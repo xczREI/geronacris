@@ -21,7 +21,40 @@
 	.ctf-birth-back .affidavit-title {
 		font-size: 16px !important;
 		font-weight: bold;
+
 	}
+.custom-dropdown {
+    position: relative;
+    display: inline-block;
+    vertical-align: middle;
+}
+
+#selected-text {
+	opacity: 0.8;
+    font-family: Arial, sans-serif;
+    font-size: 14px;
+    color: black; /* Matches the color in your screenshot */
+    padding: 2px 4px;
+    border-bottom: 1px solid transparent; /* Optional: hidden until hover */
+}
+
+#status-select {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    opacity: 0;         /* Makes the box and arrow invisible */
+    cursor: pointer;    /* Makes it obvious it's clickable */
+    appearance: none;   /* Modern way to hide the arrow */
+    -webkit-appearance: none;
+}
+
+/* Optional: Subtle hint that it's interactive when hovering */
+.custom-dropdown:hover #selected-text {
+    background-color: #f0f0f0;
+    border-radius: 3px;
+}
 </style>
 
 <div class="ctf-birth-back pt-3" style="width:960px;margin: auto;">
@@ -119,15 +152,15 @@
 						<input type="text" class="form-control form-control-sm" style="background-color: white;border-top:none;border-left:none;border-right:none;border-color: green;border-radius: 0;" name="ack_officer_sign" disabled>
 						<h6>Signature of the Administering Officer</h6>
 
-						<input type="text" class="form-control form-control-sm" id="ack_sworn_name" name="ack_sworn_name" onkeypress="return isTextKey(event)" style="text-align: center;">
+						<input type="text" class="form-control form-control-sm" id="ack_sworn_name" name="ack_sworn_name" onkeypress="return isTextKey(event)">
 						<h6>Name in Print</h6>
 					</div>
 					<div class="col-6" align="center">
 						<!-- Default to MUNICIPAL CIVIL REGISTRAR but editable -->
-						<input type="text" class="form-control form-control-sm" id="ack_sworn_position" name="ack_sworn_position" onkeypress="return isTextKey(event)" style="text-align: center;">
+						<input type="text" class="form-control form-control-sm" id="ack_sworn_position" name="ack_sworn_position" onkeypress="return isTextKey(event)">
 						<h6>Position/Title/Designation</h6>
 						<!-- Default to GERONA TARLAC but editable -->
-						<input type="text" class="form-control form-control-sm" id="ack_sworn_address" name="ack_sworn_address" onkeypress="return isTextKey(event)"style="text-align: center;">
+						<input type="text" class="form-control form-control-sm" id="ack_sworn_address" name="ack_sworn_address" onkeypress="return isTextKey(event)">
 						<h6>Address</h6>
 					</div>
 				</div>
@@ -196,7 +229,7 @@
 				<h6>&emsp;&emsp;&emsp;&emsp;2.&emsp;That I/he/she was attended at birth by
 				<div class="custom-control custom-checkbox custom-control-inline mt-1" style="padding: 0; width: 50%;margin-right: 0;">
 					<!-- Auto-fill from attendant name but editable -->
-					<input type="text" class="form-control form-control-sm" id="attend_birth_by" name="attend_birth_by" onkeypress="return isTextKey(event)">
+					<input type="text" class="form-control form-control-sm" id="attend_birth_by" name="attend_birth_by">
 				</div>
 				who resides at
 				&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;
@@ -208,7 +241,7 @@
 				<h6>&emsp;&emsp;&emsp;&emsp;3.&emsp;That I/he/she is a citizen of
 				<div class="custom-control custom-checkbox custom-control-inline mt-1" style="padding: 0; width: 50%;margin-right: 0;">
 					<!-- Default to PHILIPPINES but editable -->
-					<input type="text" class="form-control form-control-sm" id="late_citizen" name="late_citizen" onkeypress="return isTextKey(event)">
+					<input type="text" class="form-control form-control-sm" id="late_citizen" name="late_citizen" value="PHILIPPINES">
 				</div>
 				.
 				</h6>
@@ -230,7 +263,13 @@
 				&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&nbsp;&nbsp;
 				<div class="custom-control custom-checkbox custom-control-inline" style="margin-right: 0;">
 					<input type="checkbox" class="custom-control-input" id="not_married" name="married_type2" value="not married">
-					<label class="custom-control-label" for="not_married">&nbsp;not married but I/he/she was acknowledged/not acknowledged by my/his/her</label>
+					<label class="custom-control-label" for="not_married">&nbsp;not married but I/he/she  <div class="custom-dropdown">
+    				<span id="selected-text">was acknowledged</span> 
+					 <select id="status-select">
+        	<option value="acknowledged">was acknowledged</option>
+       			 <option value="not_acknowledged"> not acknowledged</option>
+    </select>
+				</div>by my/his/her</label>
 				</div><br>
 				&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&nbsp;&nbsp; 
 				father whose name is
@@ -290,7 +329,7 @@
 					<div class="col-7" align="center"></div>
 					<div class="col-5" align="center">
 						<!-- Auto-fill but editable -->
-						<input type="text" class="form-control form-control-sm" id="affiant_name" name="affiant_name" onkeypress="return isTextKey(event)" style="text-align: center;">
+						<input type="text" class="form-control form-control-sm" id="affiant_name" name="affiant_name" onkeypress="return isTextKey(event)">
 						<h6>(Signature Over Printed Name of Affiant)</h6>
 					</div>
 				</div><br>
@@ -323,21 +362,21 @@
 				<div class="custom-control custom-checkbox custom-control-inline mt-1" style="padding: 0; width: 25%;margin-right: 0;">
 					<input type="text" class="form-control form-control-sm" name="late_issued_at" id="late_issued_at" onkeypress="return isTextKey(event)">
 				</div>
-				.
+				
 				</h6><br><br>
 				<div class="row">
 					<div class="col-6" align="center">
 						<input type="text" class="form-control form-control-sm" style="background-color: white;border-top:none;border-left:none;border-right:none;border-color: green;border-radius: 0;" name="late_officer_sign" disabled>
 						<h6>Signature of the Administering Officer</h6>
-						<input type="text" class="form-control form-control-sm" id="late_sworn_name" name="late_sworn_name" onkeypress="return isTextKey(event)" style="text-align: center;">
+						<input type="text" class="form-control form-control-sm" id="late_sworn_name" name="late_sworn_name" onkeypress="return isTextKey(event)">
 						<h6>Name in Print</h6>
 					</div>
 					<div class="col-6" align="center">
 						<!-- Default to MUNICIPAL CIVIL REGISTRAR but editable -->
-						<input type="text" class="form-control form-control-sm" id="late_sworn_position" name="late_sworn_position" onkeypress="return isTextKey(event)" style="text-align: center;">
+						<input type="text" class="form-control form-control-sm" id="late_sworn_position" name="late_sworn_position" onkeypress="return isTextKey(event)">
 						<h6>Position/Title/Designation</h6>
 						<!-- Default to GERONA TARLAC but editable -->
-						<input type="text" class="form-control form-control-sm" id="late_sworn_address" name="late_sworn_address" onkeypress="return isTextKey(event)" style="text-align: center;">
+						<input type="text" class="form-control form-control-sm" id="late_sworn_address" name="late_sworn_address" onkeypress="return isTextKey(event)">
 						<h6>Address</h6>
 					</div>
 				</div>
@@ -345,6 +384,8 @@
 		</div><!--close row-->
 	</div>
 </div>
+
+<!-- Javascript -->
 
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
@@ -637,5 +678,14 @@ $(document).ready(function() {
 
     // 2. Refresh suggestions whenever the page loads
     updateSuggestions();
+});
+</script>
+<script>
+	const selectElement = document.getElementById('status-select');
+const textDisplay = document.getElementById('selected-text');
+
+selectElement.addEventListener('change', function() {
+    // Updates the visible text to match the newly selected option
+    textDisplay.textContent = this.options[this.selectedIndex].text;
 });
 </script>
