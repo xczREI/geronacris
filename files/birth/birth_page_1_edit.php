@@ -377,21 +377,27 @@
 	  		  			<h6 style="font-size: 14px;">20b.&nbsp;PLACE</h6>
 			  		</div>
 			  		<div class="col-7">
-			  			<div class="row">
-			  				<div class="col-4">
-					  		  	<h6><span style="color:green;font-size:12px;margin:0;">&emsp;(City/Municipality)</span></h6>
-					  		</div>
-					  		<div class="col-4">
-					  		  	<h6><span style="color:green;font-size:12px;margin:0;">&emsp;(Province)</span></h6>
-					  		</div>
-					  		<div class="col-4">
-					  		  	<h6><span style="color:green;font-size:12px;margin:0;">(Country)</span></h6>
-					  		</div>
-			  			</div>
-			  			<div class="input-group">
-							<input type="text" class="form-control form-control-sm" name="marriage_place" value="<?php echo $row['marriage_place']; ?>" style="text-align:center; word-spacing:5px;" onkeypress="return isTextKey(event)">
+							<div class="row">
+								<div class="col-4">
+									<h6><span style="color:green; margin:0;">&emsp;(City/Municipality)</span></h6>
+									<div class="input-group">
+										<input tabindex="38" type="text" class="form-control form-control-sm" id="marriage_city" name="marriage_city" style="text-align:center;" onkeypress="return isTextKey(event)">
+									</div>
+								</div>
+								<div class="col-4">
+									<h6><span style="color:green; margin:0;">&emsp;(Province)</span></h6>   
+									<div class="input-group">
+										<input tabindex="39" type="text" class="form-control form-control-sm" id="marriage_province" name="marriage_province" style="text-align:center;" onkeypress="return isTextKey(event)">
+									</div>
+								</div>
+								<div class="col-4">
+									<h6><span style="color:green; margin:0;">(Country)</span></h6>  
+									<div class="input-group">
+										<input tabindex="40" type="text" class="form-control form-control-sm" id="marriage_country" name="marriage_country" style="text-align:center;" onkeypress="return isTextKey(event)">
+									</div>
+								</div>
+							</div> 
 						</div>
-			  		</div>
 	    		</div><!--close row-->
 			    <div class="row" style="border-top: 2px solid green;">
 			  		<div class="col">
@@ -1149,14 +1155,15 @@ $(document).ready(function() {
             $('#father_citizen').val("NOT APPLICABLE");
             $('#father_sect').val("NOT APPLICABLE");
             $('#father_occupation').val("NOT APPLICABLE");
+			$('#father_brgy').val("NOT APPLICABLE");
+			$('#father_city').val("NOT APPLICABLE");
             $('#father_province').val("NOT APPLICABLE");
+			$('#father_country').val("NOT APPLICABLE");
             $('#father_age').val("N/A");
             
             // Auto-fill the specific marriage fields
             $('#marriage_date').val("NOT APPLICABLE");
-            $('#marriage_city').val("NOT APPLICABLE");
             $('#marriage_province').val("NOT APPLICABLE");
-            $('#marriage_country').val("NOT APPLICABLE");
             
             $('#father_lname').val("");
             $('#father_mname').val("");
@@ -1323,67 +1330,17 @@ $(document).ready(function() {
 </script>
 
 <script>
-	$(document).ready(function() {
+$(document).ready(function() {
 
-	function formatDateFormal(inputVal) {
-    if (!inputVal) return "";
-    
     const MON = ["JANUARY", "FEBRUARY", "MARCH", "APRIL", "MAY", "JUNE", 
                  "JULY", "AUGUST", "SEPTEMBER", "OCTOBER", "NOVEMBER", "DECEMBER"];
 
-    // Clean input and make uppercase
-    let v = inputVal.trim().toUpperCase();
-    // Split by any common separator: space, slash, dot, or existing dash
-    let parts = v.split(/[\s\/\.-]+/);
-
-    if (parts.length === 3) {
-        let day, month, year;
-
-        // Scenario A: Input is "10 OCTOBER 2004" (Day Month Year)
-        if (MON.includes(parts[1])) {
-            day = parts[0];
-            month = parts[1];
-            year = parts[2];
-            return `${day} ${month} ${year}`;
-        }
-        
-        // Scenario B: Input is "OCTOBER 10 2004" (Already Month Day Year)
-        if (MON.includes(parts[0])) {
-            return `${parts[0]} ${parts[1]} ${parts[2]}`;
-        }
-
-        // Scenario C: Numeric Input "10-10-2004" (Assuming MM-DD-YYYY)
-        const m = parseInt(parts[0], 10);
-        if (m >= 1 && m <= 12) {
-            return `${parts[1]} ${MON[m - 1]}  ${parts[2]}`;
-        }
-    }
-    
-    // Fallback: If it's just one word or format is weird, just dash-replace spaces
-    return v.replace(/\s+/g, '-');
-}
-
-  $('#birth_day').on('keydown', function(e) {
-                if (e.key === 'Enter' || e.keyCode === 13) {
-                    // Get the current value
-                    let originalValue = $(this).val();
-                    // Call your function and get the formatted result
-                    let formattedValue = formatDateFormal(originalValue);
-                    // Update the input with the formatted value
-                    $(this).val(formattedValue);
-                }
-            });
-
-	});
-</script>
-
-
-<script> //date of birth script
-$(document).ready(function() {
-    // 1. On page load, take the PHP value and split it into the 3 boxes
+    // ========================================================
+    // 1. SPLIT DATA ON PAGE LOAD
+    // ========================================================
     let initialVal = $('#child_birth_date').val().trim();
     if (initialVal) {
-        let parts = initialVal.split(/[\s\/\.-]+/); // splits by space, dash, or slash
+        let parts = initialVal.split(/[\s\/\.-]+/); 
         if (parts.length >= 3) {
             $('#bd_day').val(parts[0]);
             $('#bd_month').val(parts[1]);
@@ -1391,14 +1348,65 @@ $(document).ready(function() {
         }
     }
 
-    // 2. When the user types in any of the 3 boxes, update the hidden field
+    // ========================================================
+    // 2. COMBINE ON TYPING
+    // ========================================================
     $('#bd_day, #bd_month, #bd_year').on('input', function() {
         let d = $('#bd_day').val().trim();
         let m = $('#bd_month').val().trim();
         let y = $('#bd_year').val().trim();
-        
-        // Combines them with spaces and saves to the hidden field for database submission
         $('#child_birth_date').val(d + " " + m + " " + y);
     });
+
+    // ========================================================
+    // 3. KEYBOARD CONTROLS (SPACE & ENTER FORMATTING)
+    // ========================================================
+    $('#bd_day, #bd_month, #bd_year').on('keydown', function(e) {
+        let currentId = $(this).attr('id');
+
+        // --- IF SPACEBAR IS PRESSED ---
+        if (e.key === " " || e.code === "Space") {
+            e.preventDefault(); // Prevent typing a space
+            
+            if (currentId === 'bd_day') $('#bd_month').focus();
+            else if (currentId === 'bd_month') $('#bd_year').focus();
+            else if (currentId === 'bd_year') $('#birth_brgy').focus(); 
+        }
+
+        // --- IF ENTER KEY IS PRESSED ---
+        if (e.key === "Enter" || e.keyCode === 13) {
+            e.preventDefault();
+            
+            // Bonus: If you pasted a full date like "10/10/2004" into ONE box, this splits it
+            let currentVal = $(this).val().trim();
+            let parts = currentVal.split(/[\s\/\.-]+/);
+            if (parts.length === 3) {
+                $('#bd_day').val(parts[0]);
+                $('#bd_month').val(parts[1]);
+                $('#bd_year').val(parts[2]);
+            }
+            
+            // Format the month (Turn "10" into "OCTOBER")
+            let mVal = $('#bd_month').val().trim();
+            if (!isNaN(mVal) && mVal !== "") {
+                let monthIdx = parseInt(mVal, 10);
+                if (monthIdx >= 1 && monthIdx <= 12) {
+                    $('#bd_month').val(MON[monthIdx - 1]);
+                }
+            } else {
+                $('#bd_month').val(mVal.toUpperCase()); // Force uppercase if they typed letters
+            }
+
+            // Update the hidden form field with the newly formatted date
+            let finalD = $('#bd_day').val().trim();
+            let finalM = $('#bd_month').val().trim();
+            let finalY = $('#bd_year').val().trim();
+            $('#child_birth_date').val(finalD + " " + finalM + " " + finalY);
+
+            // Move cursor to the next form input automatically
+            $('#birth_brgy').focus();
+        }
+    });
+
 });
 </script>

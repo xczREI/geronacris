@@ -362,20 +362,21 @@
 						<div class="col-2">
 							<h6 style="padding-top:2px;">3.&nbsp;DATE OF<br>&emsp;BIRTH</h6>
 						</div>
-						<div class="col-5">
+						<div class="col-7">
 							<div class="row">
 								<div class="col-4"><h6 align="center" class="m-0"><span style="color:green;font-size:12px;">(Day)</span></h6></div>
 								<div class="col-4"><h6 align="center" class="m-0"><span style="color:green;font-size:12px;">(Month)</span></h6></div>
 								<div class="col-4"><h6 align="center" class="m-0"><span style="color:green;font-size:12px;">(Year)</span></h6></div>
 							</div>
 							
-							<div class="form-control form-control-sm p-0 d-flex justify-content-between align-items-center" style="background-color: #e9ecef; overflow: hidden;">
+							<div class="form-control form-control-sm p-0 d-flex justify-content-between align-items-stretch" style="background-color: #e9ecef; overflow: hidden;">
+								
 								<input type="text" id="bd_day" class="text-center" style="width: 33.33%; border: none; background: transparent; outline: none;">
-								<input type="text" id="bd_month" class="text-center" style="width: 33.33%; border: none; background: transparent; outline: none;" >
+								<input type="text" id="bd_month" class="text-center" style="width: 33.33%; border: none; background: transparent; outline: none;">
 								<input type="text" id="bd_year" class="text-center" style="width: 33.33%; border: none; background: transparent; outline: none;">
 							</div>
 
-							<input type="hidden" id="child_birth_date" name="child_birth_date" value="<?php echo trim($row['child_birth_date']); ?>">
+							<input type="hidden" id="child_birth_date" name="child_birth_date" value="<?php echo isset($row['child_birth_date']) ? trim(strip_tags($row['child_birth_date'])) : ''; ?>">
 						</div>
 					</div><!--close row-->
 					<div class="row" style="border-top:2px solid green;">
@@ -446,19 +447,19 @@
 						<div class="col-4">
 							<h6 align="center"><span style="color:green;">(First)</span></h6>
 							<div class="input-group">
-								<input tabindex="13" type="text" class="form-control form-control-sm" id="mother_fname" placeholder="" name="mother_fname" onkeypress="return isTextKey(event)">
+								<input tabindex="13" type="text" class="form-control form-control-sm text-center" id="mother_fname" placeholder="" name="mother_fname" onkeypress="return isTextKey(event)">
 							</div>
 						</div>
 						<div class="col-4">
 							<h6 align="center"><span style="color:green;">(Middle)</span></h6>
 							<div class="input-group">
-								<input tabindex="14" type="text" class="form-control form-control-sm" id="mother_mname" placeholder="" name="mother_mname" onkeypress="return isTextKey(event)">
+								<input tabindex="14" type="text" class="form-control form-control-sm text-center" id="mother_mname" placeholder="" name="mother_mname" onkeypress="return isTextKey(event)">
 							</div>
 						</div>
 						<div class="col-3">
 							<h6 align="center"><span style="color:green;">(Last)</span></h6>
 							<div class="input-group">
-								<input tabindex="15" type="text" class="form-control form-control-sm" id="mother_lname" placeholder="" name="mother_lname" onkeypress="return isTextKey(event)">
+								<input tabindex="15" type="text" class="form-control form-control-sm text-center" id="mother_lname" placeholder="" name="mother_lname" onkeypress="return isTextKey(event)">
 							</div>
 						</div>
 					</div><!--close row-->
@@ -516,25 +517,25 @@
 						<div class="col-4" style="padding-left:3em;">
 							<h6><span style="color:green; margin:0;">(House No.,St.,Barangay)</span></h6>
 							<div class="input-group">
-								<input tabindex="23" type="text" class="form-control form-control-sm" placeholder="" name="mother_brgy">
+								<input tabindex="23" type="text" class="form-control form-control-sm text-center" placeholder="" name="mother_brgy">
 							</div>
 						</div>
 						<div class="col-3">
 							<h6><span style="color:green; margin:0;">(City/Municipality)</span></h6>
 							<div class="input-group">
-								<input tabindex="24" id="mother_city" type="text" list='municipality_list' class="form-control" value="GERONA" name="mother_city" onkeypress="return isTextKey(event)" required>
+								<input tabindex="24" id="mother_city" type="text" list='municipality_list' class="form-control text-center" value="GERONA" name="mother_city" onkeypress="return isTextKey(event)" required>
 							</div>
 						</div>
 						<div class="col-2">
 							<h6><span style="color:green; margin:0;">(Province)</span></h6>
 							<div class="input-group">
-								<input tabindex="25" id="mother_province" type="text" list='province_list' class="form-control" value="TARLAC" name="mother_province" onkeypress="return isTextKey(event)" required>
+								<input tabindex="25" id="mother_province" type="text" list='province_list' class="form-control text-center" value="TARLAC" name="mother_province" onkeypress="return isTextKey(event)" required>
 							</div>
 						</div>
 						<div class="col-2">
 							<h6><span style="color:green; margin:0;">(Country)</span></h6>
 							<div class="input-group">
-								<input tabindex="26" id="mother_country" type="text" list='country_list' class="form-control" value="PHILIPPINES" name="mother_country" onkeypress="return isTextKey(event)" required>
+								<input tabindex="26" id="mother_country" type="text" list='country_list' class="form-control text-center" value="PHILIPPINES" name="mother_country" onkeypress="return isTextKey(event)" required>
 							</div>
 						</div>
 					</div><!--close row-->
@@ -553,7 +554,7 @@
 						<div class="col-4">
 							<h6 align="center"><span style="color:green;">(First)</span></h6>
 							<div class="input-group">
-								<input tabindex="27" type="text" class="form-control form-control-sm" placeholder="" id="father_fname" name="father_fname" onkeypress="return isTextKey(event)">
+								<input tabindex="27" type="text" class="form-control form-control-sm text-center" id="father_fname" name="father_fname" onkeypress="return isTextKey(event)">
 									<datalist id="father_options">
 										<option value="NOT APPLICABLE">
 										<option value="UNKNOWN">
@@ -563,13 +564,13 @@
 						<div class="col-4">
 							<h6 align="center"><span style="color:green;">(Middle)</span></h6>
 							<div class="input-group">
-								<input tabindex="28" type="text" class="form-control form-control-sm" placeholder="" id="father_mname" name="father_mname" onkeypress="return isTextKey(event)">
+								<input tabindex="28" type="text" class="form-control form-control-sm text-center" id="father_mname" name="father_mname" onkeypress="return isTextKey(event)">
 							</div>
 						</div>
 						<div class="col-3">
 							<h6 align="center"><span style="color:green;">(Last)</span></h6>
 							<div class="input-group">
-								<input tabindex="29" type="text" class="form-control form-control-sm" placeholder="" id="father_lname" name="father_lname" onkeypress="return isTextKey(event)">
+								<input tabindex="29" type="text" class="form-control form-control-sm text-center"  id="father_lname" name="father_lname" onkeypress="return isTextKey(event)">
 							</div>
 						</div>
 					</div><!--close row-->
@@ -577,26 +578,26 @@
 						<div class="col-3" style="border-right:2px solid green;">
 							<h6><span>15.&nbsp;CITIZENSHIP</span></h6>
 							<div class="input-group" style="padding-top:15px;">
-								<input tabindex="30" id="father_citizen" type="text" list='citizen_list' class="form-control" value="FILIPINO" name="father_citizen" onkeypress="return isTextKey(event)" required>
+								<input tabindex="30" id="father_citizen" type="text" list='citizen_list' class="form-control text-center" value="FILIPINO" name="father_citizen" onkeypress="return isTextKey(event)" required>
 							</div>
 						</div>
 						<div class="col-4" style="border-right:2px solid green;">
 							<h6>16.&nbsp;RELIGION/RELIGIOUS SECT</h6>
 							<div class="input-group" style="padding-top:18px;">
 								<!-- UPDATED: Dropdown but editable -->
-								<input tabindex="31" id="father_sect" type="text" list='religious_sect' class="form-control" name="father_sect" onkeypress="return isTextKey(event)" required>
+								<input tabindex="31" id="father_sect" type="text" list='religious_sect' class="form-control text-center" name="father_sect" onkeypress="return isTextKey(event)" required>
 							</div>
 						</div>
 						<div class="col-3" style="border-right:2px solid green;">
 							<h6 style="padding-top:2px;">17.&nbsp;OCCUPATION</h6>
 							<div class="input-group" style="padding-top:16px;">
-								<input tabindex="32" id="father_occupation" type="text" list='occupation_list' class="form-control" name="father_occupation" onkeypress="return isTextKey(event)" required>
+								<input tabindex="32" id="father_occupation" type="text" list='occupation_list' class="form-control text-center" name="father_occupation" onkeypress="return isTextKey(event)" required>
 							</div>
 						</div>
 						<div class="col-2">
 							<h6 style="padding-top:2px;">18.<span>&nbsp;AGE at the time of this birth<span style="color:green;">(completed years)</span></span></h6>
 							<div class="input-group">
-								<input type="text" class="form-control form-control-sm" placeholder="" id="father_age" name="father_age" onkeypress="return isNumberKey(event)">
+								<input type="text" class="form-control form-control-sm text-center" placeholder="" id="father_age" name="father_age" onkeypress="return isNumberKey(event)">
 							</div>
 						</div>
 					</div><!--close row-->
@@ -607,25 +608,25 @@
 						<div class="col-4" style="padding-left:3em;">
 							<h6><span style="color:green; margin:0;">(House No.,St.,Barangay)</span></h6>
 							<div class="input-group">
-								<input tabindex="33" type="text" class="form-control form-control-sm" placeholder="" name="father_brgy" id= "father_brgy">
+								<input tabindex="33" type="text" class="form-control form-control-sm text-center" placeholder="" name="father_brgy" id= "father_brgy">
 							</div>
 						</div>
 						<div class="col-3">
 							<h6><span style="color:green; margin:0;">(City/Municipality)</span></h6>
 							<div class="input-group">
-								<input tabindex="34" id="father_city" type="text" list='municipality_list' class="form-control form-control-sm" value="GERONA" name="father_city" onkeypress="return isTextKey(event)" required>
+								<input tabindex="34" id="father_city" type="text" list='municipality_list' class="form-control form-control-sm text-center" value="GERONA" name="father_city" onkeypress="return isTextKey(event)" required>
 							</div>
 						</div>
 						<div class="col-2">
 							<h6><span style="color:green; margin:0;">(Province)</span></h6>
 							<div class="input-group">
-								<input tabindex="35" id="father_province" type="text" list='province_list' class="form-control form-control-sm" value="TARLAC" name="father_province" onkeypress="return isTextKey(event)" required>
+								<input tabindex="35" id="father_province" type="text" list='province_list' class="form-control form-control-sm text-center" value="TARLAC" name="father_province" onkeypress="return isTextKey(event)" required>
 							</div>
 						</div>
 						<div class="col-2">
 							<h6><span style="color:green; margin:0;">(Country)</span></h6>
 							<div class="input-group">
-								<input tabindex="36" id="father_country" type="text" list='country_list' class="form-control" value="PHILIPPINES" name="father_country" onkeypress="return isTextKey(event)" required>
+								<input tabindex="36" id="father_country" type="text" list='country_list' class="form-control text-center" value="PHILIPPINES" name="father_country" onkeypress="return isTextKey(event)" required>
 							</div>
 						</div>
 					</div><!--close row-->
@@ -650,33 +651,27 @@
 								<div class="col-4"><h6 align="center"><span style="color:green;">(Year)</span></h6></div>
 							</div>
 							<div class="input-group">
-								<input tabindex="37" type="text" class="form-control form-control-sm" id="marriage_date" name="marriage_date" style="word-spacing:2em;" placeholder="Example: 12/25/2025">
+								<input tabindex="37" type="text" class="form-control form-control-sm text-center" id="marriage_date" name="marriage_date" style="word-spacing:2em;">
 							</div>
 						</div>
 						<div class="col-1" style="border-left:2px solid green;">
 							<h6>20b.&nbsp;PLACE</h6>
 						</div>
-						<div class="col-7">
-							<div class="row">
-								<div class="col-4">
-									<h6><span style="color:green; margin:0;">&emsp;(City/Municipality)</span></h6>
-									<div class="input-group">
-										<input tabindex="38" type="text" class="form-control form-control-sm" id="marriage_city" name="marriage_city" style="text-align:center;" onkeypress="return isTextKey(event)">
-									</div>
-								</div>
-								<div class="col-4">
-									<h6><span style="color:green; margin:0;">&emsp;(Province)</span></h6>   
-									<div class="input-group">
-										<input tabindex="39" type="text" class="form-control form-control-sm" id="marriage_province" name="marriage_province" style="text-align:center;" onkeypress="return isTextKey(event)">
-									</div>
-								</div>
-								<div class="col-4">
-									<h6><span style="color:green; margin:0;">(Country)</span></h6>  
-									<div class="input-group">
-										<input tabindex="40" type="text" class="form-control form-control-sm" id="marriage_country" name="marriage_country" style="text-align:center;" onkeypress="return isTextKey(event)">
-									</div>
-								</div>
-							</div> 
+							<div class="col-7">
+								<div class="row">
+								<div class="col-4"><h6 align="center" class="m-0"><span style="color:green;font-size:12px;">(City/Municipality)</span></h6></div>
+								<div class="col-4"><h6 align="center" class="m-0"><span style="color:green;font-size:12px;">(Province)</span></h6></div>
+								<div class="col-4"><h6 align="center" class="m-0"><span style="color:green;font-size:12px;">(Country)</span></h6></div>
+							</div>
+							
+							<div class="form-control form-control-sm p-0 d-flex justify-content-between align-items-center" style="background-color: #e9ecef; overflow: hidden;">
+								<input type="text" id="mp_day" class="text-center" style="width: 33.33%; border: none; background: transparent; outline: none;">
+								<input type="text" id="mp_month" class="text-center" style="width: 33.33%; border: none; background: transparent; outline: none;" >
+								<input type="text" id="mp_year" class="text-center" style="width: 33.33%; border: none; background: transparent; outline: none;">
+							</div>
+
+							<input type="hidden" id="marriage_place" name="marriage_place" value="">
+
 						</div>
 					</div><!--close row-->
 					<div class="row" style="border-top:2px solid green;">
@@ -754,10 +749,10 @@
 								<div class="input-group-prepend">
 									<span class="input-group-text" style="padding:0;border:none; background-color:white; color:black;">Address&nbsp;</span>
 								</div>
-								<input type="text" class="form-control form-control-sm" id="attendant_address1" name="attendant_address1" onkeypress="return isTextKey(event)">
+								<input type="text" class="form-control form-control-sm" id="attendant_address1" name="attendant_address1">
 							</div>
 							<div class="input-group mt-1">
-								<input type="text" class="form-control form-control-sm" name="attendant_address2" onkeypress="return isTextKey(event)">
+								<input type="text" class="form-control form-control-sm" id="attendant_address2"name="attendant_address2" >
 							</div>
 							<div class="input-group mt-1">
 								<div class="input-group-prepend">
@@ -1047,6 +1042,27 @@
 		});
 	</script>
 
+	<script>
+
+		$(document).ready(function() {
+    // Combine the three Marriage Place parts on input
+    $('#mp_day, #mp_month, #mp_year').on('input', function() {
+        let d = $('#mp_day').val().trim();
+        let m = $('#mp_month').val().trim();
+        let y = $('#mp_year').val().trim();
+        
+        // Combines them with spaces into the hidden variable
+        // Example output: "GERONA TARLAC PHILIPPINES"
+        $('#marriage_place').val(`${d} ${m} ${y}`.trim());
+        
+        // If you are using your saveToMemory function, call it here
+        if (typeof saveToMemory === "function") {
+            saveToMemory();
+        }
+    });
+});
+	</script>
+
 	<!-- NEW: Auto-fill attendant position based on checkbox selection -->
 	<script>
 		$(document).ready(function(){
@@ -1215,32 +1231,52 @@
 		});
 
 		function formatDateM() {
-			let input = document.getElementById("marriage_date").value.trim();
-			let date;
-			if (input.includes("/")) {
-				let parts = input.split("/");
-				if (parts.length === 3) {
-					let month = parts[0].padStart(2, '0');
-					let day = parts[1].padStart(2, '0');
-					let year = parts[2];
+    let input = document.getElementById("marriage_date").value.trim().toUpperCase();
+    if (!input) return;
 
-					if (parts[0].length === 4) { 
-						date = new Date(day, month - 1, year);
-					} else {
-						date = new Date(year, month - 1, day);
-					}
-				}
-			}
+    const MON = ["JANUARY", "FEBRUARY", "MARCH", "APRIL", "MAY", "JUNE", 
+                 "JULY", "AUGUST", "SEPTEMBER", "OCTOBER", "NOVEMBER", "DECEMBER"];
 
-			if (date instanceof Date && !isNaN(date)) {
-				let formattedDay = date.getDate();
-				let formattedMonth = date.toLocaleString('en-US', { month: 'long' });
-				let formattedYear = date.getFullYear();
-				document.getElementById("marriage_date").value = `${formattedMonth.toUpperCase()} ${formattedDay}  ${formattedYear}`;
-			} else {
-				document.getElementById("marriage_date").value = "Invalid date format";
-			}
-		}
+    // Split by spaces, slashes, or dashes
+    let parts = input.split(/[\s\/\.-]+/);
+
+    if (parts.length === 3) {
+        let monthName = "";
+        let day = "";
+        let year = parts[2];
+
+        // Check if the first part is a month name or number
+        if (isNaN(parts[0])) {
+            // Case: OCTOBER 10 2004
+            monthName = parts[0];
+            day = parts[1];
+        } else if (isNaN(parts[1])) {
+            // Case: 10 OCTOBER 2004
+            monthName = parts[1];
+            day = parts[0];
+        } else {
+            // Case: 10/10/2004 (Numeric)
+            let mIdx = parseInt(parts[0], 10);
+            if (mIdx >= 1 && mIdx <= 12) {
+                monthName = MON[mIdx - 1];
+                day = parts[1];
+            }
+        }
+
+        if (monthName && day && year) {
+            // Format to "MONTH DAY, YEAR"
+            document.getElementById("marriage_date").value = `${monthName} ${day}, ${year}`;
+            return;
+        }
+    }
+    
+    // If it's a special string like "NOT MARRIED", leave it alone
+    if (input === "NOT MARRIED" || input === "NOT APPLICABLE") {
+        document.getElementById("marriage_date").value = input;
+    } else {
+        document.getElementById("marriage_date").value = "INVALID DATE FORMAT";
+    }
+}
 	</script>
 
 	<script>
@@ -1261,45 +1297,39 @@
 	</script>
 
 	<script>
-$(document).ready(function() {
-    // ============================================
-    // DATE FORMATTING FUNCTION
-    // ============================================
-    function formatDateFormal(inputVal) {
-        if (!inputVal) return "";
-        
-        const MON = ["JANUARY", "FEBRUARY", "MARCH", "APRIL", "MAY", "JUNE", 
-                     "JULY", "AUGUST", "SEPTEMBER", "OCTOBER", "NOVEMBER", "DECEMBER"];
+function formatDateFormal(inputVal) {
+    if (!inputVal) return "";
+    
+    const MON = ["JANUARY", "FEBRUARY", "MARCH", "APRIL", "MAY", "JUNE", 
+                 "JULY", "AUGUST", "SEPTEMBER", "OCTOBER", "NOVEMBER", "DECEMBER"];
 
-        let v = inputVal.trim().toUpperCase();
-        let parts = v.split(/[\s\/\.-]+/);
+    // Clean up extra spaces and force uppercase
+    let v = inputVal.replace(/\s\s+/g, ' ').trim().toUpperCase();
+    let parts = v.split(/[\s\/\.-]+/);
 
-        if (parts.length === 3) {
-            let day, month, year;
+    if (parts.length === 3) {
+        let day = parts[0];
+        let month = parts[1];
+        let year = parts[2];
 
-            // Scenario A: Input is "10 OCTOBER 2004" (Day Month Year)
-            if (MON.includes(parts[1])) {
-                day = parts[0];
-                month = parts[1];
-                year = parts[2];
-                return `${month}-${day}-${year}`;
-            }
-            
-            // Scenario B: Input is "OCTOBER 10 2004" (Already Month Day Year)
-            if (MON.includes(parts[0])) {
-                return `${parts[0]}-${parts[1]}-${parts[2]}`;
-            }
-
-            // Scenario C: Numeric Input "10-10-2004" (Assuming MM-DD-YYYY)
-            const m = parseInt(parts[0], 10);
-            if (m >= 1 && m <= 12) {
-                return `${MON[m - 1]}-${parts[1]}-${parts[2]}`;
-            }
+        // Scenario: "10 OCTOBER 2004" -> Rearrange to "OCTOBER 10 2004"
+        if (MON.includes(month)) {
+            return `${month} ${day} ${year}`;
         }
         
-        // Fallback: If it's just one word or format is weird, just dash-replace spaces
-        return v.replace(/\s+/g, '-');
+        // Scenario: "OCTOBER 10 2004" -> Already correct
+        if (MON.includes(day)) {
+            return `${day} ${parts[1]} ${parts[2]}`;
+        }
+
+        // Scenario: Numeric "10 10 2004" -> Convert numeric Month to Word
+        const mIdx = parseInt(month, 10);
+        if (!isNaN(mIdx) && mIdx >= 1 && mIdx <= 12) {
+            return `${MON[mIdx - 1]} ${day} ${year}`;
+        }
     }
+    return v;
+}
 
     // ============================================
     // REMARK HISTORY FUNCTIONALITY
@@ -1402,20 +1432,20 @@ $(document).ready(function() {
             $('#remark-dropdown').hide();
         }
     });
-});
+
 </script>
 
-<script> // father not applicable script
-	$(document).ready(function() {
+<script> // Father & Marriage "Not Applicable" Sync
+$(document).ready(function() {
     const fatherFname = $('#father_fname');
     
-    // Add the new unique IDs here
+    // IDs for all fields that should lock when Father is N/A
     const fieldsToHandle = [
         'father_mname', 'father_lname', 'father_citizen', 
         'father_sect', 'father_occupation', 'father_age', 
         'father_brgy', 'father_city', 'father_province', 
         'father_country', 'marriage_date', 
-        'marriage_city', 'marriage_province', 'marriage_country' // Updated IDs
+        'marriage_place', 'mp_day', 'mp_month', 'mp_year' // Added 20b IDs
     ];
 
     function handleFatherLogic() {
@@ -1423,9 +1453,22 @@ $(document).ready(function() {
         const isEmpty = val === "";
         const isNA = (val === "NOT APPLICABLE" || val === "UNKNOWN");
 
-        // 1. Disable fields based on whether field 14 is empty or N/A
+        // 1. Disable/Enable fields and apply gray background
         fieldsToHandle.forEach(id => {
-            $('#' + id).prop('disabled', isEmpty || isNA);
+            const el = $('#' + id);
+            el.prop('disabled', isEmpty || isNA);
+            
+            if (isEmpty || isNA) {
+                el.css('background-color', '#e9ecef'); // Lock look
+                if (el.parent().hasClass('form-control')) {
+                    el.parent().css('background-color', '#e9ecef');
+                }
+            } else {
+                el.css('background-color', ''); // Reset to default
+                if (el.parent().hasClass('form-control')) {
+                    el.parent().css('background-color', 'white');
+                }
+            }
         });
 
         // 2. Auto-fill logic for "NOT APPLICABLE"
@@ -1439,26 +1482,31 @@ $(document).ready(function() {
             $('#father_country').val("NOT APPLICABLE");
             $('#father_age').val("N/A");
             
-            // Auto-fill the specific marriage fields
+            // Marriage Section Sync
             $('#marriage_date').val("NOT APPLICABLE");
-            $('#marriage_city').val("NOT APPLICABLE");
-            $('#marriage_province').val("NOT APPLICABLE");
-            $('#marriage_country').val("NOT APPLICABLE");
+            $('#mp_month').val("NOT APPLICABLE");
+            $('#mp_day, #mp_year').val("");
+            
+            // Set the hidden marriage_place variable for Page 2
+            $('#marriage_place_combined').val("NOT APPLICABLE");
             
             $('#father_lname').val("");
             $('#father_mname').val("");
         }
     }
 
-    fatherFname.on('input keydown', function(e) {
-        if (e.type === 'input' || e.key === "Enter") {
-            handleFatherLogic();
-        }
+    // Listeners for typing or Enter key
+    fatherFname.on('input keydown blur', function(e) {
+        handleFatherLogic();
+        if (typeof saveToMemory === "function") saveToMemory();
     });
 
+    // Run on page load
     handleFatherLogic();
 });
 </script>
+
+
 <script>
 	// Function to handle Enter key on Country fields
 function handleCountryEnter(event) {
@@ -1509,61 +1557,6 @@ document.getElementById("late_citizen").addEventListener("keydown", handleCountr
 				} 
 			});
 		});
-</script>
-
-<script>
-$(document).ready(function() {
-    function saveToMemory() {
-        // 1. Get current form values
-        const newData = {
-            child_fname: $('#child_fname').val(),
-            child_mname: $('#child_mname').val(),
-            child_lname: $('#child_lname').val(),
-            father_fname: $('#father_fname').val(),
-            father_mname: $('#father_mname').val(),
-            father_lname: $('#father_lname').val(),
-            mother_fname: $('input[name="mother_fname"]').val(),
-            mother_mname: $('input[name="mother_mname"]').val(),
-            mother_lname: $('#mother_lname').val(),
-            birth_day: $('#child_birth_day').val(),
-            birth_place: ( " " + $('#birth_city').val() + " " + $('#birth_province').val()).trim(),
-            marriage_date: $('#marriage_date').val(), 
-            marriage_place: $('#marriage_place').val(),
-            civil_name: $('#civil_name').val(),
-            civil_position: $('#civil_position').val(),
-            informant_name: $('#informant_name').val(),
-            informant_address: $('#informant_address').val(),
-            rel_child: $('#rel_child').val()
-        };
-
-        // 2. Retrieve existing data to compare
-        const rawOldData = localStorage.getItem('birth_form_data');
-        const oldData = rawOldData ? JSON.parse(rawOldData) : {}; // Use JSON.parse to turn string into data
-
-        // 3. Prevent duplication: Compare stringified versions
-        if (JSON.stringify(newData) !== JSON.stringify(oldData)) {
-            localStorage.setItem('birth_form_data', JSON.stringify(newData));
-            // Trigger log refresh only if data is new
-            if (typeof refreshLog === "function") refreshLog();
-        }
-    }
-
-    // Trigger save only on blur (leaving the box) or change to reduce unnecessary processing
-    $('input').on('blur change', saveToMemory);
-});
-</script>
-
-<script>
-		// Listener to clear the entire field on a single Backspace press
-	$(document).on('keydown', 'input', function(e) {
-		if (e.key === "Backspace") {
-			// Clear the current input value immediately
-			$(this).val('');
-			
-
-			$(this).trigger('input');
-		}
-	});
 </script>
 
 <script>
@@ -1618,36 +1611,32 @@ $(document).ready(function() {
     const MON = ["JANUARY", "FEBRUARY", "MARCH", "APRIL", "MAY", "JUNE", 
                  "JULY", "AUGUST", "SEPTEMBER", "OCTOBER", "NOVEMBER", "DECEMBER"];
 
-    // Clean input and make uppercase
-    let v = inputVal.trim().toUpperCase();
-    // Split by any common separator: space, slash, dot, or existing dash
+    // Clean extra spaces and force uppercase
+    let v = inputVal.replace(/\s\s+/g, ' ').trim().toUpperCase();
     let parts = v.split(/[\s\/\.-]+/);
 
     if (parts.length === 3) {
-        let day, month, year;
+        let day = parts[0];
+        let month = parts[1];
+        let year = parts[2];
 
-        // Scenario A: Input is "10 OCTOBER 2004" (Day Month Year)
-        if (MON.includes(parts[1])) {
-            day = parts[0];
-            month = parts[1];
-            year = parts[2];
-            return `${day} ${month} ${year}`;
+        // Scenario: Month is already a word (e.g., "10 OCTOBER 2004")
+        if (MON.includes(month)) {
+            return `${month} ${day}, ${year}`; // Returns OCTOBER 10 2004
         }
         
-        // Scenario B: Input is "OCTOBER 10 2004" (Already Month Day Year)
-        if (MON.includes(parts[0])) {
-            return `${parts[0]} ${parts[1]} ${parts[2]}`;
+        // Scenario: Month is first (e.g., "OCTOBER 10 2004")
+        if (MON.includes(day)) {
+            return `${day} ${parts[1]}, ${parts[2]}`;
         }
 
-        // Scenario C: Numeric Input "10-10-2004" (Assuming MM-DD-YYYY)
-        const m = parseInt(parts[0], 10);
-        if (m >= 1 && m <= 12) {
-            return `${parts[1]} ${MON[m - 1]}  ${parts[2]}`;
+        // Scenario: Numeric (e.g., "10 10 2004") -> Middle number becomes Month name
+        const mIdx = parseInt(month, 10);
+        if (!isNaN(mIdx) && mIdx >= 1 && mIdx <= 12) {
+            return `${MON[mIdx - 1]} ${day}, ${year}`;
         }
     }
-    
-    // Fallback: If it's just one word or format is weird, just dash-replace spaces
-    return v.replace(/\s+/g, '-');
+    return v;
 }
 
   $('#birth_day').on('keydown', function(e) {
@@ -1664,12 +1653,17 @@ $(document).ready(function() {
 	});
 </script>
 
-<script> //date of birth script
+<script>
 $(document).ready(function() {
-    // 1. On page load, take the PHP value and split it into the 3 boxes
+
+    const MON = ["JANUARY", "FEBRUARY", "MARCH", "APRIL", "MAY", "JUNE", 
+                 "JULY", "AUGUST", "SEPTEMBER", "OCTOBER", "NOVEMBER", "DECEMBER"];
+
+    $(document).ready(function() {
+    // 1. SPLIT DATA ON PAGE LOAD (from database)
     let initialVal = $('#child_birth_date').val().trim();
-    if (initialVal) {
-        let parts = initialVal.split(/[\s\/\.-]+/); // splits by space, dash, or slash
+    if (initialVal && !initialVal.includes('<')) {
+        let parts = initialVal.split(/[\s\/\.-]+/); 
         if (parts.length >= 3) {
             $('#bd_day').val(parts[0]);
             $('#bd_month').val(parts[1]);
@@ -1677,14 +1671,254 @@ $(document).ready(function() {
         }
     }
 
-    // 2. When the user types in any of the 3 boxes, update the hidden field
-    $('#bd_day, #bd_month, #bd_year').on('input', function() {
-        let d = $('#bd_day').val().trim();
-        let m = $('#bd_month').val().trim();
-        let y = $('#bd_year').val().trim();
+    // 2. SMART FORMATTING (Triggers on leaving any box)
+    $('#bd_day, #bd_month, #bd_year').on('blur', function() {
+        const MON = ["JANUARY", "FEBRUARY", "MARCH", "APRIL", "MAY", "JUNE", 
+                     "JULY", "AUGUST", "SEPTEMBER", "OCTOBER", "NOVEMBER", "DECEMBER"];
         
-        // Combines them with spaces and saves to the hidden field for database submission
-        $('#child_birth_date').val(d + " " + m + " " + y);
+        let mVal = $('#bd_month').val().trim();
+        if (!isNaN(mVal) && mVal !== "") {
+            let idx = parseInt(mVal, 10);
+            if (idx >= 1 && idx <= 12) $('#bd_month').val(MON[idx - 1]);
+        }
+
+        let yVal = $('#bd_year').val().trim();
+        if (yVal.length > 0 && yVal.length < 4) {
+            let yInt = parseInt(yVal, 10);
+            $('#bd_year').val(yInt < 30 ? 2000 + yInt : 1900 + yInt);
+        }
+
+        // Combine into the hidden field Page 2 actually looks for
+        let finalD = $('#bd_day').val().trim();
+        let finalM = $('#bd_month').val().trim();
+        let finalY = $('#bd_year').val().trim();
+        $('#child_birth_date').val(`${finalD} ${finalM} ${finalY}`);
+        
+        // SAVE TO MEMORY IMMEDIATELY
+        saveToMemory();
     });
 });
+
+    // ========================================================
+    // 3. KEYBOARD CONTROLS (SPACE & ENTER TO JUMP)
+    // ========================================================
+    $('#bd_day, #bd_month, #bd_year').on('keydown', function(e) {
+        // If they press Space or Enter, just move the cursor to the next box.
+        // The formatting will happen automatically in the "blur" script below!
+        if (e.key === " " || e.code === "Space" || e.key === "Enter" || e.keyCode === 13) {
+            e.preventDefault(); 
+            
+            let currentId = $(this).attr('id');
+            if (currentId === 'bd_day') $('#bd_month').focus();
+            else if (currentId === 'bd_month') $('#bd_year').focus();
+            else if (currentId === 'bd_year') $('#birth_brgy').focus(); 
+        }
+    });
+
+    // ========================================================
+    // 4. SMART FORMATTING (Triggers the moment you leave the box)
+    // ========================================================
+    
+    // When you paste a full date (10/10/08) into the Day box
+    $('#bd_day').on('blur', function() {
+        let currentVal = $(this).val().trim();
+        let parts = currentVal.split(/[\s\/\.-]+/);
+        if (parts.length === 3) {
+            $('#bd_day').val(parts[0]);
+            $('#bd_month').val(parts[1]);
+            $('#bd_year').val(parts[2]);
+            $('#bd_year').trigger('blur'); // Force the year to auto-complete
+        }
+    });
+
+    // When you leave the Month or Year box (via Tab, Space, Enter, or Click)
+    $('#bd_month, #bd_year').on('blur', function() {
+        const MON = ["JANUARY", "FEBRUARY", "MARCH", "APRIL", "MAY", "JUNE", 
+                     "JULY", "AUGUST", "SEPTEMBER", "OCTOBER", "NOVEMBER", "DECEMBER"];
+        
+        // 1. Format Month (Turn "10" into "OCTOBER")
+        let mVal = $('#bd_month').val().trim();
+        if (!isNaN(mVal) && mVal !== "") {
+            let monthIdx = parseInt(mVal, 10);
+            if (monthIdx >= 1 && monthIdx <= 12) {
+                $('#bd_month').val(MON[monthIdx - 1]);
+            }
+        } else if (mVal !== "") {
+            $('#bd_month').val(mVal.toUpperCase()); 
+        }
+
+        // 2. Auto-Complete Year (Turn "08" into "2008" or "95" into "1995")
+        let yVal = $('#bd_year').val().trim();
+        if (yVal !== "" && !isNaN(yVal) && yVal.length > 0 && yVal.length < 4) {
+            let yInt = parseInt(yVal, 10);
+            if (yInt < 100) {
+                let currentYear = new Date().getFullYear();
+                let currentTwoDigit = currentYear % 100;
+                
+                if (yInt > currentTwoDigit + 5) {
+                    $('#bd_year').val(1900 + yInt);
+                } else {
+                    $('#bd_year').val(2000 + yInt);
+                }
+            }
+        }
+
+        // 3. Update the hidden form field with the newly formatted date
+        let finalD = $('#bd_day').val().trim();
+        let finalM = $('#bd_month').val().trim();
+        let finalY = $('#bd_year').val().trim();
+        $('#child_birth_date').val(finalD + " " + finalM + " " + finalY);
+    });
+		$('input').on('blur change', saveToMemory);
+});
+</script>
+
+<script>
+function saveToMemory() {
+    // 1. Capture and clean the marriage date input
+    let mDate = $('#marriage_date').val().trim().toUpperCase();
+    let mPlace = $('input[name="marriage_place"]').val();
+
+    // 2. Auto-set place to NOT APPLICABLE if date is NOT MARRIED or N/A
+    if (mDate === "NOT MARRIED" || mDate === "NOT APPLICABLE" || mDate === "N/A") {
+        mPlace = "NOT APPLICABLE";
+        $('input[name="marriage_place"]').val(mPlace);
+    }
+
+    // 3. Construct the data object with correct comma placement
+    const newData = {
+        child_fname: $('#child_fname').val(),
+        child_mname: $('#child_mname').val(),
+        child_lname: $('#child_lname').val(),
+        father_fname: $('#father_fname').val(),
+        father_mname: $('#father_mname').val(),
+        father_lname: $('#father_lname').val(),
+        mother_fname: $('#mother_fname').val(),
+        mother_mname: $('#mother_mname').val(),
+        mother_lname: $('#mother_lname').val(),
+        // Connects to Page 2 using the correct storage key and hidden field ID
+        birth_day: $('#child_birth_date').val(),
+        birth_place: ($('#birth_city').val() + " " + $('#birth_province').val()).trim(),
+        marriage_date: mDate,
+        marriage_place: mPlace,
+        civil_name: $('#civil_name').val(),
+        civil_position: $('#civil_position').val(),
+        informant_name: $('#informant_name').val(),
+        informant_address: $('#informant_address').val(),
+        rel_child: $('#rel_child').val(),
+		attendant_name: $('#attendant_name').val(),
+		attendant_position: $('#attendant_position').val().toUpperCase(),
+
+		attendant_address: ($('#attendant_address1').val() + " " + $('input[name="attendant_address2"]').val()).trim().toUpperCase(),
+    };
+
+    // 4. Save to browser memory for Page 2 retrieval
+    const rawOldData = localStorage.getItem('birth_form_data');
+    const oldData = rawOldData ? JSON.parse(rawOldData) : {};
+
+    if (JSON.stringify(newData) !== JSON.stringify(oldData)) {
+        localStorage.setItem('birth_form_data', JSON.stringify(newData));
+    }
+}
+</script>
+
+<script> 
+	$(document).ready(function() {
+    function toggleMarriagePlace() {
+        let mDate = $('#marriage_date').val().trim().toUpperCase();
+        // Target the 3 individual boxes in 20b
+        let mpInputs = $('#mp_day, #mp_month, #mp_year');
+        let mPlaceHidden = $('#marriage_place');
+
+        if (mDate === "NOT MARRIED" || mDate === "NOT APPLICABLE" || mDate === "N/A") {
+            // 1. Fill boxes with "N", "A", "N/A" or just clear them
+            $('#mp_month').val("NOT APPLICABLE");
+
+            
+            // 2. Set the hidden variable for the database
+            mPlaceHidden.val("NOT APPLICABLE");
+
+            // 3. Disable the boxes and change color
+            mpInputs.prop('disabled', true);
+            mpInputs.parent().css('background-color', '#e9ecef'); // Makes the whole bar gray
+        } else {
+            // Re-enable if the user types a real date
+            mpInputs.prop('disabled', false);
+            mpInputs.parent().css('background-color', 'white');
+            
+            // Clear the "N/A" values so they can type
+            if ($('#mp_day').val() === "N/A") {
+                mpInputs.val("");
+                mPlaceHidden.val("");
+            }
+        }
+    }
+
+    // Keep your existing listeners
+    $('#marriage_date').on('input blur', function() {
+        toggleMarriagePlace();
+        saveToMemory();
+    });
+
+    toggleMarriagePlace();
+});
+</script>
+
+<script> 
+	$(document).ready(function() {
+    $('#attendant_position').on('keydown', function(e) {
+        if (e.key === "Enter") {
+            const val = $(this).val().trim().toUpperCase();
+            const standardPositions = ["PHYSICIAN", "NURSE", "MIDWIFE", "HILOT"];
+
+            // 1. If the position is not one of the standard 4, sync it to "Others"
+            if (val !== "" && !standardPositions.includes(val)) {
+                $('#others').prop('checked', true);
+                $('#otherstxt').val(val);
+                
+                // Uncheck standard boxes to stay accurate
+                $('#physician, #nurse, #midwife, #hilot').prop('checked', false);
+            } else if (standardPositions.includes(val)) {
+                // If they typed a standard one, ensure the correct checkbox is ticked
+                $('#others').prop('checked', false);
+                $('#otherstxt').val("");
+                $(`#${val.toLowerCase()}`).prop('checked', true);
+            }
+
+            // 2. Save to Memory for Page 2 connection
+            if (typeof saveToMemory === "function") {
+                saveToMemory();
+            }
+        }
+    });
+});
+</script>
+
+<script>
+
+	$(document).ready(function() {
+    // Sync "Others (Specify)" in 21a to "Title or Position" in 21b
+    $('#otherstxt').on('keydown', function(e) {
+        if (e.key === "Enter") {
+            const val = $(this).val().trim().toUpperCase();
+            
+            if (val !== "") {
+                // 1. Auto-fill the Certification field below
+                $('#attendant_position').val(val);
+                
+                // 2. Ensure the "Others" checkbox is ticked
+                $('#others').prop('checked', true);
+                
+                // 3. Uncheck standard boxes to maintain accuracy
+                $('#physician, #nurse, #midwife, #hilot').prop('checked', false);
+                
+                // 4. Save to memory for Page 2 connection
+                if (typeof saveToMemory === "function") {
+                    saveToMemory();
+                }
+            }
+        }
+    });
+});
+
 </script>
