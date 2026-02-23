@@ -424,7 +424,7 @@
 							</div>
 						</div>
 						<div class="col-3" style="border-top:2px solid green;">
-							<h6 style="padding-top:2px;">5d.&nbsp;WEIGHT OF BIRTH</h6>
+							<h6 style="padding-top:2px;">6.&nbsp;WEIGHT OF BIRTH</h6>
 							<div class="input-group" style="padding-top:29px;">
 								<input tabindex="12" type="text" class="form-control form-control-sm" placeholder="" name="birth_weight" onkeypress="return isNumberKey(event)">
 								<span>&nbsp;grams</span>
