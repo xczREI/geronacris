@@ -1484,17 +1484,14 @@ $(document).ready(function() {
             
             // Marriage Section Sync
             $('#marriage_date').val("NOT APPLICABLE");
-<<<<<<< HEAD
             $('#marriage_city').val("");
             $('#marriage_province').val("NOT APPLICABLE");
             $('#marriage_country').val("");
-=======
             $('#mp_month').val("NOT APPLICABLE");
             $('#mp_day, #mp_year').val("");
             
             // Set the hidden marriage_place variable for Page 2
             $('#marriage_place_combined').val("NOT APPLICABLE");
->>>>>>> bfa6c978ca396891e95f12dc347a7ef8f364f22c
             
             $('#father_lname').val("");
             $('#father_mname').val("");
@@ -1665,18 +1662,15 @@ $(document).ready(function() {
     const MON = ["JANUARY", "FEBRUARY", "MARCH", "APRIL", "MAY", "JUNE", 
                  "JULY", "AUGUST", "SEPTEMBER", "OCTOBER", "NOVEMBER", "DECEMBER"];
 
-<<<<<<< HEAD
     // ========================================================
     // 1. SPLIT DATA ON PAGE LOAD
     // ========================================================
     let initialVal = $('#child_birth_date').val().trim();
     if (initialVal) {
-=======
     $(document).ready(function() {
     // 1. SPLIT DATA ON PAGE LOAD (from database)
     let initialVal = $('#child_birth_date').val().trim();
     if (initialVal && !initialVal.includes('<')) {
->>>>>>> bfa6c978ca396891e95f12dc347a7ef8f364f22c
         let parts = initialVal.split(/[\s\/\.-]+/); 
         if (parts.length >= 3) {
             $('#bd_day').val(parts[0]);
@@ -1685,7 +1679,6 @@ $(document).ready(function() {
         }
     }
 
-<<<<<<< HEAD
     // ========================================================
     // 2. COMBINE ON TYPING
     // ========================================================
@@ -1694,7 +1687,6 @@ $(document).ready(function() {
         let m = $('#bd_month').val().trim();
         let y = $('#bd_year').val().trim();
         $('#child_birth_date').val(d + " " + m + " " + y);
-=======
     // 2. SMART FORMATTING (Triggers on leaving any box)
     $('#bd_day, #bd_month, #bd_year').on('blur', function() {
         const MON = ["JANUARY", "FEBRUARY", "MARCH", "APRIL", "MAY", "JUNE", 
@@ -1720,7 +1712,6 @@ $(document).ready(function() {
         
         // SAVE TO MEMORY IMMEDIATELY
         saveToMemory();
->>>>>>> bfa6c978ca396891e95f12dc347a7ef8f364f22c
     });
 
     // ========================================================
