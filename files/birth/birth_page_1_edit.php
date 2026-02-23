@@ -294,25 +294,25 @@
 	  				<div class="col-3" style="border-right: 2px solid green;">
 	  		  			<h6><span style="font-size: 14px;">15.&nbsp;CITIZENSHIP</span></h6>
 	  		  			<div class="input-group" style="padding-top: 15px;">
-					    	<input type="text" class="form-control form-control-sm" name="father_citizen" value="<?php echo $row['father_citizen']; ?>" onkeypress="return isTextKey(event)">
+					    	<input type="text" class="form-control form-control-sm" id = "father_citizen" name="father_citizen" value="<?php echo $row['father_citizen']; ?>" onkeypress="return isTextKey(event)">
 					  	</div>
 	  				</div>
 	  				<div class="col-4" style="border-right: 2px solid green;">
 	  		  			<h6 style="font-size: 14px;">16.&nbsp;RELIGION/RELIGIOUS SECT</h6>
 	  					<div class="input-group" style="padding-top: 18px;">
-					    	<input type="text" class="form-control form-control-sm" name="father_sect" value="<?php echo $row['father_religion']; ?>" onkeypress="return isTextKey(event)">
+					    	<input type="text" class="form-control form-control-sm" id = "father_sect" name="father_sect" value="<?php echo $row['father_religion']; ?>" onkeypress="return isTextKey(event)">
 					  	</div>
 			  		</div>
 			  		<div class="col-3" style="border-right: 2px solid green;">
 			  		  	<h6 style="padding-top:2px; font-size:14px;">17.&nbsp;OCCUPATION</h6>
 			  		  	<div class="input-group" style="padding-top: 16px;">
-					    	<input type="text" class="form-control form-control-sm" name="father_occupation" value="<?php echo $row['father_occupation']; ?>" onkeypress="return isTextKey(event)">
+					    	<input type="text" class="form-control form-control-sm" id = "father_occupation" name="father_occupation" value="<?php echo $row['father_occupation']; ?>" onkeypress="return isTextKey(event)">
 					  	</div>
 			  		</div>
 			  		<div class="col-2">
 			  		  	<h6 style="padding-top:2px; font-size:14px;">18.<span style="font-size: 10.2px;">&nbsp;AGE at the time of this birth<span style="color:green;">(completed years)</span></span></h6>
 			  		  	<div class="input-group">
-					    	<input type="text" class="form-control form-control-sm" name="father_age" style="text-align:center;" value="<?php echo $row['father_age']; ?>" onkeypress="return isNumberKey(event)">
+					    	<input type="text" class="form-control form-control-sm" id = "father_age" name="father_age" style="text-align:center;" value="<?php echo $row['father_age']; ?>" onkeypress="return isNumberKey(event)">
 					  	</div>
 			  		</div>
 	    		</div><!--close row-->
@@ -323,25 +323,25 @@
 			  		<div class="col-4" style="padding-left: 3em;">
 			  		  	<h6><span style="color:green;font-size:12px;margin:0;">(House No.,St.,Barangay)</span></h6>
 			  		  	<div class="input-group">
-					    	<input type="text" class="form-control form-control-sm" name="father_brgy" value="<?php echo $row['father_brgy']; ?>">
+					    	<input type="text" class="form-control form-control-sm" id = "father_brgy" name="father_brgy" value="<?php echo $row['father_brgy']; ?>">
 					  	</div>
 			  		</div>
 			  		<div class="col-3">
 			  		  	<h6><span style="color:green;font-size:12px;margin:0;">(City/Municipality)</span></h6>
 			  		  	<div class="input-group">
-					    	<input type="text" class="form-control form-control-sm" name="father_city" value="<?php echo $row['father_municipal']; ?>" onkeypress="return isTextKey(event)">
+					    	<input type="text" class="form-control form-control-sm" id="father_city" name="father_city" value="<?php echo $row['father_municipal']; ?>" onkeypress="return isTextKey(event)">
 					  	</div>
 			  		</div>
 			  		<div class="col-2">
 			  		  	<h6><span style="color:green;font-size:12px;margin:0;">(Province)</span></h6>
 			  		  	<div class="input-group">
-					    	<input type="text" class="form-control form-control-sm" name="father_province" value="<?php echo $row['father_province']; ?>" onkeypress="return isTextKey(event)">
+					    	<input type="text" class="form-control form-control-sm" id="father_province" name="father_province" value="<?php echo $row['father_province']; ?>" onkeypress="return isTextKey(event)">
 					  	</div>
 			  		</div>
 			  		<div class="col-2">
 			  		  	<h6><span style="color:green;font-size:12px;margin:0;">(Country)</span></h6>
 			  		  	<div class="input-group">
-					    	<input type="text" class="form-control form-control-sm" name="father_country" value="<?php echo $row['father_country']; ?>" onkeypress="return isTextKey(event)">
+					    	<input type="text" class="form-control form-control-sm" id="father_country"name="father_country" value="<?php echo $row['father_country']; ?>" onkeypress="return isTextKey(event)">
 					  	</div>
 			  		</div>
 			  	</div><!--close row-->
@@ -739,442 +739,635 @@
 </div>
 
 <!-- Javascript -->
-<script src = "../../js/input_tno_only.js"></script>
-
-<script>
-
-  $(document).ready(function(){
-  
-    var x = setInterval(function(){
-
-      var now = new Date().getTime();
-
-      //hours
-      var hrs = Math.floor((now % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-      document.getElementById("hrs").innerHTML = hrs;
-
-      var hours = ["08","09","10","11","12","01","02","03","04","05","06","07","08","09","10","11","12","01","02","03","04","05","06","07"];
-      var hrss = hours[hrs];
-
-      if (hrs <= '3' || hrs >= '16'){ var txt = 'am'; } else if (hrs >= '4' || hrs <= '15'){ var txt = 'pm'; }  
-	      //minutes
-	      var min = Math.floor((now % (1000 * 60 * 60)) / (1000 * 60));
-      if (min < 10){ var mins = "0" + min; } else if (min > 9){ var mins = min; }
-	      //seconds
-	      var sec = Math.floor((now % (1000 * 60)) / 1000);
-      if (sec < 10){ var secs = "0" + sec; } else if (sec > 9){ var secs = sec; }
-
-      $("#hrs").val(hrss +":"+ mins +":"+ secs +''+ txt);
-    })
-  });
-
-</script>
-
-<script>
-document.getElementById("child_birth_date").addEventListener("keydown", function(event) {
-    if (event.key === "Enter") { // When Enter is pressed
-        formatDate();
-    }
-});
-
-			function formatDate() {
-			const el = document.getElementById("child_birth_date");
-			let v = el.value.trim();
-			if (!v) return;
-
-			// accept 9-5-2025 or 9/5/2025 or "9 5 2025"
-			v = v.replace(/[\/\.\s]+/g, "-").replace(/-+/g, "-");
-			const parts = v.split("-");
-			if (parts.length !== 3) return invalid(el);
-
-			const d = parseInt(parts[0], 10);
-			const m = parseInt(parts[1], 10);
-			const y = parseInt(parts[2], 10);
-
-			// strict validation
-			const test = new Date(y, m - 1, d);
-			if (test.getFullYear() !== y || test.getMonth() !== m - 1 || test.getDate() !== d) {
-				return invalid(el);
-			}
-
-			const MON = ["JANUARY","FEBRUARY","MARCH","APRIL","MAY","JUNE","JULY","AUGUST","SEPTEMBER","OCTOBER","NOVEMBER","DECEMBER"];
-			el.value = `${d} ${MON[m - 1]} ${y}`;   // -> "9 MAY 2025"
-			}
-
-			function invalid(el){
-			el.value = "Invalid date format";
-			el.select();
-			}
-
-// function formatDate() {
-//     let input = document.getElementById("child_birth_date").value.trim();
-    
-//     let date;
-//     if (input.includes("/")) {
-//         let parts = input.split("/");
-        
-//         if (parts.length === 3) {
-//             // Ensure month and day are two digits
-		
-//             let day = parts[0].padStart(2, '0');
-			
-//             let month = parts[1].padStart(2, '0');
-			
-//             let year = parts[2];
-
-//             if (parts[0].length === 4) { 
-//                 // YYYY-MM-DD format
-//                 date = new Date(day, month - 1, year);
-//             } else {
-//                 // DD-MM-YYYY format
-//                 date = new Date(year, month - 1, day);
-//             }
-//         }
-//     }
-
-//     if (date instanceof Date && !isNaN(date)) {
-//         let formattedDay = date.getDate();
-//         let formattedMonth = date.toLocaleString('en-US', { month: 'long' });
-//         let formattedYear = date.getFullYear();
-        
-//         document.getElementById("child_birth_date").value = `${formattedDay} ${formattedMonth} ${formattedYear}`;
-//     } else {
-//         document.getElementById("child_birth_date").value = "Invalid date format";
-//     }
-// }
-</script>
-
-
-<!--
-<script>
-document.getElementById("marriage_date").addEventListener("keydown", function(event) {
-    if (event.key === "Enter") { // When Enter is pressed
-        formatDate2();
-    }
-});
-
-document.getElementById("marriage_date").addEventListener("blur", function() { 
-    formatDate2(); // When user tabs out
-});
-
-function formatDate2() {
-    let input = document.getElementById("marriage_date").value.trim();
-    
-    let date;
-    if (input.includes("/")) {
-        let parts = input.split("/");
-        if (parts[0].length === 4) { 
-            date = new Date(parts[0], parts[1] - 1, parts[2]); // YYYY-MM-DD
-        } else {
-            date = new Date(parts[2], parts[1] - 1, parts[0]); // MM-DD-YYYY
-        }
-    }
-
-    if (date instanceof Date && !isNaN(date)) {
-        let options = { day: 'numeric', month: 'long', year: 'numeric' };
-        document.getElementById("marriage_date").value = date.toLocaleDateString("en-US", options);
-    } else {
-        document.getElementById("marriage_date").value = "Invalid date format";
-    }
-}
-</script>
--->
-<script>
-document.getElementById("marriage_date").addEventListener("keydown", function(event) {
-    if (event.key === "Enter") { // When Enter is pressed
-        formatDateM();
-    }
-});
-
-
-
-function formatDateM() {
-    let input = document.getElementById("marriage_date").value.trim();
-    
-    let date;
-    if (input.includes("/")) {
-        let parts = input.split("/");
-        
-        if (parts.length === 3) {
-            // Ensure month and day are two digits
-            let month = parts[0].padStart(2, '0');
-            let day = parts[1].padStart(2, '0');
-            let year = parts[2];
-
-            if (parts[0].length === 4) { 
-                // YYYY-MM-DD format
-                date = new Date(day, month - 1, year);
-            } else {
-                // DD-MM-YYYY format
-                date = new Date(year, month - 1, day);
-            }
-        }
-    }
-
-    if (date instanceof Date && !isNaN(date)) {
-        let formattedDay = date.getDate();
-        let formattedMonth = date.toLocaleString('en-US', { month: 'long' });
-        let formattedYear = date.getFullYear();
-        
-        document.getElementById("marriage_date").value = `${formattedDay} ${formattedMonth} ${formattedYear}`;
-    } else {
-        document.getElementById("marriage_date").value = "Invalid date format";
-    }
-}
-</script>
-
-
-<script>
-	document.addEventListener("DOMContentLoaded", function() {
-		let inputs = document.querySelectorAll(".form-control");
-		
-		inputs.forEach((input, index) => {
-			input.addEventListener("keydown", function(event) {
-				if(event.key === "Enter"){
-					event.preventDefault();
-					let nextInput = inputs[index + 1];
-					if (nextInput){
-						nextInput.focus();
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+	<!-- NEW: Auto-fill 5b with "NOT APPLICABLE" when 5a is "SINGLE" -->
+	<script>
+		$(document).ready(function(){
+			// When birth type changes
+			$("#birth_type").on('input change', function(){
+				var birthType = $(this).val().toUpperCase();
+				if(birthType === "SINGLE"){
+					$("#multi_birth_was").val("NOT APPLICABLE");
+				} else {
+					// Clear if not single (user can fill in)
+					if($("#multi_birth_was").val() === "NOT APPLICABLE"){
+						$("#multi_birth_was").val("");
 					}
 				}
 			});
 		});
+	</script>
+
+	<!-- NEW: Auto-fill attendant position based on checkbox selection -->
+	<script>
+		$(document).ready(function(){
+			// When attendant checkbox is clicked, auto-fill position
+			$('#physician').change(function(){
+				if($(this).is(':checked')){
+					$('#attendant_position').val('PHYSICIAN');
+				}
+			});
+			$('#nurse').change(function(){
+				if($(this).is(':checked')){
+					$('#attendant_position').val('NURSE');
+				}
+			});
+			$('#midwife').change(function(){
+				if($(this).is(':checked')){
+					$('#attendant_position').val('MIDWIFE');
+				}
+			});
+			$('#hilot').change(function(){
+				if($(this).is(':checked')){
+					$('#attendant_position').val('HILOT');
+				}
+			});
+		});
+	</script>
+
+	<!-- NEW: Save new dropdown entries via AJAX (for religious sect, occupation, etc.) -->
+	<script>
+		$(document).ready(function(){
+			// Function to save new entry to database
+			function saveNewEntry(tableName, columnName, value){
+				if(value && value.trim() !== ''){
+					$.ajax({
+						url: "save_new_entry.php",
+						method: "POST",
+						data: {
+							table: tableName,
+							column: columnName,
+							value: value.trim().toUpperCase()
+						},
+						success: function(response){
+							console.log("Entry saved: " + value);
+						},
+						error: function(){
+							console.log("Error saving entry");
+						}
+					});
+				}
+			}
+
+			// Save new religious sect on blur
+			$('#mother_sect, #father_sect').on('blur', function(){
+				var val = $(this).val();
+				// Check if value exists in datalist
+				var exists = false;
+				$('#religious_sect option').each(function(){
+					if($(this).val().toUpperCase() === val.toUpperCase()){
+						exists = true;
+						return false;
+					}
+				});
+				if(!exists && val.trim() !== ''){
+					saveNewEntry('tblreligious', 'relsec', val);
+					// Add to datalist immediately
+					$('#religious_sect').append('<option value="' + val.toUpperCase() + '">' + val.toUpperCase() + '</option>');
+				}
+			});
+
+			// Save new occupation on blur
+			$('#mother_occupation, #father_occupation').on('blur', function(){
+				var val = $(this).val();
+				var exists = false;
+				$('#occupation_list option').each(function(){
+					if($(this).val().toUpperCase() === val.toUpperCase()){
+						exists = true;
+						return false;
+					}
+				});
+				if(!exists && val.trim() !== ''){
+					saveNewEntry('tbloccupation', 'occupation', val);
+					$('#occupation_list').append('<option value="' + val.toUpperCase() + '">' + val.toUpperCase() + '</option>');
+				}
+			});
+
+			// Save new citizenship on blur
+			$('#mother_citizen, #father_citizen').on('blur', function(){
+				var val = $(this).val();
+				var exists = false;
+				$('#citizen_list option').each(function(){
+					if($(this).val().toUpperCase() === val.toUpperCase()){
+						exists = true;
+						return false;
+					}
+				});
+				if(!exists && val.trim() !== ''){
+					saveNewEntry('tblcitizen', 'citiz', val);
+					$('#citizen_list').append('<option value="' + val.toUpperCase() + '">' + val.toUpperCase() + '</option>');
+				}
+			});
+		});
+	</script>
+
+	<script>
+		$(document).ready(function(){
+			var x = setInterval(function(){
+				var now = new Date().getTime();
+				var hrs = Math.floor((now % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+				document.getElementById("hrs").innerHTML = hrs;
+
+				var hours = ["08","09","10","11","12","01","02","03","04","05","06","07","08","09","10","11","12","01","02","03","04","05","06","07"];
+				var hrss = hours[hrs];
+
+				if (hrs <= '3' || hrs >= '16'){ var txt = 'am'; } else if (hrs >= '4' || hrs <= '15'){ var txt = 'pm'; } 
+				var min = Math.floor((now % (1000 * 60 * 60)) / (1000 * 60));
+				if (min < 10){ var mins = "0" + min; } else if (min > 9){ var mins = min; }
+				var sec = Math.floor((now % (1000 * 60)) / 1000);
+				if (sec < 10){ var secs = "0" + sec; } else if (sec > 9){ var secs = sec; }
+				$("#hrs").val(hrss +":"+ mins +":"+ secs +''+ txt);
+			})
+		});
+	</script>
+
+	<script>
+		var inputBox = document.getElementById('child_mname');
+		var inputBox2 = document.getElementById('child_lname');
+
+		inputBox.onkeyup = function(){
+			document.getElementById('mother_lname').value = inputBox.value;
+		}
+
+		inputBox2.onkeyup = function(){
+			document.getElementById('father_lname').value = inputBox2.value;
+		}
+	</script>
+
+	<script>
+		$(function(){
+			var dtToday = new Date();
+			var month = dtToday.getMonth() + 1;
+			var day = dtToday.getDate() - 1;
+			var year = dtToday.getFullYear();
+			if(month < 10)
+				month = '0' + month.toString();
+			if(day < 10)
+				day = '0' + day.toString();
+			var maxDate = year + '-' + month + '-' + day;
+			$('#marriage_date').attr('max', maxDate);
+			$('#birth_day').attr('max', maxDate);
+		});
+	</script>
+
+	<script>
+		document.getElementById("marriage_place").addEventListener("keydown", function(event) {
+			if (event.key === "Enter") {
+				document.getElementById("marriage_place").value = document.getElementById("marriage_place").value + " " + "PHILIPPINES";
+			}
+		});
+	</script>
+
+	<script>
+		document.getElementById("marriage_date").addEventListener("keydown", function(event) {
+			if (event.key === "Enter") {
+				formatDateM();
+			}
+		});
+
+		function formatDateM() {
+			let input = document.getElementById("marriage_date").value.trim();
+			let date;
+			if (input.includes("/")) {
+				let parts = input.split("/");
+				if (parts.length === 3) {
+					let month = parts[0].padStart(2, '0');
+					let day = parts[1].padStart(2, '0');
+					let year = parts[2];
+
+					if (parts[0].length === 4) { 
+						date = new Date(day, month - 1, year);
+					} else {
+						date = new Date(year, month - 1, day);
+					}
+				}
+			}
+
+			if (date instanceof Date && !isNaN(date)) {
+				let formattedDay = date.getDate();
+				let formattedMonth = date.toLocaleString('en-US', { month: 'long' });
+				let formattedYear = date.getFullYear();
+				document.getElementById("marriage_date").value = `${formattedMonth.toUpperCase()} ${formattedDay}  ${formattedYear}`;
+			} else {
+				document.getElementById("marriage_date").value = "Invalid date format";
+			}
+		}
+	</script>
+
+	<script>
+		document.addEventListener("DOMContentLoaded", function() {
+			let inputs = document.querySelectorAll(".form-control");
+			inputs.forEach((input, index) => {
+				input.addEventListener("keydown", function(event) {
+					if(event.key === "Enter"){
+						event.preventDefault();
+						let nextInput = inputs[index + 1];
+						if (nextInput){
+							nextInput.focus();
+						}
+					}
+				});
+			});
+		});
+	</script>
+
+	<script>
+$(document).ready(function() {
+    // ============================================
+    // DATE FORMATTING FUNCTION
+    // ============================================
+    function formatDateFormal(inputVal) {
+        if (!inputVal) return "";
+        
+        const MON = ["JANUARY", "FEBRUARY", "MARCH", "APRIL", "MAY", "JUNE", 
+                     "JULY", "AUGUST", "SEPTEMBER", "OCTOBER", "NOVEMBER", "DECEMBER"];
+
+        let v = inputVal.trim().toUpperCase();
+        let parts = v.split(/[\s\/\.-]+/);
+
+        if (parts.length === 3) {
+            let day, month, year;
+
+            // Scenario A: Input is "10 OCTOBER 2004" (Day Month Year)
+            if (MON.includes(parts[1])) {
+                day = parts[0];
+                month = parts[1];
+                year = parts[2];
+                return `${month}-${day}-${year}`;
+            }
+            
+            // Scenario B: Input is "OCTOBER 10 2004" (Already Month Day Year)
+            if (MON.includes(parts[0])) {
+                return `${parts[0]}-${parts[1]}-${parts[2]}`;
+            }
+
+            // Scenario C: Numeric Input "10-10-2004" (Assuming MM-DD-YYYY)
+            const m = parseInt(parts[0], 10);
+            if (m >= 1 && m <= 12) {
+                return `${MON[m - 1]}-${parts[1]}-${parts[2]}`;
+            }
+        }
+        
+        // Fallback: If it's just one word or format is weird, just dash-replace spaces
+        return v.replace(/\s+/g, '-');
+    }
+
+    // ============================================
+    // REMARK HISTORY FUNCTIONALITY
+    // ============================================
+    const remarkStorageKey = 'remark_history_log';
+
+    function getHistory() {
+        const raw = localStorage.getItem(remarkStorageKey);
+        return raw ? JSON.parse(raw) : [];
+    }
+
+    // 1. Show Suggestions with Delete Buttons
+    function showDropdown() {
+        const history = getHistory();
+        const dropdown = $('#remark-dropdown');
+        const inputVal = $('#r').val().toUpperCase();
+
+        if (history.length === 0) {
+            dropdown.hide();
+            return;
+        }
+
+        const filtered = history.filter(item => item.includes(inputVal));
+
+        if (filtered.length > 0) {
+            let html = '';
+            filtered.forEach((item, index) => {
+                html += `
+                    <div class="remark-item" data-text="${item}">
+                        <span class="remark-text">${item}</span>
+                        <span class="delete-remark" data-index="${history.indexOf(item)}">DELETE</span>
+                    </div>`;
+            });
+            dropdown.html(html).show();
+        } else {
+            dropdown.hide();
+        }
+    }
+
+    // 2. Handle Deleting a Remark
+    $(document).on('click', '.delete-remark', function(e) {
+        e.stopPropagation();
+        
+        const indexToRemove = $(this).data('index');
+        let history = getHistory();
+        
+        if (confirm("Delete this remark from history?")) {
+            history.splice(indexToRemove, 1);
+            localStorage.setItem(remarkStorageKey, JSON.stringify(history));
+            showDropdown();
+        }
+    });
+
+    // 3. Selection from Dropdown - Apply Date Formatting Too
+    $(document).on('click', '.remark-item', function() {
+        const selectedText = $(this).data('text');
+        $('#r').val(selectedText);
+        $('#remark-dropdown').hide();
+        
+        // Apply remark formatting
+        const formatted = selectedText.replace(/  /g, "[sp][sp]").replace(/\n/g, "[nl]");
+        $('#re').val(formatted);
+        
+        // Also apply date formatting to #rd field (or whichever field you want)
+        const dateFormatted = formatDateFormal(selectedText);
+        $('#rd').val(dateFormatted); // Replace #rd with your actual date field ID
+    });
+
+    // Listeners
+    $('#r').on('input focus', showDropdown);
+
+    // 4. Enter Key Listener - Store Data & Apply Formatting
+    $('#r').on('keydown', function(e) {
+        if (e.key === "Enter") {
+            const val = $(this).val().trim().toUpperCase();
+            if (val === "") return;
+
+            let history = getHistory();
+            if (!history.includes(val)) {
+                history.push(val);
+                if (history.length > 10) history.shift();
+                localStorage.setItem(remarkStorageKey, JSON.stringify(history));
+            }
+
+            // Apply remark formatting
+            const formatted = val.replace(/  /g, "[sp][sp]").replace(/\n/g, "[nl]");
+            $('#re').val(formatted);
+            
+            // Apply date formatting
+            const dateFormatted = formatDateFormal(val);
+            $('#rd').val(dateFormatted); // Replace #rd with your actual date field ID
+            
+            $('#remark-dropdown').hide();
+        }
+    });
+
+    // Close dropdown if clicking outside
+    $(document).on('click', function(e) {
+        if (!$(e.target).closest('.col').length) {
+            $('#remark-dropdown').hide();
+        }
+    });
+});
+</script>
+
+<script> // father not applicable script
+	$(document).ready(function() {
+    const fatherFname = $('#father_fname');
+    
+    // Add the new unique IDs here
+    const fieldsToHandle = [
+        'father_mname', 'father_lname', 'father_citizen', 
+        'father_sect', 'father_occupation', 'father_age', 
+        'father_brgy', 'father_city', 'father_province', 
+        'father_country', 'marriage_date', 
+        'marriage_city', 'marriage_province', 'marriage_country' // Updated IDs
+    ];
+
+    function handleFatherLogic() {
+        const val = fatherFname.val().trim().toUpperCase();
+        const isEmpty = val === "";
+        const isNA = (val === "NOT APPLICABLE" || val === "UNKNOWN");
+
+        // 1. Disable fields based on whether field 14 is empty or N/A
+        fieldsToHandle.forEach(id => {
+            $('#' + id).prop('disabled', isEmpty || isNA);
+        });
+
+        // 2. Auto-fill logic for "NOT APPLICABLE"
+        if (isNA) {
+            $('#father_citizen').val("NOT APPLICABLE");
+            $('#father_sect').val("NOT APPLICABLE");
+            $('#father_occupation').val("NOT APPLICABLE");
+            $('#father_city').val("NOT APPLICABLE");
+            $('#father_age').val("N/A");
+            
+            // Auto-fill the specific marriage fields
+            $('#marriage_date').val("NOT APPLICABLE");
+            $('#marriage_city').val("NOT APPLICABLE");
+            $('#marriage_province').val("NOT APPLICABLE");
+            $('#marriage_country').val("NOT APPLICABLE");
+            
+            $('#father_lname').val("");
+            $('#father_mname').val("");
+        }
+    }
+
+    fatherFname.on('input keydown', function(e) {
+        if (e.type === 'input' || e.key === "Enter") {
+            handleFatherLogic();
+        }
+    });
+
+    handleFatherLogic();
+});
+</script>
+<script>
+	// Function to handle Enter key on Country fields
+function handleCountryEnter(event) {
+    if (event.key === "Enter") {
+        event.preventDefault(); // Prevents moving to next line/field immediately
+        
+        let val = event.target.value.trim().toUpperCase();
+        
+        // If the box is empty, default to PHILIPPINES
+        if (val === "") {
+            event.target.value = "PHILIPPINES";
+        } else {
+            // If the user typed something else, keep their changed value
+            event.target.value = val;
+        }
+        
+        // Move focus to the next logical input box
+        const inputs = document.querySelectorAll(".form-control");
+        const index = Array.from(inputs).indexOf(event.target);
+        if (index > -1 && inputs[index + 1]) {
+            inputs[index + 1].focus();
+        }
+    }
+}
+
+// Attach the listener to Mother, Father, and Late Registration Country fields
+document.getElementById("mother_country").addEventListener("keydown", handleCountryEnter);
+document.getElementById("father_country").addEventListener("keydown", handleCountryEnter);
+document.getElementById("late_citizen").addEventListener("keydown", handleCountryEnter);
+</script>
+
+<script>
+		$(document).ready(function() {
+
+			// 1. Copy Child's Middle Name -> Mother's Maiden Last Name
+			$('#child_mname').on('keydown', function(e) {
+				if (e.key === "Enter") {
+					e.preventDefault(); 
+					$('#mother_lname').val($(this).val());
+					$('#child_lname').focus(); 
+				}
+			});
+			$('#child_lname').on('keydown', function(e) {
+				if (e.key === "Enter") {
+					e.preventDefault(); 
+					$('#father_lname').val($(this).val());
+					$('#child_lname').focus(); 
+				} 
+			});
+		});
+</script>
+
+<script>
+$(document).ready(function() {
+    function saveToMemory() {
+        // 1. Get current form values
+        const newData = {
+            child_fname: $('#child_fname').val(),
+            child_mname: $('#child_mname').val(),
+            child_lname: $('#child_lname').val(),
+            father_fname: $('#father_fname').val(),
+            father_mname: $('#father_mname').val(),
+            father_lname: $('#father_lname').val(),
+            mother_fname: $('input[name="mother_fname"]').val(),
+            mother_mname: $('input[name="mother_mname"]').val(),
+            mother_lname: $('#mother_lname').val(),
+            birth_day: $('#birth_day').val(),
+            birth_place: ( " " + $('#birth_city').val() + " " + $('#birth_province').val()).trim(),
+            marriage_date: $('#marriage_date').val(), 
+            marriage_place: $('#marriage_place').val(),
+            civil_name: $('#civil_name').val(),
+            civil_position: $('#civil_position').val(),
+            informant_name: $('#informant_name').val(),
+            informant_address: $('#informant_address').val(),
+            rel_child: $('#rel_child').val()
+        };
+
+        // 2. Retrieve existing data to compare
+        const rawOldData = localStorage.getItem('birth_form_data');
+        const oldData = rawOldData ? JSON.parse(rawOldData) : {}; // Use JSON.parse to turn string into data
+
+        // 3. Prevent duplication: Compare stringified versions
+        if (JSON.stringify(newData) !== JSON.stringify(oldData)) {
+            localStorage.setItem('birth_form_data', JSON.stringify(newData));
+            // Trigger log refresh only if data is new
+            if (typeof refreshLog === "function") refreshLog();
+        }
+    }
+
+    // Trigger save only on blur (leaving the box) or change to reduce unnecessary processing
+    $('input').on('blur change', saveToMemory);
+});
+</script>
+
+<script>
+		// Listener to clear the entire field on a single Backspace press
+	$(document).on('keydown', 'input', function(e) {
+		if (e.key === "Backspace") {
+			// Clear the current input value immediately
+			$(this).val('');
+			
+
+			$(this).trigger('input');
+		}
 	});
 </script>
 
 <script>
-document.getElementById("attendant_date").addEventListener("keydown", function(event) {
-    if (event.key === "Enter") { // When Enter is pressed
-        formatDateAtt();
-    }
-});
 
+	$(document).ready(function() {
+    // List of IDs that should trigger current date on Enter
+    const dateFieldIds = [
+        'birth_day', 
+        'marriage_date', 
+        'attendant_date', 
+        'informant_date', 
+        'prepared_date', 
+        'received_date', 
+        'civil_date'
+    ];
 
-function formatDateAtt() {
-    let input = document.getElementById("attendant_date").value.trim();
-    
-    let date;
-    if (input.includes("/")) {
-        let parts = input.split("/");
-        
-        if (parts.length === 3) {
-            // Ensure month and day are two digits
-            let month = parts[0].padStart(2, '0');
-            let day = parts[1].padStart(2, '0');
-            let year = parts[2];
+    // Listen for Enter key on these specific fields
+    $('input').on('keydown', function(e) {
+        if (e.key === "Enter") {
+            const currentId = $(this).attr('id');
 
-            if (parts[0].length === 4) { 
-                // YYYY-MM-DD format
-                date = new Date(day, month - 1, year);
-            } else {
-                // DD-MM-YYYY format
-                date = new Date(year, month - 1, day);
+            if (dateFieldIds.includes(currentId)) {
+                // If the box is empty, inject current date
+                if ($(this).val().trim() === "") {
+                    e.preventDefault(); // Stop move-to-next-field temporarily
+                    
+                    const now = new Date();
+                    const options = { month: 'long', day: 'numeric', year: 'numeric' };
+                    // Format: FEBRUARY 19, 2026
+                    const formattedDate = now.toLocaleDateString('en-US', options).toUpperCase();
+
+                    $(this).val(formattedDate);
+                    
+                    // Trigger your existing saveToMemory function
+                    if (typeof saveToMemory === "function") {
+                        saveToMemory();
+                    }
+                }
             }
         }
-    }
+    });
+});
 
-    if (date instanceof Date && !isNaN(date)) {
-        let formattedDay = date.getDate();
-        let formattedMonth = date.toLocaleString('en-US', { month: 'long' });
-        let formattedYear = date.getFullYear();
-        
-        document.getElementById("attendant_date").value = `${formattedMonth} ${formattedDay}  ${formattedYear}`;
-    } else {
-        document.getElementById("attendant_date").value = "Invalid date format";
-    }
-}
 </script>
 
 <script>
-document.getElementById("informant_date").addEventListener("keydown", function(event) {
-    if (event.key === "Enter") { // When Enter is pressed
-        formatDateinf();
-    }
-});
+	$(document).ready(function() {
 
-
-function formatDateinf() {
-    let input = document.getElementById("informant_date").value.trim();
+	function formatDateFormal(inputVal) {
+    if (!inputVal) return "";
     
-    let date;
-    if (input.includes("/")) {
-        let parts = input.split("/");
-        
-        if (parts.length === 3) {
-            // Ensure month and day are two digits
-            let month = parts[0].padStart(2, '0');
-            let day = parts[1].padStart(2, '0');
-            let year = parts[2];
+    const MON = ["JANUARY", "FEBRUARY", "MARCH", "APRIL", "MAY", "JUNE", 
+                 "JULY", "AUGUST", "SEPTEMBER", "OCTOBER", "NOVEMBER", "DECEMBER"];
 
-            if (parts[0].length === 4) { 
-                // YYYY-MM-DD format
-                date = new Date(day, month - 1, year);
-            } else {
-                // DD-MM-YYYY format
-                date = new Date(year, month - 1, day);
-            }
+    // Clean input and make uppercase
+    let v = inputVal.trim().toUpperCase();
+    // Split by any common separator: space, slash, dot, or existing dash
+    let parts = v.split(/[\s\/\.-]+/);
+
+    if (parts.length === 3) {
+        let day, month, year;
+
+        // Scenario A: Input is "10 OCTOBER 2004" (Day Month Year)
+        if (MON.includes(parts[1])) {
+            day = parts[0];
+            month = parts[1];
+            year = parts[2];
+            return `${day} ${month} ${year}`;
+        }
+        
+        // Scenario B: Input is "OCTOBER 10 2004" (Already Month Day Year)
+        if (MON.includes(parts[0])) {
+            return `${parts[0]} ${parts[1]} ${parts[2]}`;
+        }
+
+        // Scenario C: Numeric Input "10-10-2004" (Assuming MM-DD-YYYY)
+        const m = parseInt(parts[0], 10);
+        if (m >= 1 && m <= 12) {
+            return `${parts[1]} ${MON[m - 1]}  ${parts[2]}`;
         }
     }
-
-    if (date instanceof Date && !isNaN(date)) {
-        let formattedDay = date.getDate();
-        let formattedMonth = date.toLocaleString('en-US', { month: 'long' });
-        let formattedYear = date.getFullYear();
-        
-        document.getElementById("informant_date").value = `${formattedMonth} ${formattedDay}  ${formattedYear}`;
-    } else {
-        document.getElementById("informant_date").value = "Invalid date format";
-    }
-}
-</script>
-
-<script>
-document.getElementById("prepared_date").addEventListener("keydown", function(event) {
-    if (event.key === "Enter") { // When Enter is pressed
-        formatDateprep();
-    }
-});
-
-
-function formatDateprep() {
-    let input = document.getElementById("prepared_date").value.trim();
     
-    let date;
-    if (input.includes("/")) {
-        let parts = input.split("/");
-        
-        if (parts.length === 3) {
-            // Ensure month and day are two digits
-            let month = parts[0].padStart(2, '0');
-            let day = parts[1].padStart(2, '0');
-            let year = parts[2];
-
-            if (parts[0].length === 4) { 
-                // YYYY-MM-DD format
-                date = new Date(day, month - 1, year);
-            } else {
-                // DD-MM-YYYY format
-                date = new Date(year, month - 1, day);
-            }
-        }
-    }
-
-    if (date instanceof Date && !isNaN(date)) {
-        let formattedDay = date.getDate();
-        let formattedMonth = date.toLocaleString('en-US', { month: 'long' });
-        let formattedYear = date.getFullYear();
-        
-        document.getElementById("prepared_date").value = `${formattedMonth} ${formattedDay}  ${formattedYear}`;
-    } else {
-        document.getElementById("prepared_date").value = "Invalid date format";
-    }
+    // Fallback: If it's just one word or format is weird, just dash-replace spaces
+    return v.replace(/\s+/g, '-');
 }
-</script>
 
+  $('#birth_day').on('keydown', function(e) {
+                if (e.key === 'Enter' || e.keyCode === 13) {
+                    // Get the current value
+                    let originalValue = $(this).val();
+                    // Call your function and get the formatted result
+                    let formattedValue = formatDateFormal(originalValue);
+                    // Update the input with the formatted value
+                    $(this).val(formattedValue);
+                }
+            });
 
-<script>
-document.getElementById("received_date").addEventListener("keydown", function(event) {
-    if (event.key === "Enter") { // When Enter is pressed
-        formatDaterec();
-    }
-});
-
-
-function formatDaterec() {
-    let input = document.getElementById("received_date").value.trim();
-    
-    let date;
-    if (input.includes("/")) {
-        let parts = input.split("/");
-        
-        if (parts.length === 3) {
-            // Ensure month and day are two digits
-            let month = parts[0].padStart(2, '0');
-            let day = parts[1].padStart(2, '0');
-            let year = parts[2];
-
-            if (parts[0].length === 4) { 
-                // YYYY-MM-DD format
-                date = new Date(day, month - 1, year);
-            } else {
-                // DD-MM-YYYY format
-                date = new Date(year, month - 1, day);
-            }
-        }
-    }
-
-    if (date instanceof Date && !isNaN(date)) {
-        let formattedDay = date.getDate();
-        let formattedMonth = date.toLocaleString('en-US', { month: 'long' });
-        let formattedYear = date.getFullYear();
-        
-        document.getElementById("received_date").value = `${formattedMonth} ${formattedDay}  ${formattedYear}`;
-    } else {
-        document.getElementById("received_date").value = "Invalid date format";
-    }
-}
-</script>
-
-<script>
-document.getElementById("civil_date").addEventListener("keydown", function(event) {
-    if (event.key === "Enter") { // When Enter is pressed
-        formatDateciv();
-    }
-});
-
-
-function formatDateciv() {
-    let input = document.getElementById("civil_date").value.trim();
-    
-    let date;
-    if (input.includes("/")) {
-        let parts = input.split("/");
-        
-        if (parts.length === 3) {
-            // Ensure month and day are two digits
-            let month = parts[0].padStart(2, '0');
-            let day = parts[1].padStart(2, '0');
-            let year = parts[2];
-
-            if (parts[0].length === 4) { 
-                // YYYY-MM-DD format
-                date = new Date(day, month - 1, year);
-            } else {
-                // DD-MM-YYYY format
-                date = new Date(year, month - 1, day);
-            }
-        }
-    }
-
-    if (date instanceof Date && !isNaN(date)) {
-        let formattedDay = date.getDate();
-        let formattedMonth = date.toLocaleString('en-US', { month: 'long' });
-        let formattedYear = date.getFullYear();
-        
-        document.getElementById("civil_date").value = `${formattedMonth} ${formattedDay}  ${formattedYear}`;
-    } else {
-        document.getElementById("civil_date").value = "Invalid date format";
-    }
-}
-</script>
-
-<script>
-	document.getElementById("father_fname").addEventListener("keydown", function(event) {
-    if (event.key === "Enter") { // When Enter is pressed
-		var tatangfname = document.getElementById("father_fname").value;
-		if ((tatangfname == "UNKNOWN") || (tatangfname == "unknown")) {
-        document.getElementById("father_citizen").value = "Not Applicable";
-		document.getElementById("father_sect").value = "Not Applicable";
-		document.getElementById("father_occupation").value = "Not Applicable";
-		document.getElementById("father_brgy").value = "Not Applicable";
-		document.getElementById("father_city").value = "Not Applicable";
-		document.getElementById("father_province").value = "Not Applicable";
-		document.getElementById("marriage_place").value = "Not Applicable";
-		document.getElementById("marriage_date").value = "Not Applicable";
-		document.getElementById("father_country").value = "Not Applicable";
-		document.getElementById("father_age").value = "N/A";
-		document.getElementById("father_lname").value = "";
-		}
-    }
-});
+	});
 </script>
