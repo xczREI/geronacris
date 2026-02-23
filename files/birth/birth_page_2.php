@@ -241,7 +241,7 @@
 				<h6>&emsp;&emsp;&emsp;&emsp;3.&emsp;That I/he/she is a citizen of
 				<div class="custom-control custom-checkbox custom-control-inline mt-1" style="padding: 0; width: 50%;margin-right: 0;">
 					<!-- Default to PHILIPPINES but editable -->
-					<input type="text" class="form-control form-control-sm" id="late_citizen" name="late_citizen" value="PHILIPPINES">
+					<input type="text" class="form-control form-control-sm" id="late_citizen" name="late_citizen">
 				</div>
 				.
 				</h6>
@@ -474,36 +474,32 @@ $(document).ready(function() {
     const MON = ["JANUARY", "FEBRUARY", "MARCH", "APRIL", "MAY", "JUNE", 
                  "JULY", "AUGUST", "SEPTEMBER", "OCTOBER", "NOVEMBER", "DECEMBER"];
 
-    // Clean input and make uppercase
-    let v = inputVal.trim().toUpperCase();
-    // Split by any common separator: space, slash, dot, or existing dash
+    // Clean extra spaces and force uppercase
+    let v = inputVal.replace(/\s\s+/g, ' ').trim().toUpperCase();
     let parts = v.split(/[\s\/\.-]+/);
 
     if (parts.length === 3) {
-        let day, month, year;
+        let day = parts[0];
+        let month = parts[1];
+        let year = parts[2];
 
-        // Scenario A: Input is "10 OCTOBER 2004" (Day Month Year)
-        if (MON.includes(parts[1])) {
-            day = parts[0];
-            month = parts[1];
-            year = parts[2];
-            return `${month} ${day}, ${year}`;
+        // Scenario: Month is already a word (e.g., "10 OCTOBER 2004")
+        if (MON.includes(month)) {
+            return `${month} ${day}, ${year}`; // Returns OCTOBER 10 2004
         }
         
-        // Scenario B: Input is "OCTOBER 10 2004" (Already Month Day Year)
-        if (MON.includes(parts[0])) {
-            return `${parts[0]} ${parts[1]}, ${parts[2]}`;
+        // Scenario: Month is first (e.g., "OCTOBER 10 2004")
+        if (MON.includes(day)) {
+            return `${day} ${parts[1]}, ${parts[2]}`;
         }
 
-        // Scenario C: Numeric Input "10-10-2004" (Assuming MM-DD-YYYY)
-        const m = parseInt(parts[0], 10);
-        if (m >= 1 && m <= 12) {
-            return `${MON[m - 1]} ${parts[1]}, ${parts[2]}`;
+        // Scenario: Numeric (e.g., "10 10 2004") -> Middle number becomes Month name
+        const mIdx = parseInt(month, 10);
+        if (!isNaN(mIdx) && mIdx >= 1 && mIdx <= 12) {
+            return `${MON[mIdx - 1]} ${day}, ${year}`;
         }
     }
-    
-    // Fallback: If it's just one word or format is weird, just dash-replace spaces
-    return v.replace(/\s+/g, '-');
+    return v;
 }
 
   function syncCurrentField(focusedElement) {
@@ -561,13 +557,17 @@ $(document).ready(function() {
             valueToFill = data.birth_place || ""; 
             break;
 
-        // --- BIRTH DATE ---
-        case 'birth_date':
-        case 'bday2':
-        case 'bday1':
-        case 'late_birth_on': // Fixed syntax here
-            valueToFill = formatDateFormal(data.birth_day || "");
-            break;
+		case 'birth_date':
+		case 'bday2':
+		case 'bday1':
+		case 'late_birth_on':
+			// Pull the 'birth_day' key saved by Page 1
+			let storedDate = data.birth_day || ""; 
+			if (storedDate) {
+				// This will now return "MONTH DAY YEAR"
+				valueToFill = formatDateFormal(storedDate);
+			}
+			break;
 
         // --- 3. CITIZENSHIP (NEW) ---
         case 'late_citizen': 
@@ -619,8 +619,10 @@ $(document).ready(function() {
         case 'attend_birth_by':
             valueToFill = data.attendant_name || "";
             break;
+
+
         case 'who_resides_at':
-            valueToFill = data.attendant_address1 || "";
+            valueToFill = data.attendant_address || "";
             break;
     }
 
