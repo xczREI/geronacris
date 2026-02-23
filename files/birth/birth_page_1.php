@@ -352,7 +352,7 @@
 						<div class="col-3" style="border-right:2px solid green;">
 							<h6 style="padding-top:2px;">2.&nbsp;SEX<span style="color:green;">(Male/Female)</span></h6>
 							<div class="input-group input-group-sm">
-								<select name="sex" class="form-control" tabindex="4">
+								<select id="child_sex"name="sex" class="form-control" tabindex="4">
 									<option selected style="display:none;"></option>
 									<option value="Male">Male</option>
 									<option value="Female">Female</option>
@@ -407,27 +407,27 @@
 							<h6 style="padding-top:2px;">5a.&nbsp;TYPE OF BIRTH<br>&emsp;&nbsp;&nbsp;<span style="color:green">(Single, Twin, Triplet, etc.)</span></h6>
 							<div class="input-group" style="padding-top:13px;">
 								<!-- UPDATED: Changed to datalist for dropdown but editable -->
-								<input tabindex="9" type="text" list="birth_type_list" class="form-control form-control-sm" placeholder="" id="birth_type" name="birth_type" onkeypress="return isTextKey(event)">
+								<input tabindex="9" type="text" list="birth_type_list" class="form-control form-control-sm text-center" placeholder="" id="birth_type" name="birth_type" onkeypress="return isTextKey(event)">
 							</div>
 						</div>
 						<div class="col-3" style="border-top:2px solid green; border-right:2px solid green;">
 							<h6 style="padding-top:2px;">5b.&nbsp;IF MULTIPLE BIRTH, CHILD WAS<br>&emsp;&nbsp;&nbsp;<span style="color:green;">(First, Second, Third, etc.)</span></h6>
 							<div class="input-group" style="padding-top:17px;">
 								<!-- UPDATED: Changed to datalist for dropdown but editable, auto N/A if Single -->
-								<input tabindex="10" type="text" list="multi_birth_list" class="form-control form-control-sm" placeholder="" id="multi_birth_was" name="multi_birth_was" onkeypress="return isTextKey(event)">
+								<input tabindex="10" type="text" list="multi_birth_list" class="form-control form-control-sm text-center" placeholder="" id="multi_birth_was" name="multi_birth_was" onkeypress="return isTextKey(event)">
 							</div>
 						</div>
 						<div class="col-3" style="border-top:2px solid green; border-right:2px solid green;">
 							<h6 style="padding-top:2px;">5c.&nbsp;BIRTH ORDER<span style="color:green;">(Order of this birth to <br>&emsp;&nbsp;&nbsp;&nbsp;previous live births including fetal death)</span><br>&emsp;&nbsp;&nbsp;<span style="color:green;">(First, Second, Third, etc.)</span></h6>
 							<div class="input-group">
 								<!-- UPDATED: Changed to datalist for dropdown -->
-								<input tabindex="11" type="text" list="birth_order_list" class="form-control form-control-sm" placeholder="" id="birth_order" name="birth_order" onkeypress="return isTextKey(event)">
+								<input tabindex="11" type="text" list="birth_order_list" class="form-control form-control-sm text-center" placeholder="" id="birth_order" name="birth_order" onkeypress="return isTextKey(event)">
 							</div>
 						</div>
 						<div class="col-3" style="border-top:2px solid green;">
 							<h6 style="padding-top:2px;">6.&nbsp;WEIGHT OF BIRTH</h6>
 							<div class="input-group" style="padding-top:29px;">
-								<input tabindex="12" type="text" class="form-control form-control-sm" placeholder="" name="birth_weight" onkeypress="return isNumberKey(event)">
+								<input tabindex="12" type="text" class="form-control form-control-sm text-center" placeholder="" name="birth_weight" onkeypress="return isNumberKey(event)">
 								<span>&nbsp;grams</span>
 							</div>
 						</div>
@@ -482,19 +482,19 @@
 						<div class="col-2" style="border-right:2px solid green;">
 							<h6 style="padding-top:2px;">10a.<span>&nbsp;Total number of<br>&emsp;&emsp; children born alive</span></h6>
 							<div class="input-group">
-								<input tabindex="18" type="text" class="form-control form-control-sm" placeholder="" name="ttl_no_child" onkeypress="return isNumberKey(event)">
+								<input tabindex="18" type="text" class="form-control form-control-sm text-center" placeholder="" name="ttl_no_child" onkeypress="return isNumberKey(event)">
 							</div>
 						</div>
 						<div class="col-2" style="border-right:2px solid green;">
 							<h6 style="padding-top:2px;">10b.<span>&nbsp;No. of children still living including this birth</span></h6>
 							<div class="input-group">
-								<input tabindex="19" type="text" class="form-control form-control-sm" placeholder="" name="no_child_alive" onkeypress="return isNumberKey(event)">
+								<input tabindex="19" type="text" class="form-control form-control-sm text-center" placeholder="" name="no_child_alive" onkeypress="return isNumberKey(event)">
 							</div>
 						</div>
 						<div class="col-2" style="border-right:2px solid green;">
 							<h6 style="padding-top:2px;">10c.<span>&nbsp;No. of children born<br>&emsp; alive but are now dead</span></h6>
 							<div class="input-group">
-								<input tabindex="20" type="text" class="form-control form-control-sm" placeholder="" name="no_child_dead" onkeypress="return isNumberKey(event)">
+								<input tabindex="20" type="text" class="form-control form-control-sm text-center" placeholder="" name="no_child_dead" onkeypress="return isNumberKey(event)">
 							</div>
 						</div>
 						<div class="col-4" style="border-right:2px solid green;">
