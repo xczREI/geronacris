@@ -363,10 +363,19 @@
 							<h6 style="padding-top:2px;">3.&nbsp;DATE OF<br>&emsp;BIRTH</h6>
 						</div>
 						<div class="col-5">
-							<h6 align="center"><span style="color:green;">(Day) - (Month) - (Year)</span></h6>
-							<div class="input-group input-group-sm">
-								<input type="text" tabindex="5" class="form-control form-control-sm" id="birth_day" name="birth_day" placeholder="Example: 9-5-2025">
+							<div class="row">
+								<div class="col-4"><h6 align="center" class="m-0"><span style="color:green;font-size:12px;">(Day)</span></h6></div>
+								<div class="col-4"><h6 align="center" class="m-0"><span style="color:green;font-size:12px;">(Month)</span></h6></div>
+								<div class="col-4"><h6 align="center" class="m-0"><span style="color:green;font-size:12px;">(Year)</span></h6></div>
 							</div>
+							
+							<div class="form-control form-control-sm p-0 d-flex justify-content-between align-items-center" style="background-color: #e9ecef; overflow: hidden;">
+								<input type="text" id="bd_day" class="text-center" style="width: 33.33%; border: none; background: transparent; outline: none;">
+								<input type="text" id="bd_month" class="text-center" style="width: 33.33%; border: none; background: transparent; outline: none;" >
+								<input type="text" id="bd_year" class="text-center" style="width: 33.33%; border: none; background: transparent; outline: none;">
+							</div>
+
+							<input type="hidden" id="child_birth_date" name="child_birth_date" value="<?php echo trim($row['child_birth_date']); ?>">
 						</div>
 					</div><!--close row-->
 					<div class="row" style="border-top:2px solid green;">
@@ -1516,7 +1525,7 @@ $(document).ready(function() {
             mother_fname: $('input[name="mother_fname"]').val(),
             mother_mname: $('input[name="mother_mname"]').val(),
             mother_lname: $('#mother_lname').val(),
-            birth_day: $('#birth_day').val(),
+            birth_day: $('#child_birth_day').val(),
             birth_place: ( " " + $('#birth_city').val() + " " + $('#birth_province').val()).trim(),
             marriage_date: $('#marriage_date').val(), 
             marriage_place: $('#marriage_place').val(),
@@ -1653,4 +1662,29 @@ $(document).ready(function() {
             });
 
 	});
+</script>
+
+<script> //date of birth script
+$(document).ready(function() {
+    // 1. On page load, take the PHP value and split it into the 3 boxes
+    let initialVal = $('#child_birth_date').val().trim();
+    if (initialVal) {
+        let parts = initialVal.split(/[\s\/\.-]+/); // splits by space, dash, or slash
+        if (parts.length >= 3) {
+            $('#bd_day').val(parts[0]);
+            $('#bd_month').val(parts[1]);
+            $('#bd_year').val(parts[2]);
+        }
+    }
+
+    // 2. When the user types in any of the 3 boxes, update the hidden field
+    $('#bd_day, #bd_month, #bd_year').on('input', function() {
+        let d = $('#bd_day').val().trim();
+        let m = $('#bd_month').val().trim();
+        let y = $('#bd_year').val().trim();
+        
+        // Combines them with spaces and saves to the hidden field for database submission
+        $('#child_birth_date').val(d + " " + m + " " + y);
+    });
+});
 </script>
