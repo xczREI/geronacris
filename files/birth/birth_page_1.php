@@ -1664,12 +1664,18 @@ $(document).ready(function() {
 	});
 </script>
 
-<script> //date of birth script
+<script>
 $(document).ready(function() {
-    // 1. On page load, take the PHP value and split it into the 3 boxes
+
+    const MON = ["JANUARY", "FEBRUARY", "MARCH", "APRIL", "MAY", "JUNE", 
+                 "JULY", "AUGUST", "SEPTEMBER", "OCTOBER", "NOVEMBER", "DECEMBER"];
+
+    // ========================================================
+    // 1. SPLIT DATA ON PAGE LOAD
+    // ========================================================
     let initialVal = $('#child_birth_date').val().trim();
     if (initialVal) {
-        let parts = initialVal.split(/[\s\/\.-]+/); // splits by space, dash, or slash
+        let parts = initialVal.split(/[\s\/\.-]+/); 
         if (parts.length >= 3) {
             $('#bd_day').val(parts[0]);
             $('#bd_month').val(parts[1]);
@@ -1677,14 +1683,65 @@ $(document).ready(function() {
         }
     }
 
-    // 2. When the user types in any of the 3 boxes, update the hidden field
+    // ========================================================
+    // 2. COMBINE ON TYPING
+    // ========================================================
     $('#bd_day, #bd_month, #bd_year').on('input', function() {
         let d = $('#bd_day').val().trim();
         let m = $('#bd_month').val().trim();
         let y = $('#bd_year').val().trim();
-        
-        // Combines them with spaces and saves to the hidden field for database submission
         $('#child_birth_date').val(d + " " + m + " " + y);
     });
+
+    // ========================================================
+    // 3. KEYBOARD CONTROLS (SPACE & ENTER FORMATTING)
+    // ========================================================
+    $('#bd_day, #bd_month, #bd_year').on('keydown', function(e) {
+        let currentId = $(this).attr('id');
+
+        // --- IF SPACEBAR IS PRESSED ---
+        if (e.key === " " || e.code === "Space") {
+            e.preventDefault(); // Prevent typing a space
+            
+            if (currentId === 'bd_day') $('#bd_month').focus();
+            else if (currentId === 'bd_month') $('#bd_year').focus();
+            else if (currentId === 'bd_year') $('#birth_brgy').focus(); 
+        }
+
+        // --- IF ENTER KEY IS PRESSED ---
+        if (e.key === "Enter" || e.keyCode === 13) {
+            e.preventDefault();
+            
+            // Bonus: If you pasted a full date like "10/10/2004" into ONE box, this splits it
+            let currentVal = $(this).val().trim();
+            let parts = currentVal.split(/[\s\/\.-]+/);
+            if (parts.length === 3) {
+                $('#bd_day').val(parts[0]);
+                $('#bd_month').val(parts[1]);
+                $('#bd_year').val(parts[2]);
+            }
+            
+            // Format the month (Turn "10" into "OCTOBER")
+            let mVal = $('#bd_month').val().trim();
+            if (!isNaN(mVal) && mVal !== "") {
+                let monthIdx = parseInt(mVal, 10);
+                if (monthIdx >= 1 && monthIdx <= 12) {
+                    $('#bd_month').val(MON[monthIdx - 1]);
+                }
+            } else {
+                $('#bd_month').val(mVal.toUpperCase()); // Force uppercase if they typed letters
+            }
+
+            // Update the hidden form field with the newly formatted date
+            let finalD = $('#bd_day').val().trim();
+            let finalM = $('#bd_month').val().trim();
+            let finalY = $('#bd_year').val().trim();
+            $('#child_birth_date').val(finalD + " " + finalM + " " + finalY);
+
+            // Move cursor to the next form input automatically
+            $('#birth_brgy').focus();
+        }
+    });
+
 });
 </script>
