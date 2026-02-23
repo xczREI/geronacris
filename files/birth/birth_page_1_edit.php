@@ -1,16 +1,13 @@
 <div class="ctf-birth pt-3" style="width:960px;margin: auto;">
-	<!--birth form-->
 	<div class="form" style="padding:0 15px 0 15px;">
-		<!-- Header -->
-		<div class="row"><!--grid of header-->
-  			<div class="col-9" style="border: 2px solid green;">
+		<div class="row"><div class="col-9" style="border: 2px solid green;">
 			  	<p class="m1">Municipal Form No. 102</p>
 			  	<p class="m1">&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;<span align="center" class="m2" style="font-size: 15px;">Republic of the Philippines</span></p>
 			  	<p align="center" class="m2" style="font-size: 16px;">OFFICE OF THE CIVIL REGISTRAR GENERAL</p>
 			  	<p align="center" class="m2" style="font-size: 30px; font-weight: bold;">CERTIFICATE OF LIVE BIRTH</p>
   			</div>
   			<div class="col-3" id="book" style="border: 2px solid green; border-left:none; border-bottom:none;">
-     			<div class="form-group">
+      			<div class="form-group">
 					<label id="ltxt">Book No.</label>
 					<input type="text" class="bookNo form-control form-control-sm" id="txt" id="bookno" name="book_no" value="<?php echo $row['book_no']; ?>">
 
@@ -22,10 +19,7 @@
 					<input type="hidden" name="emp_name" id="emp_name" value="<?php echo $_SESSION['lastname']; ?>">
 				</div>
   			</div>
-		</div><!--close row-->
-  		<!-- Registry Info -->
-	  	<div class="row"><!--row of city-->
-		  	<div class="col-9 pl-0" style="border: 2px solid green; border-top: none;">
+		</div><div class="row"><div class="col-9 pl-0" style="border: 2px solid green; border-top: none;">
 		  		<div class="input-group mt-1">
 			  		<div class="input-group-prepend">
 			      		<span class="input-group-text bg-white p-0" style="border:none; color:black;">&nbsp;Province&nbsp;&emsp;&emsp;&emsp;&emsp;</span>
@@ -46,9 +40,7 @@
 			  		<div id="error"></div>
 				</div>
 		  	</div>
-	  	</div><!--close row-->
-		<!-- Child Info -->
-		<div class="row">
+	  	</div><div class="row">
   			<div class="child" style="border: 2px solid green;border-top:none;padding: 5em 3px 0 3px;width: 30px;" align="center">
   				<h4>C<br>H<br>I<br>L<br>D</h4>
   			</div>
@@ -75,8 +67,7 @@
 					    	<input type="text" class="form-control form-control-sm" id="child_lname" name="child_lname" style="text-align:center;" value="<?php echo $row['child_lname']; ?>" onkeypress="return isTextKey(event)">
 					  	</div>
 			  		</div>
-	  			</div><!--close row-->
-				<div class="row" style="border-top: 2px solid green;">
+	  			</div><div class="row" style="border-top: 2px solid green;">
 	  				<div class="col-3" style="border-right: 2px solid green;">
 	  		  			<h6 style="padding-top:2px; font-size:14px;">2.&nbsp;SEX<span style="color:green;font-size:12px;">(Male/Female)</span></h6>
 	  		  			<div class="input-group input-group-sm">
@@ -105,8 +96,7 @@
 
 						<input type="hidden" id="child_birth_date" name="child_birth_date" value="<?php echo trim($row['child_birth_date']); ?>">
 					</div>
-	    		</div><!--close row-->
-		  	    <div class="row" style="border-top: 2px solid green;">
+	  &nbsp; 		</div>&nbsp; <div class="row" style="border-top: 2px solid green;">
 			  		<div class="col-2">
 			  		  	<h6 style="padding-top:2px; font-size:14px;">4.&nbsp;PLACE OF <br>&emsp;BIRTH</h6>
 			  		</div>
@@ -128,8 +118,7 @@
 					    	<input type="text" class="form-control form-control-sm" id="birth_province" name="birth_province" value="<?php echo $row['birth_province']; ?>" onkeypress="return isTextKey(event)">
 					  	</div>
 			  		</div>
-			  	</div><!--close row-->
-			    <div class="row">
+			  	</div>&nbsp; <div class="row">
 			  		<div class="col-3" style="border-top: 2px solid green;border-right: 2px solid green;">
 			  		  	<h6 style="padding-top:2px; font-size:14px;">5a.&nbsp;TYPE OF BIRTH<br>&emsp;&nbsp;&nbsp;<span style="color:green;font-size:12px">(Single, Twin, Triplet, etc.)</span></h6>
 					  	<div class="input-group" style="padding-top: 13px;">
@@ -149,18 +138,13 @@
 					  	</div>
 			  		</div>
 			  		<div class="col-3" style="border-top: 2px solid green;">
-			  			<h6 style="padding-top:2px; font-size:14px;">5d.&nbsp;WEIGHT OF BIRTH</h6>
+			  			<h6 style="padding-top:2px; font-size:14px;">6.&nbsp;WEIGHT OF BIRTH</h6>
 					  	<div class="input-group" style="padding-top: 29px;">
 					    	<input type="text" class="form-control form-control-sm" placeholder="" name="birth_weight" style="text-align:center;" value="<?php echo $row['birth_weight']; ?>" onkeypress="return isNumberKey(event)">
 					    	<span style="font-size:14px;">&nbsp;grams</span>
 					  	</div>
 			  		</div>
-		  	    </div><!--close row-->
-
-			</div><!--close col-->
-		</div><!--close row-->
-  		<!-- Mother Info -->
-		<div class="row">
+		  	  &nbsp; </div></div></div><div class="row">
 			<div class="mother" style="border: 2px solid green;border-top:none;padding: 4em 3px 0 1px;" align="center">
   				<h4>M<br>O<br>T<br>H<br>E<br>R</h4>
   			</div>
@@ -187,8 +171,7 @@
 					    	<input type="text" class="form-control form-control-sm" id="mother_lname" name="mother_lname" style="text-align:center;" value="<?php echo $row['mother_lname']; ?>" onkeypress="return isTextKey(event)">
 					  	</div>
 			  		</div>
-	  			</div><!--close row-->
-  				<div class="row" style="border-top: 2px solid green;">
+	  			</div><div class="row" style="border-top: 2px solid green;">
 	  				<div class="col-6" style="border-right: 2px solid green;">
 	  		  			<h6 style="padding-top:2px;font-size: 14px;">8.&nbsp;CITIZENSHIP</h6>
 	  		  			<div class="input-group">
@@ -201,8 +184,7 @@
 					    	<input type="text" class="form-control form-control-sm" name="mother_sect" value="<?php echo $row['mother_religion']; ?>" onkeypress="return isTextKey(event)">
 					  	</div>
 			  		</div>
-	    		</div><!--close row-->
-		  	    <div class="row" style="border-top: 2px solid green;">
+	  &nbsp; 		</div>&nbsp; <div class="row" style="border-top: 2px solid green;">
 			  		<div class="col-2" style="border-right: 2px solid green;">
 			  		  	<h6 style="padding-top:2px; font-size:14px;">10a.<span style="font-size: 11px;">&nbsp;Total number of<br>&emsp;&emsp; children born alive</span></h6>
 			  		  	<div class="input-group">
@@ -233,8 +215,7 @@
 					    	<input type="text" class="form-control form-control-sm" name="mother_age" style="text-align:center;" value="<?php echo $row['mother_age']; ?>" onkeypress="return isNumberKey(event)">
 					  	</div>
 			  		</div>
-			  	</div><!--close row-->
-			    <div class="row" style="border-top: 2px solid green;">
+			  	</div>&nbsp; <div class="row" style="border-top: 2px solid green;">
 			  		<div class="col-1">
 			  		  	<h6 style="padding-top:2px; font-size:14px;">13.&nbsp;RESIDENCE</h6>
 			  		</div>
@@ -262,12 +243,7 @@
 					    	<input type="text" class="form-control form-control-sm" name="mother_country" value="<?php echo $row['mother_country']; ?>" onkeypress="return isTextKey(event)">
 					  	</div>
 			  		</div>
-			  	</div><!--close row-->
-
-		  	</div><!--close row-->
-		</div><!--close col-->
- 		<!-- Father Info -->
-		<div class="row">
+			  	</div></div></div><div class="row">
 			<div class="father" style="border: 2px solid green;border-top:none;padding: 1em 3px 0 3px;width: 30px;" align="center">
   				<h4>F<br>A<br>T<br>H<br>E<br>R</h4>
   			</div>
@@ -294,8 +270,7 @@
 					    	<input type="text" class="form-control form-control-sm" id="father_lname" name="father_lname" style="text-align:center;" value="<?php echo $row['father_lname']; ?>" onkeypress="return isTextKey(event)">
 					  	</div>
 			  		</div>
-	  			</div><!--close row-->
-  				<div class="row" style="border-top: 2px solid green;">
+	  			</div><div class="row" style="border-top: 2px solid green;">
 	  				<div class="col-3" style="border-right: 2px solid green;">
 	  		  			<h6><span style="font-size: 14px;">15.&nbsp;CITIZENSHIP</span></h6>
 	  		  			<div class="input-group" style="padding-top: 15px;">
@@ -320,8 +295,7 @@
 					    	<input type="text" class="form-control form-control-sm" id = "father_age" name="father_age" style="text-align:center;" value="<?php echo $row['father_age']; ?>" onkeypress="return isNumberKey(event)">
 					  	</div>
 			  		</div>
-	    		</div><!--close row-->
-			    <div class="row" style="border-top: 2px solid green;">
+	  &nbsp; 		</div>&nbsp; <div class="row" style="border-top: 2px solid green;">
 			  		<div class="col-1">
 			  		  	<h6 style="padding-top:2px; font-size:14px;">19.&nbsp;RESIDENCE</h6>
 			  		</div>
@@ -349,19 +323,13 @@
 					    	<input type="text" class="form-control form-control-sm" id="father_country"name="father_country" value="<?php echo $row['father_country']; ?>" onkeypress="return isTextKey(event)">
 					  	</div>
 			  		</div>
-			  	</div><!--close row-->
-
-		  	</div><!--close row-->
-		</div><!--close col-->
-		<!-- Marraige Info -->
-		<div class="row" style="border: 2px solid green;border-top:none;">
+			  	</div></div></div><div class="row" style="border: 2px solid green;border-top:none;">
   			<div class="col">
 	  			<div class="row">
 	  				<div class="col">
 	  		  			<h6 style="padding:0;">MARRIAGE OF PARENTS <span style="font-size: 12px;">(If not married, accomplish Affidavit of Acknowledgement/Admission of Paternity at the back.)</span></h6>
 	  				</div>
-	  			</div><!--close row-->
-  				<div class="row" style="border-top: 2px solid green;">
+	  			</div><div class="row" style="border-top: 2px solid green;">
 	  				<div class="col-1">
 	  		  			<h6 style="padding-top:2px; font-size:14px;">20a.&nbsp;DATE</h6>
 	  				</div>
@@ -398,8 +366,13 @@
 								</div>
 							</div> 
 						</div>
+<<<<<<< HEAD
 	    		</div><!--close row-->
 			    <div class="row" style="border-top: 2px solid green;">
+=======
+			  		</div>
+	  &nbsp; 		</div>&nbsp; <div class="row" style="border-top: 2px solid green;">
+>>>>>>> ebd1ee7d80d3e7af78b3135b134f5723f010c5a4
 			  		<div class="col">
 			  		  	<h6 style="padding-top:2px; font-size:14px;">21a.&nbsp;ATTENDANT</h6>
 			  		  	<div class="row">
@@ -423,12 +396,7 @@
 							</div>
 			  			</div>	
 					</div>
-			  	</div><!--close row-->
-
-		  	</div><!--close row-->
-		</div><!--close col-->
-		<!-- Cerf Attendant -->
-		<div class="row" style="border: 2px solid green;border-top:none;">
+			  	</div></div></div><div class="row" style="border: 2px solid green;border-top:none;">
   			<div class="col">
 	  			<div class="row">
 	  				<div class="col">
@@ -440,8 +408,7 @@
 					    am/pm on the date of birth specified above.   
 						</h6>
 	  				</div>
-	  			</div><!--close row-->
-  				<div class="row">
+	  			</div><div class="row">
 	  				<div class="col-6">
 	  		  			<div class="input-group mt-1">
 			  				<div class="input-group-prepend">
@@ -479,12 +446,7 @@
 			    			<input type="text" class="form-control form-control-sm" id="attendant_date" name="attendant_date" value="<?php echo $row['attendant_date']; ?>">
 						</div>
 			  		</div>
-	    		</div><!--close row-->
-
-		  	</div><!--close row-->
-		</div><!--close col-->
- 		<!-- Cerf Informant -->
-		<div class="row" style="border: 2px solid green;border-top:none;">
+	  &nbsp; 		</div></div></div><div class="row" style="border: 2px solid green;border-top:none;">
   			<div class="col">
   				<div class="row">
 	  				<div class="col-6" style="border-right: 2px solid green;">
@@ -548,12 +510,7 @@
 			    			<input type="text" class="form-control form-control-sm" id="prepared_date" name="prepared_date" value="<?php echo $row['prepared_date']; ?>">
 						</div>
 			  		</div>
-	    		</div><!--close row-->
-
-		  	</div><!--close row-->
-		</div><!--close col-->
-		<!-- Received by -->
-		<div class="row" style="border: 2px solid green;border-top:none;">
+	  &nbsp; 		</div></div></div><div class="row" style="border: 2px solid green;border-top:none;">
   			<div class="col">
   				<div class="row">
 	  				<div class="col-6" style="border-right: 2px solid green;">
@@ -610,12 +567,7 @@
 			    			<input type="text" class="form-control form-control-sm" id="civil_date" name="civil_date" value="<?php echo $row['civil_date']; ?>">
 						</div>
 			  		</div>
-	    		</div><!--close row-->
-
-		  	</div><!--close row-->
-		</div><!--close col-->
-		<!-- Remarks -->
-		<div class="row" style="border: 2px solid green;border-top:none;">
+	  &nbsp; 		</div></div></div><div class="row" style="border: 2px solid green;border-top:none;">
   			<div class="col">
   				<div class="row">
 	  				<div class="col">
@@ -626,23 +578,16 @@
 						?>
 		  					<textarea style="width: 100%; height: 80px; font-size: 13px;" id="r"><?php echo $remarks; ?></textarea>
 				  			<textarea style="width: 100%; height: 80px; font-size: 13px; display: none;" name="remarks" id="re"><?php echo $row['remarks']; ?></textarea>
-			  		</div>
-	    		</div><!--close row-->
-	    		<script>
-	    			$(document).ready(function(){
-	    				$("#r").keyup(function(){
-	    					var r = $("#r").val();
-	    					r = r.replace(/  /g, "[sp][sp]");
-	    					r = r.replace(/\n/g, "[nl]");
-	    					$("#re").val(r);
-	    				});
-	    			});
-	    		</script>
+			  		</div> 		</div> 		<script> 			$(document).ready(function(){
+	   				$("#r").keyup(function(){
+	   					var r = $("#r").val();
+	   					r = r.replace(/  /g, "[sp][sp]");
+	   					r = r.replace(/\n/g, "[nl]");
+	   					$("#re").val(r);
+	   				});
+	   			}); 		</script>
 
-		  	</div><!--close row-->
-		</div><!--close col-->
-		<!-- To be filled -->
-		<div class="row" style="border: 2px solid green;border-top:none;">
+		  	</div></div><div class="row" style="border: 2px solid green;border-top:none;">
   			<div class="col">
   				<div class="row">
 	  				<div class="col">
@@ -741,17 +686,10 @@
 							</div>  
 						</div>
 			  		</div>
-	    		</div><!--close row-->
-
-		  	</div><!--close row-->
-		</div><!--close col-->
-	 			
- 	</div>
+	  &nbsp; 		</div></div></div></div>
 </div>
 
-<!-- Javascript -->
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-	<!-- NEW: Auto-fill 5b with "NOT APPLICABLE" when 5a is "SINGLE" -->
 	<script>
 		$(document).ready(function(){
 			// When birth type changes
@@ -769,7 +707,6 @@
 		});
 	</script>
 
-	<!-- NEW: Auto-fill attendant position based on checkbox selection -->
 	<script>
 		$(document).ready(function(){
 			// When attendant checkbox is clicked, auto-fill position
@@ -796,7 +733,6 @@
 		});
 	</script>
 
-	<!-- NEW: Save new dropdown entries via AJAX (for religious sect, occupation, etc.) -->
 	<script>
 		$(document).ready(function(){
 			// Function to save new entry to database
@@ -1155,10 +1091,17 @@ $(document).ready(function() {
             $('#father_citizen').val("NOT APPLICABLE");
             $('#father_sect').val("NOT APPLICABLE");
             $('#father_occupation').val("NOT APPLICABLE");
+<<<<<<< HEAD
 			$('#father_brgy').val("NOT APPLICABLE");
 			$('#father_city').val("NOT APPLICABLE");
             $('#father_province').val("NOT APPLICABLE");
 			$('#father_country').val("NOT APPLICABLE");
+=======
+            $('#father_brgy').val("NOT APPLICABLE");
+            $('#father_city').val("NOT APPLICABLE");
+            $('#father_province').val("NOT APPLICABLE");
+            $('#father_country').val("NOT APPLICABLE");
+>>>>>>> ebd1ee7d80d3e7af78b3135b134f5723f010c5a4
             $('#father_age').val("N/A");
             
             // Auto-fill the specific marriage fields
@@ -1335,9 +1278,61 @@ $(document).ready(function() {
     const MON = ["JANUARY", "FEBRUARY", "MARCH", "APRIL", "MAY", "JUNE", 
                  "JULY", "AUGUST", "SEPTEMBER", "OCTOBER", "NOVEMBER", "DECEMBER"];
 
+<<<<<<< HEAD
     // ========================================================
     // 1. SPLIT DATA ON PAGE LOAD
     // ========================================================
+=======
+    // Clean input and make uppercase
+    let v = inputVal.trim().toUpperCase();
+    // Split by any common separator: space, slash, dot, or existing dash
+    let parts = v.split(/[\s\/\.-]+/);
+
+    if (parts.length === 3) {
+        let day, month, year;
+
+        // Scenario A: Input is "10 OCTOBER 2004" (Day Month Year)
+        if (MON.includes(parts[1])) {
+            day = parts[0];
+            month = parts[1];
+            year = parts[2];
+            return `${day} ${month} ${year}`;
+        }
+        
+        // Scenario B: Input is "OCTOBER 10 2004" (Already Month Day Year)
+        if (MON.includes(parts[0])) {
+            return `${parts[0]} ${parts[1]} ${parts[2]}`;
+        }
+
+        // Scenario C: Numeric Input "10-10-2004" (Assuming MM-DD-YYYY)
+        const m = parseInt(parts[0], 10);
+        if (m >= 1 && m <= 12) {
+            return `${parts[1]} ${MON[m - 1]}  ${parts[2]}`;
+        }
+    }
+    
+    // Fallback: If it's just one word or format is weird, just dash-replace spaces
+    return v.replace(/\s+/g, '-');
+}
+
+  $('#birth_day').on('keydown', function(e) {
+                if (e.key === 'Enter' || e.keyCode === 13) {
+                    // Get the current value
+                    let originalValue = $(this).val();
+                    // Call your function and get the formatted result
+                    let formattedValue = formatDateFormal(originalValue);
+                    // Update the input with the formatted value
+                    $(this).val(formattedValue);
+                }
+            });
+
+	});
+</script>
+
+<script> //date of birth script
+$(document).ready(function() {
+    // 1. On page load, take the PHP value and split it into the 3 boxes
+>>>>>>> ebd1ee7d80d3e7af78b3135b134f5723f010c5a4
     let initialVal = $('#child_birth_date').val().trim();
     if (initialVal) {
         let parts = initialVal.split(/[\s\/\.-]+/); 
