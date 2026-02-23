@@ -91,14 +91,19 @@
 	  		  			<h6 style="padding-top:2px; font-size:14px;">3.&nbsp;DATE OF<br>&emsp;BIRTH</h6>
 	  				</div>
 			  		<div class="col-7">
-			  		  	<div class="row">
-			  				<div class="col-4"><h6 align="center"><span style="color:green;font-size:12px;">(Day)</span></h6></div>
-			  				<div class="col-4"><h6 align="center"><span style="color:green;font-size:12px;">(Month)</span></h6></div>
-			  				<div class="col-4"><h6 align="center"><span style="color:green;font-size:12px;">(Year)</span></h6></div>
-			  			</div>
-			  			<div class="input-group">
-					    	<input type="text" class="form-control form-control-sm" id = "child_birth_date" name="child_birth_date" style="word-spacing: 5em; text-align:center;" value="<?php echo $row['child_birth_date'] ?> ">
-					    </div>
+						<div class="row">
+							<div class="col-4"><h6 align="center" class="m-0"><span style="color:green;font-size:12px;">(Day)</span></h6></div>
+							<div class="col-4"><h6 align="center" class="m-0"><span style="color:green;font-size:12px;">(Month)</span></h6></div>
+							<div class="col-4"><h6 align="center" class="m-0"><span style="color:green;font-size:12px;">(Year)</span></h6></div>
+						</div>
+						
+						<div class="form-control form-control-sm p-0 d-flex justify-content-between align-items-center" style="background-color: #e9ecef; overflow: hidden;">
+							<input type="text" id="bd_day" class="text-center" style="width: 33.33%; border: none; background: transparent; outline: none;">
+							<input type="text" id="bd_month" class="text-center" style="width: 33.33%; border: none; background: transparent; outline: none;" >
+							<input type="text" id="bd_year" class="text-center" style="width: 33.33%; border: none; background: transparent; outline: none;">
+						</div>
+
+						<input type="hidden" id="child_birth_date" name="child_birth_date" value="<?php echo trim($row['child_birth_date']); ?>">
 					</div>
 	    		</div><!--close row-->
 		  	    <div class="row" style="border-top: 2px solid green;">
@@ -1144,7 +1149,11 @@ $(document).ready(function() {
             $('#father_citizen').val("NOT APPLICABLE");
             $('#father_sect').val("NOT APPLICABLE");
             $('#father_occupation').val("NOT APPLICABLE");
+<<<<<<< HEAD
             $('#father_city').val("NOT APPLICABLE");
+=======
+            $('#father_province').val("NOT APPLICABLE");
+>>>>>>> 0aeb669d71d7a3ac53ce013ed2c79656607fe842
             $('#father_age').val("N/A");
             
             // Auto-fill the specific marriage fields
@@ -1357,6 +1366,8 @@ $(document).ready(function() {
     // Fallback: If it's just one word or format is weird, just dash-replace spaces
     return v.replace(/\s+/g, '-');
 }
+<<<<<<< HEAD
+=======
 
   $('#birth_day').on('keydown', function(e) {
                 if (e.key === 'Enter' || e.keyCode === 13) {
@@ -1370,4 +1381,45 @@ $(document).ready(function() {
             });
 
 	});
+</script>
+>>>>>>> 0aeb669d71d7a3ac53ce013ed2c79656607fe842
+
+  $('#birth_day').on('keydown', function(e) {
+                if (e.key === 'Enter' || e.keyCode === 13) {
+                    // Get the current value
+                    let originalValue = $(this).val();
+                    // Call your function and get the formatted result
+                    let formattedValue = formatDateFormal(originalValue);
+                    // Update the input with the formatted value
+                    $(this).val(formattedValue);
+                }
+            });
+
+<<<<<<< HEAD
+	});
+=======
+<script> //date of birth script
+$(document).ready(function() {
+    // 1. On page load, take the PHP value and split it into the 3 boxes
+    let initialVal = $('#child_birth_date').val().trim();
+    if (initialVal) {
+        let parts = initialVal.split(/[\s\/\.-]+/); // splits by space, dash, or slash
+        if (parts.length >= 3) {
+            $('#bd_day').val(parts[0]);
+            $('#bd_month').val(parts[1]);
+            $('#bd_year').val(parts[2]);
+        }
+    }
+
+    // 2. When the user types in any of the 3 boxes, update the hidden field
+    $('#bd_day, #bd_month, #bd_year').on('input', function() {
+        let d = $('#bd_day').val().trim();
+        let m = $('#bd_month').val().trim();
+        let y = $('#bd_year').val().trim();
+        
+        // Combines them with spaces and saves to the hidden field for database submission
+        $('#child_birth_date').val(d + " " + m + " " + y);
+    });
+});
+>>>>>>> 0aeb669d71d7a3ac53ce013ed2c79656607fe842
 </script>
