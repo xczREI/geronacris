@@ -1,0 +1,22 @@
+# Database backups and Excel files
+*.sql
+*.xlsx
+backup/
+backup_db/
+DBACKUP/
+'NEW DB'/
+
+# PDFs and sample documents
+*.pdf
+'SAMPLE DOCS'/
+
+# Temporary/OS files
+.DS_Store
+Thumbs.db
+
+# Optional: Large 3rd party libraries 
+# (Only ignore these if you can easily re-download them)
+dompdf/
+fpdf/
+tcpdf/
+canvasjs-2.3.2/WCRS-Salvador.zip

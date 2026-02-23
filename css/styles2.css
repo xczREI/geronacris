@@ -1,0 +1,211 @@
+/*nav-side*/
+.navbar{
+	padding:0;
+	margin:0;
+}
+.nav-item1{
+	padding-bottom: 20px; 
+	padding-top: 20px;
+}
+.pic h4{
+	font-family: Bookman Old Style;
+	text-shadow: 2px 2px 4px #000000;
+	color: white;
+	line-height: 0.9;
+}
+#nav-link, #nav-link_active{
+	font-family: century gothic;
+	font-size: 19px;
+	font-weight:;
+	color: white;
+	display:  block;
+	padding: 25px;
+	transition: all 0.3s ease;
+	letter-spacing: 1px;
+}
+#nav-link:hover {
+	background: dark;
+	border-left: 15px solid #07a7a5;
+	text-shadow: 2px 2px 4px #000000;
+}
+#nav-link_active{
+	background: dark;
+	border-left: 15px solid #07a7a5;
+	text-shadow: 2px 2px 4px #000000;
+}
+.nav-item .fa { margin-right: 15px; }
+.dropdown-menu a{ font-family: century gothic; }
+#nav-link:hover{ color: white; }
+.nav-item li { font-weight: 300; }
+/*nav-top*/
+.nav-top{ 
+	width: 100%;
+	position: absolute;
+	height:70px;
+	background-color: lightgray;
+}
+/*nav-top*/
+.media{
+	float: right;
+	margin-top: 15px;
+	height: 35px;
+	border-radius:2px;
+}
+.media-body{
+	padding-top: 10px;
+	padding-right: 10px;
+}
+.media-body h6{
+	text-transform: capitalize;
+	font-family: century gothic;
+	color: black;
+}
+#row{ width: 100%; }
+
+/*gallery*/
+div.polaroid {
+  width: 150px;
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+  text-align: center;
+}
+div.container a {
+  padding: 10px;
+  color: black;
+  text-decoration: none;
+}
+.item h4{
+	font-family: Consolas;
+	text-decoration: none;
+	color: black;
+}
+.item:hover{
+	text-decoration: none;
+	color: black;
+}
+.item h4:hover{ font-weight: bold; }
+.navbar-brand > h3{
+	margin-top: 8%;
+	margin-bottom: 0;
+	font-family:century gothic;
+	color:black;
+	font-weight: bold;
+}
+.navbar-brand > p{
+	font-family:century gothic;
+	color:black;
+	font-weight: bold;
+}
+.request-form{
+	background-color: white;
+	padding: 40px;
+	border-radius: 5px;
+}
+.request-form:hover{
+	 box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+}
+.crs{
+	color: black;
+	font-size: 55px;
+	font-family: Lucida Calligraphy;
+	font-weight: bold;
+	text-shadow: 2px 2px 5px lightblue;
+}
+.crs1{
+	color: black;
+	font-family: Lucida Handwriting;
+}
+.cld{
+	color: #e7d405;
+	text-shadow: -1px 0 black, 0 1px black, 1px 0 black, 0 -1px black;
+	font-family: impact;
+}
+.request-form > h2{ color: black; }
+#months,#days,#years,#hours,#minutes,#seconds{
+	background-color: lightblue;
+	padding: 5px;
+	color:black;
+	border-radius: 10px;
+}
+#months h6,#days h6,#years h6,#hours h6,#minutes h6,#seconds h6{
+	font-family: century gothic;
+}
+#months h2,#days h2,#years h2,#hours h1,#minutes h1,#seconds h1{
+	font-family: century gothic;
+	font-weight: bold;
+}
+#dd{ font-weight: bold; }
+.logo{
+	width: 55%;
+	position: static;
+}
+.lblspan{ 
+	font-size: 12px;
+	padding: 0;
+	margin-top: 0; 
+}
+#adduser{
+	width:15em;
+	margin-left:46em;
+	font-weight:bold;
+}
+/*.tduser{ line-height:2.2; }*/
+/*bctf*/
+.m1{
+	margin:0; font-size: 13px;
+	padding:0;
+}
+.m2{
+	margin-top:0; padding-left: 43%;
+	margin-bottom: 0;
+}
+#book{
+	border-left: 1px solid green;
+	background-color: lightgray;
+	border-bottom: none;
+}
+#txt{ text-align: center; background-color: #9dfaf2; }
+#ltxt{ margin: 0; font-weight: bold; }
+/* Dropdown Item */
+.dropdown-item{
+    font-size: 19px;
+    color: black;
+    font-family:century gothic;
+}
+.dropdown-item:hover{
+    background-color: #e8e6e6;
+    border-left: 7px solid lightgreen;
+    border-right: 7px solid lightgreen;
+}
+.dropdown-item:active{
+    background-color: white;
+    color:black;
+}
+ .btn{
+  	margin-bottom:10px; 
+  	font-weight:bold;
+}
+/* Collapse Button*/
+#btn1, #btn2, #btn3{ 
+	border:none; 
+	background-color:white; 
+	font-family:Baskerville Old Face; 
+	text-transform:uppercase;
+}
+#icon-collapse{ font-size: 500%; }
+#demo1, #demo2, #demo3{ margin-bottom: 10px; }
+.flex-container {
+  display: flex;
+  margin-bottom: 3px;
+}
+.flex-container > div {
+  border: 1px solid black;
+}
+#flex {
+  display:;
+}
+#flex > div {
+}
+.nv-link{
+	font-family: century gothic;
+	display:  block;
+}

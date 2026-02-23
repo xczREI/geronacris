@@ -1,0 +1,9 @@
+$(document).ready(function(){
+        $("#btn1").click(function(){
+          $("#demo2").hide();
+        })
+        $("#btn2").click(function(){
+          $("#demo1").hide();
+          $("#demo2").toggle();
+        })
+      })

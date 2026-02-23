@@ -1,0 +1,37 @@
+$(document).ready(function(){
+  $("#btn1").click(function(){
+    $("#demo1").toggle(500);
+    $("#demo2").hide(500);
+    $("#demo3").hide(500);
+    $("#demo4").hide(500);
+    $("#demo5").hide(500);
+  })
+  $("#btn2").click(function(){
+    $("#demo1").hide(500);
+    $("#demo2").toggle(500);
+    $("#demo3").hide(500);
+    $("#demo4").hide(500);
+    $("#demo5").hide(500);
+  })
+  $("#btn3").click(function(){
+    $("#demo1").hide(500);
+    $("#demo2").hide(500);
+    $("#demo3").toggle(500);
+    $("#demo4").hide(500);
+    $("#demo5").hide(500);
+  })
+  $("#btn4").click(function(){
+    $("#demo1").hide(500);
+    $("#demo2").hide(500);
+    $("#demo3").hide(500);
+    $("#demo4").toggle(500);
+    $("#demo5").hide(500);
+  })
+  $("#btn5").click(function(){
+    $("#demo1").hide(500);
+    $("#demo2").hide(500);
+    $("#demo3").hide(500);
+    $("#demo4").hide(500);
+    $("#demo5").toggle(500);
+  })
+})

@@ -1,0 +1,438 @@
+<div class="ctf-birth pt-3" style="width:960px;margin: auto;">
+<?php
+				require_once 'login_db_death.php';
+
+				$conn = new mysqli($hn, $un, $pw, $db);
+				if ($conn->connect_error) die($conn->connect_error);
+
+				$reg_no=null;
+				if (!empty($_GET['reg_no'])){ $reg_no = $_REQUEST['reg_no']; }
+
+				$sql = "SELECT * FROM registration_tbl NATURAL JOIN (person_tbl NATURAL JOIN death_cause_eight_days NATURAL JOIN att_rev_tbl NATURAL JOIN corpse_disposal_tbl NATURAL JOIN inf_pre_tbl NATURAL JOIN receive_civil_tbl NATURAL JOIN remarks_tbl NATURAL JOIN death_cause_zero_seven NATURAL JOIN autopsy_tbl NATURAL JOIN embalmer_tbl NATURAL JOIN late_reg_tbl) WHERE no = '$reg_no'";
+				$result = $conn->query($sql);  
+				if (!$result) die ("Database access failed: " . $conn->error);
+
+				if ($result->num_rows > 0) {
+	    			while($row = $result->fetch_assoc()) { 
+?>
+	<!--birth form-->
+		<div class="form" style="padding:0 15px 0 15px;">
+	 			<!-- Child 0 t0 7 days -->
+	  			<div class="row"><!--grid of header-->
+		  			<div class="col" style="border: 2px solid purple;border-bottom:none;">
+					  	<h6 style="font-weight:bold;" align="center">FOR CHILDREN AGED 0 TO 7 DAYS</h6>
+					</div>
+				</div><!-- close row -->
+				<div class="row">
+		  			<div class="col-3" style="border: 2px solid purple;border-right:none;">
+						<h6 style="padding-top:2px; font-size:14px;">14.&nbsp;AGE OF MOTHER</h6>
+						<div class="input-group" style="padding-top: 16px;">
+							<input type="text" class="form-control form-control-sm" placeholder="" name="mother_age" value="<?php echo $row['mother_age']; ?>" >
+						</div>
+					</div>
+					<div class="col-5" style="border: 2px solid purple;border-right:none;">
+						<h6 style="padding-top:2px; font-size:14px;">15.&nbsp;METHOD OF DELIVERY<span style="font-size:12px;color:purple;">(Normal spontaneous <br>vertex, if others, specify)</span></h6>
+						<div class="input-group">
+							<input type="text" class="form-control form-control-sm" placeholder="" name="delivery_method" value="<?php echo $row['delivery_method'] ?? ''; ?>" >
+						</div>
+					</div>
+					<div class="col-4" style="border: 2px solid purple;">
+						<h6 style="padding-top:2px; font-size:14px;">16.&nbsp;LENGTH OF PREGNANCY:<br><span style="color:purple;font-size:12px;">&emsp;&emsp;(in completed weeks)</span></h6>
+						<div class="input-group">
+							<input type="text" class="form-control form-control-sm" placeholder="" name="pregnancy_length" value="<?php echo $row['pregnancy_length'] ?? ''; ?>">
+						</div>
+		  			</div>
+	  			</div><!--close row-->
+	  			<div class="row">
+					<div class="col-6" style="border: 2px solid purple;border-right:none;border-top:none;">
+						<h6 style="padding-top:2px; font-size:14px;">17.&nbsp;TYPE OF BIRTH<br>&emsp;&nbsp;&nbsp;<span style="color:purple;font-size:12px">(Single, Twin, Triplet, etc.)</span></h6>
+						<div class="input-group">
+							<input type="text" class="form-control form-control-sm" placeholder="" name="birth_type" value="<?php echo $row['birth_type'] ?? ''; ?>" >
+						</div>
+					</div>
+					<div class="col-6" style="border: 2px solid purple;border-top:none;">
+						<h6 style="padding-top:2px; font-size:12px;">5b.&nbsp;IF MULTIPLE BIRTH, CHILD WAS<br>&emsp;&nbsp;&nbsp;<span style="color:purple;font-size:12px">(First, Second, Third, etc.)</span></h6>
+					  	<div class="input-group">
+							<input type="text" class="form-control form-control-sm" placeholder="" name="multi_birth_was" value="<?php echo $row['if_multi_child_was'] ?? ''; ?>" >
+						</div>
+		  			</div>
+	  			</div><!--close row-->
+	  			<div class="row"><!--grid of header-->
+		  			<div class="col" style="border: 2px solid purple;border-top:none;">
+					  	<h6 style="font-weight:bold;" align="center">MEDICAL CERTIFICATE</h6>
+					</div>
+				</div><!-- close row -->
+				<div class="row" style="margin-bottom:10px;"><!--grid of header-->
+		  			<div class="col" style="border: 2px solid purple;border-top:none;">
+					  	<h6 style="padding-top:2px;font-size: 14px;">19a.&nbsp;CAUSES OF DEATH</h6>
+
+			  		  	<h6 style="padding-top:10px;font-size:14px;">&emsp;&emsp;a. Main disease/condition of infant
+						<div class="custom-control custom-checkbox custom-control-inline" style="padding: 0; width: 70%;margin-right: 0;">
+							<input type="text" class="form-control form-control-sm" name="main_disease" value="<?php echo $row['main_disease'] ?? ''; ?>" >
+						</div>
+						&emsp;&emsp;b. Other disease/conditions of infant
+						<div class="custom-control custom-checkbox custom-control-inline mt-1" style="padding: 0; width: 69%;margin-right: 0;">
+							<input type="text" class="form-control form-control-sm" name="other_disease" value="<?php echo $row['other_disease'] ?? ''; ?>" >
+						</div>
+						&emsp;&emsp;c. Main maternal disease/condition affecting of infant
+						<div class="custom-control custom-checkbox custom-control-inline mt-1" style="padding: 0; width: 57.5%;margin-right: 0;">
+							<input type="text" class="form-control form-control-sm" name="main_maternal" value="<?php echo $row['main_maternal_disease'] ?? ''; ?>" >
+						</div>
+						&emsp;&emsp;d. Other maternal disease/conditions affecting of infant
+						<div class="custom-control custom-checkbox custom-control-inline mt-1" style="padding: 0; width: 56.5%;margin-right: 0;">
+							<input type="text" class="form-control form-control-sm" name="other_maternal" value="<?php echo $row['other_maternal_disease'] ?? ''; ?>" >
+						</div>
+						&emsp;&emsp;e. Other relevant circumstances
+						<div class="custom-control custom-checkbox custom-control-inline mt-1" style="padding: 0; width: 72.5%;margin-right: 0;">
+							<input type="text" class="form-control form-control-sm" name="other_relevant" value="<?php echo $row['other_relevant'] ?? ''; ?>" >
+						</div>
+						</h6>
+						<h6 style="font-weight:bold;" align="center">CONTINUE TO FILL UP ITEM 20</h6>
+					</div>
+				</div><!-- close row -->
+				<div class="row" style="margin-bottom:10px;"><!--grid of header-->
+		  			<div class="col" style="border: 2px solid purple;">
+					  	<h6 style="padding-top:2px;font-weight:bold;" align="center">POSTMORTEM CERTIFICATE OF DEATH</h6>
+
+			  		  	<h6 style="padding-top:10px;font-size:14px;letter-spacing:1px;">&emsp;&emsp;&emsp;&emsp;I HEREBY CERTIFY that I have performed an autopsy upon the body of the deceased and that the cause of death was
+						<div class="input-group mt-1">
+							<input type="text" class="form-control form-control-sm" placeholder="" name="autopsy_txt1" value="<?php echo $row['autopsy_txt1'] ?? ''; ?>">
+						</div>
+						<div class="input-group mt-1">
+							<input type="text" class="form-control form-control-sm" placeholder="" name="autopsy_txt2" value="<?php echo $row['autopsy_txt2'] ?? ''; ?>">
+						</div>
+						</h6>
+						<div class="row">
+							<div class="col-6">
+								<div class="input-group mt-1">
+					  				<div class="input-group-prepend">
+					      				<span class="input-group-text" style="padding:0;border:none; background-color:white; color:black;font-size:14px;">Signature&nbsp;</span>
+					  				</div>
+					    			<input type="text" class="form-control form-control-sm" placeholder="" style="background-color: white;border-top:none;border-left:none;border-right:none;border-color: purple;border-radius: 0;" name="signature" disabled>
+								</div>
+								<div class="input-group mt-1">
+					  				<div class="input-group-prepend">
+					      				<span class="input-group-text" style="padding:0;border:none; background-color:white; color:black;font-size:14px;">Name in Print&nbsp;</span>
+					  				</div>
+					    			<input type="text" class="form-control form-control-sm" placeholder="" name="autopsy_name" value="<?php echo $row['autopsy_name'] ?? ''; ?>" >
+								</div>
+								<div class="input-group mt-1">
+					  				<div class="input-group-prepend">
+					      				<span class="input-group-text" style="padding:0;border:none; background-color:white; color:black;font-size:14px;">Date&nbsp;</span>
+					  				</div>
+					    			<input type="text" class="form-control form-control-sm" placeholder="" name="autopsy_date" value="<?php echo $row['autopsy_date'] ?? ''; ?>">
+								</div>	
+							</div>
+							<div class="col-6">
+								<div class="input-group mt-1">
+					  				<div class="input-group-prepend">
+					      				<span class="input-group-text" style="padding:0;border:none; background-color:white; color:black;font-size:14px;">Title/Designation&nbsp;</span>
+					  				</div>
+					    			<input type="text" class="form-control form-control-sm" placeholder="" name="autopsy_title" value="<?php echo $row['autopsy_title'] ?? ''; ?>">
+								</div>
+								<div class="input-group mt-1">
+					  				<div class="input-group-prepend">
+					      				<span class="input-group-text" style="padding:0;border:none; background-color:white; color:black;font-size:14px;">Address&nbsp;</span>
+					  				</div>
+					    			<input type="text" class="form-control form-control-sm" placeholder="" name="autopsy_address" value="<?php echo $row['autopsy_address'] ?? ''; ?>" >
+								</div>
+								<div class="input-group mt-1">
+					    			<input type="text" class="form-control form-control-sm" placeholder="" name="province" style="background-color: #e7e3e3;" disabled="">
+								</div>
+							</div>
+						</div>
+					</div>
+				</div><!-- close row -->
+				<div class="row" style="margin-bottom:10px;"><!--grid of header-->
+		  			<div class="col" style="border: 2px solid purple;">
+					  	<h6 style="padding-top:2px;font-weight:bold;" align="center">CERTIFICATE OF EMBALMER</h6>
+
+			  		  	<h6 style="padding-top:10px;font-size:14px;">&emsp;&emsp;&emsp;&emsp;I HEREBY CERTIFY that I have embalmed
+						<div class="custom-control custom-checkbox custom-control-inline mt-1" style="padding: 0; width: 58%;margin-right: 0;">
+							<input type="text" class="form-control form-control-sm" name="embalmer_txt" value="<?php echo $row['embalmer_txt'] ?? ''; ?>">
+						</div>
+						following all the regulations prescribed by the Department of Health.
+						</h6>
+						<div class="row">
+							<div class="col-6">
+								<div class="input-group mt-1">
+					  				<div class="input-group-prepend">
+					      				<span class="input-group-text" style="padding:0;border:none; background-color:white; color:black;font-size:14px;">Signature&nbsp;</span>
+					  				</div>
+					    			<input type="text" class="form-control form-control-sm" placeholder="" style="background-color: white;border-top:none;border-left:none;border-right:none;border-color: purple;border-radius: 0;" name="signature" disabled>
+								</div>
+								<div class="input-group mt-1">
+					  				<div class="input-group-prepend">
+					      				<span class="input-group-text" style="padding:0;border:none; background-color:white; color:black;font-size:14px;">Name in Print&nbsp;</span>
+					  				</div>
+					    			<input type="text" class="form-control form-control-sm" placeholder="" name="embalmer_name" value="<?php echo $row['embalmer_name'] ?? ''; ?>" >
+								</div>
+								<div class="input-group mt-1">
+									<div class="input-group-prepend">
+					      				<span class="input-group-text" style="padding:0;border:none; background-color:white; color:black;font-size:14px;">Address&nbsp;</span>
+					  				</div>
+					    			<input type="text" class="form-control form-control-sm" placeholder="" name="embalmer_address" value="<?php echo $row['embalmer_address'] ?? ''; ?>" >
+								</div>
+								<div class="input-group mt-1">
+					    			<input type="text" class="form-control form-control-sm" placeholder="" name="province" style="background-color: #e7e3e3;" disabled="">
+								</div>	
+							</div>
+							<div class="col-6">
+								<div class="input-group mt-1">
+					  				<div class="input-group-prepend">
+					      				<span class="input-group-text" style="padding:0;border:none; background-color:white; color:black;font-size:14px;">Title/Designation&nbsp;</span>
+					  				</div>
+					    			<input type="text" class="form-control form-control-sm" placeholder="" name="embalmer_title" value="<?php echo $row['embalmer_title'] ?? ''; ?>">
+								</div>
+								<div class="input-group mt-1">
+					  				<div class="input-group-prepend">
+					      				<span class="input-group-text" style="padding:0;border:none; background-color:white; color:black;font-size:14px;">License No.&nbsp;</span>
+					  				</div>
+					    			<input type="text" class="form-control form-control-sm" placeholder="" name="embalmer_no" value="<?php echo $row['embalmer_no'] ?? ''; ?>" >
+								</div>
+								<h6 style="font-size:14px;">Issued on&nbsp;
+								<div class="custom-control custom-checkbox custom-control-inline mt-1" style="padding: 0; width: 40%;margin-right: 0;">
+									<input type="text" class="form-control form-control-sm" name="embalmer_on" value="<?php echo $row['embalmer_on'] ?? ''; ?>">
+								</div>
+								at
+								<div class="custom-control custom-checkbox custom-control-inline mt-1" style="padding: 0; width: 40%;margin-right: 0;">
+									<input type="text" class="form-control form-control-sm" name="embalmer_at" value="<?php echo $row['embalmer_at'] ?? ''; ?>" >
+								</div>
+								</h6>
+								<div class="input-group mt-1">
+					  				<div class="input-group-prepend">
+					      				<span class="input-group-text" style="padding:0;border:none; background-color:white; color:black;font-size:14px;">Expiry Date&nbsp;</span>
+					  				</div>
+					    			<input type="text" class="form-control form-control-sm" placeholder="" name="embalmer_expdate" value="<?php echo $row['embalmer_expdate'] ?? ''; ?>">
+								</div>
+								
+					  		</div>
+						</div>
+					</div>
+				</div><!-- close row -->
+	  		<!-- Affidavit of Delayed Registration-->
+			  	<div class="row">
+				  	<div class="col" style="border: 2px solid purple;">
+				  		<h6 style="padding-top:10px;font-weight: bold;font-size:23px;line-height: 0.7;" align="center">AFFIDAVIT FOR DELAYED REGISTRATION OF DEATH</h6>
+
+				  		<h6 style="padding-top:10px;font-size:14px;">&emsp;&emsp;&emsp;&emsp;I
+				  		<div class="custom-control custom-checkbox custom-control-inline" style="padding: 0; width: 50%;margin-right: 0;">
+							<input type="text" class="form-control form-control-sm" name="late_name" value="<?php echo $row['late_name'] ?? ''; ?>" >
+						</div>
+						, of legal age, single/married/divorced/widow/widower, <br>with residence and postal address at
+						<div class="custom-control custom-checkbox custom-control-inline mt-1" style="padding: 0; width: 74%;margin-right: 0;">
+							<input type="text" class="form-control form-control-sm" name="late_address" value="<?php echo $row['late_address'] ?? ''; ?>" >
+						</div>
+						<div class="custom-control custom-checkbox custom-control-inline mt-1" style="padding: 0; width: 30%;margin-right: 0;">
+							<input type="text" class="form-control form-control-sm" style="background-color: white;border-top:none;border-left:none;border-right:none;border-color: purple;border-radius: 0;" name="birthtimenum" disabled>
+						</div>
+						<span style="letter-spacing:1px;">after being duly sworn in accordance with law, do hereby depose and say:</span>
+						</h6>
+
+						<h6 style="font-size:14px;">&emsp;&emsp;&emsp;&emsp;1.&emsp;That
+						<div class="custom-control custom-checkbox custom-control-inline mt-1" style="padding: 0;width: 42%;margin-right: 0;">
+							<input type="text" class="form-control form-control-sm" id="death_name" name="death_name" value="<?php echo $row['death_name'] ?? ''; ?>" >
+						</div>
+						died on
+						<div class="custom-control custom-checkbox custom-control-inline mt-1" style="padding: 0;width: 36%;margin-right: 0;">
+							<input type="text" class="form-control form-control-sm" id="died_on" name="died_on" value="<?php echo $row['died_on'] ?? ''; ?>">
+						</div>
+						in
+						&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&nbsp;&nbsp;
+						<div class="custom-control custom-checkbox custom-control-inline mt-1" style="padding: 0;width: 66%;margin-right: 0;">
+							<input type="text" class="form-control form-control-sm" id="died_in" name="died_in" value="<?php echo $row['died_in'] ?? ''; ?>" >
+						</div>
+						and was buried/cremated in
+						&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&nbsp;&nbsp;
+						<div class="custom-control custom-checkbox custom-control-inline mt-1" style="padding: 0;width: 50%;margin-right: 0;">
+							<input type="text" class="form-control form-control-sm" id="buried_in" name="buried_in" value="<?php echo $row['buried_in'] ?? ''; ?>" >
+						</div>
+						on
+						<div class="custom-control custom-checkbox custom-control-inline mt-1" style="padding: 0;width: 34%;margin-right: 0;">
+							<input type="text" class="form-control form-control-sm" id="buried_on" name="buried_on" value="<?php echo $row['buried_on'] ?? ''; ?>">
+						</div>
+						.
+						</h6>
+
+						<h6 style="font-size:14px;">&emsp;&emsp;&emsp;&emsp;2.&emsp;That the deceased at the time of his/her death:&emsp;<br>
+						&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;
+						<?php 
+							$attended_type = $row['attended_type'];
+							if($attended_type == 'attended'){
+						?>
+						<div class="custom-control custom-checkbox custom-control-inline" style="margin-right: 0;">
+							<input type="checkbox" class="custom-control-input" id="attend" name="attended_type" value="attended" checked="">
+      						<label class="custom-control-label" for="attend" style="font-size: 14px;">&nbsp;was attended by</label>
+						</div>
+						<div class="custom-control custom-checkbox custom-control-inline mt-1" style="padding: 0; width: 45%;margin-right: 0;">
+							<input type="text" class="form-control form-control-sm" id="attend_txt" name="attended_by" value="<?php echo $row['attended_by'] ?? ''; ?>" >
+						</div>
+						;<br>
+						&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;
+						<div class="custom-control custom-checkbox custom-control-inline mt-3" style="margin-right: 0;">
+							<input type="checkbox" class="custom-control-input" id="notattend" name="attended_type" value="not attended">
+      						<label class="custom-control-label" for="notattend" style="font-size: 14px;">&nbsp;was not attended.</label>
+						</div>
+						<?php }else if($attended_type == 'not attended'){ ?>
+						<div class="custom-control custom-checkbox custom-control-inline" style="margin-right: 0;">
+							<input type="checkbox" class="custom-control-input" id="attend" name="attended_type" value="attended">
+      						<label class="custom-control-label" for="attend" style="font-size: 14px;">&nbsp;was attended by</label>
+						</div>
+						<div class="custom-control custom-checkbox custom-control-inline mt-1" style="padding: 0; width: 45%;margin-right: 0;">
+							<input type="text" class="form-control form-control-sm" id="attend_txt" name="attended_by" >
+						</div>
+						;<br>
+						&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;
+						<div class="custom-control custom-checkbox custom-control-inline mt-3" style="margin-right: 0;">
+							<input type="checkbox" class="custom-control-input" id="notattend" name="attended_type" value="not attended" checked="">
+      						<label class="custom-control-label" for="notattend" style="font-size: 14px;">&nbsp;was not attended.</label>
+						</div>
+						<?php }else{ ?>
+						<div class="custom-control custom-checkbox custom-control-inline" style="margin-right: 0;">
+							<input type="checkbox" class="custom-control-input" id="attend" name="attended_type" value="attended">
+      						<label class="custom-control-label" for="attend" style="font-size: 14px;">&nbsp;was attended by</label>
+						</div>
+						<div class="custom-control custom-checkbox custom-control-inline mt-1" style="padding: 0; width: 45%;margin-right: 0;">
+							<input type="text" class="form-control form-control-sm" id="attend_txt" name="attended_by" >
+						</div>
+						;<br>
+						&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;
+						<div class="custom-control custom-checkbox custom-control-inline mt-3" style="margin-right: 0;">
+							<input type="checkbox" class="custom-control-input" id="notattend" name="attended_type" value="not attended">
+      						<label class="custom-control-label" for="notattend" style="font-size: 14px;">&nbsp;was not attended.</label>
+						</div>
+						<?php } ?>
+						</h6>
+
+						<h6 style="font-size:14px;">&emsp;&emsp;&emsp;&emsp;3.&emsp;That the cause of death of the deceased was
+						<div class="custom-control custom-checkbox custom-control-inline mt-1" style="padding: 0; width: 59%;margin-right: 0;">
+							<input type="text" class="form-control form-control-sm" name="late_death_cause" value="<?php echo $row['late_death_cause'] ?? ''; ?>" >
+						</div>
+						.
+						</h6>
+						
+						<h6 style="font-size:14px;">&emsp;&emsp;&emsp;&emsp;4.&emsp;That the reason for the delay registering this death was due to
+						<div class="custom-control custom-checkbox custom-control-inline" style="padding: 0; width: 47%;margin-right: 0;">
+							<input type="text" class="form-control form-control-sm" name="late_reg_reason1" value="<?php echo $row['late_reg_reason'] ?? ''; ?>">
+						</div>
+						&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;
+						<div class="custom-control custom-checkbox custom-control-inline mt-1" style="padding: 0; width: 89%;margin-right: 0;">
+							<input type="text" class="form-control form-control-sm" name="late_reg_reason2">
+						</div>
+						.
+						</h6>
+						
+						<h6 style="font-size:14px;">&emsp;&emsp;&emsp;&emsp;5.&emsp;That I am executing this affidavit to attest to the truthfulness of the foregoing statements for all legal intents and purposes.
+						</h6>
+						<br>
+						<h6 style="font-size:14px;">&emsp;&emsp;&emsp;&emsp;In truth whereof, I have affixed my signature below this
+						<div class="custom-control custom-checkbox custom-control-inline" style="padding: 0; width: 10%;margin-right: 0;">
+							<input type="text" class="form-control form-control-sm" name="sign_day" id="sign_day" value="<?php echo $row['sign_day'] ?? ''; ?>">
+						</div>
+						day of
+						<div class="custom-control custom-checkbox custom-control-inline" style="padding: 0; width: 25%;margin-right: 0;">
+							<input type="text" class="form-control form-control-sm" name="sign_month" id="sign_month" value="<?php echo $row['sign_month'] ?? ''; ?>" >
+						</div>
+						,
+						<div class="custom-control custom-checkbox custom-control-inline mt-1" style="padding: 0; width: 14%;margin-right: 0;">
+							<input type="text" class="form-control form-control-sm" maxlength="4" name="sign_year" id="sign_year" value="<?php echo $row['sign_year'] ?? ''; ?>" >
+						</div>
+						at
+						<div class="custom-control custom-checkbox custom-control-inline mt-1" style="padding: 0; width: 45%;margin-right: 0;">
+							<input type="text" class="form-control form-control-sm" name="sign_at" id="sign_at" value="<?php echo $row['sign_at'] ?? ''; ?>" >
+						</div>
+						, Philippines.
+						</h6>
+
+						<div class="row">
+							<div class="col-7" align="center">
+							</div>
+							<div class="col-5" align="center">
+								<input type="text" class="form-control form-control-sm" style="text-align:center;" name="affiant_name" value="<?php echo $row['affiant_name'] ?? ''; ?>" >
+								<h6 style="font-size:14px;">(Signature Over Printed Name of Affiant)</h6>
+							</div>
+						</div>
+						<br>
+
+						<h6 style="font-size:14px;">&emsp;&emsp;&emsp;&emsp;<span style="font-weight: bold;">SUBCRIBED AND SWORN</span> to before me this
+						<div class="custom-control custom-checkbox custom-control-inline mt-1" style="padding: 0; width: 7%;margin-right: 0;">
+							<input type="text" class="form-control form-control-sm" name="sworn_day" id="sworn_day" value="<?php echo $row['sworn_day'] ?? ''; ?>">
+						</div>
+						day of
+						<div class="custom-control custom-checkbox custom-control-inline mt-1" style="padding: 0; width: 35%;margin-right: 0;">
+							<input type="text" class="form-control form-control-sm" name="sworn_month" id="sworn_month" value="<?php echo $row['sworn_month'] ?? ''; ?>" >
+						</div>
+						,
+						<div class="custom-control custom-checkbox custom-control-inline mt-1" style="padding: 0; width: 10%;margin-right: 0;">
+							<input type="text" class="form-control form-control-sm" maxlength="4" name="sworn_year" id="sworn_year" value="<?php echo $row['sworn_year'] ?? ''; ?>" >
+						</div>
+						at
+						<div class="custom-control custom-checkbox custom-control-inline mt-1" style="padding: 0; width: 42%;margin-right: 0;">
+							<input type="text" class="form-control form-control-sm" name="sworn_at" id="sworn_at" value="<?php echo $row['sworn_at'] ?? ''; ?>" >
+						</div>
+						<span style="letter-spacing: 1px;">, Philippines, affiant who exhibited to me his/her CTC/valid ID</span>
+						<div class="custom-control custom-checkbox custom-control-inline mt-1" style="padding: 0; width: 20%;margin-right: 0;">
+							<input type="text" class="form-control form-control-sm" name="ctc" value="<?php echo $row['ctc'] ?? ''; ?>" >
+						</div>
+						issued on
+						<div class="custom-control custom-checkbox custom-control-inline mt-1" style="padding: 0; width: 30%;margin-right: 0;">
+							<input type="text" class="form-control form-control-sm" name="issued_on" value="<?php echo $row['issued_on'] ?? ''; ?>">
+						</div>
+						at
+						<div class="custom-control custom-checkbox custom-control-inline mt-1" style="padding: 0; width: 30%;margin-right: 0;">
+							<input type="text" class="form-control form-control-sm" name="issued_at" value="<?php echo $row['issued_at'] ?? ''; ?>" >
+						</div>
+						.
+						</h6>
+						<br><br>
+						<div class="row">
+							<div class="col-6" align="center">
+								<input type="text" class="form-control form-control-sm" style="background-color: white;border-top:none;border-left:none;border-right:none;border-color: purple;border-radius: 0;" name="birthtimenum" disabled>
+								<h6 style="font-size:14px;">Signature of the Administering Officer</h6>
+								<input type="text" class="form-control form-control-sm" style="text-align:center;" name="administer_name" value="<?php echo $row['administer_name'] ?? ''; ?>" >
+								<h6 style="font-size:14px;">Name in Print</h6>
+							</div>
+							<div class="col-6" align="center">
+								<input type="text" class="form-control form-control-sm" style="text-align:center;" name="administer_position" value="<?php echo $row['administer_position'] ?? ''; ?>" >
+								<h6 style="font-size:14px;">Position/Title/Designation</h6>
+								<input type="text" class="form-control form-control-sm" style="text-align:center;" name="administer_address" value="<?php echo $row['administer_address'] ?? ''; ?>" >
+								<h6 style="font-size:14px;">Address</h6>
+							</div>
+						</div>
+
+				  	</div>
+			  	</div><!--close row-->
+
+	 			<br>
+
+	 	</div>
+</div>
+<?php
+					}}
+?>
+<!-- Javascript -->
+<script>
+$(document).ready(function(){
+	$("#sign_day").keyup(function(){
+		var a = $("#sign_day").val();
+		if(a >= 32){
+			alertify.dialog('alert').set({transition:'zoom',message: 'Warning: Invalid Input!'}).show(); 
+			$("#sign_day").val("");
+		}else if(a == '00'){
+			alertify.dialog('alert').set({transition:'zoom',message: 'Warning: Invalid Input!'}).show(); 
+			$("#sign_day").val("");
+		}
+	});
+
+	$("#sworn_day").keyup(function(){
+		var a = $("#sworn_day").val();
+		if(a >= 32){
+			alertify.dialog('alert').set({transition:'zoom',message: 'Warning: Invalid Input!'}).show(); 
+			$("#sworn_day").val("");
+		}else if(a == '00'){
+			alertify.dialog('alert').set({transition:'zoom',message: 'Warning: Invalid Input!'}).show(); 
+			$("#sworn_day").val("");
+		}
+	});
+});
+</script>
