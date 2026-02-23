@@ -332,19 +332,19 @@
 						<div class="col-4">
 							<h6 align="center"><span style="color:green;">(First)</span></h6>
 							<div class="input-group">
-								<input type="text" tabindex="1" class="form-control form-control-sm " id="child_fname" name="child_fname" onkeypress="return isTextKey(event)">
+								<input type="text" tabindex="1" class="form-control form-control-sm text-center" id="child_fname" name="child_fname" onkeypress="return isTextKey(event)">
 							</div>
 						</div>
 						<div class="col-4">
 							<h6 align="center"><span style="color:green;">(Middle)</span></h6>
 							<div class="input-group">
-								<input type="text" tabindex="2" class="form-control form-control-sm " id="child_mname" name="child_mname" onkeypress="return isTextKey(event)">
+								<input type="text" tabindex="2" class="form-control form-control-sm text-center" id="child_mname" name="child_mname" onkeypress="return isTextKey(event)">
 							</div>
 						</div>
 						<div class="col-3">
 							<h6 align="center"><span style="color:green;">(Last)</span></h6>
 							<div class="input-group">
-								<input type="text" tabindex ="3"class="form-control form-control-sm " id="child_lname" name="child_lname" onkeypress="return isTextKey(event)">
+								<input type="text" tabindex ="3"class="form-control form-control-sm text-center" id="child_lname" name="child_lname" onkeypress="return isTextKey(event)">
 							</div>
 						</div>
 					</div><!--close row-->
