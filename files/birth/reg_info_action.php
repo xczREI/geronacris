@@ -68,17 +68,18 @@
       $marriage_place = $conn->real_escape_string($_POST['marriage_place']);
 
       //=================attendant_informant_prepared===============================
-      if($_POST['attendant1'] == 'Physician'){
-        $attendant_type = $_POST['attendant1'];   
-      }else if($_POST['attendant2'] == 'Nurse'){
-        $attendant_type = $_POST['attendant2'];   
-      }else if($_POST['attendant3'] == 'Midwife'){
-        $attendant_type = $_POST['attendant3'];   
-      }else if($_POST['attendant4'] == 'Hilot'){
-        $attendant_type = $_POST['attendant4'];   
-      }else{
-        $attendant_type = $conn->real_escape_string($_POST['attendant5']);   
-      }
+      $att1 = $_POST['attendant1'] ?? "";
+      $att2 = $_POST['attendant2'] ?? "";
+      $att3 = $_POST['attendant3'] ?? "";
+      $att4 = $_POST['attendant4'] ?? "";
+      $att5 = $_POST['attendant5'] ?? "";
+
+      if($att1 == 'Physician') $attendant_type = 'Physician';
+      else if($att2 == 'Nurse') $attendant_type = 'Nurse';
+      else if($att3 == 'Midwife') $attendant_type = 'Midwife';
+      else if($att4 == 'Hilot') $attendant_type = 'Hilot';
+      else $attendant_type = $conn->real_escape_string($att5);
+      
       $birth_time = $conn->real_escape_string($_POST['birth_time']);
       $attendant_name = $conn->real_escape_string($_POST['attendant_name']);
       $attendant_position = $conn->real_escape_string($_POST['attendant_position']);
