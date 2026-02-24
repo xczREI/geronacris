@@ -1,962 +1,957 @@
 <style>
-		/* Global font size 10 as requested by client */
-		.ctf-birth, .ctf-birth * {
-			font-size: 10px !important;
-		}
-		.ctf-birth h4 {
-			font-size: 12px !important;
-		}
-		.ctf-birth h6 {
-			font-size: 10px !important;
-			margin-bottom: 0 !important;
-		}
-		.ctf-birth input, 
-		.ctf-birth select, 
-		.ctf-birth textarea,
-		.ctf-birth label,
-		.ctf-birth span,
-		.ctf-birth option {
-			font-size: 10px !important;
-		}
-		/* Header styling */
-		.ctf-birth .header-title {
-			font-size: 24px !important;
-			font-weight: bold;
-			white-space: nowrap;
-		}
-		.ctf-birth .header-subtitle {
-			font-size: 10px !important;
-		}
-		.ctf-birth .header-republic {
-			font-size: 12px !important;
-		}
-		/* Style for editable dropdowns */
-		.editable-select {
-			position: relative;
-		}
-		.editable-select input {
-			width: 100%;
-		}
+        /* Global font size 10 as requested by client */
+        .ctf-birth, .ctf-birth * {
+            font-size: 10px !important;
+        }
+        .ctf-birth h4 {
+            font-size: 12px !important;
+        }
+        .ctf-birth h6 {
+            font-size: 10px !important;
+            margin-bottom: 0 !important;
+        }
+        .ctf-birth input, 
+        .ctf-birth select, 
+        .ctf-birth textarea,
+        .ctf-birth label,
+        .ctf-birth span,
+        .ctf-birth option {
+            font-size: 10px !important;
+        }
+        /* Header styling */
+        .ctf-birth .header-title {
+            font-size: 24px !important;
+            font-weight: bold;
+            white-space: nowrap;
+        }
+        .ctf-birth .header-subtitle {
+            font-size: 10px !important;
+        }
+        .ctf-birth .header-republic {
+            font-size: 12px !important;
+        }
+        /* Style for editable dropdowns */
+        .editable-select {
+            position: relative;
+        }
+        .editable-select input {
+            width: 100%;
+        }
 
-		/* Container for each dropdown item */
-		.remark-item {
-			padding: 6px 12px;
-			cursor: pointer;
-			border-bottom: 1px solid #eee;
-			display: flex;
-			align-items: center; 
-			background: white;
-		}
+        /* Container for each dropdown item */
+        .remark-item {
+            padding: 6px 12px;
+            cursor: pointer;
+            border-bottom: 1px solid #eee;
+            display: flex;
+            align-items: center; 
+            background: white;
+        }
 
-		.remark-item:hover {
-			background-color: #9ebee3; 
-		}
+        .remark-item:hover {
+            background-color: #9ebee3; 
+        }
 
-		.remark-item .remark-text {
-			font-family: Arial, Helvetica, sans-serif;
-			font-size: 11px !important;
-			text-transform: uppercase;
-			color: #000000;
-			flex-grow: 1; 
-			margin-right: 15px;
-			pointer-events: auto;
-		}
+        .remark-item .remark-text {
+            font-family: Arial, Helvetica, sans-serif;
+            font-size: 11px !important;
+            text-transform: uppercase;
+            color: #000000;
+            flex-grow: 1; 
+            margin-right: 15px;
+            pointer-events: auto;
+        }
 
-		.delete-remark {
-			color: #dc3545;
-			font-weight: bold;
-			padding: 2px 8px;
-			border: 1px solid #dc3545;
-			border-radius: 3px;
-			cursor: pointer;
-			font-size: 9px !important;
-			text-transform: uppercase;
-			flex-shrink: 0; 
-			display: inline-block;
-			transition: all 0.2s;
-		}
+        .delete-remark {
+            color: #dc3545;
+            font-weight: bold;
+            padding: 2px 8px;
+            border: 1px solid #dc3545;
+            border-radius: 3px;
+            cursor: pointer;
+            font-size: 9px !important;
+            text-transform: uppercase;
+            flex-shrink: 0; 
+            display: inline-block;
+            transition: all 0.2s;
+        }
 
-		.delete-remark:hover {
-			background-color: #bd2130;
-			color: white;
-		}
+        .delete-remark:hover {
+            background-color: #bd2130;
+            color: white;
+        }
 
-		/* Forces all input boxes in these rows to align perfectly at the bottom */
-		.align-bottom-inputs > [class*="col-"] {
-			display: flex;
-			flex-direction: column;
-		}
-		.align-bottom-inputs > [class*="col-"] > .input-group {
-			margin-top: auto !important;
-			margin-bottom: 2px !important;
-		}
-	</style>
+        /* Forces all input boxes in these rows to align perfectly at the bottom */
+        .align-bottom-inputs > [class*="col-"] {
+            display: flex;
+            flex-direction: column;
+        }
+        .align-bottom-inputs > [class*="col-"] > .input-group {
+            margin-top: auto !important;
+            margin-bottom: 2px !important;
+        }
+    </style>
 
-	<script type="text/javascript">
-		$(document).ready(function () {
-			$("#provinces").change(function(){
-				var prov_id = $(this).val();
-				$.ajax({
-					url: "getmunicipal.php",
-					method: "POST",
-					data:{provID:prov_id},
-					success: function(data){
-						$("#municipals").html(data);
-					}
-				});
-			});
-		});
-	</script>
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $("#provinces").change(function(){
+                var prov_id = $(this).val();
+                $.ajax({
+                    url: "getmunicipal.php",
+                    method: "POST",
+                    data:{provID:prov_id},
+                    success: function(data){
+                        $("#municipals").html(data);
+                    }
+                });
+            });
+        });
+    </script>
 
-	<script type="text/javascript">
-		$(document).ready(function () {
-			$("#birth_province").change(function(){
-				var bprov_id = $(this).val();
-				$.ajax({
-					url: "getmunicipalb.php",
-					method: "POST",
-					data:{bprovID:bprov_id},
-					success: function(data){
-						$("#birth_city").html(data);
-					}
-				});
-			});
-		});
-	</script>
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $("#birth_province").change(function(){
+                var bprov_id = $(this).val();
+                $.ajax({
+                    url: "getmunicipalb.php",
+                    method: "POST",
+                    data:{bprovID:bprov_id},
+                    success: function(data){
+                        $("#birth_city").html(data);
+                    }
+                });
+            });
+        });
+    </script>
 
-	<script type="text/javascript">
-		$(document).ready(function () {
-			$("#mother_province").change(function(){
-				var mprov_id = $(this).val();
-				$.ajax({
-					url: "getmunicipalm.php",
-					method: "POST",
-					data:{mprovID:mprov_id},
-					success: function(data){
-						$("#mother_city").html(data);
-					}
-				});
-			});
-		});
-	</script>
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $("#mother_province").change(function(){
+                var mprov_id = $(this).val();
+                $.ajax({
+                    url: "getmunicipalm.php",
+                    method: "POST",
+                    data:{mprovID:mprov_id},
+                    success: function(data){
+                        $("#mother_city").html(data);
+                    }
+                });
+            });
+        });
+    </script>
 
-	<script type="text/javascript">
-		$(document).ready(function () {
-			$("#father_province").change(function(){
-				var fprov_id = $(this).val();
-				$.ajax({
-					url: "getmunicipalf.php",
-					method: "POST",
-					data:{fprovID:fprov_id},
-					success: function(data){
-						$("#father_city").html(data);
-					}
-				});
-			});
-		});
-	</script>
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $("#father_province").change(function(){
+                var fprov_id = $(this).val();
+                $.ajax({
+                    url: "getmunicipalf.php",
+                    method: "POST",
+                    data:{fprovID:fprov_id},
+                    success: function(data){
+                        $("#father_city").html(data);
+                    }
+                });
+            });
+        });
+    </script>
 
-	<datalist id="province_list">
-		<?php 
-			require 'mycon.php';
-			$sqlp = "SELECT * from tblprovinces";
-			$resultp = $connx->query($sqlp);
-			while ($row = $resultp->fetch_assoc()) {
-				echo "<option value='" . $row['province'] . "'>" . $row['province'] . "</option>";
-			}				
-		?>
-	</datalist>
+    <datalist id="province_list">
+        <?php 
+            require 'mycon.php';
+            $sqlp = "SELECT * from tblprovinces";
+            $resultp = $connx->query($sqlp);
+            while ($row = $resultp->fetch_assoc()) {
+                echo "<option value='" . $row['province'] . "'>" . $row['province'] . "</option>";
+            }               
+        ?>
+    </datalist>
 
-	<datalist id="municipality_list">
-		<?php 
-			require 'mycon.php';
-			$sqlp = "SELECT * from tblmunicipals";
-			$resultp = $connx->query($sqlp);
-			while ($row = $resultp->fetch_assoc()) {
-				echo "<option value='" . $row['municipals'] . "'>" . $row['municipals'] . "</option>";
-			}
-		?>
-	</datalist>
+    <datalist id="municipality_list">
+        <?php 
+            require 'mycon.php';
+            $sqlp = "SELECT * from tblmunicipals";
+            $resultp = $connx->query($sqlp);
+            while ($row = $resultp->fetch_assoc()) {
+                echo "<option value='" . $row['municipals'] . "'>" . $row['municipals'] . "</option>";
+            }
+        ?>
+    </datalist>
 
-	<datalist id="citizen_list">
-		<?php 
-			require 'mycon.php';
-			$sqlp = "SELECT * from tblcitizen";
-			$resultp = $connx->query($sqlp);
-			while ($row = $resultp->fetch_assoc()) {
-				echo "<option value='" . $row['citiz'] . "'>" . $row['citiz'] . "</option>";
-			}				
-		?>
-	</datalist>
+    <datalist id="citizen_list">
+        <?php 
+            require 'mycon.php';
+            $sqlp = "SELECT * from tblcitizen";
+            $resultp = $connx->query($sqlp);
+            while ($row = $resultp->fetch_assoc()) {
+                echo "<option value='" . $row['citiz'] . "'>" . $row['citiz'] . "</option>";
+            }               
+        ?>
+    </datalist>
 
-	<datalist id="religious_sect">
-		<?php 
-			require 'mycon.php';
-			$sqlp = "SELECT * from tblreligious";
-			$resultp = $connx->query($sqlp);
-			while ($row = $resultp->fetch_assoc()) {
-				echo "<option value='" . $row['relsec'] . "'>" . $row['relsec'] . "</option>";
-			}		
-		?>
-	</datalist>
+    <datalist id="religious_sect">
+        <?php 
+            require 'mycon.php';
+            $sqlp = "SELECT * from tblreligious";
+            $resultp = $connx->query($sqlp);
+            while ($row = $resultp->fetch_assoc()) {
+                echo "<option value='" . $row['relsec'] . "'>" . $row['relsec'] . "</option>";
+            }       
+        ?>
+    </datalist>
 
-	<datalist id="occupation_list">
-		<?php 
-			require 'mycon.php';
-			$sqlp = "SELECT * from tbloccupation";
-			$resultp = $connx->query($sqlp);
-			while ($row = $resultp->fetch_assoc()) {
-				echo "<option value='" . $row['occupation'] . "'>" . $row['occupation'] . "</option>";
-			}												
-		?>
-	</datalist>
+    <datalist id="occupation_list">
+        <?php 
+            require 'mycon.php';
+            $sqlp = "SELECT * from tbloccupation";
+            $resultp = $connx->query($sqlp);
+            while ($row = $resultp->fetch_assoc()) {
+                echo "<option value='" . $row['occupation'] . "'>" . $row['occupation'] . "</option>";
+            }                                               
+        ?>
+    </datalist>
 
-	<datalist id="country_list">
-		<?php 
-			require 'mycon.php';
-			$sqlp = "SELECT * from tblcountry";
-			$resultp = $connx->query($sqlp);
-			while ($row = $resultp->fetch_assoc()) {
-				echo "<option value='" . $row['country'] . "'>" . $row['country'] . "</option>";
-			}								
-		?>
-	</datalist>
+    <datalist id="country_list">
+        <?php 
+            require 'mycon.php';
+            $sqlp = "SELECT * from tblcountry";
+            $resultp = $connx->query($sqlp);
+            while ($row = $resultp->fetch_assoc()) {
+                echo "<option value='" . $row['country'] . "'>" . $row['country'] . "</option>";
+            }                               
+        ?>
+    </datalist>
 
-	<datalist id="birth_type_list">
-		<option value="SINGLE">SINGLE</option>
-		<option value="TWIN">TWIN</option>
-		<option value="TRIPLET">TRIPLET</option>
-		<option value="QUADRUPLET">QUADRUPLET</option>
-		<option value="QUINTUPLET">QUINTUPLET</option>
-	</datalist>
+    <datalist id="birth_type_list">
+        <option value="SINGLE">SINGLE</option>
+        <option value="TWIN">TWIN</option>
+        <option value="TRIPLET">TRIPLET</option>
+        <option value="QUADRUPLET">QUADRUPLET</option>
+        <option value="QUINTUPLET">QUINTUPLET</option>
+    </datalist>
 
-	<datalist id="multi_birth_list">
-		<option value="NOT APPLICABLE">NOT APPLICABLE</option>
-		<option value="FIRST">FIRST</option>
-		<option value="SECOND">SECOND</option>
-		<option value="THIRD">THIRD</option>
-		<option value="FOURTH">FOURTH</option>
-		<option value="FIFTH">FIFTH</option>
-	</datalist>
+    <datalist id="multi_birth_list">
+        <option value="NOT APPLICABLE">NOT APPLICABLE</option>
+        <option value="FIRST">FIRST</option>
+        <option value="SECOND">SECOND</option>
+        <option value="THIRD">THIRD</option>
+        <option value="FOURTH">FOURTH</option>
+        <option value="FIFTH">FIFTH</option>
+    </datalist>
 
-	<datalist id="birth_order_list">
-		<option value="FIRST">FIRST</option>
-		<option value="SECOND">SECOND</option>
-		<option value="THIRD">THIRD</option>
-		<option value="FOURTH">FOURTH</option>
-		<option value="FIFTH">FIFTH</option>
-		<option value="SIXTH">SIXTH</option>
-		<option value="SEVENTH">SEVENTH</option>
-		<option value="EIGHTH">EIGHTH</option>
-		<option value="NINTH">NINTH</option>
-		<option value="TENTH">TENTH</option>
-	</datalist>
+    <datalist id="birth_order_list">
+        <option value="FIRST">FIRST</option>
+        <option value="SECOND">SECOND</option>
+        <option value="THIRD">THIRD</option>
+        <option value="FOURTH">FOURTH</option>
+        <option value="FIFTH">FIFTH</option>
+        <option value="SIXTH">SIXTH</option>
+        <option value="SEVENTH">SEVENTH</option>
+        <option value="EIGHTH">EIGHTH</option>
+        <option value="NINTH">NINTH</option>
+        <option value="TENTH">TENTH</option>
+    </datalist>
 
-	<datalist id="attendant_position_list">
-		<option value="PHYSICIAN">PHYSICIAN</option>
-		<option value="NURSE">NURSE</option>
-		<option value="MIDWIFE">MIDWIFE</option>
-		<option value="HILOT">HILOT</option>
-		<option value="TRADITIONAL BIRTH ATTENDANT">TRADITIONAL BIRTH ATTENDANT</option>
-	</datalist>
+    <datalist id="attendant_position_list">
+        <option value="PHYSICIAN">PHYSICIAN</option>
+        <option value="NURSE">NURSE</option>
+        <option value="MIDWIFE">MIDWIFE</option>
+        <option value="HILOT">HILOT</option>
+        <option value="TRADITIONAL BIRTH ATTENDANT">TRADITIONAL BIRTH ATTENDANT</option>
+    </datalist>
 
-	<div class="ctf-birth pt-3" style="width:960px; margin:auto;">
-		<div class="form" style="padding:0 15px 0 15px;">
-			<div class="row">
-				<div class="col-9" style="border:2px solid green; padding: 10px;">
-					<p class="m1" style="margin-bottom: 0;">Municipal Form No. 102</p>
-					<p align="center" class="header-republic" style="margin-bottom: 0;">Republic of the Philippines</p>
-					<p align="center" class="header-subtitle" style="margin-bottom: 5px;">OFFICE OF THE CIVIL REGISTRAR GENERAL</p>
-					<p align="center" class="header-title" style="margin-bottom: 0;">CERTIFICATE OF LIVE BIRTH</p>
-				</div>
-				<div class="col-3" id="book" style="border:2px solid green; border-left:none; border-bottom:none;">
-					<div class="form-group mb-0">
-						<label id="ltxt" style="margin-bottom:0;">Book No.</label>
-						<input type="text" class="bookNo form-control form-control-sm" id="bookno" onkeypress="return isNumberKey(event)" name="book_no" style="background-color: #7FFFD4;" value="<?php echo $row['book_no']; ?>">
-						<input type="hidden" class="form-control form-control-sm" id="bookno1" name="book_no1">
+    <div class="ctf-birth pt-3" style="width:960px; margin:auto;">
+        <div class="form" style="padding:0 15px 0 15px;">
+            <div class="row">
+                <div class="col-9" style="border:2px solid green; padding: 10px;">
+                    <p class="m1" style="margin-bottom: 0;">Municipal Form No. 102</p>
+                    <p align="center" class="header-republic" style="margin-bottom: 0;">Republic of the Philippines</p>
+                    <p align="center" class="header-subtitle" style="margin-bottom: 5px;">OFFICE OF THE CIVIL REGISTRAR GENERAL</p>
+                    <p align="center" class="header-title" style="margin-bottom: 0;">CERTIFICATE OF LIVE BIRTH</p>
+                </div>
+                <div class="col-3" id="book" style="border:2px solid green; border-left:none; border-bottom:none;">
+                    <div class="form-group mb-0">
+                        <label id="ltxt" style="margin-bottom:0;">Book No.</label>
+                        <input type="text" class="bookNo form-control form-control-sm" id="bookno" onkeypress="return isNumberKey(event)" name="book_no" style="background-color: #7FFFD4;" value="">
+                        <input type="hidden" class="form-control form-control-sm" id="bookno1" name="book_no1">
 
-						<label id="ltxt" style="margin-bottom:0;">Page No.</label>
-						<input type="text" class="pageNo form-control form-control-sm" name="page_no" id="pageno" onkeypress="return isNumberKey(event)" style="background-color: #7FFFD4;" value="<?php echo $row['page_no']; ?>">
-						<input type="hidden" class="form-control form-control-sm" name="page_no1" id="pageno1">
+                        <label id="ltxt" style="margin-bottom:0;">Page No.</label>
+                        <input type="text" class="pageNo form-control form-control-sm" name="page_no" id="pageno" onkeypress="return isNumberKey(event)" style="background-color: #7FFFD4;" value="">
+                        <input type="hidden" class="form-control form-control-sm" name="page_no1" id="pageno1">
 
-						<input type="hidden" name="time" id="hrs" value="">
-						<input type="hidden" name="date" id="date" value="">
-						<input type="hidden" name="emp_name" id="emp_name" value="<?php echo $_SESSION['lastname']; ?>">
-					</div>
-				</div>
-			</div>
-			
-			<div class="row">
-				<div class="col-9 pl-0" style="border:2px solid green; border-top:none;">
-					<div class="input-group mt-1">
-						<div class="input-group-prepend">
-							<span class="input-group-text bg-white p-0" style="border:none; color:black; width: 120px;">&nbsp;Province</span>
-						</div>
-						<input type="text" list='province_list' class="form-control form-control-sm" value="TARLAC" name="provinces" onkeypress="return isTextKey(event)" required>
-					</div>
-					<div class="input-group mt-1">
-						<div class="input-group-prepend">
-							<span class="input-group-text bg-white p-0" style="border:none; color:black; width: 120px;">&nbsp;City/Municipality</span>
-						</div>
-						<input type="text" list='municipality_list' class="form-control form-control-sm" value="GERONA" name="municipals" onkeypress="return isTextKey(event)" required>
-					</div>
-				</div>
-				<div class="col-3" id="book" style="border:2px solid green; border-left:none; border-top:none;">
-					<div class="form-group mb-0">
-						<label id="ltxt" style="margin-bottom:0;">Registry No.</label>
-						<input type="text" class="regNo form-control form-control-sm" name="registry_no" id="regno" style="background-color: #7FFFD4;" value="<?php echo $row['registry_no']; ?>" required> 
-						<div id="error"></div>
-					</div>
-				</div>
-			</div>
-			
-			<div class="row">
-				<div class="child text-center" style="border:2px solid green; border-top:none; padding:5em 3px 0 3px; width:30px;">
-					<h4>C<br>H<br>I<br>L<br>D</h4>
-				</div>
-				<div class="col" style="border:2px solid green; border-left:none; border-top:none;">
-					<div class="row align-bottom-inputs">
-						<div class="col-1">
-							<h6 style="padding-top:2px;">1.&nbsp;NAME</h6>
-						</div>
-						<div class="col-4">
-							<h6 align="center"><span style="color:green;">(First)</span></h6>
-							<div class="input-group">
-								<input type="text" tabindex="1" class="form-control form-control-sm text-center" id="child_fname" name="child_fname" onkeypress="return isTextKey(event)" value="<?php echo $row['child_fname']; ?>">
-							</div>
-						</div>
-						<div class="col-4">
-							<h6 align="center"><span style="color:green;">(Middle)</span></h6>
-							<div class="input-group">
-								<input type="text" tabindex="2" class="form-control form-control-sm text-center" id="child_mname" name="child_mname" onkeypress="return isTextKey(event)" value="<?php echo $row['child_mname']; ?>">
-							</div>
-						</div>
-						<div class="col-3">
-							<h6 align="center"><span style="color:green;">(Last)</span></h6>
-							<div class="input-group">
-								<input type="text" tabindex ="3"class="form-control form-control-sm text-center" id="child_lname" name="child_lname" onkeypress="return isTextKey(event)" value="<?php echo $row['child_lname']; ?>">
-							</div>
-						</div>
-					</div>
-					<div class="row" style="border-top:2px solid green;">
-						<div class="col-3" style="border-right:2px solid green;">
-							<h6 style="padding-top:2px;">2.&nbsp;SEX<br><span style="color:green;font-size:10px;">(Male/Female)</span></h6>
-							<div class="input-group input-group-sm mt-1">
-								<select id="child_sex" name="sex" class="form-control" tabindex="4">
-									<option selected style="display:none;"><?php echo $row['child_sex']; ?></option>
-									<option value="Male">Male</option>
-									<option value="Female">Female</option>
-								</select>
-							</div>
-						</div>
-						<div class="col-2">
-							<h6 style="padding-top:2px;">3.&nbsp;DATE OF<br>&emsp;BIRTH</h6>
-						</div>
-						<div class="col-7">
-							<div class="row">
-								<div class="col-4"><h6 align="center" class="m-0"><span style="color:green;font-size:12px;">(Day)</span></h6></div>
-								<div class="col-4"><h6 align="center" class="m-0"><span style="color:green;font-size:12px;">(Month)</span></h6></div>
-								<div class="col-4"><h6 align="center" class="m-0"><span style="color:green;font-size:12px;">(Year)</span></h6></div>
-							</div>
-							
-							<div class="form-control form-control-sm p-0 d-flex justify-content-between align-items-stretch" style="background-color: #e9ecef; overflow: hidden;">
-								<input type="text" id="bd_day" class="text-center" style="width: 33.33%; border: none; background: transparent; outline: none;">
-								<input type="text" id="bd_month" class="text-center" style="width: 33.33%; border: none; background: transparent; outline: none;">
-								<input type="text" id="bd_year" class="text-center" style="width: 33.33%; border: none; background: transparent; outline: none;">
-							</div>
-							<input type="hidden" id="child_birth_date" name="birth_day" value="<?php echo isset($row['child_birth_date']) ? trim(strip_tags($row['child_birth_date'])) : ''; ?>">
-						</div>
-					</div>
-					<div class="row align-bottom-inputs" style="border-top:2px solid green;">
-						<div class="col-2">
-							<h6 style="padding-top:2px;">4.&nbsp;PLACE OF <br>&emsp;BIRTH</h6>
-						</div>
-						<div class="col-4">
-							<h6><span class="m-0" style="color:green;">(Name of Hospital/Clinic/Institution/<br>House No.,St.,Barangay)</span></h6>
-							<div class="input-group">
-								<input type="text" tabindex="6" class="form-control form-control-sm" id="birth_brgy" name="birth_brgy" value="<?php echo $row['birth_brgy']; ?>">
-							</div>
-						</div>
-						<div class="col-3">
-							<h6><span class="m-0" style="color:green;">(City/Municipality)</span></h6>
-							<div class="input-group">
-								<input tabindex="7" id="birth_city" type="text" list='municipality_list' class="form-control" name="birth_city" onkeypress="return isTextKey(event)" required value="<?php echo $row['birth_municipal']; ?>">
-							</div>
-						</div>
-						<div class="col-3">
-							<h6><span class="m-0" style="color:green;">(Province)</span></h6>
-							<div class="input-group">
-								<input tabindex="8" id="birth_province" type="text" list='province_list' class="form-control" name="birth_province" onkeypress="return isTextKey(event)" required value="<?php echo $row['birth_province']; ?>">
-							</div>
-						</div>
-					</div>
-					<div class="row align-bottom-inputs">
-						<div class="col-3" style="border-top:2px solid green; border-right:2px solid green;">
-							<h6 style="padding-top:2px;">5a.&nbsp;TYPE OF BIRTH<br>&emsp;&nbsp;&nbsp;<span style="color:green">(Single, Twin, Triplet, etc.)</span></h6>
-							<div class="input-group">
-								<input tabindex="9" type="text" list="birth_type_list" class="form-control form-control-sm text-center" placeholder="" id="birth_type" name="birth_type" onkeypress="return isTextKey(event)" value="<?php echo $row['birth_type']; ?>">
-							</div>
-						</div>
-						<div class="col-3" style="border-top:2px solid green; border-right:2px solid green;">
-							<h6 style="padding-top:2px;">5b.&nbsp;IF MULTIPLE BIRTH, CHILD WAS<br>&emsp;&nbsp;&nbsp;<span style="color:green;">(First, Second, Third, etc.)</span></h6>
-							<div class="input-group">
-								<input tabindex="10" type="text" list="multi_birth_list" class="form-control form-control-sm text-center" placeholder="" id="multi_birth_was" name="multi_birth_was" onkeypress="return isTextKey(event)" value="<?php echo $row['if_multi_birth_was']; ?>">
-							</div>
-						</div>
-						<div class="col-3" style="border-top:2px solid green; border-right:2px solid green;">
-							<h6 style="padding-top:2px;">5c.&nbsp;BIRTH ORDER<span style="color:green;">(Order of this birth to <br>&emsp;&nbsp;&nbsp;&nbsp;previous live births including fetal death)</span><br>&emsp;&nbsp;&nbsp;<span style="color:green;">(First, Second, Third, etc.)</span></h6>
-							<div class="input-group">
-								<input tabindex="11" type="text" list="birth_order_list" class="form-control form-control-sm text-center" placeholder="" id="birth_order" name="birth_order" onkeypress="return isTextKey(event)" value="<?php echo $row['birth_order']; ?>">
-							</div>
-						</div>
-						<div class="col-3" style="border-top:2px solid green;">
-							<h6 style="padding-top:2px;">6.&nbsp;WEIGHT OF BIRTH</h6>
-							<div class="input-group">
-								<input tabindex="12" type="text" class="form-control form-control-sm text-center" placeholder="" name="birth_weight" onkeypress="return isNumberKey(event)" value="<?php echo $row['birth_weight']; ?>">
-								<span>&nbsp;grams</span>
-							</div>
-						</div>
-					</div>
-				</div>
-			</div>
-			
-			<div class="row">
-				<div class="mother" style="border:2px solid green; border-top:none; padding:4em 3px 0 1px; width: 30px;" align="center">
-					<h4>M<br>O<br>T<br>H<br>E<br>R</h4>
-				</div>
-				<div class="col" style="border:2px solid green; border-left:none; border-top:none;">
-					<div class="row align-bottom-inputs">
-						<div class="col-1">
-							<h6><span>7.&nbsp;MAIDEN<br>&nbsp;&nbsp;&nbsp;&nbsp;NAME</span></h6>
-						</div>
-						<div class="col-4">
-							<h6 align="center"><span style="color:green;">(First)</span></h6>
-							<div class="input-group">
-								<input tabindex="13" type="text" class="form-control form-control-sm text-center" id="mother_fname" placeholder="" name="mother_fname" onkeypress="return isTextKey(event)" value="<?php echo $row['mother_fname']; ?>">
-							</div>
-						</div>
-						<div class="col-4">
-							<h6 align="center"><span style="color:green;">(Middle)</span></h6>
-							<div class="input-group">
-								<input tabindex="14" type="text" class="form-control form-control-sm text-center" id="mother_mname" placeholder="" name="mother_mname" onkeypress="return isTextKey(event)" value="<?php echo $row['mother_mname']; ?>">
-							</div>
-						</div>
-						<div class="col-3">
-							<h6 align="center"><span style="color:green;">(Last)</span></h6>
-							<div class="input-group">
-								<input tabindex="15" type="text" class="form-control form-control-sm text-center" id="mother_lname" placeholder="" name="mother_lname" onkeypress="return isTextKey(event)" value="<?php echo $row['mother_lname']; ?>">
-							</div>
-						</div>
-					</div>
-					<div class="row align-bottom-inputs" style="border-top:2px solid green;">
-						<div class="col-6" style="border-right:2px solid green;">
-							<h6 style="padding-top:2px;">8.&nbsp;CITIZENSHIP</h6>
-							<div class="input-group">
-								<input tabindex="16" id="mother_citizen" type="text" list='citizen_list' class="form-control" name="mother_citizen" onkeypress="return isTextKey(event)" required value="<?php echo $row['mother_citizen']; ?>">
-							</div>
-						</div>
-						<div class="col-6">
-							<h6>9.&nbsp;RELIGION/RELIGIOUS SECT</h6>
-							<div class="input-group">
-								<input tabindex="17" type="text" list='religious_sect' class="form-control" id="mother_sect" name="mother_sect" onkeypress="return isTextKey(event)" required value="<?php echo $row['mother_religion']; ?>">
-							</div>
-						</div>
-					</div>
-					<div class="row align-bottom-inputs" style="border-top:2px solid green;">
-						<div class="col-2" style="border-right:2px solid green;">
-							<h6 style="padding-top:2px;">10a.<span>&nbsp;Total number of<br>&emsp;&emsp; children born alive</span></h6>
-							<div class="input-group">
-								<input tabindex="18" type="text" class="form-control form-control-sm text-center" placeholder="" name="ttl_no_child" onkeypress="return isNumberKey(event)" value="<?php echo $row['ttl_no_child']; ?>">
-							</div>
-						</div>
-						<div class="col-2" style="border-right:2px solid green;">
-							<h6 style="padding-top:2px;">10b.<span>&nbsp;No. of children still living including this birth</span></h6>
-							<div class="input-group">
-								<input tabindex="19" type="text" class="form-control form-control-sm text-center" placeholder="" name="no_child_alive" onkeypress="return isNumberKey(event)" value="<?php echo $row['no_child_alive']; ?>">
-							</div>
-						</div>
-						<div class="col-2" style="border-right:2px solid green;">
-							<h6 style="padding-top:2px;">10c.<span>&nbsp;No. of children born<br>&emsp; alive but are now dead</span></h6>
-							<div class="input-group">
-								<input tabindex="20" type="text" class="form-control form-control-sm text-center" placeholder="" name="no_child_dead" onkeypress="return isNumberKey(event)" value="<?php echo $row['no_child_dead']; ?>">
-							</div>
-						</div>
-						<div class="col-4" style="border-right:2px solid green;">
-							<h6 style="padding-top:2px;">11.&nbsp;OCCUPATION</h6>
-							<div class="input-group">
-								<input tabindex="21" id="mother_occupation" type="text" list='occupation_list' class="form-control text-center" name="mother_occupation" onkeypress="return isTextKey(event)" required value="<?php echo $row['mother_occupation']; ?>">
-							</div>
-						</div>
-						<div class="col-2">
-							<h6 style="padding-top:2px;">12.<span>&nbsp;AGE at the time of this birth<span style="color:green;">(completed years)</span></span></h6>
-							<div class="input-group">
-								<input tabindex="22" type="text" class="form-control form-control-sm text-center" placeholder="" name="mother_age" onkeypress="return isNumberKey(event)" value="<?php echo $row['mother_age']; ?>">
-							</div>
-						</div>
-					</div>
-					<div class="row align-bottom-inputs" style="border-top:2px solid green;">
-						<div class="col-1">
-							<h6 style="padding-top:2px;">13.&nbsp;RESIDENCE</h6>
-						</div>
-						<div class="col-4" style="padding-left:3em;">
-							<h6><span style="color:green; margin:0;">(House No.,St.,Barangay)</span></h6>
-							<div class="input-group">
-								<input tabindex="23" type="text" class="form-control form-control-sm text-center" placeholder="" name="mother_brgy" value="<?php echo $row['mother_brgy']; ?>">
-							</div>
-						</div>
-						<div class="col-3">
-							<h6><span style="color:green; margin:0;">(City/Municipality)</span></h6>
-							<div class="input-group">
-								<input tabindex="24" id="mother_city" type="text" list='municipality_list' class="form-control text-center" name="mother_city" onkeypress="return isTextKey(event)" required value="<?php echo $row['mother_municipal']; ?>">
-							</div>
-						</div>
-						<div class="col-2">
-							<h6><span style="color:green; margin:0;">(Province)</span></h6>
-							<div class="input-group">
-								<input tabindex="25" id="mother_province" type="text" list='province_list' class="form-control text-center" name="mother_province" onkeypress="return isTextKey(event)" required value="<?php echo $row['mother_province']; ?>">
-							</div>
-						</div>
-						<div class="col-2">
-							<h6><span style="color:green; margin:0;">(Country)</span></h6>
-							<div class="input-group">
-								<input tabindex="26" id="mother_country" type="text" list='country_list' class="form-control text-center" name="mother_country" onkeypress="return isTextKey(event)" required value="<?php echo $row['mother_country']; ?>">
-							</div>
-						</div>
-					</div>
-				</div>
-			</div>
+                        <input type="hidden" name="time" id="hrs" value="">
+                        <input type="hidden" name="date" id="date" value="">
+                        <input type="hidden" name="emp_name" id="emp_name" value="">
+                    </div>
+                </div>
+            </div>
+            
+            <div class="row">
+                <div class="col-9 pl-0" style="border:2px solid green; border-top:none;">
+                    <div class="input-group mt-1">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text bg-white p-0" style="border:none; color:black; width: 120px;">&nbsp;Province</span>
+                        </div>
+                        <input type="text" list='province_list' class="form-control form-control-sm" value="TARLAC" name="provinces" onkeypress="return isTextKey(event)" required>
+                    </div>
+                    <div class="input-group mt-1">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text bg-white p-0" style="border:none; color:black; width: 120px;">&nbsp;City/Municipality</span>
+                        </div>
+                        <input type="text" list='municipality_list' class="form-control form-control-sm" value="GERONA" name="municipals" onkeypress="return isTextKey(event)" required>
+                    </div>
+                </div>
+                <div class="col-3" id="book" style="border:2px solid green; border-left:none; border-top:none;">
+                    <div class="form-group mb-0">
+                        <label id="ltxt" style="margin-bottom:0;">Registry No.</label>
+                        <input type="text" class="regNo form-control form-control-sm" name="registry_no" id="regno" style="background-color: #7FFFD4;" value="" required> 
+                        <div id="error"></div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="row">
+                <div class="child text-center" style="border:2px solid green; border-top:none; padding:5em 3px 0 3px; width:30px;">
+                    <h4>C<br>H<br>I<br>L<br>D</h4>
+                </div>
+                <div class="col" style="border:2px solid green; border-left:none; border-top:none;">
+                    <div class="row align-bottom-inputs">
+                        <div class="col-1">
+                            <h6 style="padding-top:2px;">1.&nbsp;NAME</h6>
+                        </div>
+                        <div class="col-4">
+                            <h6 align="center"><span style="color:green;">(First)</span></h6>
+                            <div class="input-group">
+                                <input type="text" tabindex="1" class="form-control form-control-sm text-center" id="child_fname" name="child_fname" onkeypress="return isTextKey(event)" value="">
+                            </div>
+                        </div>
+                        <div class="col-4">
+                            <h6 align="center"><span style="color:green;">(Middle)</span></h6>
+                            <div class="input-group">
+                                <input type="text" tabindex="2" class="form-control form-control-sm text-center" id="child_mname" name="child_mname" onkeypress="return isTextKey(event)" value="">
+                            </div>
+                        </div>
+                        <div class="col-3">
+                            <h6 align="center"><span style="color:green;">(Last)</span></h6>
+                            <div class="input-group">
+                                <input type="text" tabindex ="3"class="form-control form-control-sm text-center" id="child_lname" name="child_lname" onkeypress="return isTextKey(event)" value="">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row" style="border-top:2px solid green;">
+                        <div class="col-3" style="border-right:2px solid green;">
+                            <h6 style="padding-top:2px;">2.&nbsp;SEX<br><span style="color:green;font-size:10px;">(Male/Female)</span></h6>
+                            <div class="input-group input-group-sm mt-1">
+                                <select id="child_sex" name="sex" class="form-control" tabindex="4">
+                                    <option selected style="display:none;"></option>
+                                    <option value="Male">Male</option>
+                                    <option value="Female">Female</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-2">
+                            <h6 style="padding-top:2px;">3.&nbsp;DATE OF<br>&emsp;BIRTH</h6>
+                        </div>
+                        <div class="col-7">
+                            <div class="row">
+                                <div class="col-4"><h6 align="center" class="m-0"><span style="color:green;font-size:12px;">(Day)</span></h6></div>
+                                <div class="col-4"><h6 align="center" class="m-0"><span style="color:green;font-size:12px;">(Month)</span></h6></div>
+                                <div class="col-4"><h6 align="center" class="m-0"><span style="color:green;font-size:12px;">(Year)</span></h6></div>
+                            </div>
+                            
+                            <div class="form-control form-control-sm p-0 d-flex justify-content-between align-items-stretch" style="background-color: #e9ecef; overflow: hidden;">
+                                <input type="text" id="bd_day" class="text-center" style="width: 33.33%; border: none; background: transparent; outline: none;">
+                                <input type="text" id="bd_month" class="text-center" style="width: 33.33%; border: none; background: transparent; outline: none;">
+                                <input type="text" id="bd_year" class="text-center" style="width: 33.33%; border: none; background: transparent; outline: none;">
+                            </div>
+                            <input type="hidden" id="child_birth_date" name="birth_day" value="">
+                        </div>
+                    </div>
+                    <div class="row align-bottom-inputs" style="border-top:2px solid green;">
+                        <div class="col-2">
+                            <h6 style="padding-top:2px;">4.&nbsp;PLACE OF <br>&emsp;BIRTH</h6>
+                        </div>
+                        <div class="col-4">
+                            <h6><span class="m-0" style="color:green;">(Name of Hospital/Clinic/Institution/<br>House No.,St.,Barangay)</span></h6>
+                            <div class="input-group">
+                                <input type="text" tabindex="6" class="form-control form-control-sm" id="birth_brgy" name="birth_brgy" value="">
+                            </div>
+                        </div>
+                        <div class="col-3">
+                            <h6><span class="m-0" style="color:green;">(City/Municipality)</span></h6>
+                            <div class="input-group">
+                                <input tabindex="7" id="birth_city" type="text" list='municipality_list' class="form-control" name="birth_city" onkeypress="return isTextKey(event)" required value="">
+                            </div>
+                        </div>
+                        <div class="col-3">
+                            <h6><span class="m-0" style="color:green;">(Province)</span></h6>
+                            <div class="input-group">
+                                <input tabindex="8" id="birth_province" type="text" list='province_list' class="form-control" name="birth_province" onkeypress="return isTextKey(event)" required value="">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row align-bottom-inputs">
+                        <div class="col-3" style="border-top:2px solid green; border-right:2px solid green;">
+                            <h6 style="padding-top:2px;">5a.&nbsp;TYPE OF BIRTH<br>&emsp;&nbsp;&nbsp;<span style="color:green">(Single, Twin, Triplet, etc.)</span></h6>
+                            <div class="input-group">
+                                <input tabindex="9" type="text" list="birth_type_list" class="form-control form-control-sm text-center" placeholder="" id="birth_type" name="birth_type" onkeypress="return isTextKey(event)" value="">
+                            </div>
+                        </div>
+                        <div class="col-3" style="border-top:2px solid green; border-right:2px solid green;">
+                            <h6 style="padding-top:2px;">5b.&nbsp;IF MULTIPLE BIRTH, CHILD WAS<br>&emsp;&nbsp;&nbsp;<span style="color:green;">(First, Second, Third, etc.)</span></h6>
+                            <div class="input-group">
+                                <input tabindex="10" type="text" list="multi_birth_list" class="form-control form-control-sm text-center" placeholder="" id="multi_birth_was" name="multi_birth_was" onkeypress="return isTextKey(event)" value="">
+                            </div>
+                        </div>
+                        <div class="col-3" style="border-top:2px solid green; border-right:2px solid green;">
+                            <h6 style="padding-top:2px;">5c.&nbsp;BIRTH ORDER<span style="color:green;">(Order of this birth to <br>&emsp;&nbsp;&nbsp;&nbsp;previous live births including fetal death)</span><br>&emsp;&nbsp;&nbsp;<span style="color:green;">(First, Second, Third, etc.)</span></h6>
+                            <div class="input-group">
+                                <input tabindex="11" type="text" list="birth_order_list" class="form-control form-control-sm text-center" placeholder="" id="birth_order" name="birth_order" onkeypress="return isTextKey(event)" value="">
+                            </div>
+                        </div>
+                        <div class="col-3" style="border-top:2px solid green;">
+                            <h6 style="padding-top:2px;">6.&nbsp;WEIGHT OF BIRTH</h6>
+                            <div class="input-group">
+                                <input tabindex="12" type="text" class="form-control form-control-sm text-center" placeholder="" name="birth_weight" onkeypress="return isNumberKey(event)" value="">
+                                <span>&nbsp;grams</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="row">
+                <div class="mother" style="border:2px solid green; border-top:none; padding:4em 3px 0 1px; width: 30px;" align="center">
+                    <h4>M<br>O<br>T<br>H<br>E<br>R</h4>
+                </div>
+                <div class="col" style="border:2px solid green; border-left:none; border-top:none;">
+                    <div class="row align-bottom-inputs">
+                        <div class="col-1">
+                            <h6><span>7.&nbsp;MAIDEN<br>&nbsp;&nbsp;&nbsp;&nbsp;NAME</span></h6>
+                        </div>
+                        <div class="col-4">
+                            <h6 align="center"><span style="color:green;">(First)</span></h6>
+                            <div class="input-group">
+                                <input tabindex="13" type="text" class="form-control form-control-sm text-center" id="mother_fname" placeholder="" name="mother_fname" onkeypress="return isTextKey(event)" value="">
+                            </div>
+                        </div>
+                        <div class="col-4">
+                            <h6 align="center"><span style="color:green;">(Middle)</span></h6>
+                            <div class="input-group">
+                                <input tabindex="14" type="text" class="form-control form-control-sm text-center" id="mother_mname" placeholder="" name="mother_mname" onkeypress="return isTextKey(event)" value="">
+                            </div>
+                        </div>
+                        <div class="col-3">
+                            <h6 align="center"><span style="color:green;">(Last)</span></h6>
+                            <div class="input-group">
+                                <input tabindex="15" type="text" class="form-control form-control-sm text-center" id="mother_lname" placeholder="" name="mother_lname" onkeypress="return isTextKey(event)" value="">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row align-bottom-inputs" style="border-top:2px solid green;">
+                        <div class="col-6" style="border-right:2px solid green;">
+                            <h6 style="padding-top:2px;">8.&nbsp;CITIZENSHIP</h6>
+                            <div class="input-group">
+                                <input tabindex="16" id="mother_citizen" type="text" list='citizen_list' class="form-control" name="mother_citizen" onkeypress="return isTextKey(event)" required value="">
+                            </div>
+                        </div>
+                        <div class="col-6">
+                            <h6>9.&nbsp;RELIGION/RELIGIOUS SECT</h6>
+                            <div class="input-group">
+                                <input tabindex="17" type="text" list='religious_sect' class="form-control" id="mother_sect" name="mother_sect" onkeypress="return isTextKey(event)" required value="">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row align-bottom-inputs" style="border-top:2px solid green;">
+                        <div class="col-2" style="border-right:2px solid green;">
+                            <h6 style="padding-top:2px;">10a.<span>&nbsp;Total number of<br>&emsp;&emsp; children born alive</span></h6>
+                            <div class="input-group">
+                                <input tabindex="18" type="text" class="form-control form-control-sm text-center" placeholder="" name="ttl_no_child" onkeypress="return isNumberKey(event)" value="">
+                            </div>
+                        </div>
+                        <div class="col-2" style="border-right:2px solid green;">
+                            <h6 style="padding-top:2px;">10b.<span>&nbsp;No. of children still living including this birth</span></h6>
+                            <div class="input-group">
+                                <input tabindex="19" type="text" class="form-control form-control-sm text-center" placeholder="" name="no_child_alive" onkeypress="return isNumberKey(event)" value="">
+                            </div>
+                        </div>
+                        <div class="col-2" style="border-right:2px solid green;">
+                            <h6 style="padding-top:2px;">10c.<span>&nbsp;No. of children born<br>&emsp; alive but are now dead</span></h6>
+                            <div class="input-group">
+                                <input tabindex="20" type="text" class="form-control form-control-sm text-center" placeholder="" name="no_child_dead" onkeypress="return isNumberKey(event)" value="">
+                            </div>
+                        </div>
+                        <div class="col-4" style="border-right:2px solid green;">
+                            <h6 style="padding-top:2px;">11.&nbsp;OCCUPATION</h6>
+                            <div class="input-group">
+                                <input tabindex="21" id="mother_occupation" type="text" list='occupation_list' class="form-control text-center" name="mother_occupation" onkeypress="return isTextKey(event)" required value="">
+                            </div>
+                        </div>
+                        <div class="col-2">
+                            <h6 style="padding-top:2px;">12.<span>&nbsp;AGE at the time of this birth<span style="color:green;">(completed years)</span></span></h6>
+                            <div class="input-group">
+                                <input tabindex="22" type="text" class="form-control form-control-sm text-center" placeholder="" name="mother_age" onkeypress="return isNumberKey(event)" value="">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row align-bottom-inputs" style="border-top:2px solid green;">
+                        <div class="col-1">
+                            <h6 style="padding-top:2px;">13.&nbsp;RESIDENCE</h6>
+                        </div>
+                        <div class="col-4" style="padding-left:3em;">
+                            <h6><span style="color:green; margin:0;">(House No.,St.,Barangay)</span></h6>
+                            <div class="input-group">
+                                <input tabindex="23" type="text" class="form-control form-control-sm text-center" placeholder="" name="mother_brgy" value="">
+                            </div>
+                        </div>
+                        <div class="col-3">
+                            <h6><span style="color:green; margin:0;">(City/Municipality)</span></h6>
+                            <div class="input-group">
+                                <input tabindex="24" id="mother_city" type="text" list='municipality_list' class="form-control text-center" name="mother_city" onkeypress="return isTextKey(event)" required value="">
+                            </div>
+                        </div>
+                        <div class="col-2">
+                            <h6><span style="color:green; margin:0;">(Province)</span></h6>
+                            <div class="input-group">
+                                <input tabindex="25" id="mother_province" type="text" list='province_list' class="form-control text-center" name="mother_province" onkeypress="return isTextKey(event)" required value="">
+                            </div>
+                        </div>
+                        <div class="col-2">
+                            <h6><span style="color:green; margin:0;">(Country)</span></h6>
+                            <div class="input-group">
+                                <input tabindex="26" id="mother_country" type="text" list='country_list' class="form-control text-center" name="mother_country" onkeypress="return isTextKey(event)" required value="">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
 
-			<div class="row">
-				<div class="father text-center" style="border:2px solid green; border-top:none; padding:1em 3px 0 3px; width: 30px;">
-					<h4>F<br>A<br>T<br>H<br>E<br>R</h4>
-				</div>
-				<div class="col" style="border:2px solid green; border-left:none; border-top:none;">
-					<div class="row align-bottom-inputs">
-						<div class="col-1">
-							<h6><span>14.&nbsp;NAME</span></h6>
-						</div>
-						<div class="col-4">
-							<h6 align="center"><span style="color:green;">(First)</span></h6>
-							<div class="input-group">
-								<input tabindex="27" type="text" class="form-control form-control-sm text-center" id="father_fname" name="father_fname" onkeypress="return isTextKey(event)" value="<?php echo $row['father_fname']; ?>">
-									<datalist id="father_options">
-										<option value="NOT APPLICABLE">
-										<option value="UNKNOWN">
-									</datalist>
-							</div>
-						</div>
-						<div class="col-4">
-							<h6 align="center"><span style="color:green;">(Middle)</span></h6>
-							<div class="input-group">
-								<input tabindex="28" type="text" class="form-control form-control-sm text-center" id="father_mname" name="father_mname" onkeypress="return isTextKey(event)" value="<?php echo $row['father_mname']; ?>">
-							</div>
-						</div>
-						<div class="col-3">
-							<h6 align="center"><span style="color:green;">(Last)</span></h6>
-							<div class="input-group">
-								<input tabindex="29" type="text" class="form-control form-control-sm text-center"  id="father_lname" name="father_lname" onkeypress="return isTextKey(event)" value="<?php echo $row['father_lname']; ?>">
-							</div>
-						</div>
-					</div>
-					<div class="row align-bottom-inputs" style="border-top:2px solid green;">
-						<div class="col-3" style="border-right:2px solid green;">
-							<h6><span>15.&nbsp;CITIZENSHIP</span></h6>
-							<div class="input-group">
-								<input tabindex="30" id="father_citizen" type="text" list='citizen_list' class="form-control text-center" name="father_citizen" onkeypress="return isTextKey(event)" required value="<?php echo $row['father_citizen']; ?>">
-							</div>
-						</div>
-						<div class="col-4" style="border-right:2px solid green;">
-							<h6>16.&nbsp;RELIGION/RELIGIOUS SECT</h6>
-							<div class="input-group">
-								<input tabindex="31" id="father_sect" type="text" list='religious_sect' class="form-control text-center" name="father_sect" onkeypress="return isTextKey(event)" required value="<?php echo $row['father_religion']; ?>">
-							</div>
-						</div>
-						<div class="col-3" style="border-right:2px solid green;">
-							<h6 style="padding-top:2px;">17.&nbsp;OCCUPATION</h6>
-							<div class="input-group">
-								<input tabindex="32" id="father_occupation" type="text" list='occupation_list' class="form-control text-center" name="father_occupation" onkeypress="return isTextKey(event)" required value="<?php echo $row['father_occupation']; ?>">
-							</div>
-						</div>
-						<div class="col-2">
-							<h6 style="padding-top:2px;">18.<span>&nbsp;AGE at the time of this birth<span style="color:green;">(completed years)</span></span></h6>
-							<div class="input-group">
-								<input type="text" class="form-control form-control-sm text-center" placeholder="" id="father_age" name="father_age" onkeypress="return isNumberKey(event)" value="<?php echo $row['father_age']; ?>">
-							</div>
-						</div>
-					</div>
-					<div class="row align-bottom-inputs" style="border-top:2px solid green;">
-						<div class="col-1">
-							<h6 style="padding-top:2px;">19.&nbsp;RESIDENCE</h6>
-						</div>
-						<div class="col-4" style="padding-left:3em;">
-							<h6><span style="color:green; margin:0;">(House No.,St.,Barangay)</span></h6>
-							<div class="input-group">
-								<input tabindex="33" type="text" class="form-control form-control-sm text-center" placeholder="" name="father_brgy" id="father_brgy" value="<?php echo $row['father_brgy']; ?>">
-							</div>
-						</div>
-						<div class="col-3">
-							<h6><span style="color:green; margin:0;">(City/Municipality)</span></h6>
-							<div class="input-group">
-								<input tabindex="34" id="father_city" type="text" list='municipality_list' class="form-control form-control-sm text-center" name="father_city" onkeypress="return isTextKey(event)" required value="<?php echo $row['father_municipal']; ?>">
-							</div>
-						</div>
-						<div class="col-2">
-							<h6><span style="color:green; margin:0;">(Province)</span></h6>
-							<div class="input-group">
-								<input tabindex="35" id="father_province" type="text" list='province_list' class="form-control form-control-sm text-center" name="father_province" onkeypress="return isTextKey(event)" required value="<?php echo $row['father_province']; ?>">
-							</div>
-						</div>
-						<div class="col-2">
-							<h6><span style="color:green; margin:0;">(Country)</span></h6>
-							<div class="input-group">
-								<input tabindex="36" id="father_country" type="text" list='country_list' class="form-control text-center" name="father_country" onkeypress="return isTextKey(event)" required value="<?php echo $row['father_country']; ?>">
-							</div>
-						</div>
-					</div>
-				</div>
-			</div>
+            <div class="row">
+                <div class="father text-center" style="border:2px solid green; border-top:none; padding:1em 3px 0 3px; width: 30px;">
+                    <h4>F<br>A<br>T<br>H<br>E<br>R</h4>
+                </div>
+                <div class="col" style="border:2px solid green; border-left:none; border-top:none;">
+                    <div class="row align-bottom-inputs">
+                        <div class="col-1">
+                            <h6><span>14.&nbsp;NAME</span></h6>
+                        </div>
+                        <div class="col-4">
+                            <h6 align="center"><span style="color:green;">(First)</span></h6>
+                            <div class="input-group">
+                                <input tabindex="27" type="text" class="form-control form-control-sm text-center" id="father_fname" name="father_fname" onkeypress="return isTextKey(event)" value="">
+                                    <datalist id="father_options">
+                                        <option value="NOT APPLICABLE">
+                                        <option value="UNKNOWN">
+                                    </datalist>
+                            </div>
+                        </div>
+                        <div class="col-4">
+                            <h6 align="center"><span style="color:green;">(Middle)</span></h6>
+                            <div class="input-group">
+                                <input tabindex="28" type="text" class="form-control form-control-sm text-center" id="father_mname" name="father_mname" onkeypress="return isTextKey(event)" value="">
+                            </div>
+                        </div>
+                        <div class="col-3">
+                            <h6 align="center"><span style="color:green;">(Last)</span></h6>
+                            <div class="input-group">
+                                <input tabindex="29" type="text" class="form-control form-control-sm text-center"  id="father_lname" name="father_lname" onkeypress="return isTextKey(event)" value="">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row align-bottom-inputs" style="border-top:2px solid green;">
+                        <div class="col-3" style="border-right:2px solid green;">
+                            <h6><span>15.&nbsp;CITIZENSHIP</span></h6>
+                            <div class="input-group">
+                                <input tabindex="30" id="father_citizen" type="text" list='citizen_list' class="form-control text-center" name="father_citizen" onkeypress="return isTextKey(event)" required value="">
+                            </div>
+                        </div>
+                        <div class="col-4" style="border-right:2px solid green;">
+                            <h6>16.&nbsp;RELIGION/RELIGIOUS SECT</h6>
+                            <div class="input-group">
+                                <input tabindex="31" id="father_sect" type="text" list='religious_sect' class="form-control text-center" name="father_sect" onkeypress="return isTextKey(event)" required value="">
+                            </div>
+                        </div>
+                        <div class="col-3" style="border-right:2px solid green;">
+                            <h6 style="padding-top:2px;">17.&nbsp;OCCUPATION</h6>
+                            <div class="input-group">
+                                <input tabindex="32" id="father_occupation" type="text" list='occupation_list' class="form-control text-center" name="father_occupation" onkeypress="return isTextKey(event)" required value="">
+                            </div>
+                        </div>
+                        <div class="col-2">
+                            <h6 style="padding-top:2px;">18.<span>&nbsp;AGE at the time of this birth<span style="color:green;">(completed years)</span></span></h6>
+                            <div class="input-group">
+                                <input type="text" class="form-control form-control-sm text-center" placeholder="" id="father_age" name="father_age" onkeypress="return isNumberKey(event)" value="">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row align-bottom-inputs" style="border-top:2px solid green;">
+                        <div class="col-1">
+                            <h6 style="padding-top:2px;">19.&nbsp;RESIDENCE</h6>
+                        </div>
+                        <div class="col-4" style="padding-left:3em;">
+                            <h6><span style="color:green; margin:0;">(House No.,St.,Barangay)</span></h6>
+                            <div class="input-group">
+                                <input tabindex="33" type="text" class="form-control form-control-sm text-center" placeholder="" name="father_brgy" id="father_brgy" value="">
+                            </div>
+                        </div>
+                        <div class="col-3">
+                            <h6><span style="color:green; margin:0;">(City/Municipality)</span></h6>
+                            <div class="input-group">
+                                <input tabindex="34" id="father_city" type="text" list='municipality_list' class="form-control form-control-sm text-center" name="father_city" onkeypress="return isTextKey(event)" required value="">
+                            </div>
+                        </div>
+                        <div class="col-2">
+                            <h6><span style="color:green; margin:0;">(Province)</span></h6>
+                            <div class="input-group">
+                                <input tabindex="35" id="father_province" type="text" list='province_list' class="form-control form-control-sm text-center" name="father_province" onkeypress="return isTextKey(event)" required value="">
+                            </div>
+                        </div>
+                        <div class="col-2">
+                            <h6><span style="color:green; margin:0;">(Country)</span></h6>
+                            <div class="input-group">
+                                <input tabindex="36" id="father_country" type="text" list='country_list' class="form-control text-center" name="father_country" onkeypress="return isTextKey(event)" required value="">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
 
-			<div class="row" style="border:2px solid green; border-top:none;">
-				<div class="col">
-					<div class="row">
-						<div class="col">
-							<h6 style="padding:0;">MARRIAGE OF PARENTS <span>(If not married, accomplish Affidavit of Acknowledgement/Admission of Paternity at the back.)</span></h6>
-						</div>
-					</div>
-					<div class="row" style="border-top:2px solid green;">
-						<div class="col-1">
-							<h6 style="padding-top:2px;">20a.&nbsp;DATE</h6>
-						</div>
-						<div class="col-3">
-							<div class="row">
-								<div class="col-4"><h6 align="center"><span style="color:green;">(Month)</span></h6></div>
-								<div class="col-4"><h6 align="center"><span style="color:green;">(Day)</span></h6></div>
-								<div class="col-4"><h6 align="center"><span style="color:green;">(Year)</span></h6></div>
-							</div>
-							<div class="input-group">
-								<input tabindex="37" type="text" class="form-control form-control-sm text-center" id="marriage_date" name="marriage_date" style="word-spacing:2em;" value="<?php echo $row['marriage_date']; ?>">
-							</div>
-						</div>
-						<div class="col-1" style="border-left:2px solid green;">
-							<h6>20b.&nbsp;PLACE</h6>
-						</div>
-							<div class="col-7">
-								<div class="row">
-								<div class="col-4"><h6 align="center" class="m-0"><span style="color:green;font-size:12px;">(City/Municipality)</span></h6></div>
-								<div class="col-4"><h6 align="center" class="m-0"><span style="color:green;font-size:12px;">(Province)</span></h6></div>
-								<div class="col-4"><h6 align="center" class="m-0"><span style="color:green;font-size:12px;">(Country)</span></h6></div>
-							</div>
-							
-							<div class="form-control form-control-sm p-0 d-flex justify-content-between align-items-center" style="background-color: #e9ecef; overflow: hidden;">
-								<input type="text" id="mp_day" class="text-center" style="width: 33.33%; border: none; background: transparent; outline: none;">
-								<input type="text" id="mp_month" class="text-center" style="width: 33.33%; border: none; background: transparent; outline: none;" >
-								<input type="text" id="mp_year" class="text-center" style="width: 33.33%; border: none; background: transparent; outline: none;">
-							</div>
+            <div class="row" style="border:2px solid green; border-top:none;">
+                <div class="col">
+                    <div class="row">
+                        <div class="col">
+                            <h6 style="padding:0;">MARRIAGE OF PARENTS <span>(If not married, accomplish Affidavit of Acknowledgement/Admission of Paternity at the back.)</span></h6>
+                        </div>
+                    </div>
+                    <div class="row" style="border-top:2px solid green;">
+                        <div class="col-1">
+                            <h6 style="padding-top:2px;">20a.&nbsp;DATE</h6>
+                        </div>
+                        <div class="col-3">
+                            <div class="row">
+                                <div class="col-4"><h6 align="center"><span style="color:green;">(Month)</span></h6></div>
+                                <div class="col-4"><h6 align="center"><span style="color:green;">(Day)</span></h6></div>
+                                <div class="col-4"><h6 align="center"><span style="color:green;">(Year)</span></h6></div>
+                            </div>
+                            <div class="input-group">
+                                <input tabindex="37" type="text" class="form-control form-control-sm text-center" id="marriage_date" name="marriage_date" style="word-spacing:2em;" value="">
+                            </div>
+                        </div>
+                        <div class="col-1" style="border-left:2px solid green;">
+                            <h6>20b.&nbsp;PLACE</h6>
+                        </div>
+                        <div class="col-7">
+                            <div class="row">
+                                <div class="col-4"><h6 align="center" class="m-0"><span style="color:green;font-size:12px;">(City/Municipality)</span></h6></div>
+                                <div class="col-4"><h6 align="center" class="m-0"><span style="color:green;font-size:12px;">(Province)</span></h6></div>
+                                <div class="col-4"><h6 align="center" class="m-0"><span style="color:green;font-size:12px;">(Country)</span></h6></div>
+                            </div>
+                            
+                            <div class="form-control form-control-sm p-0 d-flex justify-content-between align-items-center" style="background-color: white; overflow: hidden;">
+                                <input type="text" id="marriage_city" class="text-center" style="width: 33.33%; border: none; background: transparent; outline: none;" >
+                                <input type="text" id="marriage_province" class="text-center" style="width: 33.33%; border: none; background: transparent; outline: none;" >
+                                <input type="text" id="marriage_country" name="marriage_country" class="text-center" style="width: 33.33%; border: none; background: transparent; outline: none;">
+                            </div>
 
-							<input type="hidden" id="marriage_place" name="marriage_place" value="<?php echo $row['marriage_place']; ?>">
+                            <input type="hidden" id="marriage_place" name="marriage_place">
+                        </div>
+                    </div>
+                    <div class="row" style="border-top:2px solid green;">
+                        <div class="col">
+                            <h6 style="padding-top:2px;">21a.&nbsp;ATTENDANT</h6>
+                            <div class="row">
+                                <div class="col">
+                                    <div class="custom-control custom-checkbox custom-control-inline">
+                                        <input type="hidden" name="attendant1" value="">
+                                        <input type="checkbox" class="custom-control-input" id="physician" name="attendant1" value="Physician">
+                                        <label class="custom-control-label" for="physician">&nbsp;1 Physician</label>
+                                    </div>
+                                    <div class="custom-control custom-checkbox custom-control-inline">
+                                        <input type="hidden" name="attendant2" value="">
+                                        <input type="checkbox" class="custom-control-input" id="nurse" name="attendant2" value="Nurse">
+                                        <label class="custom-control-label" for="nurse">&nbsp;2 Nurse</label>
+                                    </div>
+                                    <div class="custom-control custom-checkbox custom-control-inline">
+                                        <input type="hidden" name="attendant3" value="">
+                                        <input type="checkbox" class="custom-control-input" id="midwife" name="attendant3" value="Midwife">
+                                        <label class="custom-control-label" for="midwife">&nbsp;3 Midwife</label>
+                                    </div>
+                                    <div class="custom-control custom-checkbox custom-control-inline">
+                                        <input type="hidden" name="attendant4" value="">
+                                        <input type="checkbox" class="custom-control-input" id="hilot" name="attendant4" value="Hilot">
+                                        <label class="custom-control-label" for="hilot">&nbsp;4 Hilot (Traditional Birth Attendant)</label>
+                                    </div>
+                                    <div class="custom-control custom-checkbox custom-control-inline">
+                                        <input type="checkbox" class="custom-control-input" id="others">
+                                        <label class="custom-control-label" for="others">&nbsp;5 Others (Specify)</label>
+                                    </div>
+                                    <div class="custom-control custom-checkbox custom-control-inline pl-0">
+                                        <input type="text" class="form-control form-control-sm" size="18" id="otherstxt" name="attendant5" onkeypress="return isTextKey(event)">
+                                    </div>
+                                </div>
+                            </div>  
+                        </div>
+                    </div>
+                </div>
+            </div>
 
-						</div>
-					</div>
-					<div class="row" style="border-top:2px solid green;">
-						<div class="col">
-							<h6 style="padding-top:2px;">21a.&nbsp;ATTENDANT</h6>
-							<div class="row">
-								<div class="col">
-									<div class="custom-control custom-checkbox custom-control-inline">
-										<input type="hidden" name="attendant1" value="">
-										<input type="checkbox" class="custom-control-input" id="physician" name="attendant1" value="Physician" <?php if(isset($row['attendant_type']) && $row['attendant_type']=='Physician') echo 'checked'; ?>>
-										<label class="custom-control-label" for="physician">&nbsp;1 Physician</label>
-									</div>
-									<div class="custom-control custom-checkbox custom-control-inline">
-										<input type="hidden" name="attendant2" value="">
-										<input type="checkbox" class="custom-control-input" id="nurse" name="attendant2" value="Nurse" <?php if(isset($row['attendant_type']) && $row['attendant_type']=='Nurse') echo 'checked'; ?>>
-										<label class="custom-control-label" for="nurse">&nbsp;2 Nurse</label>
-									</div>
-									<div class="custom-control custom-checkbox custom-control-inline">
-										<input type="hidden" name="attendant3" value="">
-										<input type="checkbox" class="custom-control-input" id="midwife" name="attendant3" value="Midwife" <?php if(isset($row['attendant_type']) && $row['attendant_type']=='Midwife') echo 'checked'; ?>>
-										<label class="custom-control-label" for="midwife">&nbsp;3 Midwife</label>
-									</div>
-									<div class="custom-control custom-checkbox custom-control-inline">
-										<input type="hidden" name="attendant4" value="">
-										<input type="checkbox" class="custom-control-input" id="hilot" name="attendant4" value="Hilot" <?php if(isset($row['attendant_type']) && $row['attendant_type']=='Hilot') echo 'checked'; ?>>
-										<label class="custom-control-label" for="hilot">&nbsp;4 Hilot (Traditional Birth Attendant)</label>
-									</div>
-									<div class="custom-control custom-checkbox custom-control-inline">
-										<input type="checkbox" class="custom-control-input" id="others">
-										<label class="custom-control-label" for="others">&nbsp;5 Others (Specify)</label>
-									</div>
-									<div class="custom-control custom-checkbox custom-control-inline pl-0">
-										<input type="text" class="form-control form-control-sm" size="18" id="otherstxt" name="attendant5" onkeypress="return isTextKey(event)">
-									</div>
-								</div>
-							</div>	
-						</div>
-					</div>
-				</div>
-			</div>
+            <div class="row" style="border: 2px solid green; border-top:none;">
+                <div class="col">
+                    <div class="row">
+                        <div class="col">
+                            <h6 style="padding-top:2px;">21b. CERTIFICATION OF ATTENDANT AT BIRTH <span style="color:green">(Physician, Nurse, Midwife, Traditional Birth Attendant/Hilot, etc. )</span></h6>
+                            <h6 style="padding:0;">&emsp;&emsp;&emsp;I hereby certify that I attended the birth of the child who was born alive at
+                            <div class="custom-control custom-checkbox custom-control-inline p-0 mr-0">
+                                <input type="time" class="form-control form-control-sm text-center" name="birth_time" size="4" value="">
+                            </div>
+                            am/pm on the date of birth specified above.   
+                            </h6>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-6">
+                            <div class="input-group mt-1">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text" style="padding:0;border:none; background-color:white; color:black;">Signature&nbsp;</span>
+                                </div>
+                                <input type="text" class="form-control form-control-sm" style="background-color: white;border-top:none;border-left:none;border-right:none;border-color: green;border-radius: 0;" name="signature" disabled>
+                            </div>
+                            <div class="input-group mt-1">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text" style="padding:0;border:none; background-color:white; color:black;">Name in Print&nbsp;</span>
+                                </div>
+                                <input type="text" class="form-control form-control-sm" id ="attendant_name" name="attendant_name" onkeypress="return isTextKey(event)" value="">
+                            </div>
+                            <div class="input-group mt-1">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text" style="padding:0;border:none; background-color:white; color:black;">Title or Position&nbsp;</span>
+                                </div>
+                                <input type="text" list="attendant_position_list" class="form-control form-control-sm" id="attendant_position" name="attendant_position" onkeypress="return isTextKey(event)" value="">
+                            </div>
+                        </div>
+                        <div class="col-6">
+                            <div class="input-group mt-1">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text" style="padding:0;border:none; background-color:white; color:black;">Address&nbsp;</span>
+                                </div>
+                                <input type="text" class="form-control form-control-sm" id="attendant_address1" name="attendant_address1" value="">
+                            </div>
+                            <div class="input-group mt-1">
+                                <input type="text" class="form-control form-control-sm" id="attendant_address2" name="attendant_address2" style="background-color: white;border-top:none;border-left:none;border-right:none;border-color: green;border-radius: 0;">
+                            </div>
+                            <div class="input-group mt-1">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text" style="padding:0;border:none; background-color:white; color:black;">Date&nbsp;</span>
+                                </div>
+                                <?php date_default_timezone_set('Asia/Manila'); ?>
+                                <input type="text" class="form-control form-control-sm" id="attendant_date" name="attendant_date" value="">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
 
-			<div class="row" style="border: 2px solid green; border-top:none;">
-				<div class="col">
-					<div class="row">
-						<div class="col">
-							<h6 style="padding-top:2px;">21b. CERTIFICATION OF ATTENDANT AT BIRTH <span style="color:green">(Physician, Nurse, Midwife, Traditional Birth Attendant/Hilot, etc. )</span></h6>
-							<h6 style="padding:0;">&emsp;&emsp;&emsp;I hereby certify that I attended the birth of the child who was born alive at
-							<div class="custom-control custom-checkbox custom-control-inline p-0 mr-0">
-								<input type="time" class="form-control form-control-sm text-center" name="birth_time" size="4" value="<?php echo $row['birth_time']; ?>">
-							</div>
-							am/pm on the date of birth specified above.   
-							</h6>
-						</div>
-					</div>
-					<div class="row">
-						<div class="col-6">
-							<div class="input-group mt-1">
-								<div class="input-group-prepend">
-									<span class="input-group-text" style="padding:0;border:none; background-color:white; color:black;">Signature&nbsp;</span>
-								</div>
-								<input type="text" class="form-control form-control-sm" style="background-color: white;border-top:none;border-left:none;border-right:none;border-color: green;border-radius: 0;" name="signature" disabled>
-							</div>
-							<div class="input-group mt-1">
-								<div class="input-group-prepend">
-									<span class="input-group-text" style="padding:0;border:none; background-color:white; color:black;">Name in Print&nbsp;</span>
-								</div>
-								<input type="text" class="form-control form-control-sm" id ="attendant_name" name="attendant_name" onkeypress="return isTextKey(event)" value="<?php echo $row['attendant_name']; ?>">
-							</div>
-							<div class="input-group mt-1">
-								<div class="input-group-prepend">
-									<span class="input-group-text" style="padding:0;border:none; background-color:white; color:black;">Title or Position&nbsp;</span>
-								</div>
-								<input type="text" list="attendant_position_list" class="form-control form-control-sm" id="attendant_position" name="attendant_position" onkeypress="return isTextKey(event)" value="<?php echo $row['attendant_position']; ?>">
-							</div>
-						</div>
-						<div class="col-6">
-							<div class="input-group mt-1">
-								<div class="input-group-prepend">
-									<span class="input-group-text" style="padding:0;border:none; background-color:white; color:black;">Address&nbsp;</span>
-								</div>
-								<input type="text" class="form-control form-control-sm" id="attendant_address1" name="attendant_address1" value="<?php echo $row['attendant_address']; ?>">
-							</div>
-							<div class="input-group mt-1">
-								<input type="text" class="form-control form-control-sm" id="attendant_address2" name="attendant_address2" style="background-color: white;border-top:none;border-left:none;border-right:none;border-color: green;border-radius: 0;">
-							</div>
-							<div class="input-group mt-1">
-								<div class="input-group-prepend">
-									<span class="input-group-text" style="padding:0;border:none; background-color:white; color:black;">Date&nbsp;</span>
-								</div>
-								<?php date_default_timezone_set('Asia/Manila'); ?>
-								<input type="text" class="form-control form-control-sm" id="attendant_date" name="attendant_date" value="<?php echo $row['attendant_date']; ?>">
-							</div>
-						</div>
-					</div>
-				</div>
-			</div>
+            <div class="row" style="border: 2px solid green;border-top:none;">
+                <div class="col">
+                    <div class="row">
+                        <div class="col-6" style="border-right: 2px solid green;">
+                            <h6 style="padding-top:2px;">22. CERTIFICATION OF INFORMANT</h6>
+                            <h6 style="padding:0; text-indent:4em;">I hereby certify that all information supplied are true and correct to my own knowledge and belief.</h6>
+                            <div class="input-group mt-1">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text" style="padding:0;border:none; background-color:white; color:black;">Signature&nbsp;</span>
+                                </div>
+                                <input type="text" class="form-control form-control-sm" style="background-color: white;border-top:none;border-left:none;border-right:none;border-color: green;border-radius: 0;" name="signature" disabled>
+                            </div>
+                            <div class="input-group mt-1">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text" style="padding:0;border:none; background-color:white; color:black;">Name in Print&nbsp;</span>
+                                </div>
+                                <input type="text" class="form-control form-control-sm" id="informant_name" name="informant_name" onkeypress="return isTextKey(event)" value="">
+                            </div>
+                            <div class="input-group mt-1">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text" style="padding:0;border:none; background-color:white; color:black;">Relationship to the Child&nbsp;</span>
+                                </div>
+                                <input type="text" class="form-control form-control-sm" id="rel_child" name="rel_child" onkeypress="return isTextKey(event)" value="">
+                            </div>
+                            <div class="input-group mt-1">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text" style="padding:0;border:none; background-color:white; color:black;">Address&nbsp;</span>
+                                </div>
+                                <input type="text" class="form-control form-control-sm" id="informant_address" name="informant_address" value="">
+                            </div>
+                            <div class="input-group mt-1">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text" style="padding:0;border:none; background-color:white; color:black;">Date&nbsp;</span>
+                                </div>
+                                <input type="text" class="form-control form-control-sm" id="informant_date" name="informant_date" value="">
+                            </div>
+                        </div>
+                        <div class="col-6">
+                            <h6 style="padding-top:2px;">23. PREPARED BY</h6><br>
+                            <div class="input-group mt-3">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text" style="padding:0;border:none; background-color:white; color:black;">Signature&nbsp;</span>
+                                </div>
+                                <input type="text" class="form-control form-control-sm" style="background-color: white;border-top:none;border-left:none;border-right:none;border-color: green;border-radius: 0;" name="signature" disabled>
+                            </div>
+                            <div class="input-group mt-1">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text" style="padding:0;border:none; background-color:white; color:black;">Name in Print&nbsp;</span>
+                                </div>
+                                <input type="text" class="form-control form-control-sm" name="prepared_name" onkeypress="return isTextKey(event)" value="">
+                            </div>
+                            <div class="input-group mt-1">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text" style="padding:0;border:none; background-color:white; color:black;">Title or Position&nbsp;</span>
+                                </div>
+                                <input type="text" class="form-control form-control-sm" name="prepared_position" onkeypress="return isTextKey(event)" value="">
+                            </div>
+                            <div class="input-group mt-1">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text" style="padding:0;border:none; background-color:white; color:black;">Date&nbsp;</span>
+                                </div>
+                                <input type="text" class="form-control form-control-sm" id="prepared_date" name="prepared_date" value="">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
 
-			<div class="row" style="border: 2px solid green;border-top:none;">
-				<div class="col">
-					<div class="row">
-						<div class="col-6" style="border-right: 2px solid green;">
-							<h6 style="padding-top:2px;">22. CERTIFICATION OF INFORMANT</h6>
-							<h6 style="padding:0; text-indent:4em;">I hereby certify that all information supplied are true and correct to my own knowledge and belief.</h6>
-							<div class="input-group mt-1">
-								<div class="input-group-prepend">
-									<span class="input-group-text" style="padding:0;border:none; background-color:white; color:black;">Signature&nbsp;</span>
-								</div>
-								<input type="text" class="form-control form-control-sm" style="background-color: white;border-top:none;border-left:none;border-right:none;border-color: green;border-radius: 0;" name="signature" disabled>
-							</div>
-							<div class="input-group mt-1">
-								<div class="input-group-prepend">
-									<span class="input-group-text" style="padding:0;border:none; background-color:white; color:black;">Name in Print&nbsp;</span>
-								</div>
-								<input type="text" class="form-control form-control-sm" id="informant_name" name="informant_name" onkeypress="return isTextKey(event)" value="<?php echo $row['informant_name']; ?>">
-							</div>
-							<div class="input-group mt-1">
-								<div class="input-group-prepend">
-									<span class="input-group-text" style="padding:0;border:none; background-color:white; color:black;">Relationship to the Child&nbsp;</span>
-								</div>
-								<input type="text" class="form-control form-control-sm" id="rel_child" name="rel_child" onkeypress="return isTextKey(event)" value="<?php echo $row['rel_child']; ?>">
-							</div>
-							<div class="input-group mt-1">
-								<div class="input-group-prepend">
-									<span class="input-group-text" style="padding:0;border:none; background-color:white; color:black;">Address&nbsp;</span>
-								</div>
-								<input type="text" class="form-control form-control-sm" id="informant_address" name="informant_address" value="<?php echo $row['informant_address']; ?>">
-							</div>
-							<div class="input-group mt-1">
-								<div class="input-group-prepend">
-									<span class="input-group-text" style="padding:0;border:none; background-color:white; color:black;">Date&nbsp;</span>
-								</div>
-								<input type="text" class="form-control form-control-sm" id="informant_date" name="informant_date" value="<?php echo $row['informant_date']; ?>">
-							</div>
-						</div>
-						<div class="col-6">
-							<h6 style="padding-top:2px;">23. PREPARED BY</h6><br>
-							<div class="input-group mt-3">
-								<div class="input-group-prepend">
-									<span class="input-group-text" style="padding:0;border:none; background-color:white; color:black;">Signature&nbsp;</span>
-								</div>
-								<input type="text" class="form-control form-control-sm" style="background-color: white;border-top:none;border-left:none;border-right:none;border-color: green;border-radius: 0;" name="signature" disabled>
-							</div>
-							<div class="input-group mt-1">
-								<div class="input-group-prepend">
-									<span class="input-group-text" style="padding:0;border:none; background-color:white; color:black;">Name in Print&nbsp;</span>
-								</div>
-								<input type="text" class="form-control form-control-sm" name="prepared_name" onkeypress="return isTextKey(event)" value="<?php echo $row['prepared_name']; ?>">
-							</div>
-							<div class="input-group mt-1">
-								<div class="input-group-prepend">
-									<span class="input-group-text" style="padding:0;border:none; background-color:white; color:black;">Title or Position&nbsp;</span>
-								</div>
-								<input type="text" class="form-control form-control-sm" name="prepared_position" onkeypress="return isTextKey(event)" value="<?php echo $row['prepared_position']; ?>">
-							</div>
-							<div class="input-group mt-1">
-								<div class="input-group-prepend">
-									<span class="input-group-text" style="padding:0;border:none; background-color:white; color:black;">Date&nbsp;</span>
-								</div>
-								<input type="text" class="form-control form-control-sm" id="prepared_date" name="prepared_date" value="<?php echo $row['prepared_date']; ?>">
-							</div>
-						</div>
-					</div>
-				</div>
-			</div>
+            <div class="row" style="border: 2px solid green;border-top:none;">
+                <div class="col">
+                    <div class="row">
+                        <div class="col-6" style="border-right: 2px solid green;">
+                            <h6 style="padding-top:2px;">24. RECEIVED BY</h6>
+                            <div class="input-group mt-1">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text" style="padding:0;border:none; background-color:white; color:black;">Signature&nbsp;</span>
+                                </div>
+                                <input type="text" class="form-control form-control-sm"  style="background-color: white;border-top:none;border-left:none;border-right:none;border-color: green;border-radius: 0;" name="signature" disabled>
+                            </div>
+                            <div class="input-group mt-1">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text" style="padding:0;border:none; background-color:white; color:black;">Name in Print&nbsp;</span>
+                                </div>
+                                <input type="text" class="form-control form-control-sm"  name="received_name" onkeypress="return isTextKey(event)" value="">
+                            </div>
+                            <div class="input-group mt-1">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text" style="padding:0;border:none; background-color:white; color:black;">Title or Position&nbsp;</span>
+                                </div>
+                                <input type="text" class="form-control form-control-sm"  name="received_position" onkeypress="return isTextKey(event)" value="">
+                            </div>
+                            <div class="input-group mt-1">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text" style="padding:0;border:none; background-color:white; color:black;">Date&nbsp;</span>
+                                </div>
+                                <input type="text" class="form-control form-control-sm" id="received_date" name="received_date" value="">
+                            </div>
+                        </div>
+                        <div class="col-6">
+                            <h6 style="padding-top:2px;">25. REGISTERED AT THE OFFICE OF THE CIVIL REGISTRAR</h6>
+                            <div class="input-group mt-1">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text" style="padding:0;border:none; background-color:white; color:black;">Signature&nbsp;</span>
+                                </div>
+                                <input type="text" class="form-control form-control-sm" placeholder="" style="background-color: white;border-top:none;border-left:none;border-right:none;border-color: green;border-radius: 0;" name="signature" disabled>
+                            </div>
+                            <div class="input-group mt-1">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text" style="padding:0;border:none; background-color:white; color:black;">Name in Print&nbsp;</span>
+                                </div>
+                                <input type="text" class="form-control form-control-sm" id="civil_name" name="civil_name" onkeypress="return isTextKey(event)" value="">
+                            </div>
+                            <div class="input-group mt-1">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text" style="padding:0;border:none; background-color:white; color:black;">Title or Position&nbsp;</span>
+                                </div>
+                                <input type="text" class="form-control form-control-sm"  id="civil_position" name="civil_position" onkeypress="return isTextKey(event)" value="">
+                            </div>
+                            <div class="input-group mt-1">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text" style="padding:0;border:none; background-color:white; color:black;">Date&nbsp;</span>
+                                </div>
+                                <input type="text" class="form-control form-control-sm" id="civil_date" name="civil_date" value="">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
 
-			<div class="row" style="border: 2px solid green;border-top:none;">
-				<div class="col">
-					<div class="row">
-						<div class="col-6" style="border-right: 2px solid green;">
-							<h6 style="padding-top:2px;">24. RECEIVED BY</h6>
-							<div class="input-group mt-1">
-								<div class="input-group-prepend">
-									<span class="input-group-text" style="padding:0;border:none; background-color:white; color:black;">Signature&nbsp;</span>
-								</div>
-								<input type="text" class="form-control form-control-sm"  style="background-color: white;border-top:none;border-left:none;border-right:none;border-color: green;border-radius: 0;" name="signature" disabled>
-							</div>
-							<div class="input-group mt-1">
-								<div class="input-group-prepend">
-									<span class="input-group-text" style="padding:0;border:none; background-color:white; color:black;">Name in Print&nbsp;</span>
-								</div>
-								<input type="text" class="form-control form-control-sm"  name="received_name" onkeypress="return isTextKey(event)" value="<?php echo $row['received_name']; ?>">
-							</div>
-							<div class="input-group mt-1">
-								<div class="input-group-prepend">
-									<span class="input-group-text" style="padding:0;border:none; background-color:white; color:black;">Title or Position&nbsp;</span>
-								</div>
-								<input type="text" class="form-control form-control-sm"  name="received_position" onkeypress="return isTextKey(event)" value="<?php echo $row['received_position']; ?>">
-							</div>
-							<div class="input-group mt-1">
-								<div class="input-group-prepend">
-									<span class="input-group-text" style="padding:0;border:none; background-color:white; color:black;">Date&nbsp;</span>
-								</div>
-								<input type="text" class="form-control form-control-sm" id="received_date" name="received_date" value="<?php echo $row['received_date']; ?>">
-							</div>
-						</div>
-						<div class="col-6">
-							<h6 style="padding-top:2px;">25. REGISTERED AT THE OFFICE OF THE CIVIL REGISTRAR</h6>
-							<div class="input-group mt-1">
-								<div class="input-group-prepend">
-									<span class="input-group-text" style="padding:0;border:none; background-color:white; color:black;">Signature&nbsp;</span>
-								</div>
-								<input type="text" class="form-control form-control-sm" placeholder="" style="background-color: white;border-top:none;border-left:none;border-right:none;border-color: green;border-radius: 0;" name="signature" disabled>
-							</div>
-							<div class="input-group mt-1">
-								<div class="input-group-prepend">
-									<span class="input-group-text" style="padding:0;border:none; background-color:white; color:black;">Name in Print&nbsp;</span>
-								</div>
-								<input type="text" class="form-control form-control-sm" id="civil_name" name="civil_name" onkeypress="return isTextKey(event)" value="<?php echo $row['civil_name']; ?>">
-							</div>
-							<div class="input-group mt-1">
-								<div class="input-group-prepend">
-									<span class="input-group-text" style="padding:0;border:none; background-color:white; color:black;">Title or Position&nbsp;</span>
-								</div>
-								<input type="text" class="form-control form-control-sm"  id="civil_position" name="civil_position" onkeypress="return isTextKey(event)" value="<?php echo $row['civil_position']; ?>">
-							</div>
-							<div class="input-group mt-1">
-								<div class="input-group-prepend">
-									<span class="input-group-text" style="padding:0;border:none; background-color:white; color:black;">Date&nbsp;</span>
-								</div>
-								<input type="text" class="form-control form-control-sm" id="civil_date" name="civil_date" value="<?php echo $row['civil_date']; ?>">
-							</div>
-						</div>
-					</div>
-				</div>
-			</div>
+            <div class="row" style="border: 2px solid green;border-top:none;">
+                <div class="col">
+                    <div class="row" style="border: 2px solid green; border-top:none;">
+                        <div class="col" style="position: relative;">
+                            <h6 style="padding-top:2px; font-weight:bold;">REMARKS/ANNOTATIONS (For LCRO/OCRG Use Only)</h6>
+                            <textarea style="width: 100%; height: 80px;" id="r" class="form-control" placeholder="Type your remarks here..."></textarea>
+                            
+                            <div id="remark-dropdown" style="display:none; position:absolute; left:15px; right:15px; background:white; border:1px solid #ccc; z-index:1000; box-shadow: 0 4px 8px rgba(0,0,0,0.1); max-height: 150px; overflow-y: auto;">
+                            </div>
 
-			<div class="row" style="border: 2px solid green;border-top:none;">
-				<div class="col">
-					<div class="row" style="border: 2px solid green; border-top:none;">
-						<div class="col" style="position: relative;">
-							<h6 style="padding-top:2px; font-weight:bold;">REMARKS/ANNOTATIONS (For LCRO/OCRG Use Only)</h6>
-							<?php
-								$remarks = $row['remarks'];
-								$remarks = preg_replace("#<br>#", "", $remarks); 
-							?>
-							<textarea style="width: 100%; height: 80px;" id="r" class="form-control" placeholder="Type your remarks here..."><?php echo $remarks; ?></textarea>
-							
-							<div id="remark-dropdown" style="display:none; position:absolute; left:15px; right:15px; background:white; border:1px solid #ccc; z-index:1000; box-shadow: 0 4px 8px rgba(0,0,0,0.1); max-height: 150px; overflow-y: auto;">
-								</div>
+                            <textarea style="width: 100%; height: 80px; display: none;" name="remarks" id="re"></textarea>
+                        </div>
+                    </div>
+                </div>
+            </div>
 
-							<textarea style="width: 100%; height: 80px; display: none;" name="remarks" id="re"><?php echo $row['remarks']; ?></textarea>
-						</div>
-					</div>
-				</div>
-			</div>
-
-			<div class="row" style="border: 2px solid green;border-top:none;">
-				<div class="col">
-					<div class="row">
-						<div class="col">
-							<h6 style="padding-top:2px; font-weight:bold;">TO BE FILLED-UP AT THE OFFICE OF THE CIVIL REGISTRAR</h6>
-							<h6 style="margin-bottom: 0;">8&emsp;&emsp;&emsp;&nbsp;&nbsp;9&emsp;&emsp;&emsp;&nbsp;&nbsp;11&emsp;&emsp;&emsp;&emsp;&emsp;&nbsp;13&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;15&emsp;&emsp;&emsp;&nbsp;16&emsp;&emsp;&emsp;17&emsp;&emsp;&emsp;&emsp;&emsp;19</h6>
-							<div class="flex-container">
-								<div style="border-right:none;"><input type="text" class="form-control form-control-sm" name="8a" disabled></div>
-								<div style="margin-right: 3px;"><input type="text" class="form-control form-control-sm" name="8b" disabled></div>
-								<div style="border-right:none;"><input type="text" class="form-control form-control-sm" name="9a" disabled></div>
-								<div style="margin-right: 3px;"><input type="text" class="form-control form-control-sm" name="9b" disabled></div>
-								<div style="border-right:none;"><input type="text" class="form-control form-control-sm" name="11a" disabled></div>
-								<div style="border-right:none;"><input type="text" class="form-control form-control-sm" name="11b" disabled></div> 
-								<div style="margin-right: 3px;"><input type="text" class="form-control form-control-sm" name="11c" disabled></div>
-								<div style="border-right:none;"><input type="text" class="form-control form-control-sm" name="13a" disabled></div>
-								<div style="border-right:none;"><input type="text" class="form-control form-control-sm" name="13b" disabled></div> 
-								<div><input type="text" class="form-control form-control-sm" name="13c" disabled></div>
-								<div style="border-right:none;"><input type="text" class="form-control form-control-sm" name="13d" disabled></div>
-								<div style="border-right:none;"><input type="text" class="form-control form-control-sm" name="13e" disabled></div> 
-								<div><input type="text" class="form-control form-control-sm" name="13f" disabled></div>
-								<div style="border-right:none;"><input type="text" class="form-control form-control-sm" name="13g" disabled></div>
-								<div style="margin-right: 3px;"><input type="text" class="form-control form-control-sm" name="13h" disabled></div> 
-								<div style="border-right:none;"><input type="text" class="form-control form-control-sm" name="15a" disabled></div>
-								<div style="margin-right: 3px;"><input type="text" class="form-control form-control-sm" name="15b" disabled></div>
-								<div style="border-right:none;"><input type="text" class="form-control form-control-sm" name="16a" disabled></div> 
-								<div style="margin-right: 3px;"><input type="text" class="form-control form-control-sm" name="16b" disabled></div>
-								<div style="border-right:none;"><input type="text" class="form-control form-control-sm" name="17a" disabled></div>
-								<div style="border-right:none;"><input type="text" class="form-control form-control-sm" name="17b" disabled></div> 
-								<div style="margin-right: 3px;"><input type="text" class="form-control form-control-sm" name="17c" disabled></div>
-								<div style="border-right:none;"><input type="text" class="form-control form-control-sm" name="19a" disabled></div>
-								<div style="border-right:none;"><input type="text" class="form-control form-control-sm" name="19b" disabled></div> 
-								<div><input type="text" class="form-control form-control-sm" name="19c" disabled></div>
-								<div style="border-right:none;"><input type="text" class="form-control form-control-sm" name="19d" disabled></div>
-								<div style="border-right:none;"><input type="text" class="form-control form-control-sm" name="19e" disabled></div> 
-								<div><input type="text" class="form-control form-control-sm" name="19f" disabled></div>
-								<div style="border-right:none;"><input type="text" class="form-control form-control-sm" name="19g" disabled></div>
-								<div><input type="text" class="form-control form-control-sm" name="19h" disabled></div>  
-							</div>
-						</div>
-					</div>
-				</div>
-			</div>		
-		</div>
-	</div>
+            <div class="row" style="border: 2px solid green;border-top:none;">
+                <div class="col">
+                    <div class="row">
+                        <div class="col">
+                            <h6 style="padding-top:2px; font-weight:bold;">TO BE FILLED-UP AT THE OFFICE OF THE CIVIL REGISTRAR</h6>
+                            <h6 style="margin-bottom: 0;">8&emsp;&emsp;&emsp;&nbsp;&nbsp;9&emsp;&emsp;&emsp;&nbsp;&nbsp;11&emsp;&emsp;&emsp;&emsp;&emsp;&nbsp;13&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;15&emsp;&emsp;&emsp;&nbsp;16&emsp;&emsp;&emsp;17&emsp;&emsp;&emsp;&emsp;&emsp;19</h6>
+                            <div class="flex-container">
+                                <div style="border-right:none;"><input type="text" class="form-control form-control-sm" name="8a" disabled></div>
+                                <div style="margin-right: 3px;"><input type="text" class="form-control form-control-sm" name="8b" disabled></div>
+                                <div style="border-right:none;"><input type="text" class="form-control form-control-sm" name="9a" disabled></div>
+                                <div style="margin-right: 3px;"><input type="text" class="form-control form-control-sm" name="9b" disabled></div>
+                                <div style="border-right:none;"><input type="text" class="form-control form-control-sm" name="11a" disabled></div>
+                                <div style="border-right:none;"><input type="text" class="form-control form-control-sm" name="11b" disabled></div> 
+                                <div style="margin-right: 3px;"><input type="text" class="form-control form-control-sm" name="11c" disabled></div>
+                                <div style="border-right:none;"><input type="text" class="form-control form-control-sm" name="13a" disabled></div>
+                                <div style="border-right:none;"><input type="text" class="form-control form-control-sm" name="13b" disabled></div> 
+                                <div><input type="text" class="form-control form-control-sm" name="13c" disabled></div>
+                                <div style="border-right:none;"><input type="text" class="form-control form-control-sm" name="13d" disabled></div>
+                                <div style="border-right:none;"><input type="text" class="form-control form-control-sm" name="13e" disabled></div> 
+                                <div><input type="text" class="form-control form-control-sm" name="13f" disabled></div>
+                                <div style="border-right:none;"><input type="text" class="form-control form-control-sm" name="13g" disabled></div>
+                                <div style="margin-right: 3px;"><input type="text" class="form-control form-control-sm" name="13h" disabled></div> 
+                                <div style="border-right:none;"><input type="text" class="form-control form-control-sm" name="15a" disabled></div>
+                                <div style="margin-right: 3px;"><input type="text" class="form-control form-control-sm" name="15b" disabled></div>
+                                <div style="border-right:none;"><input type="text" class="form-control form-control-sm" name="16a" disabled></div> 
+                                <div style="margin-right: 3px;"><input type="text" class="form-control form-control-sm" name="16b" disabled></div>
+                                <div style="border-right:none;"><input type="text" class="form-control form-control-sm" name="17a" disabled></div>
+                                <div style="border-right:none;"><input type="text" class="form-control form-control-sm" name="17b" disabled></div> 
+                                <div style="margin-right: 3px;"><input type="text" class="form-control form-control-sm" name="17c" disabled></div>
+                                <div style="border-right:none;"><input type="text" class="form-control form-control-sm" name="19a" disabled></div>
+                                <div style="border-right:none;"><input type="text" class="form-control form-control-sm" name="19b" disabled></div> 
+                                <div><input type="text" class="form-control form-control-sm" name="19c" disabled></div>
+                                <div style="border-right:none;"><input type="text" class="form-control form-control-sm" name="19d" disabled></div>
+                                <div style="border-right:none;"><input type="text" class="form-control form-control-sm" name="19e" disabled></div> 
+                                <div><input type="text" class="form-control form-control-sm" name="19f" disabled></div>
+                                <div style="border-right:none;"><input type="text" class="form-control form-control-sm" name="19g" disabled></div>
+                                <div><input type="text" class="form-control form-control-sm" name="19h" disabled></div>  
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>      
+        </div>
+    </div>
 
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
 <script>
 $(document).ready(function(){
-	$("#r").keyup(function(){
-		var r = $("#r").val();
-		r = r.replace(/  /g, "[sp][sp]");
-		r = r.replace(/\n/g, "[nl]");
-		$("#re").val(r);
-	});
-}); 		
+    $("#r").keyup(function(){
+        var r = $("#r").val();
+        r = r.replace(/  /g, "[sp][sp]");
+        r = r.replace(/\n/g, "[nl]");
+        $("#re").val(r);
+    });
+});         
 </script>
 
 <script>
@@ -976,13 +971,19 @@ $(document).ready(function(){
 
 <script>
     $(document).ready(function() {
-        $('#mp_day, #mp_month, #mp_year').on('input', function() {
-            let d = $('#mp_day').val().trim();
-            let m = $('#mp_month').val().trim();
-            let y = $('#mp_year').val().trim();
+        // Monitor the new location-based IDs: City, Province, and Country
+        $('#marriage_city, #marriage_province, #marriage_country').on('input', function() {
+            let city = $('#marriage_city').val().trim();
+            let prov = $('#marriage_province').val().trim();
+            let country = $('#marriage_country').val().trim();
             
-            $('#marriage_place').val(`${d} ${m} ${y}`.trim());
+            // Concatenate them into the hidden field expected by reg_info_action.php
+            // Format: CITY PROVINCE COUNTRY (Force Uppercase for formal records)
+            let fullLocation = `${city} ${prov} ${country}`.replace(/\s+/g, ' ').trim().toUpperCase();
             
+            $('#marriage_place').val(fullLocation);
+            
+            // Save to local storage for Page 2 auto-fill
             if (typeof saveToMemory === "function") {
                 saveToMemory();
             }
@@ -1158,7 +1159,7 @@ function saveToMemory() {
         child_fname: $('#child_fname').val(),
         child_mname: $('#child_mname').val(),
         child_lname: $('#child_lname').val(),
-        child_sex: $('#child_sex').val(), // Ensure sex is stored
+        child_sex: $('#child_sex').val(), 
         father_fname: $('#father_fname').val(),
         father_mname: $('#father_mname').val(),
         father_lname: $('#father_lname').val(),
@@ -1189,6 +1190,41 @@ function saveToMemory() {
 $('input, select').on('blur change', saveToMemory);
 </script>
 
+<script> //attendant 5 script
+
+$(document).ready(function() {
+    // Automatically check "Others" and sync position ONLY when pressing Enter in Attendant 5
+    $('#otherstxt').on('keydown', function(e) {
+        if (e.key === "Enter") {
+            // Prevent the form from submitting or moving focus prematurely
+            e.preventDefault(); 
+            
+            const val = $(this).val().trim().toUpperCase();
+            
+            if (val !== "") {
+                // 1. Automatically check the "Others" checkbox
+                $('#others').prop('checked', true);
+                
+                // 2. Uncheck standard boxes to maintain accuracy
+                $('#physician, #nurse, #midwife, #hilot').prop('checked', false);
+                
+                // 3. Print/sync the value to the Attendant Position field
+                $('#attendant_position').val(val);
+                
+                // 4. Move focus to the next logical field (Name in Print)
+                $('#attendant_name').focus();
+            }
+            
+            // 5. Trigger saveToMemory to update the local storage
+            if (typeof saveToMemory === "function") {
+                saveToMemory();
+            }
+        }
+    });
+});
+
+</script>
+
 <script> 
 $(document).ready(function() {
     function toggleMarriagePlace() {
@@ -1196,29 +1232,214 @@ $(document).ready(function() {
         if(!mDate) return;
         mDate = mDate.trim().toUpperCase();
         
-        let mpInputs = $('#mp_day, #mp_month, #mp_year');
+        // Updated variable names to match your new location IDs
+        let mpInputs = $('#marriage_city, #marriage_province, #marriage_country');
         let mPlaceHidden = $('#marriage_place');
 
         if (mDate === "NOT MARRIED" || mDate === "NOT APPLICABLE" || mDate === "N/A") {
-            $('#mp_month').val("NOT APPLICABLE");
+            // Fill City with N/A and clear others
+            $('#marriage_city').val("");
+            $('#marriage_province').val("NOT APPLICABLE");
+            $('#marriage_country').val("");
+            
+            // Set hidden database value
             mPlaceHidden.val("NOT APPLICABLE");
+            
+            // Lock the fields
             mpInputs.prop('disabled', true);
             mpInputs.parent().css('background-color', '#e9ecef'); 
         } else {
+            // Unlock the fields
             mpInputs.prop('disabled', false);
             mpInputs.parent().css('background-color', 'white');
-            if ($('#mp_month').val() === "NOT APPLICABLE") {
+            
+            // Clear the "NOT APPLICABLE" placeholder so you can type a real location
+            if ($('#marriage_city').val() === "NOT APPLICABLE") {
                 mpInputs.val("");
                 mPlaceHidden.val("");
             }
         }
     }
 
+    // Run the check whenever the marriage date is updated
     $('#marriage_date').on('input blur', function() {
         toggleMarriagePlace();
         if (typeof saveToMemory === "function") saveToMemory();
     });
 
+    // Run once on load to handle existing data
     toggleMarriagePlace();
+});
+</script>
+
+<script>
+
+    $(document).ready(function() {
+    // List of all Date field IDs that should fetch current date on Enter
+    const dateFields = [
+        '#attendant_date', // Section 21b
+        '#informant_date', // Section 22
+        '#prepared_date',  // Section 23
+        '#received_date',  // Section 24
+        '#civil_date'      // Section 25
+    ];
+
+    $(dateFields.join(', ')).on('keydown', function(e) {
+        if (e.key === "Enter") {
+            e.preventDefault(); // Prevent default browser behavior
+
+            // 1. Get current date details
+            const now = new Date();
+            const day = now.getDate();
+            const year = now.getFullYear();
+            const monthName = now.toLocaleString('default', { month: 'long' }).toUpperCase();
+
+            // 2. Format as MONTH DAY, YEAR (e.g., FEBRUARY 24, 2026)
+            const formattedDate = `${monthName} ${day}, ${year}`;
+
+            // 3. Fill the focused field automatically
+            $(this).val(formattedDate);
+
+            // 4. Move focus to the next logical field automatically
+            const currentId = $(this).attr('id');
+            if (currentId === 'attendant_date') $('#informant_name').focus();
+            else if (currentId === 'informant_date') $('#prepared_name').focus();
+            else if (currentId === 'prepared_date') $('#received_name').focus();
+            else if (currentId === 'received_date') $('#civil_name').focus();
+
+            // 5. Save to local storage for Page 2
+            if (typeof saveToMemory === "function") {
+                saveToMemory();
+            }
+        }
+    });
+});
+
+</script>
+
+<script>
+
+   $(document).ready(function() {
+    // We target IDs to be sure: #mother_country, #father_country, and the country box in 20b
+    // Note: Ensure you add id="marriage_country" to your 20b Country input box
+    $('#mother_country, #father_country, #marriage_country').on('keydown', function(e) {
+        if (e.key === "Enter") {
+            // 1. Fill if empty
+            if ($(this).val().trim() === "") {
+                $(this).val("PHILIPPINES");
+            }
+
+            // 2. Prevent the global "move focus" script from jumping before we save
+            e.stopImmediatePropagation(); 
+
+            // 3. Save to memory for Page 2
+            if (typeof saveToMemory === "function") {
+                saveToMemory();
+            }
+
+            // 4. Manually move focus to the next field
+            const allInputs = $(".form-control:not([disabled])");
+            const index = allInputs.index(this);
+            if (index > -1 && index < allInputs.length - 1) {
+                allInputs.eq(index + 1).focus();
+            }
+            
+            return false; // Stop Enter from doing anything else
+        }
+    });
+});
+
+</script>
+
+<script>
+$(document).ready(function() {
+    const $remarkInput = $('#r');        
+    const $dropdown = $('#remark-dropdown'); 
+    const $hiddenInput = $('#re');      
+    const STORAGE_KEY = 'custom_remarks_list';
+
+    function getLocalRemarks() {
+        const data = localStorage.getItem(STORAGE_KEY);
+        return data ? JSON.parse(data) : [];
+    }
+
+    function saveToLocal(text) {
+        let remarks = getLocalRemarks();
+        text = text.trim().toUpperCase();
+        
+        if (text !== "" && !remarks.includes(text)) {
+            remarks.push(text);
+            localStorage.setItem(STORAGE_KEY, JSON.stringify(remarks));
+            // Alert removed here for silent saving
+        }
+    }
+
+    // --- 1. Keydown for Enter (Save) ---
+    $remarkInput.on('keydown', function(e) {
+        if (e.key === "Enter") {
+            e.preventDefault(); 
+            saveToLocal($(this).val());
+            $dropdown.hide();
+        }
+    });
+
+    // --- 2. Input/Focus for Suggestions ---
+    $remarkInput.on('input focus', function() {
+        const query = $(this).val().toUpperCase();
+        const remarks = getLocalRemarks();
+        const matches = remarks.filter(r => r.includes(query));
+
+        if (matches.length > 0 && query !== "") {
+            let html = '';
+            matches.forEach((text, index) => {
+                html += `
+                    <div class="remark-item">
+                        <span class="remark-text">${text}</span>
+                        <span class="delete-remark">Delete</span>
+                    </div>`;
+            });
+            $dropdown.html(html).show();
+        } else {
+            $dropdown.hide();
+        }
+
+        // Keep your hidden field updated for the database
+        let encoded = $(this).val().replace(/  /g, "[sp][sp]").replace(/\n/g, "[nl]");
+        $hiddenInput.val(encoded);
+    });
+
+    // --- 3. Click to Select ---
+    $(document).on('click', '.remark-text', function() {
+        const selectedText = $(this).text();
+        $remarkInput.val(selectedText);
+        let encoded = selectedText.replace(/  /g, "[sp][sp]").replace(/\n/g, "[nl]");
+        $hiddenInput.val(encoded);
+        $dropdown.hide();
+    });
+
+    // --- 4. Delete Logic with Confirmation ---
+    $(document).on('click', '.delete-remark', function(e) {
+        e.stopPropagation();
+        const textToDelete = $(this).siblings('.remark-text').text();
+        
+        // Confirmation dialog remains for safety
+        if (confirm(`Are you sure you want to delete this remark: "${textToDelete}"?`)) {
+            let remarks = getLocalRemarks();
+            remarks = remarks.filter(r => r !== textToDelete);
+            localStorage.setItem(STORAGE_KEY, JSON.stringify(remarks));
+            $(this).closest('.remark-item').remove();
+            
+            if ($dropdown.children().length === 0) {
+                $dropdown.hide();
+            }
+        }
+    });
+
+    // Hide dropdown when clicking away
+    $(document).on('click', function(e) {
+        if (!$(e.target).closest('.remark-item, #r').length) {
+            $dropdown.hide();
+        }
+    });
 });
 </script>
