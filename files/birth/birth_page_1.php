@@ -1571,3 +1571,28 @@ $(document).ready(function() {
     });
 });
 </script>
+
+<script>
+// 17. Combined Backspace Logic: Clear All AND Jump Back
+// Pressing Backspace clears the entire input box but KEEPS it selected
+$(document).ready(function() {
+    $('input[type="text"]').on('keydown', function(e) {
+        if (e.key === "Backspace") {
+            
+            // Only trigger if there is actually text in the box to delete
+            if ($(this).val() !== "") {
+                e.preventDefault(); // Stop the normal letter-by-letter deletion
+                
+                // 1. Clear the entire box instantly
+                $(this).val('');
+                
+                // 2. Alert your other scripts (like the "Not Married" lock) that the box is now empty
+                $(this).trigger('input'); 
+                
+                // 3. Save the empty box to memory directly (without blurring/deselecting)
+                if (typeof saveToMemory === "function") saveToMemory();
+            }
+        }
+    });
+});
+</script>

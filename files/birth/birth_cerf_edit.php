@@ -62,6 +62,57 @@
 	      #modal1A{ overflow:scroll; height:30em; }
 	    }
   	</style>
+
+	<style> 
+
+		@media print {
+    /* 1. Hide all the system UI (sidebar, topbar, buttons, back links) */
+    #sidebar, #navbar, #topbar, .btn, .nav-top {
+        display: none !important;
+    }
+
+    /* 2. Reset the main body so it takes up the whole paper */
+    body, #body, html {
+        padding: 0 !important;
+        margin: 0 !important;
+        background-color: white !important;
+        width: 100% !important;
+    }
+    .col-sm-9 {
+        flex: 0 0 100% !important;
+        max-width: 100% !important;
+    }
+
+    /* 3. Remove the scrollbar constraint so the whole form prints */
+    .coll {
+        overflow: visible !important;
+        height: auto !important;
+    }
+
+    /* 4. Force the browser to print your green borders and blue backgrounds */
+    .ctf-birth, .ctf-birth *, input, select {
+        -webkit-print-color-adjust: exact !important;
+        print-color-adjust: exact !important;
+        color-adjust: exact !important;
+    }
+
+    /* 5. Hide Page 2 during this specific preview (Optional, remove if you want both pages to print) */
+    #birth_page_2 {
+        display: none !important;
+    }
+    
+    /* 6. Adjust form inputs to look clean on paper */
+    input::placeholder, textarea::placeholder {
+        color: transparent !important; /* Hides placeholders when printing */
+    }
+    
+    @page {
+        size: legal; /* Sets default paper size to Legal/Long */
+        margin: 10mm; 
+    }
+}
+
+	</style>
     
 </head>
 <body>
@@ -155,7 +206,7 @@
 					<button data-toggle="collapse" data-target="#birth_page_2" id="page2" class="btn btn-outline-info">Page 2</button>
 				</div>
 				<div class="col-sm-2 mb-1 pr-0">
-					<button type="button" class="btn btn-outline-dark btn-block" data-toggle="modal" data-target="#my1A">Preview</button>
+					<button type="button" class="btn btn-secondary" onclick="openLivePreview()">Preview</button>
 				</div>
 				<div class="col-sm-2 mb-1 pr-0">
 					<button type="button" class="btn btn-outline-dark btn-block" data-toggle="modal" data-target="#my1A">Print Form No. 1A</button>
@@ -209,6 +260,24 @@
 		
   	</div>
 </div>
+<!--print modal -->
+<div class="modal fade" id="livePreviewModal" tabindex="-1" role="dialog" aria-hidden="true">
+  <div class="modal-dialog modal-xl" role="document"> <div class="modal-content">
+      <div class="modal-header bg-success text-white">
+        <h5 class="modal-title"><i class="fa fa-eye"></i> Form No. 102 Document Preview</h5>
+        <button type="button" class="close text-white" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body" id="livePreviewBody" style="overflow-x: auto; background-color: #f8f9fa;">
+        </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-info" onclick="window.print()"><i class="fa fa-print"></i> Print Document</button>
+      </div>
+    </div>
+  </div>
+</div>
 
 	<?php  
 		include 'print_form_1A_modal.php';
@@ -259,6 +328,27 @@ $(document).ready(function(){
 		}
 	});
 
+</script>
+
+<script>
+// Function to open the modal and load the print page
+function openPreview(registryNo) {
+    // CHANGE 'print_form.php' to the actual name of your printing file
+    var printUrl = "print_form.php?reg_no=" + registryNo; 
+    
+    // Load the URL into the iframe
+    $('#previewIframe').attr('src', printUrl);
+    
+    // Show the Bootstrap modal
+    $('#previewModal').modal('show');
+}
+
+// Function to trigger the print command directly from the modal
+function printFromPreview() {
+    var iframe = document.getElementById('previewIframe');
+    iframe.contentWindow.focus();
+    iframe.contentWindow.print();
+}
 </script>
 
 

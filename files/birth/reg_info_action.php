@@ -6,19 +6,27 @@
 
     if (isset($_POST['add_birth'])) 
     {
-      //====================reg_info===========================================
+    //====================reg_info===========================================
+      date_default_timezone_set('Asia/Manila'); 
+      $current_date = date("Y-m-d"); 
+      $current_time = date("H:i:s"); 
+
       $registry_no = $conn->real_escape_string($_POST['registry_no']);
       $book_no = $_POST['book_no'];
       $page_no = $_POST['page_no'];
       $province = $conn->real_escape_string($_POST['provinces']);
       $municipal = $conn->real_escape_string($_POST['municipals']);
-      $date = $_POST['civil_date'];
-      $time = $_POST['time'];
+      
+      // Auto-capture the EXACT server creation date and time
+      $date = $current_date;
+      $time = $current_time;
+      
       $e_name = $conn->real_escape_string($_POST['emp_name']);
-      $u_date = date("Y-m-d");
-      $u_time = $_POST['time'];
-      $u_name = $conn->real_escape_string($_POST['emp_name']);
-
+      
+      // Set update data to empty/zero since this is a brand new record
+      $u_date = "0000-00-00";
+      $u_time = "00:00:00";
+      $u_name = "";
       //=====================child_info==========================================
       $child_lname = $conn->real_escape_string($_POST['child_lname']);
       $child_fname = $conn->real_escape_string($_POST['child_fname']);

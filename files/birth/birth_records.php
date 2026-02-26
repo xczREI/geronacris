@@ -195,15 +195,26 @@
 ?>
           <tr>
             <td class="tduser" scope="rows">
-                <?php 
-                    $rDate = (!empty($row['reg_date']) && $row['reg_date'] != '0000-00-00') ? date("m/d/Y", strtotime($row['reg_date'])) : 'N/A';
-                    $rTime = (!empty($row['reg_time']) && $row['reg_time'] != '00:00:00') ? date("h:i A", strtotime($row['reg_time'])) : '';
-                    
-                    // This neatly joins them, removing the space if the time is blank
-                    $rCombined = $rDate . ($rTime ? ' ' . $rTime : '');
-                    echo $row['reg_user'] . '<br>(' . $rCombined . ')'; 
-                ?>
-            </td>
+              <?php 
+                  // 1. Handle missing usernames so the top line is never blank
+                  $user = !empty($row['reg_user']) ? $row['reg_user'] : 'NO USER RECORDED';
+                  
+                  // 2. Check for valid dates and times
+                  $rDate = (!empty($row['reg_date']) && $row['reg_date'] != '0000-00-00') ? date("m/d/Y", strtotime($row['reg_date'])) : '';
+                  $rTime = (!empty($row['reg_time']) && $row['reg_time'] != '00:00:00') ? date("h:i A", strtotime($row['reg_time'])) : '';
+                  
+                  // 3. Print the username
+                  echo $user;
+                  
+                  // 4. Print the date/time cleanly, or show a neat muted message if both are missing
+                  if ($rDate != '' || $rTime != '') {
+                      echo '<br>(' . trim($rDate . ' ' . $rTime) . ')';
+                  } else {
+                      echo '<br><span style="color:#999; font-size:11px;">(No Date/Time)</span>';
+                  }
+              ?>
+          </td>
+
             <td class="tduser">
                 <?php 
                     $uDate = (!empty($row['update_date']) && $row['update_date'] != '0000-00-00') ? date("m/d/Y", strtotime($row['update_date'])) : 'N/A';
