@@ -62,64 +62,73 @@
 	      #modal1A{ overflow:scroll; height:30em; }
 	    }
   	</style>
-
-	<style> 
-
-		@media print {
-    /* 1. Hide all the system UI (sidebar, topbar, buttons, back links) */
-    #sidebar, #navbar, #topbar, .btn, .nav-top {
-        display: none !important;
-    }
-
-    /* 2. Reset the main body so it takes up the whole paper */
-    body, #body, html {
-        padding: 0 !important;
-        margin: 0 !important;
-        background-color: white !important;
-        width: 100% !important;
-    }
-    .col-sm-9 {
-        flex: 0 0 100% !important;
-        max-width: 100% !important;
-    }
-
-    /* 3. Remove the scrollbar constraint so the whole form prints */
-    .coll {
-        overflow: visible !important;
-        height: auto !important;
-    }
-
-    /* 4. Force the browser to print your green borders and blue backgrounds */
-    .ctf-birth, .ctf-birth *, input, select {
-        -webkit-print-color-adjust: exact !important;
-        print-color-adjust: exact !important;
-        color-adjust: exact !important;
-    }
-
-    /* 5. Hide Page 2 during this specific preview (Optional, remove if you want both pages to print) */
-    #birth_page_2 {
-        display: none !important;
-    }
     
-    /* 6. Adjust form inputs to look clean on paper */
-    input::placeholder, textarea::placeholder {
-        color: transparent !important; /* Hides placeholders when printing */
-    }
-    
-    @page {
-        size: legal; /* Sets default paper size to Legal/Long */
-        margin: 10mm; 
-    }
-}
+    <style>
+        /* =========================================
+           1. CSS FOR PRINTING THE DOCUMENT
+           ========================================= */
+        @media print {
+            /* Hide the main background page */
+            body * {
+                visibility: visible;
+            }
+            /* Only show the preview inside the modal */
+            #livePreviewBody, #livePreviewBody * {
+                visibility: visible;
+            }
+            /* Stretch the preview to fit the paper */
+            #livePreviewBody {
+                position: absolute;
+                left: 0;
+                top: 0;
+                width: 100%;
+                margin: 0;
+                padding: 0;
+            }
+            /* Hide pop-up borders, close buttons, and the dark background shadow */
+            .modal-header, .modal-footer, .modal-backdrop { 
+                display: none !important; 
+            }
+            .modal-content { 
+                border: none !important; 
+                box-shadow: none !important;
+            }
+           
+            /* Hide placeholders so they don't print */
+            input::placeholder, textarea::placeholder {
+                color: transparent !important; 
+            }
+            @page {
+                size: legal; /* Default to Legal size paper */
+                margin: 10mm;
+            }
+        }
 
-	</style>
-    
+        /* =========================================
+           2. CSS FOR THE SCREEN (Wider Pop-up)
+           ========================================= */
+        @media (min-width: 768px) {
+            #livePreviewModal .modal-dialog {
+                max-width: 1050px !important; /* Forces the modal to be wide enough for Form 102 */
+                width: 95% !important;
+            }
+        }
+
+				/* Make text prominent ONLY inside the Live Preview Modal */
+		#livePreviewBody .ctf-birth input, 
+		#livePreviewBody .ctf-birth select, 
+		#livePreviewBody .ctf-birth textarea {
+			font-size: 11.5px !important;       /* Slightly larger */
+			font-weight: 600 !important;        /* Maximum bold */
+			color: #000000 !important;          /* Pure black text */
+			-webkit-text-fill-color: #000000 !important; /* Overrides Chrome's gray disabled text */
+			opacity: 1 !important;              /* Stops fading */
+		}
+    </style>
 </head>
 <body>
 
-<!-- nav top -->
 <nav class="navbar navbar-expand-md bg-success navbar-dark" id="navbar">
-  <!-- Brand -->
   <a class="navbar-brand" href="#">
     <div class="media pl-1 mb-3">
       <div class="media-body">
@@ -136,12 +145,10 @@
     </div>
   </a>
 
-  <!-- Toggler/collapsibe Button -->
   <button class="navbar-toggler mr-2" type="button" data-toggle="collapse" data-target="#collapsibleNavbar" style="float: right;">
     <span class="navbar-toggler-icon"></span>
   </button>
 
-  <!-- Navbar links -->
   <div class="collapse navbar-collapse bg-light" id="collapsibleNavbar">
     <ul class="navbar-nav bg-dark mx-auto h-100">
 		<li class="nav-item"><a class="active nav-link" id="nav-link" href="../../home.php">&emsp;<i class="fa fa-clock-o fa-fw"></i>Dashboard</a></li>
@@ -171,7 +178,6 @@
 	</div>
 </div>
 
-<!--navbar-->
 <div class="row" id="row">
   	<div class="col-sm-3 bg-success" style="border-left: 15px solid;" id="sidebar">
   		<div class="pic" style="margin-top: 2em;">
@@ -181,7 +187,6 @@
 	  		</center>
 	  	</div>
 
-		<!--nav-side-->
 		<div class="aside" style="margin-top: 3em;">
 			<nav class="navbar">
 				<ul class="navbar-nav" style="padding-bottom:6em;">
@@ -195,9 +200,7 @@
 			</nav>
 		</div>
 
-  	</div><!--end col-3-->
-  	
-  	<div class="col-sm-9" style="padding-top: 7%;" id="body">
+  	</div><div class="col-sm-9" style="padding-top: 7%;" id="body">
   		<div id="accordion">
 	  		<div class="row">
 		  		<div class="col-sm-4 mb-1">
@@ -206,7 +209,7 @@
 					<button data-toggle="collapse" data-target="#birth_page_2" id="page2" class="btn btn-outline-info">Page 2</button>
 				</div>
 				<div class="col-sm-2 mb-1 pr-0">
-					<button type="button" class="btn btn-secondary" onclick="openLivePreview()">Preview</button>
+					<button type="button" class="btn btn-outline-dark btn-block" onclick="openLivePreview()">Preview</button>
 				</div>
 				<div class="col-sm-2 mb-1 pr-0">
 					<button type="button" class="btn btn-outline-dark btn-block" data-toggle="modal" data-target="#my1A">Print Form No. 1A</button>
@@ -237,8 +240,7 @@
 			?>
 			<form method="post" action="birth_cerf_update_action.php" id="updatebirth_form">
 				<input type="hidden" name="reg_no" value="<?php echo $row['no']; ?>">
-			    <!-- Tab panes -->
-				<div id="birth_page_1" class="collapse show coll" data-parent="#accordion">
+			    <div id="birth_page_1" class="collapse show coll" data-parent="#accordion">
 			    <?php
 		        	include 'birth_page_1_edit.php';
 			   	?>
@@ -260,9 +262,10 @@
 		
   	</div>
 </div>
-<!--print modal -->
+
 <div class="modal fade" id="livePreviewModal" tabindex="-1" role="dialog" aria-hidden="true">
-  <div class="modal-dialog modal-xl" role="document"> <div class="modal-content">
+  <div class="modal-dialog modal-xl" role="document"> 
+    <div class="modal-content">
       <div class="modal-header bg-success text-white">
         <h5 class="modal-title"><i class="fa fa-eye"></i> Form No. 102 Document Preview</h5>
         <button type="button" class="close text-white" data-dismiss="modal" aria-label="Close">
@@ -273,20 +276,19 @@
         </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-        <button type="button" class="btn btn-info" onclick="window.print()"><i class="fa fa-print"></i> Print Document</button>
+       
       </div>
     </div>
   </div>
 </div>
 
-	<?php  
-		include 'print_form_1A_modal.php';
-		include 'print_form_102_modal.php';
-		include 'reprint.php';
-	?>
+<?php  
+    include 'print_form_1A_modal.php';
+    include 'print_form_102_modal.php';
+    include 'reprint.php';
+?>
 <?php include '../../report/report_modal1.php'; ?>
 
-<!--Javascript-->
 <script src = "../../js/birth_att_inf_2.js"></script>
 <script src = "../../js/birth_delayed_gender.js"></script>
 <script src = "../../js/birth_late_registry.js"></script>
@@ -319,7 +321,6 @@ $(document).ready(function(){
 });
 </script>
 
-<!--Javascrpt theme-->
 <script src = "../../alertifyjs/alertify.min.js"></script>
 <script>
 	document.getElementById("updatebirth_form").addEventListener("keydown", function(event){
@@ -331,26 +332,63 @@ $(document).ready(function(){
 </script>
 
 <script>
-// Function to open the modal and load the print page
-function openPreview(registryNo) {
-    // CHANGE 'print_form.php' to the actual name of your printing file
-    var printUrl = "print_form.php?reg_no=" + registryNo; 
+function openLivePreview() {
+    // 1. Target the first page of your form
+    var $original = $('#birth_page_1');
     
-    // Load the URL into the iframe
-    $('#previewIframe').attr('src', printUrl);
+    // 2. Create a clone (snapshot) of the form
+    var $clone = $original.clone();
     
-    // Show the Bootstrap modal
-    $('#previewModal').modal('show');
-}
+    // ---> THE FIX: Remove all scripts from the clone so it doesn't crash the browser! <---
+    $clone.find('script').remove();
+    
+    // 3. FORCE the clone to be visible
+    $clone.removeClass('collapse coll hidden show');
+    $clone.css({
+        'display': 'block',
+        'visibility': 'visible',
+        'height': 'auto',
+        'overflow': 'visible'
+    });
+    
+    // 4. Manually copy over typed text and selected dropdowns
+    var originalSelects = $original.find('select');
+    $clone.find('select').each(function(index, item) {
+         $(item).val(originalSelects.eq(index).val());
+    });
 
-// Function to trigger the print command directly from the modal
-function printFromPreview() {
-    var iframe = document.getElementById('previewIframe');
-    iframe.contentWindow.focus();
-    iframe.contentWindow.print();
+    var originalTextareas = $original.find('textarea');
+    $clone.find('textarea').each(function(index, item) {
+         $(item).val(originalTextareas.eq(index).val());
+    });
+
+    var originalInputs = $original.find('input');
+    $clone.find('input').each(function(index, item) {
+         if($(item).attr('type') === 'checkbox' || $(item).attr('type') === 'radio') {
+             $(item).prop('checked', originalInputs.eq(index).prop('checked'));
+         } else {
+             $(item).val(originalInputs.eq(index).val());
+         }
+    });
+
+    // 5. Strip IDs from the clone so it doesn't break the real form underneath
+    $clone.find('*').removeAttr('id');
+    $clone.removeAttr('id'); 
+    
+    // 6. Lock the preview inputs so they can't be edited
+    $clone.find('input, textarea').prop('readonly', true).css({
+        'background-color': 'transparent', 
+        'border': 'none' 
+    });
+    $clone.find('select, input[type="checkbox"], input[type="radio"]').prop('disabled', true);
+    
+    // 7. Inject the snapshot into the modal
+    $('#livePreviewBody').empty().append($clone);
+    
+    // 8. Move the modal to the body to prevent overlay issues, then show it
+    $('#livePreviewModal').appendTo("body").modal('show');
 }
 </script>
-
 
 </body>
 </html>

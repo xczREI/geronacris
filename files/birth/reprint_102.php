@@ -19,7 +19,7 @@ if ($result->num_rows > 0) {
 $pdf = new FPDI();
 
 $pdf->AddPage('P', array(215.9, 355.6));
-
+$sdf->Ouput('I',);
 //            ***** READ ME ******
 //       ung mga may adju adjustment un ung para maging dyanamic ung placement ng mga cells sa pdf depending sa width or length nung text na ilalagay and usually ideal sya for baranggay and house number as well as sa mga maliliit na textbox
 
@@ -116,12 +116,16 @@ $pdf->SetXY(37, 58);
 $pdf->Cell(0, 10, strtoupper($row['child_sex'] ?? ''), 0, 1);
 
 // Child Birth Date (FIXED: Added safety for array keys and removed stray commas)
-$sampleBirth = str_replace(',', '', $row['child_birth_date'] ?? '');
-$childBirthDate = explode(' ', $sampleBirth);
-$bday_month = $childBirthDate[0] ?? ''; // Text (e.g. FEBRUARY)
-$bday_day = $childBirthDate[1] ?? '';   // Number (e.g. 02)
-$bday_year = $childBirthDate[2] ?? '';  // Year (e.g. 2003)
+$sampleBirth = $row['child_birth_date'];
+$timestamp = strtotime($sampleBirth);
 
+$birthDay   = date('d', $timestamp);
+$birthMonth = date('F', $timestamp); // 'F' for full month name, 'm' for numbers
+$birthYear  = date('Y', $timestamp);
+
+fitTextInCell($pdf, 105, 59, 40, 5, $birthDay);
+fitTextInCell($pdf, 125, 59, 40, 5, $birthMonth);
+fitTextInCell($pdf, 165, 59, 40, 5, $birthYear);
 fitTextInCell($pdf, 105, 59, 40, 5, $bday_day);
 fitTextInCell($pdf, 125, 59, 40, 5, $bday_month);
 fitTextInCell($pdf, 165, 59, 40, 5, $bday_year);

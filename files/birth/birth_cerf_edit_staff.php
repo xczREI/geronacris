@@ -15,7 +15,7 @@
     <link href="../../css/style_css.css" rel="stylesheet" type="text/css">
 
 	<style>
-		input{ 
+		input, select{ 
 			text-transform: uppercase;
 		}
 		#birth_txt{
@@ -27,8 +27,8 @@
 			border-radius: 0;
 		}
 		textarea{ 
-	    	text-transform: uppercase;
-	    }
+    		text-transform: uppercase;
+	   	}
 	</style>
 
 	<style>
@@ -62,7 +62,69 @@
 	      #modal1A{ overflow:scroll; height:30em; }
 	    }
   	</style>
+    
+    <style>
+        /* =========================================
+           1. CSS FOR PRINTING THE DOCUMENT
+           ========================================= */
+        @media print {
+            /* Hide the main background page */
+            body * {
+                visibility: visible;
+            }
+            /* Only show the preview inside the modal */
+            #livePreviewBody, #livePreviewBody * {
+                visibility: visible;
+            }
+            /* Stretch the preview to fit the paper */
+            #livePreviewBody {
+                position: absolute;
+                left: 0;
+                top: 0;
+                width: 100%;
+                margin: 0;
+                padding: 0;
+            }
+            /* Hide pop-up borders, close buttons, and the dark background shadow */
+            .modal-header, .modal-footer, .modal-backdrop { 
+                display: none !important; 
+            }
+            .modal-content { 
+                border: none !important; 
+                box-shadow: none !important;
+            }
+           
+            /* Hide placeholders so they don't print */
+            input::placeholder, textarea::placeholder {
+                color: transparent !important; 
+            }
+            @page {
+                size: legal; /* Default to Legal size paper */
+                margin: 10mm;
+            }
+        }
 
+        /* =========================================
+           2. CSS FOR THE SCREEN (Wider Pop-up)
+           ========================================= */
+        @media (min-width: 768px) {
+            #livePreviewModal .modal-dialog {
+                max-width: 1050px !important; /* Forces the modal to be wide enough for Form 102 */
+                width: 95% !important;
+            }
+        }
+
+				/* Make text prominent ONLY inside the Live Preview Modal */
+		#livePreviewBody .ctf-birth input, 
+		#livePreviewBody .ctf-birth select, 
+		#livePreviewBody .ctf-birth textarea {
+			font-size: 11.5px !important;       /* Slightly larger */
+			font-weight: 600 !important;        /* Maximum bold */
+			color: #000000 !important;          /* Pure black text */
+			-webkit-text-fill-color: #000000 !important; /* Overrides Chrome's gray disabled text */
+			opacity: 1 !important;              /* Stops fading */
+		}
+    </style>
 </head>
 <body>
 
@@ -144,68 +206,85 @@
   	</div><!--end col-3-->
   
   	<div class="col-sm-9" style="padding-top: 7%;" id="body">
-  		<div id="accordion">
-	  		<div class="row">
-		  		<div class="col-sm-8 mb-1">
-			  		<a href="birth_records_staff.php" class="btn btn-light"><i class="fa fa-angle-double-left"></i> Back</a>
-			  		<button data-toggle="collapse" data-target="#birth_page_1" id="page1" class="btn btn-outline-info">Page 1</button>
-					<button data-toggle="collapse" data-target="#birth_page_2" id="page2" class="btn btn-outline-info">Page 2</button>
-				</div>
-				<div class="col-sm-2 mb-1 pr-0">
-					<button type="button" class="btn btn-outline-dark btn-block" data-toggle="modal" data-target="#my1A">Print Form No. 1A</button>
-				</div>
-				<div class="col-sm-2 pr-0">
-					<button type="button" class="btn btn-outline-dark btn-block" data-toggle="modal" data-target="#my102">Print Form No. 102</button>
-				</div>
-			</div>
+        <div id="accordion">
+            <div class="row">
+                <div class="col-sm-6 mb-1">
+                    <a href="birth_records_staff.php" class="btn btn-light"><i class="fa fa-angle-double-left"></i> Back</a>
+                    <button data-toggle="collapse" data-target="#birth_page_1" id="page1" class="btn btn-outline-info">Page 1</button>
+                    <button data-toggle="collapse" data-target="#birth_page_2" id="page2" class="btn btn-outline-info">Page 2</button>
+                </div>
+                <div class="col-sm-2 mb-1 pr-0">
+                    <button type="button" class="btn btn-outline-dark btn-block" onclick="openLivePreview()">Preview</button>
+                </div>
+                <div class="col-sm-2 mb-1 pr-0">
+                    <button type="button" class="btn btn-outline-dark btn-block" data-toggle="modal" data-target="#my1A">Print Form 1A</button>
+                </div>
+                <div class="col-sm-2 pr-0">
+                    <button type="button" class="btn btn-outline-dark btn-block" data-toggle="modal" data-target="#my102">Print Form 102</button>
+                </div>
+            </div>
 
-			<?php
-				require_once 'login_db_birth.php';
+          <?php
+    require_once 'login_db_birth.php';
+    $conn = new mysqli($hn, $un, $pw, $db);
+    if ($conn->connect_error) die($conn->connect_error);
 
-				$conn = new mysqli($hn, $un, $pw, $db);
-				if ($conn->connect_error) die($conn->connect_error);
+    $reg_no=null;
+    if (!empty($_GET['reg_no'])){ $reg_no = $_REQUEST['reg_no']; }
 
-				$reg_no=null;
-				if (!empty($_GET['reg_no'])){ $reg_no = $_REQUEST['reg_no']; }
+    // Added LIMIT 1 to ensure the database only ever grabs one record
+    $sql = "SELECT * FROM registration_tbl NATURAL JOIN (child_tbl NATURAL JOIN mother_tbl NATURAL JOIN father_tbl NATURAL JOIN att_inf_tbl NATURAL JOIN receive_civil_tbl NATURAL JOIN remarks_tbl NATURAL JOIN admission_paternity_tbl NATURAL JOIN late_reg_tbl) WHERE no = '$reg_no' LIMIT 1";
+    
+    $result = $conn->query($sql);  
+    
+    if ($result->num_rows > 0) {
+        // Removed the while loop entirely. Just fetch the single row once!
+        $row = $result->fetch_assoc(); 
+?>
+<form method="post" action="birth_cerf_update_action_staff.php" id="updatebirth_form">
+    <input type="hidden" name="reg_no" value="<?php echo $row['no']; ?>">
+    <div id="birth_page_1" class="collapse coll show" data-parent="#accordion">
+        <?php include 'birth_page_1_edit.php'; ?>
+    </div>
+    <div id="birth_page_2" class="collapse coll" data-parent="#accordion">
+        <?php include 'birth_page_2_edit.php'; ?>
+    </div>
+    <br>
+    <button type="submit" class="btn btn-info btn-block" name="birth_update" id="btnadd" style="font-weight:bold; letter-spacing:5px; font-size:20px;">UPDATE</button>
+    <br>
+</form>
+<?php 
+    } else {
+        // Optional: Good practice to show a message if the ID is totally missing
+        echo "<div class='alert alert-danger'>No record found for this Registry Number.</div>";
+    } 
+?>
+        </div>
+    </div>
+</div>
 
-				$sql = "SELECT * FROM registration_tbl NATURAL JOIN (child_tbl NATURAL JOIN mother_tbl NATURAL JOIN father_tbl NATURAL JOIN att_inf_tbl NATURAL JOIN receive_civil_tbl NATURAL JOIN remarks_tbl NATURAL JOIN admission_paternity_tbl NATURAL JOIN late_reg_tbl) WHERE no = '$reg_no'";
-				$result = $conn->query($sql);  
-				if (!$result) die ("Database access failed: " . $conn->error);
-
-				if ($result->num_rows > 0) {
-	    			while($row = $result->fetch_assoc()) { 
-			?>
-			<form method="post" action="birth_cerf_update_action_staff.php" id="updatebirth_form">
-				<input type="hidden" name="reg_no" value="<?php echo $row['no']; ?>">
-				  <!-- Tab panes -->
-				<div id="birth_page_1" class="collapse coll show" data-parent="#accordion">
-			    <?php
-		        	include 'birth_page_1_edit.php';
-			   	?>
-				</div>
-				<div id="birth_page_2" class="collapse coll" data-parent="#accordion">
-		      	<?php
-		        	include 'birth_page_2_edit.php';
-		   		?>
-				</div>
-				<br>
-		     	<button type="submit" class="btn btn-info btn-block" name="birth_update" id="btnadd" style="font-weight:bold; letter-spacing:5px; font-size:20px;">UPDATE</button>
-		     	<br>
-			</form>
-			<?php 
-				} 
-			}
-			?>
-		</div>
-		
-  	</div>
+<div class="modal fade" id="livePreviewModal" tabindex="-1" role="dialog" aria-hidden="true">
+  <div class="modal-dialog modal-xl" role="document"> 
+    <div class="modal-content">
+      <div class="modal-header bg-dark text-white">
+        <h5 class="modal-title"><i class="fa fa-eye"></i> Staff Preview - Form No. 102</h5>
+        <button type="button" class="close text-white" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body" id="livePreviewBody" style="overflow-x: auto; background-color: #f8f9fa;"></div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
 </div>
 
 <?php  
-	include 'print_form_1A_modal.php';
-	include 'print_form_102_modal.php';
+    include 'print_form_1A_modal.php';
+    include 'print_form_102_modal.php';
+    include '../../report/report_modal1_staff.php'; 
 ?>
-<?php include '../../report/report_modal1_staff.php'; ?>
 
 <!--Javascript-->
 <script src = "../../js/birth_att_inf_2.js"></script>
@@ -243,6 +322,59 @@ $(document).ready(function(){
 
 <!--Javascrpt theme-->
 <script src = "../../alertifyjs/alertify.min.js"></script>
+
+<script>
+// Logic to handle the Preview generation
+function openLivePreview() {
+    // 1. Target the original page content
+    var $original = $('#birth_page_1');
+    
+    // 2. Create the clone and strip scripts to prevent crashes
+    var $clone = $original.clone();
+    $clone.find('script').remove();
+    
+    // 3. FORCE fixed layout: Wrap clone in a div that matches your form's 960px width
+    // This prevents the Bootstrap "cols" from stretching and breaking alignment
+    var $previewWrapper = $('<div style="width: 960px; margin: auto; background: white; padding: 20px;"></div>');
+    
+    $clone.removeClass('collapse coll hidden show');
+    $clone.css({
+        'display': 'block',
+        'visibility': 'visible',
+        'height': 'auto',
+        'overflow': 'visible'
+    });
+
+    // 4. Copy current input values (dropdowns, text, checkboxes)
+    var originalSelects = $original.find('select');
+    $clone.find('select').each(function(index, item) {
+         $(item).val(originalSelects.eq(index).val());
+    });
+
+    var originalInputs = $original.find('input');
+    $clone.find('input').each(function(index, item) {
+         if($(item).attr('type') === 'checkbox' || $(item).attr('type') === 'radio') {
+             $(item).prop('checked', originalInputs.eq(index).prop('checked'));
+         } else {
+             $(item).val(originalInputs.eq(index).val());
+         }
+    });
+
+    // 5. Clean up IDs and lock inputs so it's a "View Only" snapshot
+    $clone.find('*').removeAttr('id');
+    $clone.find('input, textarea').prop('readonly', true).css({
+        'background-color': 'transparent', 
+        'border': 'none' 
+    });
+    $clone.find('select, input[type="checkbox"], input[type="radio"]').prop('disabled', true);
+    
+    // 6. EMPTY the body first to prevent stacking, then add the wrapper
+    $('#livePreviewBody').empty().append($previewWrapper.append($clone));
+    
+    // 7. Show the modal (Don't use appendTo("body") here, it's already in the HTML)
+    $('#livePreviewModal').modal('show');
+}
+</script>
 
 </body>
 </html>

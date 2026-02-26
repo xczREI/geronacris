@@ -1,4 +1,5 @@
 <?php
+ob_start();
 use setasign\Fpdi\Fpdi;
 require_once('../../fpdf/fpdf.php');
 require_once('../../fpdi/src/autoload.php');
@@ -10,12 +11,12 @@ if ($conn->connect_error) die($conn->connect_error);
 $reg_no=$_POST['reg_no'];
 if (!empty($_GET['reg_no'])){ $reg_no = $_REQUEST['reg_no']; }
 
-$sql = "SELECT * FROM registration_tbl NATURAL JOIN (child_tbl NATURAL JOIN mother_tbl NATURAL JOIN father_tbl NATURAL JOIN att_inf_tbl NATURAL JOIN receive_civil_tbl NATURAL JOIN remarks_tbl NATURAL JOIN admission_paternity_tbl NATURAL JOIN late_reg_tbl) WHERE no = '$reg_no'";
+$sql = "SELECT * FROM registration_tbl NATURAL JOIN (child_tbl NATURAL JOIN mother_tbl NATURAL JOIN father_tbl NATURAL JOIN att_inf_tbl NATURAL JOIN receive_civil_tbl NATURAL JOIN remarks_tbl NATURAL JOIN admission_paternity_tbl NATURAL JOIN late_reg_tbl) WHERE no = '$reg_no' LIMIT 1";
 $result = $conn->query($sql);
 if (!$result) die ("Database access failed: " . $conn->error);
 
 if ($result->num_rows > 0) {
-	while($row = $result->fetch_assoc()) {
+	$row = $result->fetch_assoc();
 $pdf = new FPDI();
 
 $pdf->AddPage('P', array(215.9, 355.6));
@@ -118,10 +119,9 @@ $pdf->Cell(0, 10, strtoupper($row['child_sex']), 0, 1);
 // fitTextInCell($pdf, 87, 59, 108, 5, $childBirthDate[0]);
 $sampleBirth = $row['child_birth_date'];
 $childBirthDate = explode(' ', $sampleBirth);
-fitTextInCell($pdf, 105, 59, 40, 5, $childBirthDate[0]);
-//$bday_month_name = date ("F", mktime (0,0,0, $childBirthDate[1], 1));
-fitTextInCell($pdf, 125, 59, 40, 5, $childBirthDate[1]);
-fitTextInCell($pdf, 165, 59, 40, 5, $childBirthDate[2]);
+fitTextInCell($pdf, 105, 59, 40, 5, $childBirthDate[0] ?? '');
+fitTextInCell($pdf, 125, 59, 40, 5, $childBirthDate[1] ?? '');
+fitTextInCell($pdf, 165, 59, 40, 5, $childBirthDate[2] ?? '');
 //Name of Hospital/House No/Street/Baranggay
 $pdf->SetXY(61, 67.5); 
 fitTextInCell($pdf, 35, 70, 75, 5, $row['birth_brgy']);
@@ -580,5 +580,5 @@ fitTextInCellAddress($pdf, 121, 321, 76, 5, $row['late_administer_position']);
 // Output the PDF
 $pdf->Output('birth_'.$row['child_fname'].'_'.$row['child_lname'].'.pdf', 'I');
 
-}}
+}
 ?>
