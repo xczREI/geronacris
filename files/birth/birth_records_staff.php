@@ -159,6 +159,7 @@
 		        <th>Birthdate</th>
 		        <th>Gender</th>
 		        <th>Edit</th>
+            <th>Delete</th>
 	      	</tr>
 		    </thead>
 	    	<tbody id="myTable">
@@ -217,6 +218,13 @@
                     </div>
                   </div>
                 </div>
+            </td>
+            <td>
+                <a href="birth_delete_action.php?reg_no=<?php echo $row['no']; ?>" 
+                  class="btn btn-danger btn-sm" 
+                  onclick="return confirm('WARNING: Are you sure you want to permanently delete this record? This action cannot be undone.')">
+                  Delete
+                </a>
             </td>
          	</tr>
        	<?php

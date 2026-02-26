@@ -6,38 +6,59 @@ require_once 'login_db_birth.php';
 $con = new mysqli($hn, $un, $pw, $db);
 if ($con->connect_error) die($con->connect_error);
 
+$data = array(); // Initialize empty array to prevent crashes
+
 if(isset($_POST['year']) && isset($_POST['month'])){  
-  $yy = $_POST['year'];
-  $mm = $_POST['month'];
-  $xx = ("$yy-$mm-01");
-  $zz = ("$yy-$mm-31");
+  $yy = $con->real_escape_string($_POST['year']);
+  $mm = $con->real_escape_string($_POST['month']);
 
+  // CONDITION 1: BOTH YEAR AND MONTH ARE SELECTED
   if (!empty($yy) && !empty($mm)) {
+    
+    // Convert numeric month ("02") into text ("FEBRUARY")
+    $dateObj = DateTime::createFromFormat('!m', $mm);
+    $monthName = strtoupper($dateObj->format('F')); 
 
-    $sql = "SELECT child_sex,count(*) as number, reg_date FROM child_tbl NATURAL JOIN registration_tbl WHERE reg_date BETWEEN '$xx' AND '$zz' GROUP BY child_sex";
+    // Search for text that contains the Month and ends with the Year
+    $sql = "SELECT child_sex, count(*) as number 
+            FROM child_tbl 
+            WHERE child_birth_date LIKE '%$monthName%$yy' 
+            GROUP BY child_sex";
+            
     $result = mysqli_query($con, $sql);
     
-    $data = array();
-    foreach ($result as $rows) {
-      array_push($data, array('name' =>$rows['child_sex'] , 'y'=>$rows['number'] ));
+    if ($result) {
+        foreach ($result as $rows) {
+          array_push($data, array('name' => $rows['child_sex'] , 'y' => $rows['number'] ));
+        }
     }
   
-  } else if (!empty($yy) && empty($mm)) {
+  } 
+  // CONDITION 2: ONLY YEAR IS SELECTED
+  else if (!empty($yy) && empty($mm)) {
 
-    $sql = "SELECT child_sex,count(*) as number, reg_date FROM child_tbl NATURAL JOIN registration_tbl WHERE reg_date LIKE '$yy%' GROUP BY child_sex";
+    // Search for text that ends with the Year
+    $sql = "SELECT child_sex, count(*) as number 
+            FROM child_tbl 
+            WHERE child_birth_date LIKE '%$yy' 
+            GROUP BY child_sex";
+            
     $result = mysqli_query($con, $sql);
     
-    $data = array();
-    foreach ($result as $rows) {
-      array_push($data, array('name' =>$rows['child_sex'] , 'y'=>$rows['number'] ));
+    if ($result) {
+        foreach ($result as $rows) {
+          array_push($data, array('name' => $rows['child_sex'] , 'y' => $rows['number'] ));
+        }
     }
-  
   }
-
 }
 
-$result->close();
+// Safely close the database connections
+if(isset($result) && $result instanceof mysqli_result) {
+    $result->close();
+}
 $con->close();
 
+// Return the data to the pie chart
 print json_encode($data, JSON_NUMERIC_CHECK);
 ?>

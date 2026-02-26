@@ -162,33 +162,72 @@
 		        <th>Birthdate</th>
 		        <th>Gender</th>
   	        <th>Edit</th>
+            <th>Delete</th>
 			   </tr>
 		    </thead>
 	    	<tbody id="myTable">
       	<?php
-			    require_once 'login_db_birth.php';
-			    $conn = new mysqli($hn, $un, $pw, $db);
-			    if ($conn->connect_error) die($conn->connect_error);
-		      $sql= "SELECT * FROM registration_tbl NATURAL JOIN child_tbl  ORDER BY child_lname ASC";
-		      $result = $conn->query($sql);  
-		      if (!$result) die ("Database access failed: " . $conn->error);
+    require_once 'login_db_birth.php';
+    $conn = new mysqli($hn, $un, $pw, $db);
+    if ($conn->connect_error) die($conn->connect_error);
 
-		      $rows = $result->num_rows;
-		      for ($j = 0 ; $j < $rows ; ++$j)
-		      {
-			      $result->data_seek($j);
-			      $row = $result->fetch_array(MYSQLI_ASSOC);
-		  	?>
+    $filterYear = $_REQUEST['year'] ?? ''; 
+
+    if (!empty($filterYear)) {
+        // Filtered by year and sorted by Date Created (Newest First)
+        $sql = "SELECT * FROM registration_tbl NATURAL JOIN child_tbl 
+                WHERE child_birth_date LIKE '%$filterYear' 
+                ORDER BY reg_date DESC, reg_time DESC";
+    } else {
+        // Show all records sorted by Date Created (Newest First)
+        $sql = "SELECT * FROM registration_tbl NATURAL JOIN child_tbl 
+                ORDER BY reg_date DESC, reg_time DESC";
+    }
+
+    $result = $conn->query($sql);  
+    if (!$result) die ("Database access failed: " . $conn->error);
+
+    $rows = $result->num_rows;
+    for ($j = 0 ; $j < $rows ; ++$j)
+    {
+        $result->data_seek($j);
+        $row = $result->fetch_array(MYSQLI_ASSOC);
+?>
           <tr>
-            <td class="tduser" scope="rows"><?php echo $row['reg_user'].'<br>('.date_format(date_create($row['reg_date']),"m/d/Y").' '.date_format(date_create($row['reg_time']),'h:i A').')'; ?></td>
-            <td class="tduser"><?php echo $row['update_user'].'<br>('.date_format(date_create($row['update_date']),"m/d/Y").' '.date_format(date_create($row['update_time']),'h:i A').')'; ?></td>
+            <td class="tduser" scope="rows">
+                <?php 
+                    $rDate = (!empty($row['reg_date']) && $row['reg_date'] != '0000-00-00') ? date("m/d/Y", strtotime($row['reg_date'])) : 'N/A';
+                    $rTime = (!empty($row['reg_time']) && $row['reg_time'] != '00:00:00') ? date("h:i A", strtotime($row['reg_time'])) : '';
+                    
+                    // This neatly joins them, removing the space if the time is blank
+                    $rCombined = $rDate . ($rTime ? ' ' . $rTime : '');
+                    echo $row['reg_user'] . '<br>(' . $rCombined . ')'; 
+                ?>
+            </td>
+            <td class="tduser">
+                <?php 
+                    $uDate = (!empty($row['update_date']) && $row['update_date'] != '0000-00-00') ? date("m/d/Y", strtotime($row['update_date'])) : 'N/A';
+                    $uTime = (!empty($row['update_time']) && $row['update_time'] != '00:00:00') ? date("h:i A", strtotime($row['update_time'])) : '';
+                    
+                    // This neatly joins them, removing the space if the time is blank
+                    $uCombined = $uDate . ($uTime ? ' ' . $uTime : '');
+                    echo !empty($row['update_user']) ? $row['update_user'] . '<br>(' . $uCombined . ')' : 'NO UPDATES'; 
+                ?>
+            </td>
             <td class="tduser"><?php echo $row['registry_no']; ?></td>
             <td class="tduser"><?php echo $row['child_lname']; echo', ';echo $row['child_fname']; echo' '; echo $row['child_mname']; ?></td>
             <td class="tduser"><?php echo $row['child_birth_date']; ?></td>
             <td class="tduser"><?php echo $row['child_sex']; ?></td>
             <td>
-              <a href="birth_cerf_edit.php?reg_no=<?php echo $row['no']; ?>" class='btn btn-light btn-sm'><strong>Edit</strong></a>
+                <a href="birth_cerf_edit.php?reg_no=<?php echo $row['no']; ?>" class='btn btn-light btn-sm'><strong>Edit</strong></a>
             </td>
+            <td>
+              <a href="birth_delete_action.php?reg_no=<?php echo $row['no']; ?>" 
+                class='btn btn-danger btn-sm' 
+                onclick="return confirm('ARE YOU SURE YOU WANT TO PERMANENTLY DELETE THIS RECORD?')">
+                <strong>Delete</strong>
+            </a>
+        </td>
          	</tr>
        	<?php
           }

@@ -149,10 +149,13 @@
   	<div class="col-sm-9" style="padding-top: 7%;" id="body">
   		<div id="accordion">
 	  		<div class="row">
-		  		<div class="col-sm-6 mb-1">
+		  		<div class="col-sm-4 mb-1">
 			  		<a href="birth_records.php" class="btn btn-light"><i class="fa fa-angle-double-left"></i> Back</a>
 			  		<button data-toggle="collapse" data-target="#birth_page_1" id="page1" class="btn btn-outline-info">Page 1</button>
 					<button data-toggle="collapse" data-target="#birth_page_2" id="page2" class="btn btn-outline-info">Page 2</button>
+				</div>
+				<div class="col-sm-2 mb-1 pr-0">
+					<button type="button" class="btn btn-outline-dark btn-block" data-toggle="modal" data-target="#my1A">Preview</button>
 				</div>
 				<div class="col-sm-2 mb-1 pr-0">
 					<button type="button" class="btn btn-outline-dark btn-block" data-toggle="modal" data-target="#my1A">Print Form No. 1A</button>

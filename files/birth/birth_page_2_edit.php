@@ -373,6 +373,8 @@
 		</div></div>
 </div>
 
+<!-- Javascript -->
+
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
 <script>
@@ -391,6 +393,7 @@ $(document).ready(function(){
 </script>
 
 
+<!-- Move to next input on Enter key -->
 <script>
 document.addEventListener("DOMContentLoaded", function() {
 	let inputs = document.querySelectorAll(".form-control");
@@ -409,6 +412,7 @@ document.addEventListener("DOMContentLoaded", function() {
 });
 </script>
 
+<!-- Auto-check "the birth" checkbox when filling child late name -->
 <script>
 document.getElementById("childlatename").addEventListener("input", function() {
 	if(this.value.trim() !== "") {
@@ -425,6 +429,7 @@ document.getElementById("bplace1").addEventListener("input", function() {
 });
 </script>
 
+<!-- Auto-check married checkbox when filling married date -->
 <script>
 document.getElementById("married_txt1").addEventListener("input", function() {
 	if(this.value.trim() !== "") {
@@ -444,183 +449,105 @@ document.getElementById("not_married_txt").addEventListener("input", function() 
 <script> 
 $(document).ready(function() {
     
-    // Helper function to add ordinal suffixes (1ST, 2ND, etc.)
     function getOrdinal(n) {
-        let s = ["TH", "ST", "ND", "RD"],
-            v = n % 100;
+        let s = ["TH", "ST", "ND", "RD"], v = n % 100;
         return n + (s[(v - 20) % 10] || s[v] || s[0]);
     }
 
-	function formatDateFormal(inputVal) {
-    if (!inputVal) return "";
-    
-    const MON = ["JANUARY", "FEBRUARY", "MARCH", "APRIL", "MAY", "JUNE", 
-                 "JULY", "AUGUST", "SEPTEMBER", "OCTOBER", "NOVEMBER", "DECEMBER"];
-
-    // Clean extra spaces and force uppercase
-    let v = inputVal.replace(/\s\s+/g, ' ').trim().toUpperCase();
-    let parts = v.split(/[\s\/\.-]+/);
-
-    if (parts.length === 3) {
-        let day = parts[0];
-        let month = parts[1];
-        let year = parts[2];
-
-        // Scenario: Month is already a word (e.g., "10 OCTOBER 2004")
-        if (MON.includes(month)) {
-            return `${month} ${day}, ${year}`; // Returns OCTOBER 10 2004
-        }
+    function formatDateFormal(inputVal) {
+        if (!inputVal) return "";
         
-        // Scenario: Month is first (e.g., "OCTOBER 10 2004")
-        if (MON.includes(day)) {
-            return `${day} ${parts[1]}, ${parts[2]}`;
-        }
+        const MON = ["JANUARY", "FEBRUARY", "MARCH", "APRIL", "MAY", "JUNE", 
+                     "JULY", "AUGUST", "SEPTEMBER", "OCTOBER", "NOVEMBER", "DECEMBER"];
 
-        // Scenario: Numeric (e.g., "10 10 2004") -> Middle number becomes Month name
-        const mIdx = parseInt(month, 10);
-        if (!isNaN(mIdx) && mIdx >= 1 && mIdx <= 12) {
-            return `${MON[mIdx - 1]} ${day}, ${year}`;
-        }
-    }
-    return v;
-}
-
-  function syncCurrentField(focusedElement) {
-    const rawData = localStorage.getItem('birth_form_data');
-    const data = rawData ? JSON.parse(rawData) : {};
-    
-    const elementId = $(focusedElement).attr('id');
-    let valueToFill = "";
-
-    const now = new Date();
-    const currentDay = now.getDate();
-    const currentYear = now.getFullYear();
-    const currentMonthName = now.toLocaleString('default', { month: 'long' }).toUpperCase();
-
-    const fName = `${data.father_fname || ''} ${data.father_mname || ''} ${data.father_lname || ''}`.trim().toUpperCase();
-    const mName = `${data.mother_fname || ''} ${data.mother_mname || ''} ${data.mother_lname || ''}`.trim().toUpperCase();
-
-    switch (elementId) {
-        // --- DATE FIELDS ---
-        case 'sworn_day':
-        case 'ack_sworn_day':
-        case 'sign_day':
-            valueToFill = getOrdinal(currentDay);
-            break;
-        case 'sworn_month':
-        case 'ack_sworn_month':
-        case 'sign_month':  
-            valueToFill = currentMonthName;
-            break;
-        case 'sworn_year':
-        case 'ack_sworn_year':
-        case 'sign_year':
-            valueToFill = currentYear.toString();
-            break;
+        // Clean extra spaces and force uppercase
+        let v = inputVal.replace(/\s\s+/g, ' ').trim().toUpperCase();
         
-        // --- APPLICANT / INFORMANT ---
-        case 'late_name': 
-        case 'affiant_name':
-            valueToFill = data.informant_name || "";
-            break;
-        case 'late_address':
-            valueToFill = data.informant_address || "";
-            break;
-        case 'applicant_than_owner':
-        case 'applicant_relation':  
-            valueToFill = data.rel_child || "";
-            break;
+        // FIXED: Added comma here as well
+        let parts = v.split(/[\s\/,\.-]+/);
 
-        // --- BIRTH PLACE ---
-        case 'birth_place':
-        case 'bplace1':
-        case 'bplace2':
-        case 'late_birth_in':
-        case 'late_birth_in2':
-            valueToFill = data.birth_place || ""; 
-            break;
+        if (parts.length >= 3) {
+            let day = parts[0];
+            let month = parts[1];
+            let year = parts[2];
 
-		case 'birth_date':
-		case 'bday2':
-		case 'bday1':
-		case 'late_birth_on':
-			// Pull the 'birth_day' key saved by Page 1
-			let storedDate = data.birth_day || ""; 
-			if (storedDate) {
-				// This will now return "MONTH DAY YEAR"
-				valueToFill = formatDateFormal(storedDate);
-			}
-			break;
-
-        // --- 3. CITIZENSHIP (NEW) ---
-        case 'late_citizen': 
-            valueToFill = "PHILIPPINES";
-            break;
-
-        // --- OFFICER DATA ---
-        case 'ack_sworn_name':
-        case 'late_sworn_name':
-            valueToFill = data.civil_name || "";
-            break;
-        case 'ack_sworn_position':
-        case 'late_sworn_position':
-            valueToFill = data.civil_position || "MUNICIPAL CIVIL REGISTRAR"; 
-            break;
-        case 'ack_sworn_address':
-        case 'late_sworn_address':
-        case 'sworn_at':
-        case 'sign_at':
-            valueToFill = "GERONA, TARLAC"; 
-            break;
-
-        // --- PARENT NAMES ---
-        case 'child_name':
-        case 'childlatename':
-        case 'late_birth_of':
-            valueToFill = `${data.child_fname || ''} ${data.child_mname || ''} ${data.child_lname || ''}`;
-            break;
-        case 'father_name':
-        case 'father_sign':
-        case 'ack_father_sworn':
-		case 'not_married_txt':
-            valueToFill = fName;
-            break;
-        case 'mother_name':
-        case 'mother_sign':
-        case 'ack_mother_sworn':
-            valueToFill = mName;
-            break;
+            // Scenario: Month is already a word (e.g., "10 OCTOBER 2004")
+            if (MON.includes(month)) {
+                return `${month} ${day}, ${year}`; 
+            }
             
-        // --- MARRIAGE ---
-        case 'married_txt1':
-            valueToFill = data.marriage_date || "";
-            break;
-        case 'married_txt2': 
-            valueToFill = data.marriage_place || "";
-            break;
-            
-        // --- ATTENDANT ---
-        case 'attend_birth_by':
-            valueToFill = data.attendant_name || "";
-            break;
+            // Scenario: Month is first (e.g., "OCTOBER 10 2004")
+            if (MON.includes(day)) {
+                return `${day} ${parts[1]}, ${parts[2]}`;
+            }
 
-
-        case 'who_resides_at':
-            valueToFill = data.attendant_address || "";
-            break;
+            // Scenario: Numeric (e.g., "10 10 2004")
+            const mIdx = parseInt(month, 10);
+            if (!isNaN(mIdx) && mIdx >= 1 && mIdx <= 12) {
+                return `${MON[mIdx - 1]} ${day}, ${year}`;
+            }
+        }
+        return v;
     }
 
-    if (valueToFill) {
-        $(focusedElement).val(valueToFill.trim().toUpperCase());
-    }
-}
+    // Notice the new "forceOverwrite" parameter
+    function syncCurrentField(focusedElement, forceOverwrite = false) {
+        const rawData = localStorage.getItem('birth_form_data');
+        const data = rawData ? JSON.parse(rawData) : {};
+        
+        const elementId = $(focusedElement).attr('id');
+        if (!elementId) return;
 
+        let valueToFill = "";
+        const now = new Date();
+        const fName = `${data.father_fname || ''} ${data.father_mname || ''} ${data.father_lname || ''}`.trim().toUpperCase();
+        const mName = `${data.mother_fname || ''} ${data.mother_mname || ''} ${data.mother_lname || ''}`.trim().toUpperCase();
+
+        switch (elementId) {
+            case 'sworn_day': case 'ack_sworn_day': case 'sign_day': valueToFill = getOrdinal(now.getDate()); break;
+            case 'sworn_month': case 'ack_sworn_month': case 'sign_month': valueToFill = now.toLocaleString('default', { month: 'long' }).toUpperCase(); break;
+            case 'sworn_year': case 'ack_sworn_year': case 'sign_year': valueToFill = now.getFullYear().toString(); break;
+            case 'late_name': case 'affiant_name': valueToFill = data.informant_name || ""; break;
+            case 'late_address': valueToFill = data.informant_address || ""; break;
+            case 'applicant_than_owner': case 'applicant_relation': valueToFill = data.rel_child || ""; break;
+            case 'birth_place': case 'bplace1': case 'bplace2': case 'late_birth_in': case 'late_birth_in2': valueToFill = data.birth_place || ""; break;
+            case 'birth_date': case 'bday2': case 'bday1': case 'late_birth_on':
+                let storedDate = data.birth_day || ""; 
+                if (storedDate) valueToFill = formatDateFormal(storedDate);
+                break;
+            case 'late_citizen': valueToFill = "PHILIPPINES"; break;
+            case 'ack_sworn_name': case 'late_sworn_name': valueToFill = data.civil_name || ""; break;
+            case 'ack_sworn_position': case 'late_sworn_position': valueToFill = data.civil_position || "MUNICIPAL CIVIL REGISTRAR"; break;
+            case 'ack_sworn_address': case 'late_sworn_address': case 'sworn_at': case 'sign_at': valueToFill = "GERONA, TARLAC"; break;
+            case 'child_name': case 'childlatename': case 'late_birth_of': valueToFill = `${data.child_fname || ''} ${data.child_mname || ''} ${data.child_lname || ''}`; break;
+            case 'father_name': case 'father_sign': case 'ack_father_sworn': case 'not_married_txt': valueToFill = fName; break;
+            case 'mother_name': case 'mother_sign': case 'ack_mother_sworn': valueToFill = mName; break;
+            case 'married_txt1': valueToFill = data.marriage_date || ""; break;
+            case 'married_txt2': valueToFill = data.marriage_place || ""; break;
+            case 'attend_birth_by': valueToFill = data.attendant_name || ""; break;
+            case 'who_resides_at': valueToFill = data.attendant_address || ""; break;
+        }
+
+        if (valueToFill) {
+            let currentVal = $(focusedElement).val().trim();
+            // ONLY overwrite if it's currently empty, OR if the user pressed Enter
+            if (currentVal === "" || forceOverwrite) {
+                $(focusedElement).val(valueToFill.trim().toUpperCase());
+            }
+        }
+    }
+
+    // 1. ON LOAD: Fill in any fields that are currently blank
+    $('input[type="text"]').each(function() {
+        syncCurrentField(this, false); 
+    });
+
+    // 2. ON ENTER: Force an overwrite of the current field
     $('input').on('keydown', function(e) {
         if (e.key === "Enter") {
             e.preventDefault(); 
-            syncCurrentField(this);
+            syncCurrentField(this, true);
 
-            // Move to next field
             const allInputs = $('input:visible:not([disabled])');
             const index = allInputs.index(this);
             if (index > -1 && index < allInputs.length - 1) {

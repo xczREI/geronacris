@@ -141,23 +141,35 @@
       <div class="col-sm-4"></div>
       <div class="col-sm-2 p-0 mb-1">
           <select class="custom-select" id="byear" name="year" required>
-            <?php 
-                require_once 'login_db_birth.php';
+          <?php 
+        require_once 'login_db_birth.php';
+        $conn = new mysqli($hn, $un, $pw, $db);
+        if ($conn->connect_error) die($conn->connect_error);
 
-                $conn = new mysqli($hn, $un, $pw, $db);
-                if ($conn->connect_error) die($conn->connect_error);
+        // Extracts the last 4 characters (the year) from the "DD MONTH YYYY" string
+        $sql = "SELECT RIGHT(TRIM(child_birth_date), 4) AS yr 
+                FROM child_tbl 
+                WHERE child_birth_date IS NOT NULL AND child_birth_date != ''
+                GROUP BY yr 
+                ORDER BY yr DESC";
 
-                $sql = "SELECT DATE_FORMAT(reg_date,'%Y') AS yr FROM registration_tbl GROUP BY yr ORDER BY yr";
-                $result = $conn->query($sql);  
-                if (!$result) die ("Database access failed: " . $conn->error);
+        $result = $conn->query($sql);  
 
-                if ($result->num_rows > 0) {
-                  echo "<option value='' style='display:none;'>-- Select Year --</option>";
-                  while($row = $result->fetch_assoc()) { 
-                    echo " <option value='".$row['yr']."'>".$row['yr']."</option>";   
-                  }
-                } 
-            ?>
+        echo "<option value='' style='display:none;'>-- Select Year --</option>";
+
+        if ($result && $result->num_rows > 0) {
+            // This will now display 2026, 2004, 3333, 2131, etc.
+            while($row = $result->fetch_assoc()) { 
+                $validYear = $row['yr'];
+                // Extra check to ensure it's actually a 4-digit number
+                if (is_numeric($validYear) && strlen($validYear) == 4) {
+                    echo "<option value='".$validYear."'>".$validYear."</option>";   
+                }
+            }
+        } else {
+            echo "<option value=''>No records found</option>";
+        }
+    ?>
           </select>
           </div>
           <div class="col-sm-2 p-0">

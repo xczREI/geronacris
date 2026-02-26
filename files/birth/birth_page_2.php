@@ -285,7 +285,7 @@
 				</div>
 				&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;
 				<div class="custom-control custom-checkbox custom-control-inline mt-1" style="padding: 0; width: 78%;margin-right: 0;">
-					<input type="text" class="form-control form-control-sm text-center" name="late_reason_2">
+					<input type="text" class="form-control form-control-sm text-center" name="late_reason_2" value="<?php echo htmlspecialchars($row['late_reason_2'] ?? ''); ?>">
 				</div>
 				.
 				</h6>
@@ -469,38 +469,40 @@ $(document).ready(function() {
     }
 
 	function formatDateFormal(inputVal) {
-    if (!inputVal) return "";
-    
-    const MON = ["JANUARY", "FEBRUARY", "MARCH", "APRIL", "MAY", "JUNE", 
-                 "JULY", "AUGUST", "SEPTEMBER", "OCTOBER", "NOVEMBER", "DECEMBER"];
-
-    // Clean extra spaces and force uppercase
-    let v = inputVal.replace(/\s\s+/g, ' ').trim().toUpperCase();
-    let parts = v.split(/[\s\/\.-]+/);
-
-    if (parts.length === 3) {
-        let day = parts[0];
-        let month = parts[1];
-        let year = parts[2];
-
-        // Scenario: Month is already a word (e.g., "10 OCTOBER 2004")
-        if (MON.includes(month)) {
-            return `${month} ${day}, ${year}`; // Returns OCTOBER 10 2004
-        }
+        if (!inputVal) return "";
         
-        // Scenario: Month is first (e.g., "OCTOBER 10 2004")
-        if (MON.includes(day)) {
-            return `${day} ${parts[1]}, ${parts[2]}`;
-        }
+        const MON = ["JANUARY", "FEBRUARY", "MARCH", "APRIL", "MAY", "JUNE", 
+                     "JULY", "AUGUST", "SEPTEMBER", "OCTOBER", "NOVEMBER", "DECEMBER"];
 
-        // Scenario: Numeric (e.g., "10 10 2004") -> Middle number becomes Month name
-        const mIdx = parseInt(month, 10);
-        if (!isNaN(mIdx) && mIdx >= 1 && mIdx <= 12) {
-            return `${MON[mIdx - 1]} ${day}, ${year}`;
+        // Clean extra spaces and force uppercase
+        let v = inputVal.replace(/\s\s+/g, ' ').trim().toUpperCase();
+        
+        // FIXED: Added comma here as well
+        let parts = v.split(/[\s\/,\.-]+/);
+
+        if (parts.length >= 3) {
+            let day = parts[0];
+            let month = parts[1];
+            let year = parts[2];
+
+            // Scenario: Month is already a word (e.g., "10 OCTOBER 2004")
+            if (MON.includes(month)) {
+                return `${month} ${day}, ${year}`; 
+            }
+            
+            // Scenario: Month is first (e.g., "OCTOBER 10 2004")
+            if (MON.includes(day)) {
+                return `${day} ${parts[1]}, ${parts[2]}`;
+            }
+
+            // Scenario: Numeric (e.g., "10 10 2004")
+            const mIdx = parseInt(month, 10);
+            if (!isNaN(mIdx) && mIdx >= 1 && mIdx <= 12) {
+                return `${MON[mIdx - 1]} ${day}, ${year}`;
+            }
         }
+        return v;
     }
-    return v;
-}
 
   function syncCurrentField(focusedElement) {
     const rawData = localStorage.getItem('birth_form_data');

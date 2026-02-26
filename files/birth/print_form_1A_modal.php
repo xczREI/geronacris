@@ -74,7 +74,13 @@
                 <div class="col-7">
                   <h6>
                   <input class="input" type="hidden" name="reg_no" value="<?php echo $row['no']; ?>">
-                  <input class="input" type="text" name="regi_no" value="<?php echo $row['registry_no']; ?>" readonly>
+                  <input class="input" type="text" name="reg_date" value="<?php 
+                        $raw_reg = $row['reg_date'] ?? '';
+                        if (!empty($raw_reg) && $raw_reg != '0000-00-00') {
+                            echo date('F d, Y', strtotime($raw_reg));
+                        } else {
+                            echo 'N/A';
+                        } ?>" readonly="">
                   <input class="input" type="text" name="reg_date" value="<?php echo date_format(date_create($row['reg_date']),'F d, Y'); ?>" readonly="">
                   <input class="input" type="text" name="child_name" value="<?php echo ucwords($row['child_fname'].' '.$row['child_mname'].' '.$row['child_lname']); ?>" readonly="">
                   <input class="input" type="text" name="child_sex" value="<?php echo ucwords($row['child_sex']); ?>" readonly="">

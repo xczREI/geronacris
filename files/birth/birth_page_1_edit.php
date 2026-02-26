@@ -278,10 +278,10 @@
                         <label id="ltxt" style="margin-bottom:0;">Page No.</label>
                         <input type="text" class="pageNo form-control form-control-sm" name="page_no" id="pageno" onkeypress="return isNumberKey(event)" style="background-color: #7FFFD4;" value="<?php echo $row['page_no'] ?? ''; ?>">
                         <input type="hidden" class="form-control form-control-sm" name="page_no1" id="pageno1">
-
-                        <input type="hidden" name="time" id="hrs" value="">
-                        <input type="hidden" name="date" id="date" value="">
-                        <input type="hidden" name="emp_name" id="emp_name" value="<?php echo $_SESSION['lastname'] ?? ''; ?>">
+                            <?php date_default_timezone_set('Asia/Manila'); ?>
+                            <input type="hidden" name="time" id="hrs" value="<?php echo date('H:i:s'); ?>">
+                            <input type="hidden" name="date" id="date" value="<?php echo date('Y-m-d'); ?>">
+                            <input type="hidden" name="emp_name" id="emp_name" value="<?php echo $_SESSION['lastname'] ?? ''; ?>">
                     </div>
                 </div>
             </div>
@@ -298,13 +298,13 @@
                         <div class="input-group-prepend">
                             <span class="input-group-text bg-white p-0" style="border:none; color:black; width: 120px;">&nbsp;City/Municipality</span>
                         </div>
-                        <input type="text" list='municipality_list' class="form-control form-control-sm" value="<?php echo $row['municipal'] ?? 'GERONA'; ?>" name="municipals" onkeypress="return isTextKey(event)" required>
+                        <input type="text" list='municipality_list' class="form-control form-control-sm" id="municipal" value="<?php echo $row['municipal'] ?? 'GERONA'; ?>" name="municipals" onkeypress="return isTextKey(event)" required>
                     </div>
                 </div>
                 <div class="col-3" id="book" style="border:2px solid green; border-left:none; border-top:none;">
                     <div class="form-group mb-0">
                         <label id="ltxt" style="margin-bottom:0;">Registry No.</label>
-                        <input type="text" class="regNo form-control form-control-sm" name="registry_no" id="regno" style="background-color: #7FFFD4;" value="<?php echo $row['registry_no'] ?? ''; ?>" required> 
+                        <input type="text" class="regNo form-control form-control-sm" name="registry_no" id="regno" style="background-color: #7FFFD4;" value="<?php echo $row['registry_no'] ?? ''; ?>" > 
                         <div id="error"></div>
                     </div>
                 </div>
@@ -686,7 +686,7 @@
                                         <label class="custom-control-label" for="others">&nbsp;5 Others (Specify)</label>
                                     </div>
                                     <div class="custom-control custom-checkbox custom-control-inline pl-0">
-                                        <input type="text" class="form-control form-control-sm" size="18" id="otherstxt" name="attendant5" onkeypress="return isTextKey(event)">
+                                        <input type="text" class="form-control form-control-sm" size="18" id="otherstxt" name="attendant5" value="<?php echo $row['attendant_position'] ?? ''; ?>">
                                     </div>
                                 </div>
                             </div>  
@@ -737,7 +737,7 @@
                                 <input type="text" class="form-control form-control-sm" id="attendant_address1" name="attendant_address1" value="<?php echo $row['attendant_address'] ?? ''; ?>">
                             </div>
                             <div class="input-group mt-1">
-                                <input type="text" class="form-control form-control-sm" id="attendant_address2" name="attendant_address2" style="background-color: white;border-top:none;border-left:none;border-right:none;border-color: green;border-radius: 0;">
+                                <input type="text" class="form-control form-control-sm" id="attendant_address2" name="attendant_address2" style="background-color: white;border-top:none;border-left:none;border-right:none;border-color: green;border-radius: 0;" value="<?php echo htmlspecialchars($row['attendant_address2'] ?? ''); ?>">
                             </div>
                             <div class="input-group mt-1">
                                 <div class="input-group-prepend">
@@ -948,63 +948,89 @@
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
 <script>
-$(document).ready(function(){
-    $("#r").keyup(function(){
-        var r = $("#r").val();
-        r = r.replace(/  /g, "[sp][sp]");
-        r = r.replace(/\n/g, "[nl]");
-        $("#re").val(r);
+// 1. Single / Multiple Birth Sync (UPDATED)
+$(document).ready(function() {
+    function toggleMultipleBirth() {
+        let birthType = $("#birth_type").val();
+        if (!birthType) return;
+        
+        birthType = birthType.trim().toUpperCase();
+        let multiBirthInput = $("#multi_birth_was");
+        
+        if (birthType === "SINGLE") {
+            // Fill with N/A, disable the input, and turn it grey
+            multiBirthInput.val("NOT APPLICABLE");
+            multiBirthInput.prop('disabled', true);
+            multiBirthInput.css('background-color', '#e9ecef');
+        } else {
+            // Unlock the input and turn it white for Twins, Triplets, etc.
+            multiBirthInput.prop('disabled', false);
+            multiBirthInput.css('background-color', 'white');
+            
+            // Clear the "NOT APPLICABLE" text so you can type "FIRST", "SECOND", etc.
+            if (multiBirthInput.val() === "NOT APPLICABLE") {
+                multiBirthInput.val("");
+            }
+        }
+    }
+
+    // Run when typing or changing the birth type
+    $("#birth_type").on('input blur change', function() {
+        toggleMultipleBirth();
+        if (typeof saveToMemory === "function") saveToMemory();
     });
-});         
+
+    // Run once when the page loads to handle existing data
+    toggleMultipleBirth();
+});
 </script>
 
 <script>
+    // 2. Attendant Checkbox Logic (UPDATED WITH ON-LOAD SYNC)
     $(document).ready(function(){
-        $("#birth_type").on('input change', function(){
-            var birthType = $(this).val().toUpperCase();
-            if(birthType === "SINGLE"){
-                $("input[name='multi_birth_was']").val("NOT APPLICABLE");
-            } else {
-                if($("input[name='multi_birth_was']").val() === "NOT APPLICABLE"){
-                    $("input[name='multi_birth_was']").val("");
-                }
+        
+        // --- 1. ON PAGE LOAD CHECK ---
+        let isStandardChecked = $('#physician').is(':checked') || 
+                                $('#nurse').is(':checked') || 
+                                $('#midwife').is(':checked') || 
+                                $('#hilot').is(':checked');
+                                
+        let othersText = $('#otherstxt').val().trim();
+
+        if (!isStandardChecked && othersText !== "") {
+            // If it's a custom attendant (like "AAADA"), check the #others box automatically
+            $('#others').prop('checked', true);
+        } else if (isStandardChecked) {
+            // If a standard box (like Midwife) is checked, clear the text box so it doesn't show duplicate text
+            $('#otherstxt').val('');
+        }
+
+        // --- 2. CLICK EVENT LOGIC ---
+        // Handle standard checkbox changes
+        $('#physician, #nurse, #midwife, #hilot').change(function(){
+            if($(this).is(':checked')){
+                let positionValue = $(this).val().toUpperCase();
+                
+                $('input[name="attendant_position"]').val(positionValue);
+                $('#others').prop('checked', false);
+                $('#otherstxt').val('');
+                $('#physician, #nurse, #midwife, #hilot').not(this).prop('checked', false);
+            }
+            if (typeof saveToMemory === "function") saveToMemory();
+        });
+
+        // Clear the standard boxes if the user manually clicks "Others"
+        $('#others').change(function(){
+            if($(this).is(':checked')){
+                $('#physician, #nurse, #midwife, #hilot').prop('checked', false);
+                $('#otherstxt').focus();
             }
         });
     });
 </script>
 
 <script>
-    $(document).ready(function() {
-        // Monitor the new location-based IDs: City, Province, and Country
-        $('#marriage_city, #marriage_province, #marriage_country').on('input', function() {
-            let city = $('#marriage_city').val().trim();
-            let prov = $('#marriage_province').val().trim();
-            let country = $('#marriage_country').val().trim();
-            
-            // Concatenate them into the hidden field expected by reg_info_action.php
-            // Format: CITY PROVINCE COUNTRY (Force Uppercase for formal records)
-            let fullLocation = `${city} ${prov} ${country}`.replace(/\s+/g, ' ').trim().toUpperCase();
-            
-            $('#marriage_place').val(fullLocation);
-            
-            // Save to local storage for Page 2 auto-fill
-            if (typeof saveToMemory === "function") {
-                saveToMemory();
-            }
-        });
-    });
-</script>
-
-<script>
-    $(document).ready(function(){
-        $('#physician').change(function(){ if($(this).is(':checked')){ $('input[name="attendant_position"]').val('PHYSICIAN'); } });
-        $('#nurse').change(function(){ if($(this).is(':checked')){ $('input[name="attendant_position"]').val('NURSE'); } });
-        $('#midwife').change(function(){ if($(this).is(':checked')){ $('input[name="attendant_position"]').val('MIDWIFE'); } });
-        $('#hilot').change(function(){ if($(this).is(':checked')){ $('input[name="attendant_position"]').val('HILOT'); } });
-    });
-</script>
-
-<script>
+    // 3. Child Last Name to Parents Last Name Auto-fill
     $(document).ready(function(){
         var inputBox = document.getElementById('child_mname');
         var inputBox2 = document.getElementById('child_lname');
@@ -1024,6 +1050,7 @@ $(document).ready(function(){
 </script>
 
 <script>
+    // 4. Global "Enter to move to next field"
     document.addEventListener("DOMContentLoaded", function() {
         let inputs = document.querySelectorAll(".form-control:not([disabled])");
         inputs.forEach((input, index) => {
@@ -1040,7 +1067,8 @@ $(document).ready(function(){
     });
 </script>
 
-<script> // Father & Marriage "Not Applicable" Sync
+<script> 
+// 5. Father & Marriage "Not Applicable" Sync (UPDATED)
 $(document).ready(function() {
     const fatherFname = $('#father_fname');
     
@@ -1049,7 +1077,7 @@ $(document).ready(function() {
         'father_sect', 'father_occupation', 'father_age', 
         'father_brgy', 'father_city', 'father_province', 
         'father_country', 'marriage_date', 
-        'marriage_place', 'mp_day', 'mp_month', 'mp_year' 
+        'marriage_place', 'marriage_city', 'marriage_province', 'marriage_country' 
     ];
 
     function handleFatherLogic() {
@@ -1087,8 +1115,8 @@ $(document).ready(function() {
             $('#father_age').val("N/A");
             
             $('#marriage_date').val("NOT APPLICABLE");
-            $('#mp_month').val("NOT APPLICABLE");
-            $('#mp_day, #mp_year').val("");
+            $('#marriage_city').val("NOT APPLICABLE");
+            $('#marriage_province, #marriage_country').val("");
             $('#marriage_place').val("NOT APPLICABLE");
             
             $('#father_lname').val("");
@@ -1106,10 +1134,12 @@ $(document).ready(function() {
 </script>
 
 <script>
+// 6. Child Birth Date Formatting & Spacebar Navigation
 $(document).ready(function() {
     const MON = ["JANUARY", "FEBRUARY", "MARCH", "APRIL", "MAY", "JUNE", 
                  "JULY", "AUGUST", "SEPTEMBER", "OCTOBER", "NOVEMBER", "DECEMBER"];
 
+    // 1. Load Initial Data
     let initialVal = $('#child_birth_date').val();
     if (initialVal && initialVal.trim() !== '' && !initialVal.includes('<')) {
         let parts = initialVal.trim().split(/[\s\/\.-]+/); 
@@ -1120,6 +1150,23 @@ $(document).ready(function() {
         }
     }
 
+    // 2. Spacebar Navigation Logic
+    $('#bd_day, #bd_month, #bd_year').on('keydown', function(e) {
+        if (e.key === " ") {
+            e.preventDefault(); // Stop the space from actually being typed
+
+            const currentId = $(this).attr('id');
+            if (currentId === 'bd_day') {
+                $('#bd_month').focus();
+            } else if (currentId === 'bd_month') {
+                $('#bd_year').focus();
+            } else if (currentId === 'bd_year') {
+                $('#birth_brgy').focus(); // Move to Section 4 (Place of Birth) after Year
+            }
+        }
+    });
+
+    // 3. Formatting and Saving on Blur
     $('#bd_day, #bd_month, #bd_year').on('blur', function() {
         let mVal = $('#bd_month').val().trim();
         if (!isNaN(mVal) && mVal !== "") {
@@ -1148,8 +1195,8 @@ $(document).ready(function() {
     });
 });
 </script>
-
 <script>
+// 7. Save To Memory (Page 1 to Page 2 sync)
 function saveToMemory() {
     let mDate = $('#marriage_date').val() ? $('#marriage_date').val().trim().toUpperCase() : "";
     let mPlace = $('#marriage_place').val() ? $('#marriage_place').val().trim() : "";
@@ -1163,7 +1210,7 @@ function saveToMemory() {
         child_fname: $('#child_fname').val(),
         child_mname: $('#child_mname').val(),
         child_lname: $('#child_lname').val(),
-        child_sex: $('#child_sex').val(), // Ensure sex is stored
+        child_sex: $('#child_sex').val(), 
         father_fname: $('#father_fname').val(),
         father_mname: $('#father_mname').val(),
         father_lname: $('#father_lname').val(),
@@ -1195,71 +1242,360 @@ $('input, select').on('blur change', saveToMemory);
 </script>
 
 <script> 
+// 8. Toggle Marriage Place & Date Logic (UPDATED)
 $(document).ready(function() {
-    function toggleMarriagePlace() {
-        let mDate = $('#marriage_date').val();
-        if(!mDate) return;
-        mDate = mDate.trim().toUpperCase();
+    function toggleMarriageLogic() {
+        let mDateInput = $('#marriage_date');
+        let mDateVal = mDateInput.val().trim().toUpperCase();
         
-        let mpInputs = $('#mp_day, #mp_month, #mp_year');
+        // Target all sub-fields for location and the date field itself
+        let marriageFields = $('#marriage_city, #marriage_province, #marriage_country, #marriage_date');
         let mPlaceHidden = $('#marriage_place');
 
-        if (mDate === "NOT MARRIED" || mDate === "NOT APPLICABLE" || mDate === "N/A") {
-            $('#mp_month').val("NOT APPLICABLE");
+        // Check if the value indicates they are not married
+        if (mDateVal === "NOT MARRIED" || mDateVal === "NOT APPLICABLE" || mDateVal === "N/A" || mDateVal === "UNKNOWN") {
+            // 1. Force values to "NOT APPLICABLE"
+            $('#marriage_city').val("");
+            $('#marriage_province').val("NOT APPLICABLE");
+            $('#marriage_country').val("");
             mPlaceHidden.val("NOT APPLICABLE");
-            mpInputs.prop('disabled', true);
-            mpInputs.parent().css('background-color', '#e9ecef'); 
+            
+            // 2. Lock the fields and apply grey background
+            // We keep marriage_date enabled initially so they can type "N/A", 
+            // but we grey out the location fields immediately.
+            $('#marriage_city, #marriage_province, #marriage_country').prop('disabled', true);
+            $('#marriage_city, #marriage_province, #marriage_country').parent().css('background-color', '#e9ecef'); 
         } else {
-            mpInputs.prop('disabled', false);
-            mpInputs.parent().css('background-color', 'white');
-            if ($('#mp_month').val() === "NOT APPLICABLE") {
-                mpInputs.val("");
+            // Unlock the fields if a valid date or other text is present
+            $('#marriage_city, #marriage_province, #marriage_country').prop('disabled', false);
+            $('#marriage_city, #marriage_province, #marriage_country').parent().css('background-color', 'white');
+            
+            // Clear the "NOT APPLICABLE" placeholder so the user can type real data
+            if ($('#marriage_province').val() === "NOT APPLICABLE") {
+                $('#marriage_city, #marriage_province, #marriage_country').val("");
                 mPlaceHidden.val("");
             }
         }
     }
 
-    $('#marriage_date').on('input blur', function() {
-        toggleMarriagePlace();
+    // Trigger logic when the date is changed or blurred
+    $('#marriage_date').on('input blur change', function() {
+        toggleMarriageLogic();
         if (typeof saveToMemory === "function") saveToMemory();
     });
 
-    toggleMarriagePlace();
+    // Run once on load to handle existing database records
+    toggleMarriageLogic();
 });
 </script>
+
 <script>
+// 9. Deconstruct / Re-sync Marriage Place on Edit Load
 $(document).ready(function() {
-    // 1. Get the full string from the hidden field (e.g., "GERONA TARLAC PHILIPPINES")
     let fullPlace = $('#marriage_place').val().trim();
 
     if (fullPlace !== "" && fullPlace !== "NOT APPLICABLE") {
-        // 2. Split the string by spaces
         let parts = fullPlace.split(" ");
-
-        // 3. Assign parts to the boxes
-        // This assumes the format: [City] [Province] [Country]
         if (parts.length >= 1) $('#marriage_city').val(parts[0]);
         if (parts.length >= 2) $('#marriage_province').val(parts[1]);
-        
-        // If there are more than 2 parts, join the rest as the Country
         if (parts.length >= 3) {
             let countryParts = parts.slice(2); 
             $('#marriage_country').val(countryParts.join(" "));
         }
     } else if (fullPlace === "NOT APPLICABLE") {
-        $('#marriage_city').val("NOT APPLICABLE");
-        // Disable boxes if it's N/A
+        $('#marriage_province').val("NOT APPLICABLE");
         $('#marriage_city, #marriage_province, #marriage_country').prop('disabled', true);
     }
 
-    // 4. Also keep the "Sync" logic so if you edit them now, the hidden field updates
+    // Keep the "Sync" logic so if you edit them now, the hidden field updates
     $('#marriage_city, #marriage_province, #marriage_country').on('input', function() {
         let city = $('#marriage_city').val().trim();
         let prov = $('#marriage_province').val().trim();
         let country = $('#marriage_country').val().trim();
         
-        let updatedPlace = `${city} ${prov} ${country}`.replace(/\s+/g, ' ').trim().toUpperCase();
+        let updatedPlace = `${city} ${prov}`.replace(/\s+/g, ' ').trim().toUpperCase();
         $('#marriage_place').val(updatedPlace);
+    });
+});
+</script>
+
+<script> 
+// 10. Attendant 5 (Others) Auto-Check and Sync
+$(document).ready(function() {
+    $('#otherstxt').on('keydown', function(e) {
+        if (e.key === "Enter") {
+            e.preventDefault(); 
+            const val = $(this).val().trim().toUpperCase();
+            if (val !== "") {
+                $('#others').prop('checked', true);
+                $('#physician, #nurse, #midwife, #hilot').prop('checked', false);
+                $('#attendant_position').val(val);
+                $('#attendant_name').focus();
+            }
+            if (typeof saveToMemory === "function") saveToMemory();
+        }
+    });
+});
+</script>
+
+<script>
+// 11. Enter to fetch Current Date
+$(document).ready(function() {
+    const dateFields = [
+        '#attendant_date', '#informant_date', '#prepared_date', '#received_date', '#civil_date'
+    ];
+
+    $(dateFields.join(', ')).on('keydown', function(e) {
+        if (e.key === "Enter") {
+            e.preventDefault(); 
+            const now = new Date();
+            const day = now.getDate();
+            const year = now.getFullYear();
+            const monthName = now.toLocaleString('default', { month: 'long' }).toUpperCase();
+            const formattedDate = `${monthName} ${day}, ${year}`;
+
+            $(this).val(formattedDate);
+
+            const currentId = $(this).attr('id');
+            if (currentId === 'attendant_date') $('#informant_name').focus();
+            else if (currentId === 'informant_date') $('#prepared_name').focus();
+            else if (currentId === 'prepared_date') $('#received_name').focus();
+            else if (currentId === 'received_date') $('#civil_name').focus();
+
+            if (typeof saveToMemory === "function") saveToMemory();
+        }
+    });
+});
+</script>
+
+<script>
+// 12. Enter to fetch PHILIPPINES
+$(document).ready(function() {
+    $('#mother_country, #father_country, #marriage_country').on('keydown', function(e) {
+        if (e.key === "Enter") {
+            if ($(this).val().trim() === "") {
+                $(this).val("PHILIPPINES");
+            }
+            e.stopImmediatePropagation(); 
+
+            // Special handling for marriage country sync to hidden field
+            if ($(this).attr('id') === 'marriage_country') {
+                let fullPlace = ($('#marriage_city').val() + " " + $('#marriage_province').val() + " " + $(this).val()).trim();
+                $('#marriage_place').val(fullPlace.toUpperCase());
+            }
+
+            if (typeof saveToMemory === "function") saveToMemory();
+
+            const allInputs = $(".form-control:not([disabled])");
+            const index = allInputs.index(this);
+            if (index > -1 && index < allInputs.length - 1) {
+                allInputs.eq(index + 1).focus();
+            }
+            return false;
+        }
+    });
+});
+</script>
+
+<script>
+// 13. Local Storage Remarks Logic
+$(document).ready(function() {
+    const $remarkInput = $('#r');        
+    const $dropdown = $('#remark-dropdown'); 
+    const $hiddenInput = $('#re');      
+    const STORAGE_KEY = 'custom_remarks_list';
+
+    function getLocalRemarks() {
+        const data = localStorage.getItem(STORAGE_KEY);
+        return data ? JSON.parse(data) : [];
+    }
+
+    function saveToLocal(text) {
+        let remarks = getLocalRemarks();
+        text = text.trim().toUpperCase();
+        
+        if (text !== "" && !remarks.includes(text)) {
+            remarks.push(text);
+            localStorage.setItem(STORAGE_KEY, JSON.stringify(remarks));
+        }
+    }
+
+    $remarkInput.on('keydown', function(e) {
+        if (e.key === "Enter") {
+            e.preventDefault(); 
+            saveToLocal($(this).val());
+            $dropdown.hide();
+        }
+    });
+
+    $remarkInput.on('input focus', function() {
+        const query = $(this).val().toUpperCase();
+        const remarks = getLocalRemarks();
+        const matches = remarks.filter(r => r.includes(query));
+
+        if (matches.length > 0 && query !== "") {
+            let html = '';
+            matches.forEach((text, index) => {
+                html += `
+                    <div class="remark-item">
+                        <span class="remark-text">${text}</span>
+                        <span class="delete-remark">Delete</span>
+                    </div>`;
+            });
+            $dropdown.html(html).show();
+        } else {
+            $dropdown.hide();
+        }
+
+        let encoded = $(this).val().replace(/  /g, "[sp][sp]").replace(/\n/g, "[nl]");
+        $hiddenInput.val(encoded);
+    });
+
+    $(document).on('click', '.remark-text', function() {
+        const selectedText = $(this).text();
+        $remarkInput.val(selectedText);
+        let encoded = selectedText.replace(/  /g, "[sp][sp]").replace(/\n/g, "[nl]");
+        $hiddenInput.val(encoded);
+        $dropdown.hide();
+    });
+
+    $(document).on('click', '.delete-remark', function(e) {
+        e.stopPropagation();
+        const textToDelete = $(this).siblings('.remark-text').text();
+        
+        if (confirm(`Are you sure you want to delete this remark: "${textToDelete}"?`)) {
+            let remarks = getLocalRemarks();
+            remarks = remarks.filter(r => r !== textToDelete);
+            localStorage.setItem(STORAGE_KEY, JSON.stringify(remarks));
+            $(this).closest('.remark-item').remove();
+            
+            if ($dropdown.children().length === 0) {
+                $dropdown.hide();
+            }
+        }
+    });
+
+    $(document).on('click', function(e) {
+        if (!$(e.target).closest('.remark-item, #r').length) {
+            $dropdown.hide();
+        }
+    });
+});
+</script>
+
+<script>
+// 14. Marriage Date (20a) Auto-Formatting (Enter & Blur Trigger)
+$(document).ready(function() {
+    const MON = ["JANUARY", "FEBRUARY", "MARCH", "APRIL", "MAY", "JUNE", 
+                 "JULY", "AUGUST", "SEPTEMBER", "OCTOBER", "NOVEMBER", "DECEMBER"];
+
+    function formatMarriageDate(input) {
+        let val = $(input).val().trim().toUpperCase();
+        
+        // Skip formatting if it's N/A, empty, or already formatted correctly
+        if (val === "" || val === "NOT APPLICABLE" || val === "NOT MARRIED" || val === "N/A") return;
+
+        // FIXED: Added the comma (,) into the split regex to clean up existing commas
+        let parts = val.split(/[\s\/,\.-]+/); 
+        
+        if (parts.length >= 3) {
+            let month = parts[0];
+            let day = parts[1];
+            let year = parts[2];
+
+            // Convert numeric month to Name
+            if (!isNaN(month) && month !== "") {
+                let idx = parseInt(month, 10);
+                if (idx >= 1 && idx <= 12) month = MON[idx - 1];
+            }
+
+            // Fix 2-digit years
+            if (year.length === 2) {
+                let yInt = parseInt(year, 10);
+                let currentYear = new Date().getFullYear() % 100;
+                year = (yInt > currentYear + 5) ? "19" + year : "20" + year;
+            }
+
+            // Set the final formatted value: OCTOBER 24, 1995
+            $(input).val(`${month} ${day}, ${year}`);
+        }
+    }
+
+    $('#marriage_date').on('keydown', function(e) {
+        if (e.key === "Enter") {
+            formatMarriageDate(this);
+            if (typeof toggleMarriageLogic === "function") toggleMarriageLogic();
+            if (typeof saveToMemory === "function") saveToMemory();
+        }
+    });
+
+    $('#marriage_date').on('blur', function() {
+        formatMarriageDate(this);
+    });
+});
+</script>
+
+<script>
+// 15. Spacebar Navigation for Section 20b
+$(document).ready(function() {
+    $('#marriage_city, #marriage_province, #marriage_country').on('keydown', function(e) {
+        if (e.key === " ") {
+            e.preventDefault(); // Prevent space from being typed
+            
+            const currentId = $(this).attr('id');
+            if (currentId === 'marriage_city') {
+                $('#marriage_province').focus();
+            } else if (currentId === 'marriage_province') {
+                $('#marriage_country').focus();
+            } else if (currentId === 'marriage_country') {
+                // Move to the first checkbox in Section 21a
+                $('#physician').focus();
+            }
+        }
+    });
+});
+</script>
+
+<script>
+// 16. Spacebar Navigation for Date of Birth (Section 3)
+$(document).ready(function() {
+    $('#bd_day, #bd_month, #bd_year').on('keydown', function(e) {
+        if (e.key === " ") {
+            e.preventDefault(); 
+            const currentId = $(this).attr('id');
+            if (currentId === 'bd_day') {
+                $('#bd_month').focus();
+            } else if (currentId === 'bd_month') {
+                $('#bd_year').focus();
+            } else if (currentId === 'bd_year') {
+                $('#birth_brgy').focus(); // Jumps to Section 4: Place of Birth
+            }
+        }
+    });
+});
+</script>
+
+<script>
+// 17. Combined Backspace Logic: Clear All AND Jump Back
+// Pressing Backspace clears the entire input box but KEEPS it selected
+$(document).ready(function() {
+    $('input[type="text"]').on('keydown', function(e) {
+        if (e.key === "Backspace") {
+            
+            // Only trigger if there is actually text in the box to delete
+            if ($(this).val() !== "") {
+                e.preventDefault(); // Stop the normal letter-by-letter deletion
+                
+                // 1. Clear the entire box instantly
+                $(this).val('');
+                
+                // 2. Alert your other scripts (like the "Not Married" lock) that the box is now empty
+                $(this).trigger('input'); 
+                
+                // 3. Save the empty box to memory directly (without blurring/deselecting)
+                if (typeof saveToMemory === "function") saveToMemory();
+            }
+        }
     });
 });
 </script>
