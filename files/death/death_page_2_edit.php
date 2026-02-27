@@ -1,33 +1,13 @@
 <div class="ctf-birth pt-3" style="width:960px;margin: auto;">
-<?php
-				require_once 'login_db_death.php';
-
-				$conn = new mysqli($hn, $un, $pw, $db);
-				if ($conn->connect_error) die($conn->connect_error);
-
-				$reg_no=null;
-				if (!empty($_GET['reg_no'])){ $reg_no = $_REQUEST['reg_no']; }
-
-				$sql = "SELECT * FROM registration_tbl NATURAL JOIN (person_tbl NATURAL JOIN death_cause_eight_days NATURAL JOIN att_rev_tbl NATURAL JOIN corpse_disposal_tbl NATURAL JOIN inf_pre_tbl NATURAL JOIN receive_civil_tbl NATURAL JOIN remarks_tbl NATURAL JOIN death_cause_zero_seven NATURAL JOIN autopsy_tbl NATURAL JOIN embalmer_tbl NATURAL JOIN late_reg_tbl) WHERE no = '$reg_no'";
-				$result = $conn->query($sql);  
-				if (!$result) die ("Database access failed: " . $conn->error);
-
-				if ($result->num_rows > 0) {
-	    			while($row = $result->fetch_assoc()) { 
-?>
-	<!--birth form-->
-		<div class="form" style="padding:0 15px 0 15px;">
-	 			<!-- Child 0 t0 7 days -->
-	  			<div class="row"><!--grid of header-->
-		  			<div class="col" style="border: 2px solid purple;border-bottom:none;">
+	<div class="form" style="padding:0 15px 0 15px;">
+	 			<div class="row"><div class="col" style="border: 2px solid purple;border-bottom:none;">
 					  	<h6 style="font-weight:bold;" align="center">FOR CHILDREN AGED 0 TO 7 DAYS</h6>
 					</div>
-				</div><!-- close row -->
-				<div class="row">
+				</div><div class="row">
 		  			<div class="col-3" style="border: 2px solid purple;border-right:none;">
 						<h6 style="padding-top:2px; font-size:14px;">14.&nbsp;AGE OF MOTHER</h6>
 						<div class="input-group" style="padding-top: 16px;">
-							<input type="text" class="form-control form-control-sm" placeholder="" name="mother_age" value="<?php echo $row['mother_age']; ?>" >
+							<input type="text" class="form-control form-control-sm" placeholder="" name="mother_age" value="<?php echo $row['mother_age'] ?? ''; ?>" >
 						</div>
 					</div>
 					<div class="col-5" style="border: 2px solid purple;border-right:none;">
@@ -42,8 +22,7 @@
 							<input type="text" class="form-control form-control-sm" placeholder="" name="pregnancy_length" value="<?php echo $row['pregnancy_length'] ?? ''; ?>">
 						</div>
 		  			</div>
-	  			</div><!--close row-->
-	  			<div class="row">
+	  			</div><div class="row">
 					<div class="col-6" style="border: 2px solid purple;border-right:none;border-top:none;">
 						<h6 style="padding-top:2px; font-size:14px;">17.&nbsp;TYPE OF BIRTH<br>&emsp;&nbsp;&nbsp;<span style="color:purple;font-size:12px">(Single, Twin, Triplet, etc.)</span></h6>
 						<div class="input-group">
@@ -56,14 +35,10 @@
 							<input type="text" class="form-control form-control-sm" placeholder="" name="multi_birth_was" value="<?php echo $row['if_multi_child_was'] ?? ''; ?>" >
 						</div>
 		  			</div>
-	  			</div><!--close row-->
-	  			<div class="row"><!--grid of header-->
-		  			<div class="col" style="border: 2px solid purple;border-top:none;">
+	  			</div><div class="row"><div class="col" style="border: 2px solid purple;border-top:none;">
 					  	<h6 style="font-weight:bold;" align="center">MEDICAL CERTIFICATE</h6>
 					</div>
-				</div><!-- close row -->
-				<div class="row" style="margin-bottom:10px;"><!--grid of header-->
-		  			<div class="col" style="border: 2px solid purple;border-top:none;">
+				</div><div class="row" style="margin-bottom:10px;"><div class="col" style="border: 2px solid purple;border-top:none;">
 					  	<h6 style="padding-top:2px;font-size: 14px;">19a.&nbsp;CAUSES OF DEATH</h6>
 
 			  		  	<h6 style="padding-top:10px;font-size:14px;">&emsp;&emsp;a. Main disease/condition of infant
@@ -76,11 +51,11 @@
 						</div>
 						&emsp;&emsp;c. Main maternal disease/condition affecting of infant
 						<div class="custom-control custom-checkbox custom-control-inline mt-1" style="padding: 0; width: 57.5%;margin-right: 0;">
-							<input type="text" class="form-control form-control-sm" name="main_maternal" value="<?php echo $row['main_maternal_disease'] ?? ''; ?>" >
+							<input type="text" class="form-control form-control-sm" name="main_maternal_disease" value="<?php echo $row['main_maternal_disease'] ?? ''; ?>" >
 						</div>
 						&emsp;&emsp;d. Other maternal disease/conditions affecting of infant
 						<div class="custom-control custom-checkbox custom-control-inline mt-1" style="padding: 0; width: 56.5%;margin-right: 0;">
-							<input type="text" class="form-control form-control-sm" name="other_maternal" value="<?php echo $row['other_maternal_disease'] ?? ''; ?>" >
+							<input type="text" class="form-control form-control-sm" name="other_maternal_disease" value="<?php echo $row['other_maternal_disease'] ?? ''; ?>" >
 						</div>
 						&emsp;&emsp;e. Other relevant circumstances
 						<div class="custom-control custom-checkbox custom-control-inline mt-1" style="padding: 0; width: 72.5%;margin-right: 0;">
@@ -89,9 +64,7 @@
 						</h6>
 						<h6 style="font-weight:bold;" align="center">CONTINUE TO FILL UP ITEM 20</h6>
 					</div>
-				</div><!-- close row -->
-				<div class="row" style="margin-bottom:10px;"><!--grid of header-->
-		  			<div class="col" style="border: 2px solid purple;">
+				</div><div class="row" style="margin-bottom:10px;"><div class="col" style="border: 2px solid purple;">
 					  	<h6 style="padding-top:2px;font-weight:bold;" align="center">POSTMORTEM CERTIFICATE OF DEATH</h6>
 
 			  		  	<h6 style="padding-top:10px;font-size:14px;letter-spacing:1px;">&emsp;&emsp;&emsp;&emsp;I HEREBY CERTIFY that I have performed an autopsy upon the body of the deceased and that the cause of death was
@@ -120,7 +93,7 @@
 					  				<div class="input-group-prepend">
 					      				<span class="input-group-text" style="padding:0;border:none; background-color:white; color:black;font-size:14px;">Date&nbsp;</span>
 					  				</div>
-					    			<input type="text" class="form-control form-control-sm" placeholder="" name="autopsy_date" value="<?php echo $row['autopsy_date'] ?? ''; ?>">
+					    			<input type="date" class="form-control form-control-sm" name="autopsy_date" value="<?php echo $row['autopsy_date'] ?? ''; ?>">
 								</div>	
 							</div>
 							<div class="col-6">
@@ -142,9 +115,7 @@
 							</div>
 						</div>
 					</div>
-				</div><!-- close row -->
-				<div class="row" style="margin-bottom:10px;"><!--grid of header-->
-		  			<div class="col" style="border: 2px solid purple;">
+				</div><div class="row" style="margin-bottom:10px;"><div class="col" style="border: 2px solid purple;">
 					  	<h6 style="padding-top:2px;font-weight:bold;" align="center">CERTIFICATE OF EMBALMER</h6>
 
 			  		  	<h6 style="padding-top:10px;font-size:14px;">&emsp;&emsp;&emsp;&emsp;I HEREBY CERTIFY that I have embalmed
@@ -192,7 +163,7 @@
 								</div>
 								<h6 style="font-size:14px;">Issued on&nbsp;
 								<div class="custom-control custom-checkbox custom-control-inline mt-1" style="padding: 0; width: 40%;margin-right: 0;">
-									<input type="text" class="form-control form-control-sm" name="embalmer_on" value="<?php echo $row['embalmer_on'] ?? ''; ?>">
+									<input type="date" class="form-control form-control-sm" name="embalmer_on" value="<?php echo $row['embalmer_on'] ?? ''; ?>">
 								</div>
 								at
 								<div class="custom-control custom-checkbox custom-control-inline mt-1" style="padding: 0; width: 40%;margin-right: 0;">
@@ -203,15 +174,13 @@
 					  				<div class="input-group-prepend">
 					      				<span class="input-group-text" style="padding:0;border:none; background-color:white; color:black;font-size:14px;">Expiry Date&nbsp;</span>
 					  				</div>
-					    			<input type="text" class="form-control form-control-sm" placeholder="" name="embalmer_expdate" value="<?php echo $row['embalmer_expdate'] ?? ''; ?>">
+					    			<input type="date" class="form-control form-control-sm" name="embalmer_expdate" value="<?php echo $row['embalmer_expdate'] ?? ''; ?>">
 								</div>
 								
 					  		</div>
 						</div>
 					</div>
-				</div><!-- close row -->
-	  		<!-- Affidavit of Delayed Registration-->
-			  	<div class="row">
+				</div><div class="row">
 				  	<div class="col" style="border: 2px solid purple;">
 				  		<h6 style="padding-top:10px;font-weight: bold;font-size:23px;line-height: 0.7;" align="center">AFFIDAVIT FOR DELAYED REGISTRATION OF DEATH</h6>
 
@@ -235,7 +204,7 @@
 						</div>
 						died on
 						<div class="custom-control custom-checkbox custom-control-inline mt-1" style="padding: 0;width: 36%;margin-right: 0;">
-							<input type="text" class="form-control form-control-sm" id="died_on" name="died_on" value="<?php echo $row['died_on'] ?? ''; ?>">
+							<input type="date" class="form-control form-control-sm" id="died_on" name="died_on" value="<?php echo $row['died_on'] ?? ''; ?>">
 						</div>
 						in
 						&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&nbsp;&nbsp;
@@ -249,7 +218,7 @@
 						</div>
 						on
 						<div class="custom-control custom-checkbox custom-control-inline mt-1" style="padding: 0;width: 34%;margin-right: 0;">
-							<input type="text" class="form-control form-control-sm" id="buried_on" name="buried_on" value="<?php echo $row['buried_on'] ?? ''; ?>">
+							<input type="date" class="form-control form-control-sm" id="buried_on" name="buried_on" value="<?php echo $row['buried_on'] ?? ''; ?>">
 						</div>
 						.
 						</h6>
@@ -257,7 +226,7 @@
 						<h6 style="font-size:14px;">&emsp;&emsp;&emsp;&emsp;2.&emsp;That the deceased at the time of his/her death:&emsp;<br>
 						&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;
 						<?php 
-							$attended_type = $row['attended_type'];
+							$attended_type = $row['attended_type'] ?? '';
 							if($attended_type == 'attended'){
 						?>
 						<div class="custom-control custom-checkbox custom-control-inline" style="margin-right: 0;">
@@ -293,7 +262,7 @@
       						<label class="custom-control-label" for="attend" style="font-size: 14px;">&nbsp;was attended by</label>
 						</div>
 						<div class="custom-control custom-checkbox custom-control-inline mt-1" style="padding: 0; width: 45%;margin-right: 0;">
-							<input type="text" class="form-control form-control-sm" id="attend_txt" name="attended_by" >
+							<input type="text" class="form-control form-control-sm" id="attend_txt" name="attended_by" value="<?php echo $row['attended_by'] ?? ''; ?>">
 						</div>
 						;<br>
 						&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;
@@ -313,11 +282,7 @@
 						
 						<h6 style="font-size:14px;">&emsp;&emsp;&emsp;&emsp;4.&emsp;That the reason for the delay registering this death was due to
 						<div class="custom-control custom-checkbox custom-control-inline" style="padding: 0; width: 47%;margin-right: 0;">
-							<input type="text" class="form-control form-control-sm" name="late_reg_reason1" value="<?php echo $row['late_reg_reason'] ?? ''; ?>">
-						</div>
-						&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;
-						<div class="custom-control custom-checkbox custom-control-inline mt-1" style="padding: 0; width: 89%;margin-right: 0;">
-							<input type="text" class="form-control form-control-sm" name="late_reg_reason2">
+							<input type="text" class="form-control form-control-sm" name="late_reg_reason" value="<?php echo $row['late_reg_reason'] ?? ''; ?>">
 						</div>
 						.
 						</h6>
@@ -376,7 +341,7 @@
 						</div>
 						issued on
 						<div class="custom-control custom-checkbox custom-control-inline mt-1" style="padding: 0; width: 30%;margin-right: 0;">
-							<input type="text" class="form-control form-control-sm" name="issued_on" value="<?php echo $row['issued_on'] ?? ''; ?>">
+							<input type="date" class="form-control form-control-sm" name="issued_on" value="<?php echo $row['issued_on'] ?? ''; ?>">
 						</div>
 						at
 						<div class="custom-control custom-checkbox custom-control-inline mt-1" style="padding: 0; width: 30%;margin-right: 0;">
@@ -395,44 +360,13 @@
 							<div class="col-6" align="center">
 								<input type="text" class="form-control form-control-sm" style="text-align:center;" name="administer_position" value="<?php echo $row['administer_position'] ?? ''; ?>" >
 								<h6 style="font-size:14px;">Position/Title/Designation</h6>
-								<input type="text" class="form-control form-control-sm" style="text-align:center;" name="administer_address" value="<?php echo $row['administer_address'] ?? ''; ?>" >
+								<input type="text" class="form-control form-control-sm" name="administer_address" value="Municipal Hall, Gerona, Tarlac" style="text-align:center;">
 								<h6 style="font-size:14px;">Address</h6>
 							</div>
 						</div>
 
 				  	</div>
-			  	</div><!--close row-->
-
-	 			<br>
+			  	</div><br>
 
 	 	</div>
 </div>
-<?php
-					}}
-?>
-<!-- Javascript -->
-<script>
-$(document).ready(function(){
-	$("#sign_day").keyup(function(){
-		var a = $("#sign_day").val();
-		if(a >= 32){
-			alertify.dialog('alert').set({transition:'zoom',message: 'Warning: Invalid Input!'}).show(); 
-			$("#sign_day").val("");
-		}else if(a == '00'){
-			alertify.dialog('alert').set({transition:'zoom',message: 'Warning: Invalid Input!'}).show(); 
-			$("#sign_day").val("");
-		}
-	});
-
-	$("#sworn_day").keyup(function(){
-		var a = $("#sworn_day").val();
-		if(a >= 32){
-			alertify.dialog('alert').set({transition:'zoom',message: 'Warning: Invalid Input!'}).show(); 
-			$("#sworn_day").val("");
-		}else if(a == '00'){
-			alertify.dialog('alert').set({transition:'zoom',message: 'Warning: Invalid Input!'}).show(); 
-			$("#sworn_day").val("");
-		}
-	});
-});
-</script>

@@ -275,17 +275,29 @@
                     </div>
                   </div>
                   <div class="col-7 col-md-8">
-                    <?php
+                     <?php
                       require_once 'php/login_db_death.php';
 
-          					  $conn = new mysqli($hn, $un, $pw, $db);
-          					  if ($conn->connect_error) die($conn->connect_error);
+                      $conn = new mysqli($hn, $un, $pw, $db);
+                      if ($conn->connect_error) die($conn->connect_error);
 
-                      $sql = "SELECT * FROM person_tbl NATURAL JOIN registration_tbl";
+                      // Use the correct $conn variable and the new table name
+                        $sql = "SELECT 
+                            n.no, 
+                            r.registry_no, 
+                            p.first_name, 
+                            p.middle_name, 
+                            p.last_name, 
+                            r.reg_date 
+                        FROM no_tbl n
+                        LEFT JOIN registration_tbl r ON n.no = r.no
+                        LEFT JOIN person_tbl p ON n.no = p.no
+                        ORDER BY n.no DESC";
                       $result = $conn->query($sql);  
+                      
                       if (!$result) die ("Database access failed: " . $conn->error);
+                      
                       $rows = $result->num_rows;
-                                    
                     ?>
                     <div class="numbers">
                       <h6 class="card-category text-right text-uppercase">Death</h6>
