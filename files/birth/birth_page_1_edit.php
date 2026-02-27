@@ -1132,20 +1132,43 @@ $(document).ready(function() {
 });
 </script>
 
+
 <script>
-// 6. Child Birth Date Formatting & Spacebar Navigation
+// 6. Child Birth Date Formatting & Spacebar Navigation (With Auto-Month Text on Load)
 $(document).ready(function() {
     const MON = ["JANUARY", "FEBRUARY", "MARCH", "APRIL", "MAY", "JUNE", 
                  "JULY", "AUGUST", "SEPTEMBER", "OCTOBER", "NOVEMBER", "DECEMBER"];
 
-    // 1. Load Initial Data
+    // 1. Load Initial Data & Format Month
     let initialVal = $('#child_birth_date').val();
     if (initialVal && initialVal.trim() !== '' && !initialVal.includes('<')) {
         let parts = initialVal.trim().split(/[\s\/\.-]+/); 
         if (parts.length >= 3) {
-            $('#bd_day').val(parts[0]);
-            $('#bd_month').val(parts[1]);
-            $('#bd_year').val(parts[2]);
+            let day, month, year;
+
+            // Check if the first chunk is a 4-digit Year (e.g., 2005)
+            if (parts[0].length === 4 && !isNaN(parts[0])) {
+                year = parts[0];
+                month = parts[1];
+                day = parts[2];
+            } else {
+                day = parts[0];
+                month = parts[1];
+                year = parts[2];
+            }
+
+            // ---> THE FIX: Convert '05' to 'MAY' instantly on load <---
+            if (!isNaN(month) && month !== "") {
+                let idx = parseInt(month, 10);
+                if (idx >= 1 && idx <= 12) {
+                    month = MON[idx - 1];
+                }
+            }
+
+            // Set the final values into the boxes
+            $('#bd_day').val(day);
+            $('#bd_month').val(month);
+            $('#bd_year').val(year);
         }
     }
 
@@ -1194,6 +1217,8 @@ $(document).ready(function() {
     });
 });
 </script>
+
+
 <script>
 // 7. Save To Memory (Page 1 to Page 2 sync)
 function saveToMemory() {
@@ -1483,7 +1508,7 @@ $(document).ready(function() {
 </script>
 
 <script>
-// 14. Marriage Date (20a) Auto-Formatting (Enter & Blur Trigger)
+// 14. Marriage Date (20a) Auto-Formatting (On Load, Enter & Blur Trigger)
 $(document).ready(function() {
     const MON = ["JANUARY", "FEBRUARY", "MARCH", "APRIL", "MAY", "JUNE", 
                  "JULY", "AUGUST", "SEPTEMBER", "OCTOBER", "NOVEMBER", "DECEMBER"];
@@ -1494,13 +1519,21 @@ $(document).ready(function() {
         // Skip formatting if it's N/A, empty, or already formatted correctly
         if (val === "" || val === "NOT APPLICABLE" || val === "NOT MARRIED" || val === "N/A") return;
 
-        // FIXED: Added the comma (,) into the split regex to clean up existing commas
         let parts = val.split(/[\s\/,\.-]+/); 
         
         if (parts.length >= 3) {
-            let month = parts[0];
-            let day = parts[1];
-            let year = parts[2];
+            let month, day, year;
+            
+            // SMART FIX: If database sends YYYY-MM-DD
+            if (parts[0].length === 4 && !isNaN(parts[0])) {
+                year = parts[0];
+                month = parts[1];
+                day = parts[2];
+            } else {
+                month = parts[0];
+                day = parts[1];
+                year = parts[2];
+            }
 
             // Convert numeric month to Name
             if (!isNaN(month) && month !== "") {
@@ -1518,6 +1551,11 @@ $(document).ready(function() {
             // Set the final formatted value: OCTOBER 24, 1995
             $(input).val(`${month} ${day}, ${year}`);
         }
+    }
+
+    // ---> THE FIX: Run the formatter instantly when the page loads! <---
+    if ($('#marriage_date').length > 0) {
+        formatMarriageDate($('#marriage_date'));
     }
 
     $('#marriage_date').on('keydown', function(e) {

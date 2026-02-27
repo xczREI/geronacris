@@ -241,7 +241,7 @@
         // Removed the while loop entirely. Just fetch the single row once!
         $row = $result->fetch_assoc(); 
 ?>
-<form method="post" action="birth_cerf_update_action_staff.php" id="updatebirth_form">
+<form method="post" action="birth_cerf_update_action_staff.php" id="updatebirth_form" novalidate>
     <input type="hidden" name="reg_no" value="<?php echo $row['no']; ?>">
     <div id="birth_page_1" class="collapse coll show" data-parent="#accordion">
         <?php include 'birth_page_1_edit.php'; ?>
@@ -374,6 +374,33 @@ function openLivePreview() {
     // 7. Show the modal (Don't use appendTo("body") here, it's already in the HTML)
     $('#livePreviewModal').modal('show');
 }
+</script>
+
+<script>
+// Find any invalid inputs when the user hits UPDATE
+$('#updatebirth_form').on('invalid', function () {
+    return false;
+} , true);
+
+document.getElementById('updatebirth_form').addEventListener('invalid', function(e){
+    // Find the closest accordion collapse container to the invalid field
+    var $closestCollapse = $(e.target).closest('.collapse');
+    
+    // If it's closed, open it!
+    if(!$closestCollapse.hasClass('show')) {
+        $closestCollapse.collapse('show');
+    }
+}, true);
+</script>
+
+
+// DELETE THIS ENTIRE SCRIPT FROM THE BOTTOM OF YOUR EDIT PAGES
+<script>
+// Force Sync Hidden Fields Before Form Submission
+$(document).ready(function() {
+    $('#updatebirth_form').on('submit', function() {
+ })
+ }) // ... delete all of this ...
 </script>
 
 </body>

@@ -9,12 +9,14 @@ if(isset($_POST['print'])){
 
     $reg_no = $conn->real_escape_string($_POST['reg_no']);
 
-    $sql = "SELECT * FROM registration_tbl NATURAL JOIN (child_tbl NATURAL JOIN mother_tbl NATURAL JOIN father_tbl NATURAL JOIN att_inf_tbl NATURAL JOIN receive_civil_tbl NATURAL JOIN remarks_tbl NATURAL JOIN admission_paternity_tbl NATURAL JOIN late_reg_tbl) WHERE no = '$reg_no'";
+    // ADDED LIMIT 1 HERE
+    $sql = "SELECT * FROM registration_tbl NATURAL JOIN (child_tbl NATURAL JOIN mother_tbl NATURAL JOIN father_tbl NATURAL JOIN att_inf_tbl NATURAL JOIN receive_civil_tbl NATURAL JOIN remarks_tbl NATURAL JOIN admission_paternity_tbl NATURAL JOIN late_reg_tbl) WHERE no = '$reg_no' LIMIT 1";
     $result = $conn->query($sql);  
     if (!$result) die ("Database access failed: " . $conn->error);
 
     if ($result->num_rows > 0) {
-       while($row = $result->fetch_assoc()) { 
+       // REMOVED WHILE LOOP HERE
+       $row = $result->fetch_assoc(); 
 
         // 1. Get dynamic inputs from the print modal
         $date_now = $_POST['date_now'] ?? '';
@@ -299,7 +301,6 @@ if(isset($_POST['print'])){
         //$pdf->Cell(30,10,'DOCUMENTARY STAMP TAX PAID',0,0,'C');
 
         $pdf->Output('Form_1A_'.str_replace(' ', '_', $child_name).'.pdf', 'I');
-       }
     }
   }
 }

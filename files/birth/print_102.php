@@ -118,10 +118,15 @@ $pdf->Cell(0, 10, strtoupper($row['child_sex']), 0, 1);
 // $row['child_birth_date']
 // fitTextInCell($pdf, 87, 59, 108, 5, $childBirthDate[0]);
 $sampleBirth = $row['child_birth_date'];
-$childBirthDate = explode(' ', $sampleBirth);
-fitTextInCell($pdf, 105, 59, 40, 5, $childBirthDate[0] ?? '');
-fitTextInCell($pdf, 125, 59, 40, 5, $childBirthDate[1] ?? '');
-fitTextInCell($pdf, 165, 59, 40, 5, $childBirthDate[2] ?? '');
+
+// Safely pull the Day, Month (as a word), and Year from the database string
+$bDay = (!empty($sampleBirth) && $sampleBirth != '0000-00-00') ? date('d', strtotime($sampleBirth)) : '';
+$bMonth = (!empty($sampleBirth) && $sampleBirth != '0000-00-00') ? date('F', strtotime($sampleBirth)) : '';
+$bYear = (!empty($sampleBirth) && $sampleBirth != '00-00-00') ? date('Y', strtotime($sampleBirth)) : '';
+
+fitTextInCell($pdf, 105, 59, 40, 5, $bDay);
+fitTextInCell($pdf, 125, 59, 40, 5, $bMonth);
+fitTextInCell($pdf, 165, 59, 40, 5, $bYear);
 //Name of Hospital/House No/Street/Baranggay
 $pdf->SetXY(61, 67.5); 
 fitTextInCell($pdf, 35, 70, 75, 5, $row['birth_brgy']);

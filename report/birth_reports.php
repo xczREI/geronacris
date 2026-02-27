@@ -147,11 +147,15 @@
         if ($conn->connect_error) die($conn->connect_error);
 
         // Extracts the last 4 characters (the year) from the "DD MONTH YYYY" string
-        $sql = "SELECT RIGHT(TRIM(child_birth_date), 4) AS yr 
-                FROM child_tbl 
-                WHERE child_birth_date IS NOT NULL AND child_birth_date != ''
-                GROUP BY yr 
-                ORDER BY yr DESC";
+                 $sql = "SELECT 
+                          CASE 
+                            WHEN child_birth_date LIKE '%-%' THEN LEFT(TRIM(child_birth_date), 4) 
+                            ELSE RIGHT(TRIM(child_birth_date), 4) 
+                          END AS yr 
+                        FROM child_tbl 
+                        WHERE child_birth_date IS NOT NULL AND child_birth_date != '' AND child_birth_date != '0000-00-00'
+                        GROUP BY yr 
+                        ORDER BY yr DESC";
 
         $result = $conn->query($sql);  
 

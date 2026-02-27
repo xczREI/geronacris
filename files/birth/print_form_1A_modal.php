@@ -147,7 +147,7 @@
         </div>
       </form>
         <?php 
-          }
+         break; }
         } 
         ?>
     </div>

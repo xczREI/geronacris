@@ -32,7 +32,9 @@
       $child_fname = $conn->real_escape_string($_POST['child_fname']);
       $child_mname = $conn->real_escape_string($_POST['child_mname']);
       $child_sex = $conn->real_escape_string($_POST['sex']);
-      $child_birth_date = $_POST['birth_day'];
+            // FORMAT FIX: The database strictly requires YYYY-MM-DD format!
+      $raw_bd = $_POST['birth_day'] ?? '';
+      $child_birth_date = (!empty($raw_bd)) ? date("Y-m-d", strtotime($raw_bd)) : '';
 
       $birth_brgy = $conn->real_escape_string($_POST['birth_brgy']);
       $birth_city = $conn->real_escape_string($_POST['birth_city']);

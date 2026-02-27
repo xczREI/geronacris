@@ -136,10 +136,15 @@
                 $conn = new mysqli($hn, $un, $pw, $db);
                 if ($conn->connect_error) die($conn->connect_error);
 
-                // IMPLEMENTED NEW LOGIC FROM ADMIN BIRTH_REPORTS.PHP
-                $sql = "SELECT RIGHT(TRIM(child_birth_date), 4) AS yr 
+                // Extracts the last 4 characters (the year) from the "DD MONTH YYYY" string
+                // Smart Query: Checks if the date has dashes (2005-05-03) or spaces (03 MAY 2005)
+                $sql = "SELECT 
+                          CASE 
+                            WHEN child_birth_date LIKE '%-%' THEN LEFT(TRIM(child_birth_date), 4) 
+                            ELSE RIGHT(TRIM(child_birth_date), 4) 
+                          END AS yr 
                         FROM child_tbl 
-                        WHERE child_birth_date IS NOT NULL AND child_birth_date != ''
+                        WHERE child_birth_date IS NOT NULL AND child_birth_date != '' AND child_birth_date != '0000-00-00'
                         GROUP BY yr 
                         ORDER BY yr DESC";
 

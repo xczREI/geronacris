@@ -210,5 +210,22 @@ $(document).ready(function(){
 
 </script>
 
+<script>
+// Force Sync Hidden Fields Before Form Submission
+$(document).ready(function() {
+    $('#addbirth_form').on('submit', function() {
+        // Grab whatever is currently sitting in the three date boxes
+        let finalD = $('#bd_day').val() ? $('#bd_day').val().trim() : '';
+        let finalM = $('#bd_month').val() ? $('#bd_month').val().trim() : '';
+        let finalY = $('#bd_year').val() ? $('#bd_year').val().trim() : '';
+        
+        // Combine them and shove them into the hidden field that goes to the DB
+        if(finalD && finalM && finalY) {
+            $('#child_birth_date').val(`${finalD} ${finalM} ${finalY}`);
+        }
+    });
+});
+</script>
+
 </body>
 </html>

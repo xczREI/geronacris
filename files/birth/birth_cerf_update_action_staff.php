@@ -23,8 +23,9 @@
       // FIXED: Form uses name="sex", not child_sex
       $child_sex = $conn->real_escape_string($_POST['sex'] ?? ''); 
       
-      // FIXED: Form uses name="birth_day", not child_birth_date
-      $child_birth_date = $conn->real_escape_string($_POST['birth_day'] ?? ''); 
+      // FORMAT FIX: The database strictly requires YYYY-MM-DD format!
+      $raw_bd = $_POST['birth_day'] ?? '';
+      $child_birth_date = (!empty($raw_bd)) ? date("Y-m-d", strtotime($raw_bd)) : '';
 
       $birth_brgy = $conn->real_escape_string($_POST['birth_brgy'] ?? '');
       $birth_city = $conn->real_escape_string($_POST['birth_city'] ?? '');
@@ -221,5 +222,5 @@
       exit();
 
       mysqli_close($conn);
-}
+    }
 ?>

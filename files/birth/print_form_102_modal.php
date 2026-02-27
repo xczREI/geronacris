@@ -13,15 +13,14 @@
         $reg_no=null;
         if (!empty($_GET['reg_no'])){ $reg_no = $_REQUEST['reg_no']; }
 
-        // CHANGE 1: Added "LIMIT 1" right here at the end of the SQL query
+        // ADDED LIMIT 1 HERE
         $sql = "SELECT * FROM registration_tbl NATURAL JOIN (child_tbl NATURAL JOIN mother_tbl NATURAL JOIN father_tbl NATURAL JOIN att_inf_tbl NATURAL JOIN receive_civil_tbl NATURAL JOIN remarks_tbl NATURAL JOIN admission_paternity_tbl NATURAL JOIN late_reg_tbl) WHERE no = '$reg_no' LIMIT 1";
-        
         $result = $conn->query($sql);  
         if (!$result) die ("Database access failed: " . $conn->error);
 
-        if ($result->num_rows > 0) {
-          // CHANGE 2: Removed the "while" loop. Now it only fetches once!
-          $row = $result->fetch_assoc(); 
+        if ($result->num_rows >0) {
+          // REMOVED WHILE LOOP HERE
+          $row = $result->fetch_assoc();
         ?>
         <form method="post" action="print_102.php" target="_blank">
           <input type="hidden" name="reg_no" value="<?php echo $row['no']; ?>">
@@ -36,8 +35,8 @@
           </div>
         </form>
         <?php 
-        // CHANGE 3: Removed the extra "}" bracket here that used to close the while loop
         } 
+        // REMOVED EXTRA BRACKET HERE
         ?>
 
         </div>

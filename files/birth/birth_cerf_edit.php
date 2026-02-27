@@ -231,12 +231,12 @@
 				$reg_no=null;
 				if (!empty($_GET['reg_no'])){ $reg_no = $_REQUEST['reg_no']; }
 
-				$sql = "SELECT * FROM registration_tbl NATURAL JOIN (child_tbl NATURAL JOIN mother_tbl NATURAL JOIN father_tbl NATURAL JOIN att_inf_tbl NATURAL JOIN receive_civil_tbl NATURAL JOIN remarks_tbl NATURAL JOIN admission_paternity_tbl NATURAL JOIN late_reg_tbl) WHERE no = '$reg_no'";
+				$sql = "SELECT * FROM registration_tbl NATURAL JOIN (child_tbl NATURAL JOIN mother_tbl NATURAL JOIN father_tbl NATURAL JOIN att_inf_tbl NATURAL JOIN receive_civil_tbl NATURAL JOIN remarks_tbl NATURAL JOIN admission_paternity_tbl NATURAL JOIN late_reg_tbl) WHERE no = '$reg_no' LIMIT 1";
 				$result = $conn->query($sql);  
 				if (!$result) die ("Database access failed: " . $conn->error);
 
 				if ($result->num_rows > 0) {
-	    			while($row = $result->fetch_assoc()) { 
+	    			$row = $result->fetch_assoc();
 			?>
 			<form method="post" action="birth_cerf_update_action.php" id="updatebirth_form">
 				<input type="hidden" name="reg_no" value="<?php echo $row['no']; ?>">
@@ -255,7 +255,6 @@
 		     	<br>
 			</form>
 			<?php 
-				}
 			}
 			?>
 		</div>
