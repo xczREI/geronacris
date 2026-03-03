@@ -1336,7 +1336,7 @@ $(document).ready(function() {
 </script>
 
 <script>
-// 11. Enter to fetch Current Date
+// 11. Enter to fetch Current Date (ONLY if empty)
 $(document).ready(function() {
     const dateFields = [
         '#attendant_date', '#informant_date', '#prepared_date', '#received_date', '#civil_date'
@@ -1345,14 +1345,18 @@ $(document).ready(function() {
     $(dateFields.join(', ')).on('keydown', function(e) {
         if (e.key === "Enter") {
             e.preventDefault(); 
-            const now = new Date();
-            const day = now.getDate();
-            const year = now.getFullYear();
-            const monthName = now.toLocaleString('default', { month: 'long' }).toUpperCase();
-            const formattedDate = `${monthName} ${day}, ${year}`;
+            
+            // --> THE FIX: Only auto-fill if the user hasn't typed anything yet <--
+            if ($(this).val().trim() === "") {
+                const now = new Date();
+                const day = now.getDate();
+                const year = now.getFullYear();
+                const monthName = now.toLocaleString('default', { month: 'long' }).toUpperCase();
+                const formattedDate = `${monthName} ${day}, ${year}`;
+                $(this).val(formattedDate);
+            }
 
-            $(this).val(formattedDate);
-
+            // Move focus to the next field regardless of whether we auto-filled or not
             const currentId = $(this).attr('id');
             if (currentId === 'attendant_date') $('#informant_name').focus();
             else if (currentId === 'informant_date') $('#prepared_name').focus();
@@ -1595,4 +1599,7 @@ $(document).ready(function() {
         }
     });
 });
+
+
+
 </script>

@@ -513,5 +513,173 @@ $(document).ready(function() {
     toggleAutopsyFields();
 });
 </script>
+
+<script>
+$(document).ready(function() {
+    
+    // UNBIND OLD CONFLICTING SCRIPTS
+    $("input[name='date_birth'], input[name='date_of_death'], select[name='sex'], select[name='autopsy']").off();
+    $("input[name='maternal_condition']").off();
+
+    // 1. Radio Buttons for 19c
+    $("input[name='maternal_condition']").on('change', function() {
+        if($(this).is(':checked')) {
+            $("input[name='maternal_condition']").not(this).prop('checked', false);
+        }
+    });
+
+    // 2. Smart Age, Infant Locks, and Maternal Locks
+    function runSmartLogic() {
+        // ... (Keep your existing runSmartLogic code exactly as it is) ...
+        var birthVal = $("input[name='date_birth']").val();
+        var deathVal = $("input[name='date_of_death']").val();
+        var allAgeFields = $("input[name='age_at_death'], input[name='age_one_month'], input[name='age_one_day'], input[name='age_hrs_hrs'], input[name='age_hrs_min']");
+
+        if (birthVal && deathVal) {
+            var dob = new Date(birthVal);
+            var dod = new Date(deathVal);
+            if (dod >= dob) {
+                var years = dod.getFullYear() - dob.getFullYear();
+                var months = dod.getMonth() - dob.getMonth();
+                var days = dod.getDate() - dod.getDate();
+                if (days < 0) { months--; days += new Date(dod.getFullYear(), dod.getMonth(), 0).getDate(); }
+                if (months < 0) { years--; months += 12; }
+
+                allAgeFields.val('').prop('readonly', false).css('background-color', '#fff');
+
+                if (years >= 1) {
+                    $("input[name='age_at_death']").val(years);
+                    $("input[name='age_one_month'], input[name='age_one_day'], input[name='age_hrs_hrs'], input[name='age_hrs_min']").val('N/A').prop('readonly', true).css('background-color', '#e9ecef');
+                } else if (months > 0 || days > 0) {
+                    $("input[name='age_one_month']").val(months);
+                    $("input[name='age_one_day']").val(days);
+                    $("input[name='age_at_death'], input[name='age_hrs_hrs'], input[name='age_hrs_min']").val('N/A').prop('readonly', true).css('background-color', '#e9ecef');
+                } else if (years === 0 && months === 0 && days === 0) {
+                    $("input[name='age_at_death'], input[name='age_one_month'], input[name='age_one_day']").val('N/A').prop('readonly', true).css('background-color', '#e9ecef');
+                }
+            }
+        }
+
+        var yrs = parseInt($("input[name='age_at_death']").val()) || 0;
+        var mos = parseInt($("input[name='age_one_month']").val()) || 0;
+        var dys = parseInt($("input[name='age_one_day']").val()) || 0;
+        
+        var infantFields = ['mother_age', 'delivery_method', 'pregnancy_length', 'birth_type', 'multi_birth_was', 'main_disease', 'other_disease', 'main_maternal_disease', 'other_maternal_disease', 'other_relevant'];
+        var adultFields = ['immediate_cause', 'immediate_interval', 'antecedent_cause', 'antecedent_interval', 'underlying_cause', 'underlying_interval', 'other_condition_death'];
+
+        if (yrs > 0 || mos > 0 || dys > 7) {
+            infantFields.forEach(function(f) { $("input[name='" + f + "']").val('N/A').prop('readonly', true).css('background-color', '#e9ecef'); });
+            adultFields.forEach(function(f) { var el = $("input[name='" + f + "']"); if (el.prop('readonly')) { el.prop('readonly', false).css('background-color', '#fff'); if(el.val() === 'N/A') el.val(''); } });
+        } else {
+            infantFields.forEach(function(f) { var el = $("input[name='" + f + "']"); if (el.prop('readonly')) { el.prop('readonly', false).css('background-color', '#fff'); if(el.val() === 'N/A') el.val(''); } });
+            adultFields.forEach(function(f) { $("input[name='" + f + "']").val('N/A').prop('readonly', true).css('background-color', '#e9ecef'); });
+        }
+
+        var sex = $("select[name='sex']").val() || "";
+        var maternalCheckboxes = $("input[name='maternal_condition']");
+        if (sex.toUpperCase() === 'FEMALE' && yrs >= 15 && yrs <= 49) {
+            maternalCheckboxes.prop('disabled', false);
+            $("#none_choices").css('pointer-events', 'auto');
+            if ($("#none_choices").data('auto-checked')) { $("#none_choices").prop('checked', false); $("#none_choices").data('auto-checked', false); }
+        } else {
+            maternalCheckboxes.prop('disabled', true).prop('checked', false);
+            $("#none_choices").prop('disabled', false).prop('checked', true).css('pointer-events', 'none');
+            $("#none_choices").data('auto-checked', true);
+        }
+    }
+
+    // 3. Sync to Page 2 Affidavit
+    function syncToPage2() {
+        // ... (Keep your existing syncToPage2 code exactly as it is) ...
+        var fname = $("input[name='deceased_fname']").val() || "";
+        var mname = $("input[name='deceased_mname']").val() || "";
+        var lname = $("input[name='deceased_lname']").val() || "";
+        $("input[name='death_name']").val((fname + " " + mname + " " + lname).replace(/\s+/g, ' ').trim());
+        $("input[name='died_on']").val($("input[name='date_of_death']").val());
+        $("input[name='died_in']").val($("input[name='place_of_death']").val());
+        var informant = $("input[name='informant_name']").val() || "";
+        $("input[name='late_name'], input[name='affiant_name']").val(informant);
+        $("input[name='late_address']").val($("input[name='informant_address']").val() || "");
+    }
+
+    // 4. Autopsy Toggle
+    function toggleAutopsyFields() {
+        // ... (Keep your existing toggleAutopsyFields code exactly as it is) ...
+        var autopsySelect = $("select[name='autopsy']").val() || "";
+        var autopsyFields = ['autopsy_txt1', 'autopsy_txt2', 'autopsy_name', 'autopsy_date', 'autopsy_title', 'autopsy_address'];
+        if (autopsySelect.toUpperCase() === 'NO') {
+            autopsyFields.forEach(function(f) { $("input[name='" + f + "']").val('N/A').prop('readonly', true).css('background-color', '#e9ecef'); });
+        } else {
+            autopsyFields.forEach(function(f) { var el = $("input[name='" + f + "']"); el.prop('readonly', false).css('background-color', '#fff'); if(el.val() === 'N/A') el.val(''); });
+        }
+    }
+
+    // Bind triggers to instantly fire when typing or clicking
+    $("select[name='sex']").on('change', runSmartLogic);
+    $("select[name='autopsy']").on('change', toggleAutopsyFields);
+    $("input[name='date_birth'], input[name='date_of_death']").on('change', function() { runSmartLogic(); syncToPage2(); });
+    $("input[name='age_at_death'], input[name='age_one_month'], input[name='age_one_day'], input[name='deceased_fname'], input[name='deceased_mname'], input[name='deceased_lname'], input[name='place_of_death'], input[name='informant_name'], input[name='informant_address']").on('keyup change', function() { runSmartLogic(); syncToPage2(); });
+
+    // Fire everything instantly on load so logic applies to the pulled data
+    runSmartLogic();
+    syncToPage2();
+    toggleAutopsyFields();
+
+    // =======================================================================
+    // NEW MAGIC: HIDE DATA AND POP IT ON FOCUS
+    // =======================================================================
+
+    // 1. Hide the values immediately after the page loads and the logic runs
+    $('form input:not([type="hidden"]):not([type="submit"]):not([type="checkbox"]):not([type="radio"]), form select').each(function() {
+        var originalValue = $(this).val();
+        
+        // Don't hide 'N/A' from disabled/locked fields so the user knows they are locked
+        if (originalValue !== 'N/A' && !$(this).prop('readonly')) {
+            $(this).attr('data-old-val', originalValue); // Save it secretly
+            $(this).val(''); // Wipe the box clean visually
+        }
+    });
+
+   // 2. When the user presses ENTER in a box, pop the old data back in AND jump to next box
+    $('form').on('keydown', 'input, select', function(e) {
+        // Check if the key pressed is the Enter key
+        if (e.key === 'Enter' || e.keyCode === 13) {
+            e.preventDefault(); // CRITICAL: Stop the form from submitting/saving
+
+            // 1. Reveal the hidden data if the box is empty and not locked
+            if ($(this).val() === '' && !$(this).prop('readonly')) {
+                var oldData = $(this).attr('data-old-val');
+                if (oldData !== undefined) {
+                    $(this).val(oldData);
+                    $(this).trigger('change'); // Alert your smart logic that data was added
+                }
+            }
+
+            // 2. Find all form fields that you can actually type in (visible, not locked/disabled)
+            var $focusable = $(this).closest('form').find('input, select, textarea').filter(':visible:not([readonly]):not([disabled])');
+            var currentIndex = $focusable.index(this);
+            var nextIndex = currentIndex + 1;
+
+            // 3. Move the cursor to the next available field
+            if (nextIndex < $focusable.length) {
+                $focusable.eq(nextIndex).focus();
+            }
+        }
+    });
+
+    // 3. SAFETY NET: When saving, put all untouched old data back into the empty boxes
+    $('form').on('submit', function() {
+        $(this).find('input, select').each(function() {
+            if ($(this).val() === '') {
+                var oldData = $(this).attr('data-old-val');
+                if (oldData !== undefined) {
+                    $(this).val(oldData);
+                }
+            }
+        });
+    });
+
+});
+</script>
 </body>
 </html>

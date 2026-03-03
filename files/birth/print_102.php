@@ -17,7 +17,26 @@ if (!$result) die ("Database access failed: " . $conn->error);
 
 if ($result->num_rows > 0) {
 	$row = $result->fetch_assoc();
-$pdf = new FPDI();
+
+// =========================================================================
+// THE ALIGNMENT FIX: Custom Class to offset all X and Y coordinates
+// =========================================================================
+class ADJUSTABLE_PDF extends FPDI {
+    public $offsetX = 0;
+    public $offsetY = 0;
+    
+    // Override the default SetXY to include our printer offsets
+    function SetXY($x, $y) {
+        parent::SetXY($x + $this->offsetX, $y + $this->offsetY);
+    }
+}
+
+$pdf = new ADJUSTABLE_PDF();
+
+// Catch the offsets sent from the frontend modal (default to 0 if none)
+$pdf->offsetX = isset($_POST['offset_x']) ? floatval($_POST['offset_x']) : 0;
+$pdf->offsetY = isset($_POST['offset_y']) ? floatval($_POST['offset_y']) : 0;
+// =========================================================================
 
 $pdf->AddPage('P', array(215.9, 355.6));
 
@@ -35,7 +54,7 @@ $pdf->AddPage('P', array(215.9, 355.6));
 $pdf->SetFont('Arial', '', 10);
 $pdf->SetTextColor(0, 0, 0);
 
-function fitTextInCell($pdf, $x, $y, $width, $height, $text, $maxFontSize = 10, $minFontSize = 4) {
+function fitTextInCell($pdf, $x, $y, $width, $height, $text, $maxFontSize = 10, $minFontSize = 7) {
     $pdf->SetXY($x, $y);
     $fontSize = $maxFontSize;
   
@@ -487,21 +506,37 @@ $pdf->SetXY(83.3, 190.2);
 fitTextInCell($pdf, 82, 192, 88, 5, $row['late_citizen']);
 
 $pdf->SetFont('Arial', '', 10);
-if ($row['married_type'] == 'married') {
-    $pdf->SetXY(76.6, 209.7);
+
+// THE FIX 1: Make the checks 100% case-insensitive and check both columns
+$mType1 = strtolower(trim($row['married_type'] ?? ''));
+$mType2 = strtolower(trim($row['married_type2'] ?? ''));
+
+if ($mType1 == 'married' || $mType2 == 'married') {
+    $pdf->SetXY(76.6, 197.5);
     $pdf->Cell(0, 10, 'X', 0, 1);
+    
     $pdf->SetXY(106.6, 197.5);
-    $date3 = date('F j, Y', strtotime($row['married_on']));
-    $pdf->Cell(0, 10, strtoupper($date3), 0, 1);
+    $mDate = strtoupper($row['married_on']);
+    if ($mDate == "NOT APPLICABLE" || $mDate == "UNKNOWN" || $mDate == "N/A" || $mDate == "NOT MARRIED") {
+        $pdf->Cell(0, 10, $mDate, 0, 1);
+    } else {
+        $date3 = date('F j, Y', strtotime($row['married_on']));
+        $pdf->Cell(0, 10, strtoupper($date3), 0, 1);
+    }
+
     $pdf->SetXY(156.6, 197.5);
     fitTextInCell($pdf, 156, 200, 42, 5, $row['married_at']);
-} else if ($row['married_type'] == 'not married') {
-    $pdf->SetXY(76.6, 209.7);
+    
+} else if ($mType1 == 'not married' || $mType2 == 'not married') {
+    
+    // THE FIX 2: Fixed the coordinates so it prints aligned with the box
+    // To move LEFT/RIGHT, change 76.6. To move UP/DOWN, change 203.5.
+    $pdf->SetXY(76.6, 203.5); 
     $pdf->Cell(0, 10, 'X', 0, 1);
+    
     $pdf->SetXY(139.6, 214.5);
     fitTextInCell($pdf, 140, 217, 52, 5, $row['not_married_name']);
 }
-
 // Late Reg Reason
 $pdf->SetXY(131.6, 221);
 fitTextInCell($pdf, 133, 223, 65, 5, $row['late_reg_reason']);
@@ -562,24 +597,6 @@ fitTextInCellAddress($pdf, 121, 329, 76, 5, $row['late_administer_address']);
 // Late Administer position
 $pdf->SetXY(127, 321);
 fitTextInCellAddress($pdf, 121, 321, 76, 5, $row['late_administer_position']);
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 // Output the PDF

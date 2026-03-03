@@ -19,10 +19,28 @@ if (!empty($_GET['reg_no'])){ $reg_no = $_REQUEST['reg_no']; }
        // Removed the while loop entirely
        $row = $result->fetch_assoc();
        
-$pdf = new FPDI();
+// =========================================================================
+// THE ALIGNMENT FIX: Custom Class to offset all X and Y coordinates
+// =========================================================================
+class ADJUSTABLE_PDF extends FPDI {
+    public $offsetX = 0;
+    public $offsetY = 0;
+    
+    // Override the default SetXY to include our printer offsets
+    function SetXY($x, $y) {
+        parent::SetXY($x + $this->offsetX, $y + $this->offsetY);
+    }
+}
+
+$pdf = new ADJUSTABLE_PDF();
+
+// Catch the offsets sent from the frontend modal (default to 0 if none)
+$pdf->offsetX = isset($_POST['offset_x']) ? floatval($_POST['offset_x']) : 0;
+$pdf->offsetY = isset($_POST['offset_y']) ? floatval($_POST['offset_y']) : 0;
+// =========================================================================
+
 $pdf->AddPage('P', array(215.9, 355.6));
 
-//            ***** READ ME ******
 //            ***** READ ME ******
 //       ung mga may adju adjustment un ung para maging dyanamic ung placement ng mga cells sa pdf depending sa width or length nung text na ilalagay and usually ideal sya for baranggay and house number as well as sa mga maliliit na textbox
 
@@ -37,7 +55,7 @@ $pdf->AddPage('P', array(215.9, 355.6));
 $pdf->SetFont('Arial', '', 10);
 $pdf->SetTextColor(0, 0, 0);
 
-function fitTextInCell($pdf, $x, $y, $width, $height, $text, $maxFontSize = 10, $minFontSize = 4) {
+function fitTextInCell($pdf, $x, $y, $width, $height, $text, $maxFontSize = 10, $minFontSize = 5) {
     $pdf->SetXY($x, $y);
     $fontSize = $maxFontSize;
   
@@ -405,13 +423,13 @@ $pdf->SetXY(139, 49.5);
 fitTextInCell($pdf, 132, 52, 64, 5, $row['mother_name']);
 
 // Sword Day
-$pdf->SetXY(99.5, 65.5);
+$pdf->SetXY(94.5, 65.5);
 $pdf->Cell(0, 10, strtoupper($row['sworn_day'] ?? ''), 0, 1);
 // Sword month
-$pdf->SetXY(130.5, 65.5);
+$pdf->SetXY(135.5, 65.5);
 $pdf->Cell(0, 10, strtoupper($row['sworn_month'] ?? ''), 0, 1);
 // Sword year
-$pdf->SetXY(178.5, 65.5);
+$pdf->SetXY(173.5, 65.5);
 $pdf->Cell(0, 10, strtoupper($row['sworn_year'] ?? ''), 0, 1);
 
 // Sworn Father Name
@@ -486,21 +504,41 @@ fitTextInCell($pdf, 27, 184.5, 138, 5, $row['who_resides_at']);
 $pdf->SetXY(83.3, 190.2);
 fitTextInCell($pdf, 82, 192, 88, 5, $row['late_citizen']);
 
+
 $pdf->SetFont('Arial', '', 10);
-$married_type = $row['married_type'] ?? '';
-if ($married_type == 'married') {
-    $pdf->SetXY(80.6, 197.8);
+
+// THE FIX 1: Make the checks 100% case-insensitive and check both columns
+$mType1 = strtolower(trim($row['married_type'] ?? ''));
+$mType2 = strtolower(trim($row['married_type2'] ?? ''));
+
+
+if ($mType1 == 'married' || $mType2 == 'married') {
+    $pdf->SetXY(76.6, 197.5);
     $pdf->Cell(0, 10, 'X', 0, 1);
+    
     $pdf->SetXY(106.6, 197.5);
-    $pdf->Cell(0, 10, strtoupper($row['married_on'] ?? ''), 0, 1);
+    $mDate = strtoupper($row['married_on']);
+    if ($mDate == "NOT APPLICABLE" || $mDate == "UNKNOWN" || $mDate == "N/A" || $mDate == "NOT MARRIED") {
+        $pdf->Cell(0, 10, $mDate, 0, 1);
+    } else {
+        $date3 = date('F j, Y', strtotime($row['married_on']));
+        $pdf->Cell(0, 10, strtoupper($date3), 0, 1);
+    }
+
     $pdf->SetXY(156.6, 197.5);
     fitTextInCell($pdf, 156, 200, 42, 5, $row['married_at']);
-} else if ($married_type == 'not married') {
-    $pdf->SetXY(80.6, 208.5);
+    
+} else if ($mType1 == 'not married' || $mType2 == 'not married') {
+    
+    // THE FIX 2: Fixed the coordinates so it prints aligned with the box
+    // To move LEFT/RIGHT, change 76.6. To move UP/DOWN, change 203.5.
+    $pdf->SetXY(73.6, 208.5); 
     $pdf->Cell(0, 10, 'X', 0, 1);
+    
     $pdf->SetXY(139.6, 214.5);
     fitTextInCell($pdf, 140, 217, 52, 5, $row['not_married_name']);
 }
+
 
 // Late Reg Reason
 $pdf->SetXY(131.6, 221);
@@ -509,52 +547,52 @@ fitTextInCell($pdf, 133, 223, 65, 5, $row['late_reg_reason']);
 $pdf->SetXY(104.6, 234);
 fitTextInCell($pdf, 105, 237, 73, 5, $row['applicant_only']);
 // Applicant Than Owner
-$pdf->SetXY(138.6, 240);
+$pdf->SetXY(133.6, 240);
 fitTextInCell($pdf, 138, 243, 29, 5, $row['applicant_than_owner']);
 
 // Sign Day
-$pdf->SetXY(124, 264);
+$pdf->SetXY(118, 264);
 $pdf->Cell(0, 10, strtoupper($row['sign_day'] ?? ''), 0, 1);
 // Sign month
-$pdf->SetXY(154, 264);
+$pdf->SetXY(149, 264);
 $pdf->Cell(0, 10, strtoupper(($row['sign_month'] ?? '') . ' ' . ($row['sign_year'] ?? '')), 0, 1);
 // Sign at
-$pdf->SetXY(80, 269);
+$pdf->SetXY(85, 269);
 fitTextInCellAddress($pdf, 80, 271.5, 67, 4, $row['sign_at']);
 // Affiant Name
-$pdf->SetXY(147, 279);
-fitTextInCell($pdf, 137, 281, 60, 4, $row['affiant_name']);
+$pdf->SetXY(147, 275);
+fitTextInCell($pdf, 147, 275, 60, 4, $row['affiant_name']);
 
 // Late Sworn Day
-$pdf->SetXY(108, 295);
+$pdf->SetXY(100, 295);
 $pdf->Cell(0, 10, strtoupper($row['late_sworn_day'] ?? ''), 0, 1);
 // Late Sworn month
-$pdf->SetXY(142, 295);
+$pdf->SetXY(130, 295);
 $pdf->Cell(0, 10, strtoupper($row['late_sworn_month'] ?? ''), 0, 1);
 // Late Sworn year
-$pdf->SetXY(182, 295);
+$pdf->SetXY(170, 295);
 $pdf->Cell(0, 10, strtoupper($row['late_sworn_year'] ?? ''), 0, 1);
 // Late Sworn at
-$pdf->SetXY(15, 302);
-fitTextInCellAddress($pdf, 15, 304, 73, 5, $row['late_sworn_at']);
+$pdf->SetXY(15, 293);
+fitTextInCellAddress($pdf, 15, 306, 73, 5, $row['late_sworn_at']);
 // Late CTC
-$pdf->SetXY(15, 307);
+$pdf->SetXY(15, 305.5);
 $pdf->Cell(0, 10, strtoupper($row['late_ctc'] ?? ''), 0, 1);
 // Late Issued On
-$pdf->SetXY(75, 307);
+$pdf->SetXY(75, 309.5);
 $pdf->Cell(0, 10, strtoupper($row['late_issued_on'] ?? ''), 0, 1);
 // Late Issued at
-$pdf->SetXY(132, 307);
-fitTextInCellAddress($pdf, 132, 309, 66, 5, $row['late_issued_at']);
+$pdf->SetXY(126, 305.5);
+fitTextInCellAddress($pdf, 132, 310.5, 66, 5, $row['late_issued_at']);
 // Late Administer Name
-$pdf->SetXY(25, 325);
-fitTextInCell($pdf, 15, 329, 76, 5, $row['late_administer_name']);
+$pdf->SetXY(25, 329);
+fitTextInCell($pdf, 25, 329, 76, 5, $row['late_administer_name']);
 // Late Administer address
-$pdf->SetXY(140, 325);
-fitTextInCellAddress($pdf, 121, 329, 76, 5, $row['late_administer_address']);
+$pdf->SetXY(130, 305.5);
+fitTextInCellAddress($pdf, 127, 329, 76, 5, $row['late_administer_address']);
 // Late Administer position
-$pdf->SetXY(127, 315);
-fitTextInCellAddress($pdf, 121, 318, 76, 5, $row['late_administer_position']);
+$pdf->SetXY(127, 317);
+fitTextInCellAddress($pdf, 127, 317, 76, 5, $row['late_administer_position']);
 
 // Output the PDF
 $pdf->Output('birth_'.$row['child_fname'].'_'.$row['child_lname'].'.pdf', 'I');

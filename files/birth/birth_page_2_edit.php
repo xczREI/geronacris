@@ -243,34 +243,30 @@
 				</div>
 				.
 				</h6>
+				<input type="hidden" name="married_type" id="hidden_married_type" value="<?php echo $row['married_type'] ?? ''; ?>">
+				<input type="hidden" name="married_type2" id="hidden_married_type2" value="<?php echo $row['married_type2'] ?? ''; ?>">
+
 				<h6>&emsp;&emsp;&emsp;&emsp;4.&emsp;That my/his/her parents were&emsp;
 				<div class="custom-control custom-checkbox custom-control-inline" style="margin-right: 0;">
-					<input type="checkbox" class="custom-control-input text-center" id="married" name="married_type" value="married" <?php if(($row['married_type'] ?? '') == 'married') echo 'checked'; ?>>
-					<label class="custom-control-label" for="married">&nbsp;married on</label>
+					<input type="checkbox" class="custom-control-input text-center marriage-toggle" id="married" value="married" <?php if(($row['married_type'] ?? '') == 'married') echo 'checked'; ?>><label class="custom-control-label" for="married">&nbsp;married on</label>
 				</div>
 				<div class="custom-control custom-checkbox custom-control-inline mt-1" style="padding: 0; width: 30%;margin-right: 0;">
-					<input type="text" class="form-control form-control-sm text-center" id="married_txt1" name="married_on" value="<?php echo $row['married_on'] ?? ''; ?>">
+					<input type="text" class="form-control form-control-sm text-center" id="married_txt1" name="married_on" value="<?php echo (($row['married_type'] ?? '') == 'married') ? ($row['married_on'] ?? '') : ''; ?>">
 				</div>
 				at
 				<div class="custom-control custom-checkbox custom-control-inline mt-1" style="padding: 0; width: 35%;margin-right: 0;">
-					<input type="text" class="form-control form-control-sm text-center"  id="married_txt2" name="married_at" value="<?php echo $row['married_at'] ?? ''; ?>" onkeypress="return isTextKey(event)">
+					<input type="text" class="form-control form-control-sm text-center"  id="married_txt2" name="married_at" value="<?php echo (($row['married_type'] ?? '') == 'married') ? ($row['married_at'] ?? '') : ''; ?>" onkeypress="return isTextKey(event)">
 				</div>
 				<br>
 				&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&nbsp;&nbsp;
 				<div class="custom-control custom-checkbox custom-control-inline" style="margin-right: 0;">
-					<input type="checkbox" class="custom-control-input text-center" id="not_married" name="married_type2" value="not married" <?php if(($row['married_type'] ?? '') == 'not married') echo 'checked'; ?>>
-					<label class="custom-control-label" for="not_married">&nbsp;not married but I/he/she  <div class="custom-dropdown">
-    				<span id="selected-text">was acknowledged</span> 
-					 <select id="status-select">
-        	<option value="acknowledged">was acknowledged</option>
-       			 <option value="not_acknowledged"> not acknowledged</option>
-    </select>
-				</div>by my/his/her</label>
+					<input type="checkbox" class="custom-control-input text-center marriage-toggle" id="not_married" value="not married" <?php if(($row['married_type'] ?? '') == 'not married' || ($row['married_type2'] ?? '') == 'not married') echo 'checked'; ?>>
+					<label class="custom-control-label" for="not_married">&nbsp;not married but I/he/she was acknowledged by my/his/her</label>
 				</div><br>
 				&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&nbsp;&nbsp; 
 				father whose name is
 				<div class="custom-control custom-checkbox custom-control-inline" style="padding: 0; width: 45%;margin-right: 0;">
-					<input type="text" class="form-control form-control-sm text-center" id="not_married_txt" name="not_married_name" value="<?php echo $row['not_married_name'] ?? ''; ?>" onkeypress="return isTextKey(event)">
+					<input type="text" class="form-control form-control-sm text-center" id="not_married_txt" name="not_married_name" value="<?php echo (($row['married_type'] ?? '') == 'not married' || ($row['married_type2'] ?? '') == 'not married') ? ($row['not_married_name'] ?? '') : ''; ?>" onkeypress="return isTextKey(event)">
 				</div>
 				.
 				</h6>
@@ -431,18 +427,146 @@ document.getElementById("bplace1").addEventListener("input", function() {
 
 <!-- Auto-check married checkbox when filling married date -->
 <script>
-document.getElementById("married_txt1").addEventListener("input", function() {
-	if(this.value.trim() !== "") {
-		document.getElementById("married").checked = true;
-		document.getElementById("not_married").checked = false;
-	}
-});
+// Marriage Toggle Logic (Handles both clicking and typing)
+$(document).ready(function() {
+   $('.marriage-toggle').on('change', function() {
+        if ($(this).is(':checked')) {
+            $('.marriage-toggle').not(this).prop('checked', false);
+            
+            const rawData = localStorage.getItem('birth_form_data');
+            const data = rawData ? JSON.parse(rawData) : {};
+            
+            if ($(this).attr('id') === 'married') {
+                // FORCE BOTH HIDDEN INPUTS FOR THE DATABASE
+                $('#hidden_married_type').val('married');
+                $('#hidden_married_type2').val('');
 
-document.getElementById("not_married_txt").addEventListener("input", function() {
-	if(this.value.trim() !== "") {
-		document.getElementById("not_married").checked = true;
-		document.getElementById("married").checked = false;
-	}
+                $('#not_married_txt').val('');
+                
+                let mDate = data.marriage_date || '';
+                let mPlace = data.marriage_place || '';
+
+                if (mDate && mDate !== "NOT APPLICABLE" && mDate !== "NOT MARRIED" && mDate !== "N/A" && mDate !== "UNKNOWN") {
+                    $('#married_txt1').val(mDate);
+                } else {
+                    $('#married_txt1').val(''); 
+                }
+
+                if (mPlace && mPlace !== "NOT APPLICABLE" && mPlace !== "NOT MARRIED" && mPlace !== "N/A" && mPlace !== "UNKNOWN") {
+                    $('#married_txt2').val(mPlace.replace(/\s*PHILIPPINES\s*$/i, "").trim());
+                } else {
+                    $('#married_txt2').val(''); 
+                }
+
+            } else {
+                // FORCE BOTH HIDDEN INPUTS FOR THE DATABASE
+                $('#hidden_married_type').val('not married');
+                $('#hidden_married_type2').val('not married');
+
+                $('#married_txt1').val('');
+                $('#married_txt2').val('');
+                
+                const fName = `${data.father_fname || ''} ${data.father_mname || ''} ${data.father_lname || ''}`.trim().toUpperCase();
+                if (fName && fName !== "NOT APPLICABLE" && fName !== "UNKNOWN") {
+                    $('#not_married_txt').val(fName);
+                }
+            }
+        }
+    });
+
+    // 2. Logic for typing or auto-filling in the "Married Date" field
+    $('#married_txt1').on('input keyup change', function() {
+        let val = $(this).val().trim().toUpperCase();
+        
+        // If the box says NOT APPLICABLE, securely check "Not Married"
+        if (val === "NOT APPLICABLE" || val === "NOT MARRIED" || val === "N/A" || val === "UNKNOWN") {
+            $('#not_married').prop('checked', true);
+            $('#married').prop('checked', false);
+            
+            // Bring back the Father's Name automatically!
+            const rawData = localStorage.getItem('birth_form_data');
+            if (rawData) {
+                const data = JSON.parse(rawData);
+                const fName = `${data.father_fname || ''} ${data.father_mname || ''} ${data.father_lname || ''}`.trim().toUpperCase();
+                if (fName && fName !== "NOT APPLICABLE" && fName !== "UNKNOWN") {
+                    $('#not_married_txt').val(fName);
+                }
+            }
+        } 
+        // If it's a real date, switch to "Married"
+        else if (val !== "") {
+            $('#married').prop('checked', true);
+            $('#not_married').prop('checked', false);
+            $('#not_married_txt').val('');
+        }
+    });
+
+    // 3. Logic for typing in the "Father's Name" (Not Married) field
+   $('#not_married_txt').on('input', function() {
+        if ($(this).val().trim() !== "") {
+            $('#not_married').prop('checked', true);
+            $('#married').prop('checked', false);
+            
+            // Sync the hidden inputs!
+            $('#hidden_married_type').val('not married');
+            $('#hidden_married_type2').val('not married');
+            
+            $('#married_txt1').val('');
+            $('#married_txt2').val('');
+        }
+    });
+
+   // 4. FIX THE UI IMMEDIATELY ON PAGE LOAD
+    // 4. FIX THE UI IMMEDIATELY ON PAGE LOAD
+    setTimeout(function() {
+        let dbStatus = "<?php echo $row['married_type'] ?? ''; ?>";
+        let dbStatus2 = "<?php echo $row['married_type2'] ?? ''; ?>";
+        let dateBoxVal = $('#married_txt1').val().trim().toUpperCase();
+        
+        if (dbStatus === "married") {
+            $('#married').prop('checked', true);
+            $('#not_married').prop('checked', false);
+            $('#hidden_married_type').val('married');
+            $('#hidden_married_type2').val('');
+            $('#not_married_txt').val(''); 
+        } 
+        else if (dbStatus === "not married" || dbStatus2 === "not married") {
+            $('#not_married').prop('checked', true);
+            $('#married').prop('checked', false);
+            $('#hidden_married_type').val('not married');
+            $('#hidden_married_type2').val('not married');
+            
+            $('#married_txt1').val(''); 
+            $('#married_txt2').val(''); 
+            
+            if ($('#not_married_txt').val().trim() === '') {
+                const rawData = localStorage.getItem('birth_form_data');
+                if (rawData) {
+                    const data = JSON.parse(rawData);
+                    const fName = `${data.father_fname || ''} ${data.father_mname || ''} ${data.father_lname || ''}`.trim().toUpperCase();
+                    if (fName && fName !== "NOT APPLICABLE" && fName !== "UNKNOWN") {
+                        $('#not_married_txt').val(fName);
+                    }
+                }
+            }
+        } 
+        else {
+            if (dateBoxVal === "NOT APPLICABLE" || dateBoxVal === "NOT MARRIED" || dateBoxVal === "N/A" || dateBoxVal === "UNKNOWN") {
+                $('#not_married').prop('checked', true);
+                $('#married').prop('checked', false);
+                $('#hidden_married_type').val('not married');
+                $('#hidden_married_type2').val('not married');
+                $('#married_txt1').val('');
+                $('#married_txt2').val('');
+            } else if (dateBoxVal !== "") {
+                $('#married').prop('checked', true);
+                $('#not_married').prop('checked', false);
+                $('#hidden_married_type').val('married');
+                $('#hidden_married_type2').val('');
+                $('#not_married_txt').val('');
+            }
+        }
+    }, 600); // 600ms ensures this runs LAST and overrides the auto-fill script!
 });
 </script>
 
@@ -503,6 +627,8 @@ $(document).ready(function() {
         const fName = `${data.father_fname || ''} ${data.father_mname || ''} ${data.father_lname || ''}`.trim().toUpperCase();
         const mName = `${data.mother_fname || ''} ${data.mother_mname || ''} ${data.mother_lname || ''}`.trim().toUpperCase();
 
+       // --- UPDATE THIS SECTION IN birth_page_2_edit.php ---
+
         switch (elementId) {
             case 'sworn_day': case 'ack_sworn_day': case 'sign_day': valueToFill = getOrdinal(now.getDate()); break;
             case 'sworn_month': case 'ack_sworn_month': case 'sign_month': valueToFill = now.toLocaleString('default', { month: 'long' }).toUpperCase(); break;
@@ -523,7 +649,14 @@ $(document).ready(function() {
             case 'father_name': case 'father_sign': case 'ack_father_sworn': case 'not_married_txt': valueToFill = fName; break;
             case 'mother_name': case 'mother_sign': case 'ack_mother_sworn': valueToFill = mName; break;
             case 'married_txt1': valueToFill = data.marriage_date || ""; break;
-            case 'married_txt2': valueToFill = data.marriage_place || ""; break;
+
+            // ---> THE FIX: Fetch ONLY Municipality and Province (Excluding Country) <---
+            case 'married_txt2': 
+                let mPlaceStr = data.marriage_place || "";
+                // This regex removes "PHILIPPINES" from the end of the string if it exists
+                valueToFill = mPlaceStr.replace(/\s*PHILIPPINES\s*$/i, "").trim(); 
+                break;
+
             case 'attend_birth_by': valueToFill = data.attendant_name || ""; break;
             case 'who_resides_at': valueToFill = data.attendant_address || ""; break;
         }
@@ -591,14 +724,5 @@ $(document).ready(function() {
 
     // 2. Refresh suggestions whenever the page loads
     updateSuggestions();
-});
-</script>
-<script>
-	const selectElement = document.getElementById('status-select');
-const textDisplay = document.getElementById('selected-text');
-
-selectElement.addEventListener('change', function() {
-    // Updates the visible text to match the newly selected option
-    textDisplay.textContent = this.options[this.selectedIndex].text;
 });
 </script>

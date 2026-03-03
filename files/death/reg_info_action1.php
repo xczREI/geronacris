@@ -187,7 +187,7 @@ require_once 'login_db_death.php';
       $administer_position = $conn->real_escape_string($_POST['administer_position'] ?? '');
       $administer_address = $conn->real_escape_string($_POST['administer_address'] ?? '');
 
-
+      
       //==============================database====================================
       
       $servername = "localhost";
@@ -202,6 +202,13 @@ require_once 'login_db_death.php';
         die("Connection failed: " . $conn2->connect_error);
       }
 
+      // Check if 'status' column exists, if not, add it automatically
+      $check_col = $conn2->query("SHOW COLUMNS FROM no_tbl LIKE 'status'");
+      if ($check_col->num_rows == 0) {
+          $conn2->query("ALTER TABLE no_tbl ADD status VARCHAR(50) DEFAULT 'Active'");
+      }
+
+      // Now it is safe to insert
       $sql = "INSERT INTO no_tbl (registry_no, status) VALUES ('$registry_no', '0')";
 
       if ($conn2->query($sql) === TRUE) {

@@ -22,11 +22,78 @@
     .tduser{
       text-transform: uppercase;
     }
-  </style>
 
-  <style>
+    /* --- NEW DESKTOP SIDEBAR STYLES --- */
+    #sidebar {
+      background-color: #2ea84b !important; 
+      padding-left: 0;
+      padding-right: 0;
+    }
+
+    #sidebar .pic h4 {
+      color: #ffffff;
+      font-family: 'Century Gothic', sans-serif;
+      text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+      margin-top: 10px;
+      font-size: 1.2rem;
+    }
+
+    #sidebar .pic .lblspan {
+      font-size: 0.7rem;
+      letter-spacing: 1px;
+    }
+
+    #sidebar .aside {
+      width: 100%;
+    }
+
+    #sidebar .navbar {
+      padding: 0;
+      width: 100%;
+    }
+
+    #sidebar .navbar-nav {
+      width: 100%;
+      padding-bottom: 6em;
+    }
+
+    #sidebar .nav-link {
+      color: #ffffff !important;
+      font-family: 'Century Gothic', sans-serif;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      padding: 15px 20px 15px 30px !important;
+      transition: all 0.3s ease;
+      width: 100%;
+    }
+
+    #sidebar .nav-link i {
+      margin-right: 15px;
+    }
+
+    #sidebar .nav-link:hover {
+      background-color: #c2ba15;
+      color: #ffffff !important;
+    }
+
+    #sidebar .nav-link.active,
+    #sidebar #nav-link_active {
+      background-color: #ffcc00 !important; 
+      color: #ffffff !important;
+      font-weight: 500;
+      border-left: 12px solid #009688; 
+      text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.4); 
+      padding-left: 18px !important; 
+    }
+    /* ----------------------------------- */
+
     #navbar{ display: none; }
+    
     @media only screen and (max-width: 768px) {
+        /* For mobile phones: */
+      [class*="col-"] {
+        width: 100%;
+      }
       #navbar{ display: block; display: flex;}
       #topbar{ display: none;  }
       #sidebar{ display: none; }
@@ -38,6 +105,16 @@
         top: 72px;
         right: 20px;
         z-index: 1000;
+      }
+      .navbar-collapse #nav-link_active, #nav-link { 
+        font-size: 18px !important; 
+        font-family: 'Century Gothic', sans-serif;
+        text-transform: uppercase;
+        color: #ffffff !important; 
+        display: block;
+        padding: 10px;
+        transition: all 0.3s ease;
+        letter-spacing: 1px;
       }
     }
   </style>
@@ -90,7 +167,7 @@
 </div>
 
 <div class="row" id="row">
-  <div class="col-sm-3 bg-success" style="border-left: 15px solid;" id="sidebar">
+  <div class="col-sm-3" id="sidebar">
     <div class="pic" style="margin-top: 2em;">
      <center>
         <img src="../../images/logo.png" class="logo">
@@ -99,12 +176,12 @@
     </div>
     <div class="aside" style="margin-top: 3em;">
       <nav class="navbar">
-        <ul class="navbar-nav" style="padding-bottom:6em;">
-          <li class="nav-item"><a class="nav-link" href="../../home.php">&emsp;<i class="fa fa-clock-o fa-fw"></i>Dashboard</a></li>
-          <li class="nav-item"><a class="nav-link active" id="nav-link_active" href="../files.php" >&emsp;<i class="fa fa-bookmark-o fa-fw"></i>Registration</a></li>
-          <li class="nav-item"><a class="nav-link" data-toggle="modal" href="#myreport">&emsp;<i class="fa fa-file-o fa-fw"></i>Report</a></li>
-          <li class="nav-item"><a class="nav-link" href="../../employee/view_users.php">&emsp;<i class="fa fa-user-o fa-fw"></i>Account</a></li>
-          <li class="nav-item"><a class="nav-link" href="../../php/logout.php">&emsp;<i class="fa fa-eject fa-fw"></i>Logout</a></li>
+        <ul class="navbar-nav">
+          <li class="nav-item"><a class="nav-link" href="../../home.php"><i class="fa fa-clock-o fa-fw"></i>Dashboard</a></li>
+          <li class="nav-item"><a class="nav-link active" id="nav-link_active" href="../files.php" ><i class="fa fa-bookmark-o fa-fw"></i>Registration</a></li>
+          <li class="nav-item"><a class="nav-link" data-toggle="modal" href="#myreport"><i class="fa fa-file-o fa-fw"></i>Report</a></li>
+          <li class="nav-item"><a class="nav-link" href="../../employee/view_users.php"><i class="fa fa-user-o fa-fw"></i>Account</a></li>
+          <li class="nav-item"><a class="nav-link" href="../../php/logout.php"><i class="fa fa-eject fa-fw"></i>Logout</a></li>
         </ul>
       </nav>
     </div>
