@@ -159,71 +159,43 @@
 				        <th>Wife Name</th>
 				        <th>Marriage Date</th>
 				        <th>Edit</th>
+                <th>Delete</th>
 			      	</tr>
 			    </thead>
 		    	<tbody id="myTable">
-			      	<?php
-				    require_once 'login_db_mrg.php';
+    <?php
+    require_once 'login_db_mrg.php';
+    $conn = new mysqli($hn, $un, $pw, $db);
+    if ($conn->connect_error) die($conn->connect_error);
 
-				    $conn = new mysqli($hn, $un, $pw, $db);
-				    if ($conn->connect_error) die($conn->connect_error);
+    $sql = "SELECT * FROM registration_tbl NATURAL JOIN husband_tbl NATURAL JOIN wife_tbl NATURAL JOIN marriage_tbl ORDER BY reg_date DESC, reg_time DESC";
+    $result = $conn->query($sql);  
+    if (!$result) die ("Database access failed: " . $conn->error);
 
-				      $sql= "SELECT * FROM registration_tbl NATURAL JOIN husband_tbl NATURAL JOIN wife_tbl NATURAL JOIN marriage_tbl ORDER BY update_date DESC, update_time DESC";
-				      $result = $conn->query($sql);  
-				      if (!$result) die ("Database access failed: " . $conn->error);
-
-				      $rows = $result->num_rows;
-
-				      for ($j = 0 ; $j < $rows ; ++$j)
-				      {
-				      $result->data_seek($j);
-				      $row = $result->fetch_array(MYSQLI_ASSOC);
-				  	?>
-	                <tr>
-	                  <td class="tduser" scope="rows"><?php echo $row['reg_user'].'<br>('.date_format(date_create($row['reg_date']),"m/d/Y").' '.date_format(date_create($row['reg_time']),'h:i A').')'; ?></td>
-	                  <td class="tduser"><?php echo $row['update_user'].'<br>('.date_format(date_create($row['update_date']),"m/d/Y").' '.date_format(date_create($row['update_time']),'h:i A').')'; ?></td>
-	                  <td class="tduser"><?php echo $row['registry_no']; ?></td>
-	                  <td class="tduser"><?php echo $row['husband_lname'].', '.$row['husband_fname'].' '.$row['husband_mname']; ?></td>
-	                  <td class="tduser"><?php echo $row['wife_lname'].', '.$row['wife_fname'].' '.$row['wife_mname']; ?></td>
-	                  <td class="tduser"><?php echo $row['mrg_date']; ?></td>
-	                  <td>
-	                      <!-- <a href="marriage_cerf_edit_staff.php?reg_no=<?php echo $row['no']; ?>" class='btn btn-light btn-sm'><strong>Edit</strong></a> -->
-                        <button type="button" class="btn btn-secondary" data-toggle="modal" data-target="#staticBackdrop<?php echo $row['no']; ?>">
-                  Edit
-                </button>
-
-                <!-- Modal -->
-                <div class="modal fade" id="staticBackdrop<?php echo $row['no']; ?>" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
-                  <div class="modal-dialog modal-dialog-centered">
-                    <div class="modal-content">
-                      <div class="modal-header">
-                        <h5 class="modal-title h2" id="staticBackdropLabel">Admin Authentication</h5>
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                          <span aria-hidden="true">&times;</span>
-                        </button>
-                      </div>
-                      <div class="modal-body">
-                        <form action="marriage_admin_pass_check.php" method="post">
-                        <div class="form-group">
-                          <label for="adminPassword" class="h3">Enter Admin Password</label>
-                          <input type="password" name="adminPassword" class="form-control" id="adminPassword">
-                        </div>
-                        <input type="hidden" name="edit_no" value="<?php echo  $row['no']; ?>">
-                      </div>
-                      <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                        <button type="submit" name="birth_auth_submit_btn" class="btn btn-primary">Submit</button>
-                        </form>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-	                  </td>
-	              	</tr>
-	              	<?php
-	                }
-	              	?>
-		    	</tbody>
+    while($row = $result->fetch_assoc()) {
+    ?>
+    <tr>
+        <td class="tduser"><?php /* Use Admin logic here */ ?></td>
+        <td class="tduser"><?php /* Use Admin logic here */ ?></td>
+        <td class="tduser"><?php echo $row['registry_no']; ?></td>
+        <td class="tduser"><?php echo $row['husband_lname'].', '.$row['husband_fname']; ?></td>
+        <td class="tduser"><?php echo $row['wife_lname'].', '.$row['wife_fname']; ?></td>
+        <td class="tduser"><?php echo $row['mrg_date']; ?></td>
+        <td>
+            <button type="button" class="btn btn-secondary btn-sm" data-toggle="modal" data-target="#staticBackdrop<?php echo $row['no']; ?>">
+                <strong>Edit</strong>
+            </button>
+            </td>
+        <td>
+            <a href="marriage_delete_action.php?reg_no=<?php echo $row['no']; ?>" 
+               class='btn btn-danger btn-sm' 
+               onclick="return confirm('STAFF: ARE YOU SURE YOU WANT TO PERMANENTLY DELETE THIS RECORD?')">
+               <strong>Delete</strong>
+            </a>
+        </td>
+    </tr>
+    <?php } ?>
+</tbody>
 		  	</table>
 		</div>
 	</div>	

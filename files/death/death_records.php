@@ -202,69 +202,68 @@
       <table class="table table-hover table-sm">
         <thead class="thead-dark">
           <tr>
-            <th>Encoder</th>
-            <th>Date Registered</th>
+            <th>Time Created</th>
+            <th>Time Updated</th>
             <th>Registry No</th>
             <th>Name of Deceased</th>
+            <th>Birth Date</th>
             <th>Death Date</th>
             <th>Gender</th>
-            <th>Action</th>
+            <th>Edit</th>
+            <th>Delete</th>
           </tr>
         </thead>
-        <tbody id="myTable">
-          <?php
-            // Using the local database connection file you provided
-            require_once 'login_db_death.php'; 
+      <tbody id="myTable">
+    <?php
+    require_once 'login_db_death.php';
+    $conn = new mysqli($hn, $un, $pw, $db);
+    if ($conn->connect_error) die($conn->connect_error);
 
-            $connx = new mysqli($hn, $un, $pw, $db);
-            if ($connx->connect_error) die($connx->connect_error);
+    // Using a unique variable name ($main_records) so the includes don't overwrite it
+    $sql = "SELECT * FROM registration_tbl NATURAL JOIN person_tbl ORDER BY update_date DESC, update_time DESC";
+    $main_records = $conn->query($sql);  
+    
+    if ($main_records) {
+        // Switching to a while loop which is much safer with nested includes
+        while ($row = $main_records->fetch_assoc()) {
+            if (!$row) continue; // Extra safety net
             
-            // THE BRIDGE QUERY: Mapping real columns to your form variables
-            $sql = "SELECT 
-                        n.no, 
-                        r.registry_no, 
-                        r.reg_user AS emp_name,
-                        r.reg_date AS date_of_registration,
-                        p.first_name AS deceased_fname, 
-                        p.middle_name AS deceased_mname, 
-                        p.last_name AS deceased_lname, 
-                        p.sex, 
-                        p.date_death AS date_of_death
-                    FROM no_tbl n
-                    LEFT JOIN registration_tbl r ON n.no = r.no
-                    LEFT JOIN person_tbl p ON n.no = p.no
-                    ORDER BY n.no DESC";
-
-            $result = $connx->query($sql);  
-            if (!$result) die ("Database access failed: " . $connx->error);
-
-            while($row = $result->fetch_assoc()) {
-          ?>
-              <tr>
-                <td class="tduser"><?php echo $row['emp_name'] ?: 'N/A'; ?></td>
-                <td class="tduser">
-                    <?php 
-                        $regDate = $row['date_of_registration'];
-                        echo ($regDate && $regDate != '0000-00-00') ? $regDate : 'N/A'; 
-                    ?>
-                </td>
-                <td class="tduser font-weight-bold text-primary"><?php echo $row['registry_no']; ?></td>
-                <td class="tduser">
-                    <?php echo $row['deceased_lname'].', '.$row['deceased_fname'].' '.$row['deceased_mname']; ?>
-                </td>
-                <td class="tduser">
-                    <?php 
-                        $deathDate = $row['date_of_death'];
-                        echo ($deathDate) ? $deathDate : 'N/A'; 
-                    ?>
-                </td>
-                <td class="tduser"><?php echo $row['sex']; ?></td>
-                <td>
-                  <a href="death_cerf_edit.php?id=<?php echo $row['no']; ?>" class='btn btn-light btn-sm'><strong>Edit</strong></a>
-                </td>
-              </tr>
-          <?php } ?>
-        </tbody>
+            // Safely format dates to stop the PHP "Deprecated" warnings
+            $reg_date_formatted = (!empty($row['reg_date'])) ? date_format(date_create($row['reg_date']), "m/d/Y") : '';
+            $reg_time_formatted = (!empty($row['reg_time'])) ? date_format(date_create($row['reg_time']), "h:i A") : '';
+            $upd_date_formatted = (!empty($row['update_date'])) ? date_format(date_create($row['update_date']), "m/d/Y") : '';
+            $upd_time_formatted = (!empty($row['update_time'])) ? date_format(date_create($row['update_time']), "h:i A") : '';
+            
+            $reg_display = $row['reg_user'] . '<br>(' . $reg_date_formatted . ' ' . $reg_time_formatted . ')';
+            $upd_display = $row['update_user'] . '<br>(' . $upd_date_formatted . ' ' . $upd_time_formatted . ')';
+    ?>
+        <tr>
+            <td class="tduser" scope="rows"><?php echo $reg_display; ?></td>
+            <td class="tduser"><?php echo $upd_display; ?></td>
+            <td class="tduser"><?php echo $row['registry_no']; ?></td>
+            <td class="tduser"><?php echo $row['last_name'] . ', ' . $row['first_name'] . ' ' . $row['middle_name']; ?></td>
+            <td class="tduser"><?php echo $row['date_birth']; ?></td>
+            <td class="tduser"><?php echo $row['date_death']; ?></td>
+            <td class="tduser"><?php echo $row['sex']; ?></td>
+            
+            <td>
+                <a href="death_cerf_edit.php?no=<?php echo $row['no']; ?>" class="btn btn-light btn-sm font-weight-bold">Edit</a>
+            </td>
+            
+            <td>
+                <button type="button" class="btn btn-danger btn-sm font-weight-bold" data-toggle="modal" data-target="#delete_<?php echo $row['no']; ?>">
+                    Delete
+                </button>
+            </td>
+        </tr>
+        <?php include('remove.php'); ?>
+    <?php
+        }
+    } else {
+        echo "<tr><td colspan='8'>Error loading database records.</td></tr>";
+    }
+    ?>
+</tbody>
       </table>
     </div>
   </div>  

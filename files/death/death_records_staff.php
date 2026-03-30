@@ -163,6 +163,8 @@
 	      	</tr>
 		    </thead>
 	    	<tbody id="myTable">
+          <td><?php echo $row['something_here']; ?></td>
+          <td><?php echo $row['something_here']." ".$row['something_else']; ?></td>
 	      	<?php
 				    require_once 'login_db_death.php';
 				    $conn = new mysqli($hn, $un, $pw, $db);

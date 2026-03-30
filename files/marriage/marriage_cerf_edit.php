@@ -51,6 +51,45 @@
 	      #modal3A{ overflow:scroll; height:30em; }
 	    }
   	</style>
+	<style>
+    /* =========================================
+       1. CSS FOR PRINTING
+       ========================================= */
+    @media print {
+        body * { visibility: hidden; }
+        #livePreviewBody, #livePreviewBody * { visibility: visible; }
+        #livePreviewBody {
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 100%;
+        }
+        .modal-header, .modal-footer, .modal-backdrop { display: none !important; }
+        .modal-content { border: none !important; }
+        @page { size: legal; margin: 10mm; }
+    }
+
+    /* =========================================
+       2. CSS FOR THE MODAL PREVIEW
+       ========================================= */
+    @media (min-width: 768px) {
+        #livePreviewModal .modal-dialog {
+            max-width: 1050px !important;
+            width: 95% !important;
+        }
+    }
+
+    /* Styling to make text bold and black in the preview */
+    #livePreviewBody .ctf-birth input, 
+    #livePreviewBody .ctf-birth select, 
+    #livePreviewBody .ctf-birth textarea {
+        font-size: 11.5px !important;
+        font-weight: 600 !important;
+        color: #000000 !important;
+        -webkit-text-fill-color: #000000 !important;
+        opacity: 1 !important;
+    }
+</style>
 
 </head>
 <body>
@@ -138,21 +177,26 @@
   	<div class="col-sm-9" style="padding-top: 7%;" id="body">
   		<div id="accordion">
   		<div class="row">
-	  		<div class="col-sm-6 mb-1">
-  				<a href="marriage_records.php" class="btn btn-light"><i class="fa fa-angle-double-left"></i> Back</a>
-		  		<button data-toggle="collapse" data-target="#marriage_page_1" id="page1" class="btn btn-outline-info">Page 1</button>
-				<button data-toggle="collapse" data-target="#marriage_page_2" id="page2" class="btn btn-outline-info">Page 2</button>
-		</div>
-			<div class="col-sm-2 mb-1 pr-0">
-				<button type="button" class="btn btn-outline-dark btn-block" data-toggle="modal" data-target="#my3A">Print Form No. 3A</button>
-			</div>
-			<div class="col-sm-2 pr-0">
-				<button type="button" class="btn btn-outline-dark btn-block" data-toggle="modal" data-target="#my97">Print Form No. 97</button>
-			</div>
-			<div class="col-sm-2 pr-0">
-				<button type="button" class="btn btn-outline-dark btn-block" data-toggle="modal" data-target="#my97reprint">Reprint</button>
-			</div>
-		</div>
+    <div class="col-sm-4 mb-1">
+        <a href="marriage_records.php" class="btn btn-light"><i class="fa fa-angle-double-left"></i> Back</a>
+        <button data-toggle="collapse" data-target="#marriage_page_1" id="page1" class="btn btn-outline-info">Page 1</button>
+        <button data-toggle="collapse" data-target="#marriage_page_2" id="page2" class="btn btn-outline-info">Page 2</button>
+    </div>
+    
+    <div class="col-sm-2 mb-1 pr-0">
+        <button type="button" class="btn btn-outline-dark btn-block" onclick="openLivePreview()">Preview</button>
+    </div>
+
+    <div class="col-sm-2 mb-1 pr-0">
+        <button type="button" class="btn btn-outline-dark btn-block" data-toggle="modal" data-target="#my3A">Print Form No. 3A</button>
+    </div>
+    <div class="col-sm-2 pr-0">
+        <button type="button" class="btn btn-outline-dark btn-block" data-toggle="modal" data-target="#my97">Print Form No. 97</button>
+    </div>
+    <div class="col-sm-2 pr-0">
+        <button type="button" class="btn btn-outline-dark btn-block" data-toggle="modal" data-target="#my97reprint">Reprint</button>
+    </div>
+	</div>
 
 		<?php
 			require_once 'login_db_mrg.php';
@@ -193,6 +237,24 @@
 		}
 		?>
 		</div>
+		<div class="modal fade" id="livePreviewModal" tabindex="-1" role="dialog" aria-hidden="true">
+			<div class="modal-dialog modal-xl" role="document"> 
+				<div class="modal-content">
+				<div class="modal-header bg-success text-white">
+					<h5 class="modal-title"><i class="fa fa-eye"></i> Form No. 97 Document Preview</h5>
+					<button type="button" class="close text-white" data-dismiss="modal" aria-label="Close">
+					<span aria-hidden="true">&times;</span>
+					</button>
+				</div>
+				<div class="modal-body" id="livePreviewBody" style="overflow-x: auto; background-color: #f8f9fa;">
+					</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+					<button type="button" class="btn btn-primary" onclick="window.print()">Print Preview</button>
+				</div>
+				</div>
+			</div>
+			</div>
 		
   	</div>
 </div>
@@ -240,6 +302,50 @@ $(document).ready(function(){
 
 <!--Javascrpt theme-->
 <script src = "../../alertifyjs/alertify.min.js"></script>
+<script>
+function openLivePreview() {
+    // 1. Target both pages of the marriage form
+    var $p1 = $('#marriage_page_1');
+    var $p2 = $('#marriage_page_2');
+    
+    // 2. Create clones and remove scripts to prevent glitches
+    var $clone1 = $p1.clone().find('script').remove().end();
+    var $clone2 = $p2.clone().find('script').remove().end();
+    
+    // 3. Force clones to be visible and clear IDs
+    $([$clone1, $clone2]).each(function() {
+        this.removeClass('collapse coll hidden');
+        this.css({'display': 'block', 'visibility': 'visible', 'height': 'auto', 'margin-bottom': '30px'});
+        this.find('*').removeAttr('id');
+    });
+
+    // 4. Sync typed values from original form to the clones
+    syncValues($p1, $clone1);
+    syncValues($p2, $clone2);
+
+    // 5. Lock inputs so they are read-only
+    $([$clone1, $clone2]).each(function() {
+        this.find('input, textarea').prop('readonly', true).css({'background-color': 'transparent', 'border': 'none'});
+        this.find('select, input[type="checkbox"]').prop('disabled', true);
+    });
+
+    // 6. Inject into the modal and show
+    $('#livePreviewBody').empty().append($clone1).append('<hr style="border: 2px dashed #000;">').append($clone2);
+    $('#livePreviewModal').appendTo("body").modal('show');
+}
+
+function syncValues($source, $target) {
+    $source.find('input, select, textarea').each(function(index) {
+        var $srcEl = $(this);
+        var $tgtEl = $target.find('input, select, textarea').eq(index);
+        if ($srcEl.is(':checkbox, :radio')) {
+            $tgtEl.prop('checked', $srcEl.prop('checked'));
+        } else {
+            $tgtEl.val($srcEl.val());
+        }
+    });
+}
+</script>
 
 </body>
 </html>

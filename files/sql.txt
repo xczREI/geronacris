@@ -1,0 +1,3 @@
+ALTER TABLE mother_tbl MODIFY marriage_date VARCHAR(50);
+ALTER TABLE father_tbl MODIFY marriage_date VARCHAR(50);
+

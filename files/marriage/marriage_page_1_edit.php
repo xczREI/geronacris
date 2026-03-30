@@ -915,6 +915,39 @@
 	hLname.addEventListener('input', updateFullName);
 </script>
 <script>
+document.addEventListener('DOMContentLoaded', function() {
+    const inputs = document.querySelectorAll('input, select, textarea');
+
+    // 1. SYNC ON LOAD: Capture database values immediately for Page 2
+    inputs.forEach(el => {
+        if (el.name) { sessionStorage.setItem(el.name, el.value); }
+    });
+
+    // 2. LIVE SAVE: Update memory if you change any values
+    inputs.forEach(el => {
+        el.addEventListener('input', function() {
+            if (this.name) { sessionStorage.setItem(this.name, this.value); }
+        });
+    });
+
+    // 3. ENTER KEY: Navigate to next box
+    document.addEventListener('keydown', function(e) {
+        if (e.key === 'Enter') {
+            const current = document.activeElement;
+            if (current.tagName === 'INPUT' || current.tagName === 'SELECT') {
+                e.preventDefault();
+                const focusable = Array.from(document.querySelectorAll('input:not([type="hidden"]):not([disabled]):not([readonly]), select:not([disabled])'));
+                const index = focusable.indexOf(current);
+                if (index > -1 && index < focusable.length - 1) {
+                    focusable[index + 1].focus();
+                }
+            }
+        }
+    });
+});
+</script>
+
+<script>
 	const wFname = document.getElementById('w_fname');
 	const wMname = document.getElementById('w_mname');
 	const wLname = document.getElementById('w_lname');

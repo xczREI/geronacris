@@ -194,11 +194,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['no'])) {
     exit; // Stop the page from loading the form
 }
 
-
 // =========================================================================
 // THE "FETCHER" LOGIC (Executes when you just open the page to view it)
 // =========================================================================
-$id = $_GET['reg_no'] ?? $_GET['id'] ?? ''; 
+$id = $_GET['reg_no'] ?? $_GET['id'] ?? $_GET['no'] ?? ''; 
 
 if (!empty($id)) {
     $sql = "SELECT 
@@ -237,7 +236,7 @@ if (!empty($id)) {
     $row = $result->fetch_assoc();
     
     if($row) { 
-        // 1. THE PHP DATE TRANSLATOR (For HTML5 Calendars)
+        // 1. THE PHP DATE TRANSLATOR
         $date_columns = ['date_birth', 'date_of_death', 'date_from', 'date_to', 'attendant_date', 'reviewed_date', 'burial_issued_date', 'transfer_issued_date', 'informant_date', 'prepared_date', 'received_date', 'civil_date', 'autopsy_date', 'embalmer_on', 'embalmer_expdate', 'died_on', 'buried_on', 'issued_on'];
         
         foreach ($date_columns as $col) {
@@ -370,19 +369,29 @@ if (!empty($id)) {
         <form action="" method="POST">
             <input type="hidden" name="no" value="<?php echo $row['no'] ?? $id; ?>">
             <div class="card shadow">
-                <div class="card-header bg-dark text-white d-flex justify-content-between align-items-center">
-                    <h5 class="mb-0">Edit Death Record: <?php echo $row['deceased_lname'] ?? ''; ?>, <?php echo $row['deceased_fname'] ?? ''; ?></h5>
-                    <a href="death_records.php" class="btn btn-sm btn-light">Back to Records</a>
+                
+                <div class="card-header bg-white pb-3 pt-4 border-bottom-0">
+                    <div class="row align-items-center">
+                        
+                        <div class="col-md-3 d-flex align-items-center">
+                            <a href="death_records.php" class="text-secondary mr-3" style="text-decoration: none; font-size: 14px;">&laquo; Back</a>
+                            <a class="btn btn-outline-info btn-sm active mr-2" data-toggle="tab" href="#page1" role="tab" style="border-radius:0;">Page 1</a>
+                            <a class="btn btn-outline-info btn-sm" data-toggle="tab" href="#page2" role="tab" style="border-radius:0;">Page 2</a>
+                        </div>
+                        
+                        <div class="col-md-9 d-flex justify-content-between">
+                            <button type="submit" formaction="print_103.php" formtarget="_blank" class="btn btn-light border py-1" style="background: white; width: 23%;">Preview</button>
+                            
+                            <a href="print_103.php?no=<?php echo $row['no'] ?? $id; ?>" target="_blank" class="btn btn-light border py-1" style="background: white; width: 24%; text-align: center; text-decoration: none; color: black;">Print Form No. 103</a>
+                            
+                            <a href="print_2A.php?no=<?php echo $row['no'] ?? $id; ?>" target="_blank" class="btn btn-light border py-1" style="background: white; width: 24%; text-align: center; text-decoration: none; color: black;">Print Form No. 2A</a>
+                            
+                            <button type="submit" name="update_death" class="btn btn-light border py-1" style="background: white; width: 23%;">Reprint</button>
+                        </div>
+                        
+                    </div>
                 </div>
-                <div class="card-body">
-                    <ul class="nav nav-tabs mb-4" id="deathTab" role="tablist">
-                        <li class="nav-item">
-                            <a class="nav-link active font-weight-bold" id="page1-tab" data-toggle="tab" href="#page1" role="tab">PAGE 1 (Main Info)</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link font-weight-bold" id="page2-tab" data-toggle="tab" href="#page2" role="tab">PAGE 2 (Affidavit/Medical)</a>
-                        </li>
-                    </ul>
+                <div class="card-body pt-0">
                     <div class="tab-content">
                         <div class="tab-pane fade show active" id="page1" role="tabpanel">
                             <?php include 'death_page_1_edit.php'; ?>
@@ -392,9 +401,10 @@ if (!empty($id)) {
                         </div>
                     </div>
                 </div>
+                
                 <div class="card-footer text-right py-3">
                     <a href="death_records.php" class="btn btn-secondary mr-2">Cancel</a>
-                    <button type="submit" class="btn btn-success px-5 font-weight-bold">SAVE ALL CHANGES</button>
+                    <button type="submit" name="update_death" class="btn btn-success px-5 font-weight-bold">SAVE ALL CHANGES</button>
                 </div>
             </div>
         </form>
@@ -404,6 +414,7 @@ if (!empty($id)) {
 
 <?php include '../../report/report_modal1.php'; ?>
 <script src = "../../alertifyjs/alertify.min.js"></script>
+
 <script>
 $(document).ready(function() {
     
@@ -492,119 +503,6 @@ $(document).ready(function() {
 
     // 4. Autopsy Toggle
     function toggleAutopsyFields() {
-        var autopsySelect = $("select[name='autopsy']").val() || "";
-        var autopsyFields = ['autopsy_txt1', 'autopsy_txt2', 'autopsy_name', 'autopsy_date', 'autopsy_title', 'autopsy_address'];
-        if (autopsySelect.toUpperCase() === 'NO') {
-            autopsyFields.forEach(function(f) { $("input[name='" + f + "']").val('N/A').prop('readonly', true).css('background-color', '#e9ecef'); });
-        } else {
-            autopsyFields.forEach(function(f) { var el = $("input[name='" + f + "']"); el.prop('readonly', false).css('background-color', '#fff'); if(el.val() === 'N/A') el.val(''); });
-        }
-    }
-
-    // Bind triggers to instantly fire when typing or clicking
-    $("select[name='sex']").on('change', runSmartLogic);
-    $("select[name='autopsy']").on('change', toggleAutopsyFields);
-    $("input[name='date_birth'], input[name='date_of_death']").on('change', function() { runSmartLogic(); syncToPage2(); });
-    $("input[name='age_at_death'], input[name='age_one_month'], input[name='age_one_day'], input[name='deceased_fname'], input[name='deceased_mname'], input[name='deceased_lname'], input[name='place_of_death'], input[name='informant_name'], input[name='informant_address']").on('keyup change', function() { runSmartLogic(); syncToPage2(); });
-
-    // Fire everything instantly on load
-    runSmartLogic();
-    syncToPage2();
-    toggleAutopsyFields();
-});
-</script>
-
-<script>
-$(document).ready(function() {
-    
-    // UNBIND OLD CONFLICTING SCRIPTS
-    $("input[name='date_birth'], input[name='date_of_death'], select[name='sex'], select[name='autopsy']").off();
-    $("input[name='maternal_condition']").off();
-
-    // 1. Radio Buttons for 19c
-    $("input[name='maternal_condition']").on('change', function() {
-        if($(this).is(':checked')) {
-            $("input[name='maternal_condition']").not(this).prop('checked', false);
-        }
-    });
-
-    // 2. Smart Age, Infant Locks, and Maternal Locks
-    function runSmartLogic() {
-        // ... (Keep your existing runSmartLogic code exactly as it is) ...
-        var birthVal = $("input[name='date_birth']").val();
-        var deathVal = $("input[name='date_of_death']").val();
-        var allAgeFields = $("input[name='age_at_death'], input[name='age_one_month'], input[name='age_one_day'], input[name='age_hrs_hrs'], input[name='age_hrs_min']");
-
-        if (birthVal && deathVal) {
-            var dob = new Date(birthVal);
-            var dod = new Date(deathVal);
-            if (dod >= dob) {
-                var years = dod.getFullYear() - dob.getFullYear();
-                var months = dod.getMonth() - dob.getMonth();
-                var days = dod.getDate() - dod.getDate();
-                if (days < 0) { months--; days += new Date(dod.getFullYear(), dod.getMonth(), 0).getDate(); }
-                if (months < 0) { years--; months += 12; }
-
-                allAgeFields.val('').prop('readonly', false).css('background-color', '#fff');
-
-                if (years >= 1) {
-                    $("input[name='age_at_death']").val(years);
-                    $("input[name='age_one_month'], input[name='age_one_day'], input[name='age_hrs_hrs'], input[name='age_hrs_min']").val('N/A').prop('readonly', true).css('background-color', '#e9ecef');
-                } else if (months > 0 || days > 0) {
-                    $("input[name='age_one_month']").val(months);
-                    $("input[name='age_one_day']").val(days);
-                    $("input[name='age_at_death'], input[name='age_hrs_hrs'], input[name='age_hrs_min']").val('N/A').prop('readonly', true).css('background-color', '#e9ecef');
-                } else if (years === 0 && months === 0 && days === 0) {
-                    $("input[name='age_at_death'], input[name='age_one_month'], input[name='age_one_day']").val('N/A').prop('readonly', true).css('background-color', '#e9ecef');
-                }
-            }
-        }
-
-        var yrs = parseInt($("input[name='age_at_death']").val()) || 0;
-        var mos = parseInt($("input[name='age_one_month']").val()) || 0;
-        var dys = parseInt($("input[name='age_one_day']").val()) || 0;
-        
-        var infantFields = ['mother_age', 'delivery_method', 'pregnancy_length', 'birth_type', 'multi_birth_was', 'main_disease', 'other_disease', 'main_maternal_disease', 'other_maternal_disease', 'other_relevant'];
-        var adultFields = ['immediate_cause', 'immediate_interval', 'antecedent_cause', 'antecedent_interval', 'underlying_cause', 'underlying_interval', 'other_condition_death'];
-
-        if (yrs > 0 || mos > 0 || dys > 7) {
-            infantFields.forEach(function(f) { $("input[name='" + f + "']").val('N/A').prop('readonly', true).css('background-color', '#e9ecef'); });
-            adultFields.forEach(function(f) { var el = $("input[name='" + f + "']"); if (el.prop('readonly')) { el.prop('readonly', false).css('background-color', '#fff'); if(el.val() === 'N/A') el.val(''); } });
-        } else {
-            infantFields.forEach(function(f) { var el = $("input[name='" + f + "']"); if (el.prop('readonly')) { el.prop('readonly', false).css('background-color', '#fff'); if(el.val() === 'N/A') el.val(''); } });
-            adultFields.forEach(function(f) { $("input[name='" + f + "']").val('N/A').prop('readonly', true).css('background-color', '#e9ecef'); });
-        }
-
-        var sex = $("select[name='sex']").val() || "";
-        var maternalCheckboxes = $("input[name='maternal_condition']");
-        if (sex.toUpperCase() === 'FEMALE' && yrs >= 15 && yrs <= 49) {
-            maternalCheckboxes.prop('disabled', false);
-            $("#none_choices").css('pointer-events', 'auto');
-            if ($("#none_choices").data('auto-checked')) { $("#none_choices").prop('checked', false); $("#none_choices").data('auto-checked', false); }
-        } else {
-            maternalCheckboxes.prop('disabled', true).prop('checked', false);
-            $("#none_choices").prop('disabled', false).prop('checked', true).css('pointer-events', 'none');
-            $("#none_choices").data('auto-checked', true);
-        }
-    }
-
-    // 3. Sync to Page 2 Affidavit
-    function syncToPage2() {
-        // ... (Keep your existing syncToPage2 code exactly as it is) ...
-        var fname = $("input[name='deceased_fname']").val() || "";
-        var mname = $("input[name='deceased_mname']").val() || "";
-        var lname = $("input[name='deceased_lname']").val() || "";
-        $("input[name='death_name']").val((fname + " " + mname + " " + lname).replace(/\s+/g, ' ').trim());
-        $("input[name='died_on']").val($("input[name='date_of_death']").val());
-        $("input[name='died_in']").val($("input[name='place_of_death']").val());
-        var informant = $("input[name='informant_name']").val() || "";
-        $("input[name='late_name'], input[name='affiant_name']").val(informant);
-        $("input[name='late_address']").val($("input[name='informant_address']").val() || "");
-    }
-
-    // 4. Autopsy Toggle
-    function toggleAutopsyFields() {
-        // ... (Keep your existing toggleAutopsyFields code exactly as it is) ...
         var autopsySelect = $("select[name='autopsy']").val() || "";
         var autopsyFields = ['autopsy_txt1', 'autopsy_txt2', 'autopsy_name', 'autopsy_date', 'autopsy_title', 'autopsy_address'];
         if (autopsySelect.toUpperCase() === 'NO') {

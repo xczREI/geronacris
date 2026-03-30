@@ -7,8 +7,11 @@
     {
       $reg_no = $conn->real_escape_string($_POST['reg_no']);
       $registry_no = $conn->real_escape_string($_POST['registry_no'] ?? '');
-      $book_no = $_POST['book_no'] ?? '';
-      $page_no = $_POST['page_no'] ?? '';
+      
+      // STRICT MODE FIX: Default empty book/page to 0 instead of a blank string
+      $book_no = !empty($_POST['book_no']) ? (int)$_POST['book_no'] : 0;
+      $page_no = !empty($_POST['page_no']) ? (int)$_POST['page_no'] : 0;
+      
       $province = $conn->real_escape_string($_POST['provinces'] ?? '');
       $municipal = $conn->real_escape_string($_POST['municipals'] ?? '');
       $u_date = date("Y-m-d");
@@ -19,11 +22,8 @@
       $child_lname = $conn->real_escape_string($_POST['child_lname'] ?? '');
       $child_fname = $conn->real_escape_string($_POST['child_fname'] ?? '');
       $child_mname = $conn->real_escape_string($_POST['child_mname'] ?? '');
-      
-      // FIXED: Form uses name="sex", not child_sex
       $child_sex = $conn->real_escape_string($_POST['sex'] ?? ''); 
       
-      // FORMAT FIX: The database strictly requires YYYY-MM-DD format!
       $raw_bd = $_POST['birth_day'] ?? '';
       $child_birth_date = (!empty($raw_bd)) ? date("Y-m-d", strtotime($raw_bd)) : '';
 
@@ -64,12 +64,28 @@
       $father_province = $conn->real_escape_string($_POST['father_province'] ?? '');
       $father_country = $conn->real_escape_string($_POST['father_country'] ?? '');
       
-      //marriage_info
-      $marriage_date = $conn->real_escape_string($_POST['marriage_date'] ?? '');
+      //==============================marriage_info======================================
+      $raw_marriage = $_POST['marriage_date'] ?? '';
+      $clean_marriage = strtoupper(trim($raw_marriage));
+      $non_date_keywords = ['NOT MARRIED', 'NOT APPLICABLE', 'N/A', 'NONE'];
+
+      // Check if empty or matches a non-date keyword
+      if (empty($clean_marriage) || in_array($clean_marriage, $non_date_keywords)) {
+          $marriage_val = $conn->real_escape_string($clean_marriage ?: 'NOT APPLICABLE');
+          $marriage_date_sql = "'$marriage_val'"; 
+      } else {
+          // If it's a valid date, format it. Otherwise, treat as a string.
+          $timestamp = strtotime($raw_marriage);
+          if ($timestamp) {
+              $marriage_date_sql = "'" . date("Y-m-d", $timestamp) . "'";
+          } else {
+              $marriage_date_sql = "'" . $conn->real_escape_string($raw_marriage) . "'";
+          }
+      }
+
       $marriage_place = $conn->real_escape_string($_POST['marriage_place'] ?? '');
 
       //==========================attendant_informant_prepared====================================
-      // FIXED: Added isset() to prevent fatal crash if boxes are unchecked
       if(isset($_POST['attendant1']) && $_POST['attendant1'] == 'Physician'){
         $attendant_type = $_POST['attendant1'];   
       }else if(isset($_POST['attendant2']) && $_POST['attendant2'] == 'Nurse'){
@@ -82,7 +98,6 @@
         $attendant_type = $conn->real_escape_string($_POST['attendant5'] ?? '');   
       }
       
-      // FIXED: Merge attendant address 1 and 2
       $att_add1 = $_POST['attendant_address1'] ?? '';
       $att_add2 = $_POST['attendant_address2'] ?? '';
       $attendant_address = $conn->real_escape_string(trim($att_add1 . ' ' . $att_add2));
@@ -142,7 +157,6 @@
       $late_birth_on = '';
       $late_birth_of = '';
 
-      // FIXED: Form uses late_birth_in2 and late_birth_on2
       if($late_birth_type == 'my birth'){
             $late_birth_in = $conn->real_escape_string($_POST['late_birth_in'] ?? '');
             $late_birth_on = $conn->real_escape_string($_POST['late_birth_on'] ?? '');
@@ -160,7 +174,6 @@
       $married_at = $conn->real_escape_string($_POST['married_at'] ?? '');
       $not_married_name = $conn->real_escape_string($_POST['not_married_name'] ?? '');
       
-      // FIXED: Merge late_reason_1 and late_reason_2
       $lr1 = $_POST['late_reason_1'] ?? '';
       $lr2 = $_POST['late_reason_2'] ?? '';
       $late_reg_reason = $conn->real_escape_string(trim($lr1 . ' ' . $lr2));
@@ -194,10 +207,12 @@
       $sql = "UPDATE child_tbl SET registry_no='$registry_no', child_lname='$child_lname', child_fname='$child_fname', child_mname='$child_mname', child_sex='$child_sex', child_birth_date='$child_birth_date', birth_brgy='$birth_brgy', birth_municipal='$birth_city', birth_province='$birth_province', birth_type='$birth_type', if_multi_birth_was='$multi_birth_was', birth_order='$birth_order', birth_weight='$birth_weight' WHERE no = '$reg_no'";
       $result = $conn->query($sql);
 
-      $sql = "UPDATE mother_tbl SET registry_no='$registry_no', mother_lname='$mother_lname', mother_fname='$mother_fname', mother_mname='$mother_mname', mother_citizen='$mother_citizen', mother_religion='$mother_sect', mother_brgy='$mother_brgy', mother_municipal='$mother_city', mother_province='$mother_province', mother_country='$mother_country', mother_occupation='$mother_occupation', mother_age='$mother_age', ttl_no_child='$ttl_no_child', no_child_dead='$no_child_dead', no_child_alive='$no_child_alive',  marriage_date='$marriage_date', marriage_place='$marriage_place' WHERE no = '$reg_no'";
+      // Using $marriage_date_sql (quotes are already included in the variable)
+      $sql = "UPDATE mother_tbl SET registry_no='$registry_no', mother_lname='$mother_lname', mother_fname='$mother_fname', mother_mname='$mother_mname', mother_citizen='$mother_citizen', mother_religion='$mother_sect', mother_brgy='$mother_brgy', mother_municipal='$mother_city', mother_province='$mother_province', mother_country='$mother_country', mother_occupation='$mother_occupation', mother_age='$mother_age', ttl_no_child='$ttl_no_child', no_child_dead='$no_child_dead', no_child_alive='$no_child_alive',  marriage_date=$marriage_date_sql, marriage_place='$marriage_place' WHERE no = '$reg_no'";
       $result = $conn->query($sql);
 
-      $sql = "UPDATE father_tbl SET registry_no='$registry_no', father_lname='$father_lname', father_fname='$father_fname', father_mname='$father_mname', father_age='$father_age', father_religion='$father_sect', father_citizen='$father_citizen', father_brgy='$father_brgy', father_municipal='$father_city', father_province='$father_province', father_country='$father_country', father_occupation='$father_occupation', marriage_date='$marriage_date', marriage_place='$marriage_place' WHERE no = '$reg_no'";
+      // Using $marriage_date_sql (quotes are already included in the variable)
+      $sql = "UPDATE father_tbl SET registry_no='$registry_no', father_lname='$father_lname', father_fname='$father_fname', father_mname='$father_mname', father_age='$father_age', father_religion='$father_sect', father_citizen='$father_citizen', father_brgy='$father_brgy', father_municipal='$father_city', father_province='$father_province', father_country='$father_country', father_occupation='$father_occupation', marriage_date=$marriage_date_sql, marriage_place='$marriage_place' WHERE no = '$reg_no'";
       $result = $conn->query($sql);
 
       $sql = "UPDATE att_inf_tbl SET registry_no='$registry_no', attendant_type='$attendant_type', birth_time='$birth_time', attendant_name='$attendant_name', attendant_position='$attendant_position', attendant_address='$attendant_address', informant_name='$informant_name', rel_child='$rel_child', informant_address='$informant_address', prepared_name='$prepared_name', prepared_position='$prepared_position', attendant_date='$attendant_date', informant_date='$informant_date', prepared_date='$prepared_date' WHERE no = '$reg_no'";
@@ -217,10 +232,11 @@
 
       if (!$result) echo "UPDATE failed: $sql<br>" . $conn->error . "<br><br>";
 
+      // Close connection before exiting
+      mysqli_close($conn);
+
       // Go back to previous page
       header('Location: ' . $_SERVER['HTTP_REFERER']);
       exit();
-
-      mysqli_close($conn);
 }
 ?>

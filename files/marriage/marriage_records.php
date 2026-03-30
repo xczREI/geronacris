@@ -152,53 +152,66 @@
   		</div>
 		<br>
   		<div class="table-responsive" style="overflow:scroll; height:50em;">
-		  	<table class="table table-striped table-sm">
-			    <thead class="thead-dark">
-			      	<tr>
-				      	<th>Time Created</th>
-				        <th>Time Updated</th>
-				        <th>Registry No</th>
-				        <th>Husband Name</th>
-				        <th>Wife Name</th>
-				        <th>Marriage Date</th>
-				        <th>Edit</th>
-			      	</tr>
-			    </thead>
-		    	<tbody id="myTable">
-			      	<?php
-				    require_once 'login_db_mrg.php';
+    <table class="table table-striped table-sm">
+        <thead class="thead-dark">
+            <tr>
+                <th>Time Created</th>
+                <th>Time Updated</th>
+                <th>Registry No</th>
+                <th>Husband Name</th>
+                <th>Wife Name</th>
+                <th>Marriage Date</th>
+                <th>Edit</th>
+                <th>Delete</th> </tr>
+        </thead>
+        <tbody id="myTable">
+            <?php
+            require_once 'login_db_mrg.php';
+            $conn = new mysqli($hn, $un, $pw, $db);
+            if ($conn->connect_error) die($conn->connect_error);
 
-				    $conn = new mysqli($hn, $un, $pw, $db);
-				    if ($conn->connect_error) die($conn->connect_error);
+            // Updated SQL to sort by newest first like birth_records
+            $sql = "SELECT * FROM registration_tbl NATURAL JOIN husband_tbl NATURAL JOIN wife_tbl NATURAL JOIN marriage_tbl ORDER BY reg_date DESC, reg_time DESC";
+            $result = $conn->query($sql);  
+            if (!$result) die ("Database access failed: " . $conn->error);
 
-				      $sql= "SELECT * FROM registration_tbl NATURAL JOIN husband_tbl NATURAL JOIN wife_tbl NATURAL JOIN marriage_tbl ORDER BY husband_lname ASC";
-				      $result = $conn->query($sql);  
-				      if (!$result) die ("Database access failed: " . $conn->error);
-
-				      $rows = $result->num_rows;
-
-				      for ($j = 0 ; $j < $rows ; ++$j)
-				      {
-				      $result->data_seek($j);
-				      $row = $result->fetch_array(MYSQLI_ASSOC);
-				  	?>
-	                <tr>
-	                  <td class="tduser" scope="rows"><?php echo $row['reg_user'].'<br>('.date_format(date_create($row['reg_date']),"m/d/Y").' '.date_format(date_create($row['reg_time']),'h:i A').')'; ?></td>
-	                  <td class="tduser"><?php echo $row['update_user'].'<br>('.date_format(date_create($row['update_date']),"m/d/Y").' '.date_format(date_create($row['update_time']),'h:i A').')'; ?></td>
-	                  <td class="tduser"><?php echo $row['registry_no']; ?></td>
-	                  <td class="tduser"><?php echo $row['husband_lname'].', '.$row['husband_fname'].' '.$row['husband_mname']; ?></td>
-	                  <td class="tduser"><?php echo $row['wife_lname'].', '.$row['wife_fname'] .' '.$row['wife_mname']; ?></td>
-	                  <td class="tduser"><?php echo $row['mrg_date']; ?></td>
-	                  <td>
-	                      <a href="marriage_cerf_edit.php?reg_no=<?php echo $row['no']; ?>" class='btn btn-light btn-sm'><strong>Edit</strong></a>
-	                  </td>
-	              	</tr>
-	              	<?php
-	                }
-	              	?>
-		    	</tbody>
-		  	</table>
-		</div>
+            while($row = $result->fetch_assoc()) {
+            ?>
+            <tr>
+                <td class="tduser">
+                    <?php 
+                        $user = !empty($row['reg_user']) ? $row['reg_user'] : 'NO USER';
+                        $rDate = (!empty($row['reg_date']) && $row['reg_date'] != '0000-00-00') ? date("m/d/Y", strtotime($row['reg_date'])) : '';
+                        $rTime = (!empty($row['reg_time']) && $row['reg_time'] != '00:00:00') ? date("h:i A", strtotime($row['reg_time'])) : '';
+                        echo $user . ($rDate || $rTime ? '<br>(' . trim("$rDate $rTime") . ')' : '<br>(No Date/Time)');
+                    ?>
+                </td>
+                <td class="tduser">
+                    <?php 
+                        $uDate = (!empty($row['update_date']) && $row['update_date'] != '0000-00-00') ? date("m/d/Y", strtotime($row['update_date'])) : 'N/A';
+                        $uTime = (!empty($row['update_time']) && $row['update_time'] != '00:00:00') ? date("h:i A", strtotime($row['update_time'])) : '';
+                        echo !empty($row['update_user']) ? $row['update_user'] . '<br>(' . trim("$uDate $uTime") . ')' : 'NO UPDATES'; 
+                    ?>
+                </td>
+                <td class="tduser"><?php echo $row['registry_no']; ?></td>
+                <td class="tduser"><?php echo $row['husband_lname'].', '.$row['husband_fname'].' '.$row['husband_mname']; ?></td>
+                <td class="tduser"><?php echo $row['wife_lname'].', '.$row['wife_fname'] .' '.$row['wife_mname']; ?></td>
+                <td class="tduser"><?php echo $row['mrg_date']; ?></td>
+                <td>
+                    <a href="marriage_cerf_edit.php?reg_no=<?php echo $row['no']; ?>" class='btn btn-light btn-sm'><strong>Edit</strong></a>
+                </td>
+                <td>
+                    <a href="marriage_delete_action.php?reg_no=<?php echo $row['no']; ?>" 
+                       class='btn btn-danger btn-sm' 
+                       onclick="return confirm('ARE YOU SURE YOU WANT TO PERMANENTLY DELETE THIS RECORD?')">
+                       <strong>Delete</strong>
+                    </a>
+                </td>
+            </tr>
+            <?php } ?>
+        </tbody>
+    </table>
+</div>
 	</div>	
 </div>
 

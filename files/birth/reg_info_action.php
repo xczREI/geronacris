@@ -12,8 +12,8 @@
       $current_time = date("H:i:s"); 
 
       $registry_no = $conn->real_escape_string($_POST['registry_no']);
-      $book_no = $_POST['book_no'];
-      $page_no = $_POST['page_no'];
+      $book_no = !empty($_POST['book_no']) ? (int)$_POST['book_no'] : 0;
+      $page_no = !empty($_POST['page_no']) ? (int)$_POST['page_no'] : 0;
       $province = $conn->real_escape_string($_POST['provinces']);
       $municipal = $conn->real_escape_string($_POST['municipals']);
       
@@ -40,7 +40,7 @@
       $birth_city = $conn->real_escape_string($_POST['birth_city']);
       $birth_province = $conn->real_escape_string($_POST['birth_province']);
       $birth_type = $conn->real_escape_string($_POST['birth_type']);
-      $multi_birth_was = $conn->real_escape_string($_POST['multi_birth_was']);
+  $multi_birth_was = $conn->real_escape_string($_POST['multi_birth_was'] ?? '');
       $birth_order = $conn->real_escape_string($_POST['birth_order']);
       $birth_weight = $conn->real_escape_string($_POST['birth_weight']);
 
@@ -74,8 +74,17 @@
       $father_country = $conn->real_escape_string($_POST['father_country']);
 
       //====================================marriage_info===========================
-      $marriage_date = $_POST['marriage_date'];
-      $marriage_place = $conn->real_escape_string($_POST['marriage_place']);
+      $raw_marriage = $_POST['marriage_date'] ?? '';
+
+// If empty, "NOT MARRIED", "NOT APPLICABLE", or "N/A", insert a dummy date like 1900-01-01
+if (empty($raw_marriage) || strtoupper($raw_marriage) === 'NOT MARRIED' || strtoupper($raw_marriage) === 'NOT APPLICABLE' || strtoupper($raw_marriage) === 'N/A') {
+    $marriage_date = "'1900-01-01'"; // A fake date that represents "Not Married" or "Not Applicable"
+} else {
+    // Force it into a strict YYYY-MM-DD format
+    $marriage_date = "'" . date("Y-m-d", strtotime($raw_marriage)) . "'";
+} 
+
+$marriage_place = $conn->real_escape_string($_POST['marriage_place']);
 
       //=================attendant_informant_prepared===============================
       $att1 = $_POST['attendant1'] ?? "";
@@ -126,7 +135,7 @@
       $sworn_month = $conn->real_escape_string($_POST['ack_sworn_month']);
       $sworn_year = $conn->real_escape_string($_POST['ack_sworn_year']);
 
-      $birth_gender = $_POST['birth_gender'];
+      $birth_gender =( $_POST['birth_gender']??'');
       $sworn_ctc = $conn->real_escape_string($_POST['ack_ctc']);
       $sworn_issuedon = $conn->real_escape_string($_POST['ack_issued_on']);
       $sworn_issuedat = $conn->real_escape_string($_POST['ack_issued_at']);
@@ -137,14 +146,14 @@
       //===============================late registration=============================
       $late_name = $conn->real_escape_string($_POST['late_name']);
       $late_address = $conn->real_escape_string($_POST['late_address']);
-      $late_birth_type = $conn->real_escape_string($_POST['late_birth_type']);
+      $late_birth_type = $conn->real_escape_string($_POST['late_birth_type']??'');
       $late_birth_of = $conn->real_escape_string($_POST['late_birth_of']);
       $late_birth_in = $conn->real_escape_string($_POST['late_birth_in']);
       $late_birth_on = $conn->real_escape_string($_POST['late_birth_on']);
       $attend_birth_by = $conn->real_escape_string($_POST['attend_birth_by']);
       $who_resides_at = $conn->real_escape_string($_POST['who_resides_at']);
       $late_citizen = $conn->real_escape_string($_POST['late_citizen']);
-      $married_type = $conn->real_escape_string($_POST['married_type']);
+      $married_type = $conn->real_escape_string($_POST['married_type']??'');
       $married_on = $conn->real_escape_string($_POST['married_on']);
       $married_at = $conn->real_escape_string($_POST['married_at']);
       $not_married_name = $conn->real_escape_string($_POST['not_married_name']);
@@ -195,9 +204,10 @@
 
 
 
-     
-      $sql = "INSERT INTO registration_tbl VALUES ('$registry_no', '$book_no', '$page_no', '$province', '$municipal', '$date', '$time', '$e_name', '$u_date', '$u_time', '$u_name', '$no')";
-      $result = $conn->query($sql);
+      
+      // Replace the column names in the first set of parentheses with your exact database column names if they differ
+$sql = "INSERT INTO registration_tbl (registry_no, book_no, page_no, province, municipal, reg_date, reg_time, emp_name, update_date, update_time, update_name, no_id) 
+        VALUES ('$registry_no', '$book_no', '$page_no', '$province', '$municipal', '$date', '$time', '$e_name', '$u_date', '$u_time', '$u_name', '$no')";
 
 
       
@@ -206,11 +216,12 @@
       $sql = "INSERT INTO child_tbl VALUES ('$registry_no', '$child_lname', '$child_fname', '$child_mname', '$child_sex', '$child_birth_date', '$birth_brgy', '$birth_city', '$birth_province', '$birth_type', '$multi_birth_was', '$birth_order', '$birth_weight', '$no')";
       $result = $conn->query($sql);
 
-      $sql = "INSERT INTO mother_tbl VALUES ('$registry_no', '$mother_lname', '$mother_fname', '$mother_mname', '$mother_citizen', '$mother_sect', '$mother_brgy', '$mother_city', '$mother_province', '$mother_country', '$mother_occupation', '$mother_age', '$ttl_no_child', '$no_child_dead', '$no_child_alive', '$marriage_date', '$marriage_place', '$no')";
-      $result = $conn->query($sql);
+     // Quotes removed around $marriage_date
+       $sql = "INSERT INTO mother_tbl VALUES ('$registry_no', '$mother_lname', '$mother_fname', '$mother_mname', '$mother_citizen', '$mother_sect', '$mother_brgy', '$mother_city', '$mother_province', '$mother_country', '$mother_occupation', '$mother_age', '$ttl_no_child', '$no_child_dead', '$no_child_alive', $marriage_date, '$marriage_place', '$no')";
+$result = $conn->query($sql);
 
-      $sql = "INSERT INTO father_tbl VALUES ('$registry_no', '$father_lname', '$father_fname', '$father_mname', '$father_age', '$father_sect', '$father_citizen', '$father_brgy', '$father_city', '$father_province', '$father_country', '$father_occupation', '$marriage_date', '$marriage_place', '$no')";
-      $result = $conn->query($sql);
+        $sql = "INSERT INTO father_tbl VALUES ('$registry_no', '$father_lname', '$father_fname', '$father_mname', '$father_age', '$father_sect', '$father_citizen', '$father_brgy', '$father_city', '$father_province', '$father_country', '$father_occupation', $marriage_date, '$marriage_place', '$no')";
+$result = $conn->query($sql);
 
       $sql = "INSERT INTO att_inf_tbl VALUES ('$registry_no', '$attendant_type', '$birth_time', '$attendant_name', '$attendant_position', '$attendant_address', '$informant_name', '$rel_child', '$informant_address', '$prepared_name', '$prepared_position', '$attendant_date', '$informant_date', '$prepared_date', '$no')";
       $result = $conn->query($sql);

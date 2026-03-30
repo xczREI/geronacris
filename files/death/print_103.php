@@ -1,63 +1,142 @@
 <?php
+// Turn off minor notices/warnings that break PDF generation, keep fatal errors
+ini_set('display_errors', 1);
+ini_set('display_startup_errors', 1);
+error_reporting(E_ERROR | E_PARSE); 
+ob_start();
 use setasign\Fpdi\Fpdi;
 require_once('../../fpdf/fpdf.php');
 require_once('../../fpdi/src/autoload.php');
-require_once 'login_db_death.php';
 
-$conn = new mysqli($hn, $un, $pw, $db);
-if ($conn->connect_error) die($conn->connect_error);
+$row = [];
 
-$reg_no=$_POST['reg_no'];
-if (!empty($_GET['reg_no'])){ $reg_no = $_REQUEST['reg_no']; }
+// =========================================================================
+// HYBRID LOGIC: Are we Previewing (POST) or Printing from Database (GET)?
+// =========================================================================
 
-$sql = "SELECT * FROM registration_tbl NATURAL JOIN (person_tbl NATURAL JOIN death_cause_eight_days NATURAL JOIN att_rev_tbl NATURAL JOIN corpse_disposal_tbl NATURAL JOIN inf_pre_tbl NATURAL JOIN receive_civil_tbl NATURAL JOIN remarks_tbl NATURAL JOIN death_cause_zero_seven NATURAL JOIN autopsy_tbl NATURAL JOIN embalmer_tbl NATURAL JOIN late_reg_tbl) WHERE no = '$reg_no'";
-$result = $conn->query($sql);  
-if (!$result) die ("Database access failed: " . $conn->error);
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    // --- MODE 1: LIVE PREVIEW (Uses unsaved form data) ---
+    
+    // 1. Fallback: Catch all standard fields
+    foreach ($_POST as $key => $value) {
+        $row[$key] = $value;
+    }
 
-if ($result->num_rows > 0) {
-while($row = $result->fetch_assoc()) {
+    // 2. Remap fields where HTML Form name doesn't match Database name
+    $row['first_name'] = $_POST['deceased_fname'] ?? '';
+    $row['middle_name'] = $_POST['deceased_mname'] ?? '';
+    $row['last_name'] = $_POST['deceased_lname'] ?? '';
+    $row['date_death'] = $_POST['date_of_death'] ?? '';
+    $row['place_death'] = $_POST['place_of_death'] ?? '';
+    $row['father_name'] = $_POST['parent_father_name'] ?? '';
+    $row['mother_name'] = $_POST['parent_mother_name'] ?? '';
+    $row['citizen'] = $_POST['citizenship'] ?? '';
+    $row['province'] = $_POST['provinces'] ?? '';
+    $row['corpse_disposal_type'] = $_POST['corpse_disposal'] ?? '';
+    $row['manner_of_death'] = $_POST['death_manner'] ?? '';
+    $row['place_of_occurrence'] = $_POST['place_external_cause'] ?? '';
+    $row['if_multi_child_was'] = $_POST['multi_birth_was'] ?? '';
+    $row['main_maternal_disease'] = $_POST['main_maternal'] ?? '';
+    $row['other_maternal_disease'] = $_POST['other_maternal'] ?? '';
+
+    // 3. Rebuild the Age Logic
+    $age_at_death = $_POST['age_at_death'] ?? '';
+    $age_one_month = $_POST['age_one_month'] ?? '';
+    $age_one_day = $_POST['age_one_day'] ?? '';
+    $age_hrs_hrs = $_POST['age_hrs_hrs'] ?? '';
+    $age_hrs_min = $_POST['age_hrs_min'] ?? '';
+
+    $row['age_time_of_death'] = ''; $row['age_type'] = ''; $row['age_day_min'] = '';
+    if ($age_at_death != '' && $age_at_death != 'N/A') { $row['age_time_of_death'] = $age_at_death; $row['age_type'] = 'YEARS'; }
+    elseif ($age_one_month != '' && $age_one_month != 'N/A') { $row['age_time_of_death'] = $age_one_month; $row['age_type'] = 'MONTHS'; $row['age_day_min'] = $age_one_day; }
+    elseif ($age_one_day != '' && $age_one_day != 'N/A') { $row['age_time_of_death'] = $age_one_day; $row['age_type'] = 'DAYS'; }
+    elseif ($age_hrs_hrs != '' && $age_hrs_hrs != 'N/A') { $row['age_time_of_death'] = $age_hrs_hrs; $row['age_type'] = 'HOURS'; $row['age_day_min'] = $age_hrs_min; }
+
+    // 4. Rebuild the Attendant Logic
+    $att = $_POST['attendant'] ?? '';
+    if($att == 'OTHERS' || $att == '') $att = $_POST['attendant5'] ?? '';
+    $row['attendant'] = $att;
+
+    // 5. Rebuild the Cemetery Logic
+    $cem = $_POST['cemetery'] ?? '';
+    $munCem = $_POST['municipalityCemetery'] ?? '';
+    $provCem = $_POST['provinceCemetery'] ?? '';
+    if($munCem != '' || $provCem != '') { $cem = trim($cem . ' | ' . $munCem . ' | ' . $provCem); }
+    $row['cemetery_name_address'] = $cem;
+
+} else {
+    // --- MODE 2: DATABASE PRINT (Uses saved database data) ---
+    require_once 'login_db_death.php';
+    $conn = new mysqli($hn, $un, $pw, $db);
+    if ($conn->connect_error) die($conn->connect_error);
+
+    $reg_no = isset($_REQUEST['no']) ? $_REQUEST['no'] : '';
+
+    $sql = "SELECT * FROM registration_tbl NATURAL JOIN (person_tbl NATURAL JOIN death_cause_eight_days NATURAL JOIN att_rev_tbl NATURAL JOIN corpse_disposal_tbl NATURAL JOIN inf_pre_tbl NATURAL JOIN receive_civil_tbl NATURAL JOIN remarks_tbl NATURAL JOIN death_cause_zero_seven NATURAL JOIN autopsy_tbl NATURAL JOIN embalmer_tbl NATURAL JOIN late_reg_tbl) WHERE no = '$reg_no'";
+    $result = $conn->query($sql);  
+    if (!$result) die ("Database access failed: " . $conn->error);
+
+    if ($result->num_rows > 0) {
+        $row = $result->fetch_assoc();
+    } else {
+        die("SYSTEM ERROR: Record not found in the database.");
+    }
+}
+
+// =========================================================================
+// UNIVERSAL CLEANUP (Runs for both Preview and Database Mode)
+// =========================================================================
+
+// Convert any NULL database values to empty strings to prevent strtoupper() crashes
+foreach($row as $key => $val) {
+    if ($val === null) {
+        $row[$key] = '';
+    }
+    
+    // Hide 'N/A' for the Infant / Medical fields on Page 2
+    $infant_fields = ['mother_age', 'delivery_method', 'pregnancy_length', 'birth_type', 'if_multi_child_was', 'main_disease', 'other_disease', 'main_maternal_disease', 'other_maternal_disease', 'other_relevant'];
+    if (in_array($key, $infant_fields) && strtoupper(trim($row[$key])) === 'N/A') {
+        $row[$key] = ''; // Erase the text so the PDF prints a blank box
+    }
+}
+
+
+// =========================================================================
+// GENERATE THE PDF
+// =========================================================================
+
 $pdf = new FPDI();
 
 $pdf->AddPage('P', array(215.9, 355.6));
-
-//            ***** READ ME ******
-//       ung mga may adju adjustment un ung para maging dyanamic ung placement ng mga cells sa pdf depending sa width or length nung text na ilalagay and usually ideal sya for baranggay and house number as well as sa mga maliliit na textbox
-
-$pageCount = $pdf->setSourceFile('../../death.pdf');
+$pageCount = $pdf->setSourceFile('death.pdf');
 $templateId = $pdf->importPage(1);
+$pdf->useTemplate($templateId);
 
-// // Use the imported template
-// $pdf->useTemplate($templateId);
-
-// Set font and text color
 $pdf->SetFont('Arial', '', 10);
 $pdf->SetTextColor(0, 0, 0);
 
 function fitTextInCell($pdf, $x, $y, $width, $height, $text, $maxFontSize = 10, $minFontSize = 5) {
+  $text = (string)$text; // Safety net: Ensure text is always a string
   $pdf->SetXY($x, $y);
   $fontSize = $maxFontSize;
 
-  // Adjust font size to fit the width
   while ($fontSize >= $minFontSize) {
       $pdf->SetFont('Arial', '', $fontSize);
-      if ($pdf->GetStringWidth($text) <= ($width - 10)) { // Consider a small padding
+      if ($pdf->GetStringWidth($text) <= ($width - 10)) { 
           break;
       }
-      $fontSize -= 4; // Decrease font size by 1 for finer control
+      $fontSize -= 4; 
   }
 
-  // Ensure the font size does not go below the minimum font size
   if ($fontSize < $minFontSize) {
       $fontSize = $minFontSize;
   }
 
-  // Set the font to the final size
   $pdf->SetFont('Arial', '', $fontSize);
-
-  // Set the draw color and draw the cell with the text centered
   $pdf->Cell($width, $height, strtoupper($text), 0, 0, 'C');
   $pdf->SetFont('Arial', '', 10);
 }
+
 // Province
 $pdf->SetXY(35, 27.9); 
 $pdf->Cell(0, 10, strtoupper($row['province']), 0, 1);
@@ -75,7 +154,7 @@ $pdf->SetFont('Arial', '', 10);
 // First Name
 fitTextInCell($pdf, 36, 47.5, 36, 8, $row['first_name']);
 
-// First Name
+// Middle Name
 $pdf->SetXY(79, 47.5); 
 fitTextInCell($pdf, 72, 47.5, 34, 8, $row['middle_name']);
 
@@ -96,10 +175,10 @@ $pdf->SetXY(77, 62);
 $pdf->Cell(0, 10, strtoupper($row['date_birth']), 0, 1);
 
 // Age Type
-if ($row['age_type'] === 'yrs') {
+if ($row['age_type'] === 'yrs' || $row['age_type'] === 'YEARS') {
   $pdf->SetXY(134, 64); 
   $pdf->Cell(0, 10, strtoupper($row['age_time_of_death']), 0, 1);
-} else if ($row['age_type'] === 'under yrs') {
+} else if ($row['age_type'] === 'under yrs' || $row['age_type'] === 'MONTHS' || $row['age_type'] === 'DAYS') {
   $pdf->SetXY(161, 64); 
   $pdf->Cell(0, 10, strtoupper($row['age_time_of_death']), 0, 1);
   $pdf->SetXY(175, 64); 
@@ -113,7 +192,6 @@ if ($row['age_type'] === 'yrs') {
 
 // Death Place
 fitTextInCell($pdf, 24, 75, 129, 8, $row['place_death']);
-// $pdf->Cell(0, 10, strtoupper($row['place_death']), 0, 1);
 
 // Civil Status
 $pdf->SetXY(161, 75); 
@@ -121,7 +199,6 @@ $pdf->Cell(0, 10, strtoupper($row['civil_status']), 0, 1);
 
 // Religion
 fitTextInCell($pdf, 19, 87, 48, 8, $row['religion']);
-// $pdf->Cell(0, 10, strtoupper($row['religion']), 0, 1);
 
 // Citizenship
 $pdf->SetXY(73, 86); 
@@ -181,10 +258,7 @@ if($row['maternal_condition'] === 'pregnant, not in labour') {
 } else if ($row['maternal_condition'] === '42 days to 1 year after delivery') {
   $pdf->SetXY(137.5, 140); 
   $pdf->Cell(0, 10, 'X', 0, 1);
-} //else {
- // $pdf->SetXY(178.5, 139.9); 
- // $pdf->Cell(0, 10, 'X', 0, 1);
-//}
+}
 
 // Manner of Death
 $pdf->SetXY(113, 151.5); 
@@ -215,19 +289,6 @@ if($row['attendant'] == 'Private Physician') {
   $pdf->Cell(0, 10, strtoupper($row['attendant']), 0, 1);
 }
 
-// Date From
-// $dateFrom = $row['date_from'];
-//$timestamp = strtotime($dateFrom);
-//$formattedDate = date('m/d/Y', $timestamp);
-//fitTextInCell($pdf, 160, 171.5, 26, 5, $formattedDate);
-
-// Date To
-//$pdf->SetXY(184, 168.9); 
-//$dateTo = $row['date_to'];
-//$timestampTo = strtotime($dateTo);
-//$formattedDateTo = date('m/d/Y', $timestampTo);
-//fitTextInCell($pdf, 184, 171.5, 26, 5, $formattedDateTo);
-
 $pdf->SetFont('Arial', '', 10);
 if ($row['certify_type'] == 'attended') {
   $pdf->SetXY(179, 179.5); 
@@ -238,10 +299,12 @@ if ($row['certify_type'] == 'attended') {
 }
 
 // death time
-$militaryTime = $row['death_time'];
-$convertedTime = date("g:i a", strtotime($militaryTime));
-$pdf->SetXY(107, 182); 
-fitTextInCell($pdf, 105, 185, 27, 4, $convertedTime);
+$militaryTime = $row['death_time'] ?? '';
+$convertedTime = '';
+if(!empty($militaryTime)) {
+    $convertedTime = date("g:i a", strtotime($militaryTime));
+}
+fitTextInCell($pdf, 125, 180.5, 27, 4, $convertedTime);
 
 $pdf->SetFont('Arial', '', 10);
 // Attendant Name
@@ -287,10 +350,15 @@ $pdf->Cell(0, 10, strtoupper($row['transfer_date_issued']), 0, 1);
 
 // Name of Crematory
 $pdf->SetXY(32.5, 229.5);
-$crematoryAdd = explode(',', $row['cemetery_name_address']);
-fitTextInCell($pdf, 20, 231.5, 60, 6, $crematoryAdd[0]);
-fitTextInCell($pdf, 80, 231.5, 60, 6, $crematoryAdd[1]);
-fitTextInCell($pdf, 140, 231.5, 60, 6, $crematoryAdd[2]);
+$cem_str = $row['cemetery_name_address'] ?? '';
+if (strpos($cem_str, ' | ') !== false) {
+    $crematoryAdd = explode(' | ', $cem_str);
+} else {
+    $crematoryAdd = explode(',', $cem_str); // Fallback
+}
+fitTextInCell($pdf, 20, 231.5, 60, 6, $crematoryAdd[0] ?? '');
+fitTextInCell($pdf, 80, 231.5, 60, 6, $crematoryAdd[1] ?? '');
+fitTextInCell($pdf, 140, 231.5, 60, 6, $crematoryAdd[2] ?? '');
 
 // Informant Name
 $pdf->SetXY(38.5, 252); 
@@ -307,7 +375,6 @@ fitTextInCell($pdf, 33, 266, 77, 4, $row['informant_address']);
 // Informant date
 $pdf->SetXY(33.5, 267.5); 
 $pdf->Cell(0, 10, strtoupper($row['informant_date']), 0, 1);
-
 
 // Prepared Name
 $pdf->SetXY(132.5, 251); 
@@ -351,8 +418,8 @@ $pdf->Cell(0, 10, strtoupper($row['remarks']), 0, 1);
 
 // 2nd Page
 $pdf->AddPage('P', array(215.9, 355.6));
-// $templateId = $pdf->importPage(2);
-// $pdf->useTemplate($templateId);
+$templateId = $pdf->importPage(2);
+$pdf->useTemplate($templateId);
 
 $pdf->SetFont('Arial', '', 12);
 $pdf->SetTextColor(0, 0, 0);
@@ -376,7 +443,6 @@ $pdf->Cell(0, 10, strtoupper($row['birth_type']), 0, 1);
 // If multi child was
 $pdf->SetXY(129.5, 34); 
 $pdf->Cell(0, 10, strtoupper($row['if_multi_child_was']), 0, 1);
-
 
 // Main Disease
 $pdf->SetXY(65.5, 50); 
@@ -524,17 +590,7 @@ fitTextInCell($pdf, 109, 329, 78, 6,$row['administer_address']);
 // administer name
 fitTextInCell($pdf, 22, 329, 78, 6,$row['administer_name']);
 
-
-
-
-
-
-
-
-
-
-$pdf->Output('death_'.$row['first_name'].'_'.$row['last_name'].'.pdf', 'I');
-
-}}
-
+// Set a dynamic filename based on mode
+$filename = ($_SERVER['REQUEST_METHOD'] === 'POST') ? 'PREVIEW_death_' : 'death_';
+$pdf->Output($filename . $row['first_name'] . '_' . $row['last_name'] . '.pdf', 'I');
 ?>

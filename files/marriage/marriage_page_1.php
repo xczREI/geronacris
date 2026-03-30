@@ -11,7 +11,6 @@
 ?>
 </datalist>
 
-<!-- Municipality list -->
 <datalist id="municipality_list">
 <?php 
 	require 'mycon.php';
@@ -24,7 +23,6 @@
 ?>
 </datalist>
 
-<!-- Country list -->
 <datalist id="country_list">
 	<?php 
 		require 'mycon.php';
@@ -38,11 +36,8 @@
 	?>
 </datalist>
 <div class="ctf-birth pt-3" style="width:960px;margin: auto;">
-	<!--birth form-->
-		<div class="form" style="padding:0 15px 0 15px;">
-	 			<!-- Header -->
-	  			<div class="row"><!--grid of header-->
-		  			<div class="col-9" style="border: 2px solid #f30956;">
+	<div class="form" style="padding:0 15px 0 15px;">
+	 			<div class="row"><div class="col-9" style="border: 2px solid #f30956;">
 					  	<p class="m1">Municipal Form No. 97</p>
 					  	<p class="m1">&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;<span align="center" class="m2" style="font-size: 15px;">Republic of the Philippines</span></p>
 					  	<p align="center" class="m2" style="font-size: 16px;">OFFICE OF THE CIVIL REGISTRAR GENERAL</p>
@@ -58,16 +53,12 @@
 							<input type="text" class="pageNo form-control form-control-sm" name="page_no" id="pageno" >
 							<input type="hidden" class="form-control form-control-sm" name="page_no1" id="pageno1">
 
-						<!-- Hidden Text -->
-							<input type="hidden" name="time" id="hrs" value="">
+						<input type="hidden" name="time" id="hrs" value="">
 							<input type="hidden" name="date" id="date" value="">
 							<input type="hidden" name="emp_name" id="emp_name" value="<?php echo $_SESSION['lastname']; ?>">
 						</div>
 		  			</div>
-	  			</div><!--close row-->
-	  		<!-- Registry Info -->
-			  	<div class="row"><!--row of city-->
-				  	<div class="col-9" style="border: 2px solid #f30956; border-top: none; padding-left:0;">
+	  			</div><div class="row"><div class="col-9" style="border: 2px solid #f30956; border-top: none; padding-left:0;">
 				  		<div class="input-group mt-1">
 					  		<div class="input-group-prepend">
 					      		<span class="input-group-text" style="padding:0;border:none; background-color:white; color:black;">&nbsp;Province&nbsp;&emsp;&emsp;&emsp;&emsp;</span>
@@ -113,9 +104,7 @@
 					  		<div id="error"></div>
 						</div>
 				  	</div>
-			  	</div><!--close row-->
-			<!-- Person Info -->
-	  			<div class="row">
+			  	</div><div class="row">
 		  			<div class="col" style="border: 2px solid #f30956; border-top: none;">
 			  			<div class="row">
 			  				<div class="col-2" style="border-right: 1px solid #f30956;padding-top:20px;">
@@ -131,15 +120,15 @@
 			  						<div class="col">
 					  		  			<h6 style="color:#f30956;font-size:12px;">(First) 
 										<div class="custom-control custom-checkbox custom-control-inline" style="padding: 0; width: 89%;margin-right: 0;">
-											<input type="text" class="form-control form-control-sm h-inp" id="h_fname" name="husband_fname">
+											<input type="text" class="form-control form-control-sm h-inp" id="h_fname" name="husband_fname" style="text-align:center;">
 										</div>
 										(Middle) 
 										<div class="custom-control custom-checkbox custom-control-inline mt-1" style="padding: 0; width: 84%;margin-right: 0;">
-											<input type="text" class="form-control form-control-sm h-inp" id="h_mname" name="husband_mname" >
+											<input type="text" class="form-control form-control-sm h-inp" id="h_mname" name="husband_mname" style="text-align:center;">
 										</div>
 										(Last) 
 										<div class="custom-control custom-checkbox custom-control-inline mt-1" style="padding: 0; width: 89%;margin-right: 0;">
-											<input type="text" class="form-control form-control-sm h-inp" id="h_lname" name="husband_lname">
+											<input type="text" class="form-control form-control-sm h-inp" id="h_lname" name="husband_lname" style="text-align:center;">
 										</div>
 										</h6>
 			  						</div>
@@ -155,22 +144,21 @@
 			  						<div class="col">
 					  		  			<h6 style="color:#f30956;font-size:12px;">(First) 
 										<div class="custom-control custom-checkbox custom-control-inline" style="padding: 0; width: 89%;margin-right: 0;">
-											<input type="text" class="form-control form-control-sm" id="w_fname" name="wife_fname" >
+											<input type="text" class="form-control form-control-sm" id="w_fname" name="wife_fname" style="text-align:center;">
 										</div>
 										(Middle) 
 										<div class="custom-control custom-checkbox custom-control-inline mt-1" style="padding: 0; width: 84%;margin-right: 0;">
-											<input type="text" class="form-control form-control-sm" id="w_mname" name="wife_mname" >
+											<input type="text" class="form-control form-control-sm" id="w_mname" name="wife_mname" style="text-align:center;">
 										</div>
 										(Last) 
 										<div class="custom-control custom-checkbox custom-control-inline mt-1" style="padding: 0; width: 89%;margin-right: 0;">
-											<input type="text" class="form-control form-control-sm" id="w_lname" name="wife_lname" >
+											<input type="text" class="form-control form-control-sm" id="w_lname" name="wife_lname" style="text-align:center;">
 										</div>
 										</h6>
 			  						</div>
 			  					</div>
 					  		</div>
-			  			</div><!--close row-->
-			  			<div class="row" style="border-top: 2px solid #f30956;">
+			  			</div><div class="row" style="border-top: 2px solid #f30956;">
 			  				<div class="col-2" style="border-right: 1px solid #f30956;">
 			  		  			<h6 style="padding-top:2px; font-size:14px;">2a.&nbsp;Date of Birth<br>
 			  		  			2b.&nbsp;Age</h6>
@@ -180,7 +168,7 @@
 			  						<div class="col-2 pr-0">
 							  		  	<h6 align="center" style="color:#f30956;;font-size:12px;">(Day)</h6>
 							  		  	<div class="input-group">
-									    	<input type="text" class="form-control form-control-sm" id="husband_bday" name="husband_bday" >
+									    	<input type="text" class="form-control form-control-sm" id="husband_bday" name="husband_bday" style="text-align:center;">
 									  	</div>
 							  		</div>
 							  		<div class="col-4 pr-0">
@@ -206,13 +194,13 @@
 							  		<div class="col-3" style="border-right: 1px solid #f30956;">
 							  		  	<h6 align="center" style="color:#f30956;;font-size:12px;">(Year)</h6>
 							  		  	<div class="input-group">
-									    	<input type="text" class="form-control form-control-sm" placeholder="" maxlength="5" name="husband_byear" >
+									    	<input type="text" class="form-control form-control-sm" placeholder="" maxlength="5" name="husband_byear" style="text-align:center;">
 									  	</div>
 							  		</div>
 							  		<div class="col-3">
 							  		  	<h6 align="center" style="color:#f30956;;font-size:12px;">(Age)</h6>
 							  		  	<div class="input-group">
-									    	<input type="text" class="form-control form-control-sm" placeholder="" name="husband_age" >
+									    	<input type="text" class="form-control form-control-sm" placeholder="" name="husband_age" style="text-align:center;">
 									  	</div>
 							  		</div>
 			  					</div>
@@ -222,7 +210,7 @@
 			  						<div class="col-2 pr-0">
 							  		  	<h6 align="center" style="color:#f30956;;font-size:12px;">(Day)</h6>
 							  		  	<div class="input-group">
-									    	<input type="text" class="form-control form-control-sm" id="wife_bday" name="wife_bday" >
+									    	<input type="text" class="form-control form-control-sm" id="wife_bday" name="wife_bday" style="text-align:center;">
 									  	</div>
 							  		</div>
 							  		<div class="col-4 pr-0">
@@ -248,19 +236,18 @@
 							  		<div class="col-3" style="border-right: 1px solid #f30956;">
 							  		  	<h6 align="center" style="color:#f30956;;font-size:12px;">(Year)</h6>
 							  		  	<div class="input-group">
-									    	<input type="text" class="form-control form-control-sm" placeholder="" maxlength="5" name="wife_byear" >
+									    	<input type="text" class="form-control form-control-sm" placeholder="" maxlength="5" name="wife_byear" style="text-align:center;">
 									  	</div>
 							  		</div>
 							  		<div class="col-3">
 							  		  	<h6 align="center" style="color:#f30956;;font-size:12px;">(Age)</h6>
 							  		  	<div class="input-group">
-									    	<input type="text" class="form-control form-control-sm" placeholder="" name="wife_age" >
+									    	<input type="text" class="form-control form-control-sm" placeholder="" name="wife_age" style="text-align:center;">
 									  	</div>
 							  		</div>
 			  					</div>
 					  		</div>
-			  			</div><!--close row-->
-			  			<div class="row" style="border-top: 2px solid #f30956;">
+			  			</div><div class="row" style="border-top: 2px solid #f30956;">
 			  				<div class="col-2" style="border-right: 1px solid #f30956;">
 			  		  			<h6 style="padding-top:2px; font-size:14px;">3.&nbsp;Place of Birth</h6>
 			  				</div>
@@ -269,9 +256,9 @@
 			  						<div class="col">
 							  		  	<h6 style="color:#f30956;;font-size:12px;">&emsp;(City/Municipality)&emsp;&emsp;&emsp;&emsp;(Province)&emsp;&emsp;&emsp;&emsp;&emsp;(Country)</h6>
 							  		  	<div class="input-group">
-									    	<input type="text" class="form-control form-control-sm" placeholder="" name="husband_bplace" list='municipality_list'>
-											<input type="text" class="form-control form-control-sm" placeholder="" name="husband_bplaceProvince" list='province_list'>
-											<input type="text" class="form-control form-control-sm" placeholder="" name="husband_bplaceCountry" list='country_list'>
+									    	<input type="text" class="form-control form-control-sm" placeholder="" name="husband_bplace" list='municipality_list'style="text-align:center;">
+											<input type="text" class="form-control form-control-sm" placeholder="" name="husband_bplaceProvince" list='province_list' style="text-align:center;">
+											<input type="text" class="form-control form-control-sm" placeholder="" name="husband_bplaceCountry" list='country_list' style="text-align:center;">
 									  	</div>
 							  		</div>
 			  					</div>
@@ -281,15 +268,14 @@
 			  						<div class="col">
 							  		  	<h6 style="color:#f30956;;font-size:12px;">&emsp;(City/Municipality)&emsp;&emsp;&emsp;&emsp;(Province)&emsp;&emsp;&emsp;&emsp;&emsp;(Country)</h6>
 							  		  	<div class="input-group">
-									    	<input type="text" class="form-control form-control-sm" placeholder="" name="wife_bplace"  list='municipality_list'>
-											<input type="text" class="form-control form-control-sm" placeholder="" name="wife_bplaceProvince"  list='province_list'>
-											<input type="text" class="form-control form-control-sm" placeholder="" name="wife_bplaceCountry"  list='country_list'>
+									    	<input type="text" class="form-control form-control-sm" placeholder="" name="wife_bplace"  list='municipality_list' style="text-align:center;">
+											<input type="text" class="form-control form-control-sm" placeholder="" name="wife_bplaceProvince"  list='province_list' style="text-align:center;">
+											<input type="text" class="form-control form-control-sm" placeholder="" name="wife_bplaceCountry"  list='country_list' style="text-align:center;">
 									  	</div>
 							  		</div>
 			  					</div>
 					  		</div>
-			  			</div><!--close row-->
-			  			<div class="row" style="border-top: 2px solid #f30956;">
+			  			</div><div class="row" style="border-top: 2px solid #f30956;">
 			  				<div class="col-2" style="border-right: 1px solid #f30956;">
 			  		  			<h6 style="padding-top:2px; font-size:14px;">4a.&nbsp;Sex<br>
 			  		  			4b.&nbsp;Citizenship</h6>
@@ -300,15 +286,15 @@
 							  		  	<div class="input-group">
 							  		  		<select name="husband_sex" class="form-control form-control-sm">
 												<option style="display:none;"></option>
-												<option value="Male" selected style="font-size:15px;">Male</option>
-												<option value="Female" style="font-size:15px;" disabled="">Female</option>
+												<option value="Male" selected style="font-size:15px;" style="text-align:center;">Male</option>
+												<option value="Female" style="font-size:15px;" disabled="" style="text-align:center;">Female</option>
 											</select>
 									  	</div>
 							  		</div>
 							  		<div class="col-7">
 							  		  	<h6 style="color:#f30956;;font-size:12px;">(Citizenship)</h6>
 							  		  	<div class="input-group" style="padding-top: 2px;">
-									    	<select class="form-control form-control-sm" placeholder="" name="husband_citizen">
+									    	<select class="form-control form-control-sm" placeholder="" name="husband_citizen" style="text-align:center;">
 											<option selected style="display:none;"></option>
 											<?php
 												require 'mycon.php';
@@ -331,16 +317,16 @@
 			  						<div class="col-5" style="border-right: 1px solid #f30956;"><br>
 							  		  	<div class="input-group">
 							  		  		<select name="wife_sex" class="form-control form-control-sm">
-												<optionstyle="display:none;"></optionstyle=>
-												<option value="Male" style="font-size:15px;" disabled="">Male</option>
-												<option value="Female"  selected  style="font-size:15px;">Female</option>
+												<option style="display:none;"></option>
+												<option value="Male" style="font-size:15px;" disabled="" style="text-align:center;">Male</option>
+												<option value="Female" selected style="font-size:15px;" style="text-align:center;">Female</option>
 											</select>
 									  	</div>
 							  		</div>
 							  		<div class="col-7">
 							  		  	<h6 style="color:#f30956;;font-size:12px;">(Citizenship)</h6>
 							  		  	<div class="input-group" style="padding-top: 2px;">
-									    	<select class="form-control form-control-sm" placeholder="" name="wife_citizen">
+									    	<select class="form-control form-control-sm" placeholder="" name="wife_citizen" style="text-align:center;">
 											<option selected style="display:none;"></option>
 											<?php
 												require 'mycon.php';
@@ -358,8 +344,7 @@
 							  		</div>
 			  					</div>
 					  		</div>
-			  			</div><!--close row-->
-			  			<div class="row" style="border-top: 2px solid #f30956;">
+			  			</div><div class="row" style="border-top: 2px solid #f30956;">
 			  				<div class="col-2" style="border-right: 1px solid #f30956;">
 			  		  			<h6 style="padding-top:2px; font-size:14px;">5.&nbsp;Residence</h6>
 			  				</div>
@@ -368,7 +353,7 @@
 			  						<div class="col">
 			  							<h6 align="center" style="color:#f30956;;font-size:12px;">(House No.,St.,Barangay, City/Municipality, Province, Country)</h6>
 							  		  	<div class="input-group">
-									    	<input type="text" class="form-control form-control-sm" placeholder="" name="husband_residence">
+									    	<input type="text" class="form-control form-control-sm" placeholder="" name="husband_residence" style="text-align:center;">
 									  	</div>
 							  		</div>
 			  					</div>
@@ -378,13 +363,12 @@
 			  						<div class="col">
 			  							<h6 align="center" style="color:#f30956;;font-size:12px;">(House No.,St.,Barangay, City/Municipality, Province, Country)</h6>
 							  		  	<div class="input-group">
-									    	<input type="text" class="form-control form-control-sm" placeholder="" name="wife_residence">
+									    	<input type="text" class="form-control form-control-sm" placeholder="" name="wife_residence" style="text-align:center;">
 									  	</div>
 							  		</div>
 			  					</div>
 					  		</div>
-			  			</div><!--close row-->
-			  			<div class="row" style="border-top: 2px solid #f30956;">
+			  			</div><div class="row" style="border-top: 2px solid #f30956;">
 			  				<div class="col-2" style="border-right: 1px solid #f30956;">
 			  		  			<h6 style="padding-top:2px; font-size:14px;">6.&nbsp;Religion/<br>&emsp;Religious Sect</h6>
 			  				</div>
@@ -392,7 +376,7 @@
 			  					<div class="row">
 			  						<div class="col">
 							  		  	<div class="input-group mt-2">
-									    	<select class="form-control form-control-sm text-uppercase" name="husband_sect"  >
+									    	<select class="form-control form-control-sm text-uppercase" name="husband_sect" style="text-align:center;">
 											<option selected style="display:none;"></option>
 											<?php 
 											require 'mycon.php';
@@ -414,7 +398,7 @@
 					  		  	<div class="row">
 			  						<div class="col">
 							  		  	<div class="input-group mt-2">
-									    	<select class="form-control form-control-sm text-uppercase" name="wife_sect"  >
+									    	<select class="form-control form-control-sm text-uppercase" name="wife_sect" style="text-align:center;">
 											<option selected style="display:none;"></option>
 											<?php 
 											require 'mycon.php';
@@ -432,8 +416,7 @@
 							  		</div>
 			  					</div>
 					  		</div>
-			  			</div><!--close row-->
-			  			<div class="row" style="border-top: 2px solid #f30956;">
+			  			</div><div class="row" style="border-top: 2px solid #f30956;">
 			  				<div class="col-2" style="border-right: 1px solid #f30956;">
 			  		  			<h6 style="padding-top:2px; font-size:14px;">7.&nbsp;Civil Status</h6>
 			  				</div>
@@ -441,7 +424,7 @@
 			  					<div class="row">
 			  						<div class="col">
 							  		  	<div class="input-group mt-2">
-									    	<input type="text" class="form-control form-control-sm" placeholder="" name="husband_cstatus" >
+									    	<input type="text" class="form-control form-control-sm" placeholder="" name="husband_cstatus" style="text-align:center;">
 									  	</div>
 							  		</div>
 			  					</div>
@@ -450,13 +433,12 @@
 					  		  	<div class="row">
 			  						<div class="col">
 							  		  	<div class="input-group mt-2">
-									    	<input type="text" class="form-control form-control-sm" placeholder="" name="wife_cstatus" >
+									    	<input type="text" class="form-control form-control-sm" placeholder="" name="wife_cstatus" style="text-align:center;">
 									  	</div>
 							  		</div>
 			  					</div>
 					  		</div>
-			  			</div><!--close row-->
-			  			<div class="row" style="border-top: 2px solid #f30956;">
+			  			</div><div class="row" style="border-top: 2px solid #f30956;">
 			  				<div class="col-2" style="border-right: 1px solid #f30956;">
 			  		  			<h6 style="padding-top:2px; font-size:14px;">8.&nbsp;Name of<br>&emsp;Father</h6>
 			  				</div>
@@ -465,9 +447,9 @@
 			  						<div class="col">
 							  		  	<h6 style="color:#f30956;;font-size:12px;">&emsp;&emsp;&emsp;&emsp;(First)&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;(Middle)&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;(Last)</h6>
 							  		  	<div class="input-group">
-									    	<input type="text" class="form-control form-control-sm" placeholder="" id="h_fa_fname" name="h_fa_name">
-											<input type="text" class="form-control form-control-sm" placeholder="" id="h_fa_mname" name="h_fa_nameM">
-											<input type="text" class="form-control form-control-sm" placeholder="" id="h_fa_lname" name="h_fa_nameL">
+									    	<input type="text" class="form-control form-control-sm" placeholder="" id="h_fa_fname" name="h_fa_name" style="text-align:center;">
+											<input type="text" class="form-control form-control-sm" placeholder="" id="h_fa_mname" name="h_fa_nameM" style="text-align:center;">
+											<input type="text" class="form-control form-control-sm" placeholder="" id="h_fa_lname" name="h_fa_nameL" style="text-align:center;">
 									  	</div>
 							  		</div>
 			  					</div>
@@ -477,15 +459,14 @@
 			  						<div class="col">
 							  		  	<h6 style="color:#f30956;;font-size:12px;">&emsp;&emsp;&emsp;&emsp;(First)&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;(Middle)&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;(Last)</h6>
 							  		  	<div class="input-group">
-									    	<input type="text" class="form-control form-control-sm" placeholder="" id="w_fa_fname" name="w_fa_name">
-											<input type="text" class="form-control form-control-sm" placeholder="" id="w_fa_mname" name="w_fa_nameM">
-											<input type="text" class="form-control form-control-sm" placeholder="" id="w_fa_lname" name="w_fa_nameL">
+									    	<input type="text" class="form-control form-control-sm" placeholder="" id="w_fa_fname" name="w_fa_name" style="text-align:center;">
+											<input type="text" class="form-control form-control-sm" placeholder="" id="w_fa_mname" name="w_fa_nameM" style="text-align:center;">
+											<input type="text" class="form-control form-control-sm" placeholder="" id="w_fa_lname" name="w_fa_nameL" style="text-align:center;">
 									  	</div>
 							  		</div>
 			  					</div>
 					  		</div>
-			  			</div><!--close row-->
-			  			<div class="row" style="border-top: 2px solid #f30956;">
+			  			</div><div class="row" style="border-top: 2px solid #f30956;">
 			  				<div class="col-2" style="border-right: 1px solid #f30956;">
 			  		  			<h6 style="padding-top:2px; font-size:14px;">9.&nbsp;Citizenship</h6>
 			  				</div>
@@ -493,7 +474,7 @@
 			  					<div class="row">
 			  						<div class="col">
 							  		  	<div class="input-group mt-2">
-									    	<select class="form-control form-control-sm" placeholder="" name="h_father_citizen">
+									    	<select class="form-control form-control-sm" placeholder="" name="h_father_citizen" style="text-align:center;">
 											<option selected style="display:none;"></option>
 											<?php
 												require 'mycon.php';
@@ -515,7 +496,7 @@
 					  		  	<div class="row">
 			  						<div class="col">
 							  		  	<div class="input-group mt-2">
-									    	<select class="form-control form-control-sm" placeholder="" name="w_father_citizen">
+									    	<select class="form-control form-control-sm" placeholder="" name="w_father_citizen" style="text-align:center;">
 											<option selected style="display:none;"></option>
 											<?php
 												require 'mycon.php';
@@ -533,8 +514,7 @@
 							  		</div>
 			  					</div>
 					  		</div>
-			  			</div><!--close row-->
-			  			<div class="row" style="border-top: 2px solid #f30956;">
+			  			</div><div class="row" style="border-top: 2px solid #f30956;">
 			  				<div class="col-2" style="border-right: 1px solid #f30956;">
 			  		  			<h6 style="padding-top:2px; font-size:14px;">10.&nbsp;Maiden Name <br>&emsp;of Mother</h6>
 			  				</div>
@@ -543,9 +523,9 @@
 			  						<div class="col">
 							  		  	<h6 style="color:#f30956;;font-size:12px;">&emsp;&emsp;&emsp;&emsp;(First)&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;(Middle)&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;(Last)</h6>
 							  		  	<div class="input-group">
-									    	<input type="text" class="form-control form-control-sm" placeholder="" id="h_mo_fname" name="h_mo_name">
-											<input type="text" class="form-control form-control-sm" placeholder="" id="h_mo_mname" name="h_mo_nameM">
-											<input type="text" class="form-control form-control-sm" placeholder="" id="h_mo_lname" name="h_mo_nameL">
+									    	<input type="text" class="form-control form-control-sm" placeholder="" id="h_mo_fname" name="h_mo_name" style="text-align:center;">
+											<input type="text" class="form-control form-control-sm" placeholder="" id="h_mo_mname" name="h_mo_nameM" style="text-align:center;">
+											<input type="text" class="form-control form-control-sm" placeholder="" id="h_mo_lname" name="h_mo_nameL" style="text-align:center;">
 									  	</div>
 							  		</div>
 			  					</div>
@@ -555,15 +535,14 @@
 			  						<div class="col">
 							  		  	<h6 style="color:#f30956;;font-size:12px;">&emsp;&emsp;&emsp;&emsp;(First)&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;(Middle)&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;(Last)</h6>
 							  		  	<div class="input-group">
-									    	<input type="text" class="form-control form-control-sm" placeholder="" id="w_mo_fname" name="w_mo_name">
-											<input type="text" class="form-control form-control-sm" placeholder="" id="w_mo_mname" name="w_mo_nameM">
-											<input type="text" class="form-control form-control-sm" placeholder="" id="w_mo_lname" name="w_mo_nameL">
+									    	<input type="text" class="form-control form-control-sm" placeholder="" id="w_mo_fname" name="w_mo_name" style="text-align:center;">
+											<input type="text" class="form-control form-control-sm" placeholder="" id="w_mo_mname" name="w_mo_nameM" style="text-align:center;">
+											<input type="text" class="form-control form-control-sm" placeholder="" id="w_mo_lname" name="w_mo_nameL" style="text-align:center;">
 									  	</div>
 							  		</div>
 			  					</div>
 					  		</div>
-			  			</div><!--close row-->
-			  			<div class="row" style="border-top: 2px solid #f30956;">
+			  			</div><div class="row" style="border-top: 2px solid #f30956;">
 			  				<div class="col-2" style="border-right: 1px solid #f30956;">
 			  		  			<h6 style="padding-top:2px; font-size:14px;">11.&nbsp;Citizenship</h6>
 			  				</div>
@@ -571,7 +550,7 @@
 			  					<div class="row">
 			  						<div class="col">
 							  		  	<div class="input-group mt-2">
-									    	<select class="form-control form-control-sm" placeholder="" name="h_mother_citizen">
+									    	<select class="form-control form-control-sm" placeholder="" name="h_mother_citizen" style="text-align:center;">
 											<option selected style="display:none;"></option>
 											<?php
 												require 'mycon.php';
@@ -593,7 +572,7 @@
 					  		  	<div class="row">
 			  						<div class="col">
 							  		  	<div class="input-group mt-2">
-									    	<select class="form-control form-control-sm" placeholder="" name="w_mother_citizen">
+									    	<select class="form-control form-control-sm" placeholder="" name="w_mother_citizen" style="text-align:center;">
 											<option selected style="display:none;"></option>
 											<?php
 												require 'mycon.php';
@@ -611,8 +590,7 @@
 							  		</div>
 			  					</div>
 					  		</div>
-					  	</div><!--close row-->
-					  	<div class="row" style="border-top: 2px solid #f30956;">
+					  	</div><div class="row" style="border-top: 2px solid #f30956;">
 			  				<div class="col-2" style="border-right: 1px solid #f30956;">
 			  		  			<h6 style="padding-top:1px;font-size:14px;line-height:0.7;">12.&nbsp;<span style="font-size:10px;">Name of Person/ <br>&emsp;&emsp;Wali Who Gave<br>&emsp;&emsp;Consent or<br>&emsp;&emsp;Advice</span></h6>
 			  				</div>
@@ -621,9 +599,9 @@
 			  						<div class="col">
 							  		  	<h6 style="color:#f30956;;font-size:12px;">&emsp;&emsp;&emsp;&emsp;(First)&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;(Middle)&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;(Last)</h6>
 							  		  	<div class="input-group">
-									    	<input type="text" class="form-control form-control-sm" placeholder="" name="h_person_name">
-											<input type="text" class="form-control form-control-sm" placeholder="" name="h_person_nameM">
-											<input type="text" class="form-control form-control-sm" placeholder="" name="h_person_nameL">
+									    	<input type="text" class="form-control form-control-sm" placeholder="" name="h_person_name" style="text-align:center;">
+											<input type="text" class="form-control form-control-sm" placeholder="" name="h_person_nameM" style="text-align:center;">
+											<input type="text" class="form-control form-control-sm" placeholder="" name="h_person_nameL" style="text-align:center;">
 									  	</div>
 							  		</div>
 			  					</div>
@@ -633,15 +611,14 @@
 			  						<div class="col">
 							  		  	<h6 style="color:#f30956;;font-size:12px;">&emsp;&emsp;&emsp;&emsp;(First)&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;(Middle)&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;(Last)</h6>
 							  		  	<div class="input-group">
-									    	<input type="text" class="form-control form-control-sm" placeholder="" name="w_person_name">
-											<input type="text" class="form-control form-control-sm" placeholder="" name="w_person_nameM">
-											<input type="text" class="form-control form-control-sm" placeholder="" name="w_person_nameL">
+									    	<input type="text" class="form-control form-control-sm" placeholder="" name="w_person_name" style="text-align:center;">
+											<input type="text" class="form-control form-control-sm" placeholder="" name="w_person_nameM" style="text-align:center;">
+											<input type="text" class="form-control form-control-sm" placeholder="" name="w_person_nameL" style="text-align:center;">
 									  	</div>
 							  		</div>
 			  					</div>
 					  		</div>
-			  			</div><!--close row-->
-			  			<div class="row" style="border-top: 2px solid #f30956;">
+			  			</div><div class="row" style="border-top: 2px solid #f30956;">
 			  				<div class="col-2" style="border-right: 1px solid #f30956;">
 			  		  			<h6 style="padding-top:2px; font-size:14px;">13.&nbsp;Relationship</h6>
 			  				</div>
@@ -649,7 +626,7 @@
 			  					<div class="row">
 			  						<div class="col">
 							  		  	<div class="input-group mt-2">
-									    	<input type="text" class="form-control form-control-sm" placeholder="" name="h_person_rel" >
+									    	<input type="text" class="form-control form-control-sm" placeholder="" name="h_person_rel" style="text-align:center;">
 									  	</div>
 							  		</div>
 			  					</div>
@@ -658,13 +635,12 @@
 					  		  	<div class="row">
 			  						<div class="col">
 							  		  	<div class="input-group mt-2">
-									    	<input type="text" class="form-control form-control-sm" placeholder="" name="w_person_rel" >
+									    	<input type="text" class="form-control form-control-sm" placeholder="" name="w_person_rel" style="text-align:center;">
 									  	</div>
 							  		</div>
 			  					</div>
 					  		</div>
-					  	</div><!--close row-->
-					  	<div class="row" style="border-top: 2px solid #f30956;">
+					  	</div><div class="row" style="border-top: 2px solid #f30956;">
 			  				<div class="col-2" style="border-right: 1px solid #f30956;">
 			  		  			<h6 style="padding-top:2px; font-size:14px;">14.&nbsp;Residence</h6>
 			  				</div>
@@ -673,7 +649,7 @@
 			  						<div class="col">
 			  							<h6 align="center" style="color:#f30956;;font-size:12px;">(House No.,St.,Barangay, City/Municipality, Province, Country)</h6>
 							  		  	<div class="input-group">
-									    	<input type="text" class="form-control form-control-sm" placeholder="" name="h_person_residence">
+									    	<input type="text" class="form-control form-control-sm" placeholder="" name="h_person_residence" style="text-align:center;">
 									  	</div>
 							  		</div>
 			  					</div>
@@ -683,39 +659,32 @@
 			  						<div class="col">
 			  							<h6 align="center" style="color:#f30956;;font-size:12px;">(House No.,St.,Barangay, City/Municipality, Province, Country)</h6>
 							  		  	<div class="input-group">
-									    	<input type="text" class="form-control form-control-sm" placeholder="" name="w_person_residence">
+									    	<input type="text" class="form-control form-control-sm" placeholder="" name="w_person_residence" style="text-align:center;">
 									  	</div>
 							  		</div>
 			  					</div>
 					  		</div>
-			  			</div><!--close row-->
-
-	 				</div><!--close col-->
-    			</div><!--close row-->
-    		<!-- Med Cerf Info -->
-    			<div class="row">
+			  			</div></div></div><div class="row">
 		  			<div class="col" style="border: 2px solid #f30956; border-top: none;">
 			  			<div class="row">
 			  				<div class="col">
 			  		  			<h6 style="padding-top:2px;font-size: 14px;">15.&nbsp;Place of Marriage:
 			  		  			<div class="custom-control custom-checkbox custom-control-inline" style="padding: 0; width:44%;margin-right: 0;">
-									<input type="text" class="form-control form-control-sm" name="mrg_brgy" style="border-bottom: 1px dotted #f30956;">
+									<input type="text" class="form-control form-control-sm" name="mrg_brgy" style="border-bottom: 1px dotted #f30956;text-align:center;">
 								</div>
 								<div class="custom-control custom-checkbox custom-control-inline" style="padding: 0; width:20%;margin-right: 0;">
-									<input type="text" class="form-control form-control-sm" name="mrg_city" style="border-bottom: 1px dotted #f30956;"  list='municipality_list'>
+									<input type="text" class="form-control form-control-sm" name="mrg_city" style="border-bottom: 1px dotted #f30956;"  list='municipality_list' style="text-align:center;">
 								</div>
 								<div class="custom-control custom-checkbox custom-control-inline" style="padding: 0; width:20%;margin-right: 0;">
-									<input type="text" class="form-control form-control-sm" name="mrg_province" style="border-bottom: 1px dotted #f30956;"  list='province_list' >
+									<input type="text" class="form-control form-control-sm" name="mrg_province" style="border-bottom: 1px dotted #f30956;"  list='province_list' style="text-align:center;">
 								</div>
 			  		  			</h6>
 			  				</div>
-			  			</div><!--close row-->
-			  			<div class="row">
+			  			</div><div class="row">
 			  				<div class="col">
 			  		  			<h6 style="font-size: 10.5px;line-height: 8.9px;">&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;(Office of the /House of/Barangay of/Church of/Mosque of)&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;(City/Municipal)&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;(Province)</h6>
 			  				</div>
-			  			</div><!--close row-->
-			  			<div class="row">
+			  			</div><div class="row">
 			  				<div class="col">
 			  		  			<h6 style="padding-top:2px;font-size: 14px;">16.&nbsp;Date of Marriage:
 			  		  			<div class="custom-control custom-checkbox custom-control-inline" style="padding: 0; width:40%;margin-right: 0;">
@@ -730,24 +699,22 @@
 								am/pm
 								</h6>
 			  				</div>
-			  			</div><!--close row-->
-			  			<div class="row">
+			  			</div><div class="row">
 			  				<div class="col">
 			  		  			<h6 style="font-size:10.5px; line-height:8.9px; color:#f30956;">&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;(Day)&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;(Month)&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;(Year)</h6>
 			  				</div>
-			  			</div><!--close row-->
-			  			<div class="row">
+			  			</div><div class="row">
 			  				<div class="col">
 			  		  			<h6 style="padding-top:2px; font-size:14px;">18.&nbsp;CERTIFICATION OF THE CONTRACTING PARTIES:</h6>
 
 			  		  			<h6 style="font-size:13px;">&emsp;&emsp;&emsp;&emsp;THIS IS TO CERTIFY: That I,
 			  		  			<div class="custom-control custom-control-inline" style="padding:0; width:30%; margin-right:0;">
-									<input type="text" class="form-control form-control-sm" id="husband_name" name="husband_name" style="border-bottom: 1px dotted #f30956;" readonly>
+									<input type="text" class="form-control form-control-sm" id="husband_name" name="husband_name" style="border-bottom: 1px dotted #f30956; text-align:center;" readonly>
 									
 								</div>
 								and I,
 								<div class="custom-control custom-control-inline" style="padding: 0; width: 30%;margin-right: 0;">
-									<input type="text" class="form-control form-control-sm" id="wife_name" name="wife_name" style="border-bottom: 1px dotted #f30956;" readonly>
+									<input type="text" class="form-control form-control-sm" id="wife_name" name="wife_name" style="border-bottom: 1px dotted #f30956;text-align:center;" readonly>
 								</div>
 								born of <br>
 								legal age, of our free will and accord, and in the presence of the person solemnizing this marriage and of the witnesses named below, take each other <br>as husband and wife and certifying further that we:
@@ -763,20 +730,19 @@
 								into a marriage settlement.<br>
 								&emsp;&emsp;&emsp;&emsp;IN WITNESS WHEREOF, we signed /marked with our fingerprint this certificate in quadruplicate this
 			  		  			<div class="custom-control custom-control-inline" style="padding:0; width:7%; margin-right:0;">
-									<input type="text" class="form-control form-control-sm" id="mrg_days" name="mrg_days" style="border-bottom: 1px dotted #f30956;" >
+									<input type="text" class="form-control form-control-sm" id="mrg_days" name="mrg_days" style="border-bottom: 1px dotted #f30956; text-align:center;" >
 								</div>
 								day of
 								<div class="custom-control custom-control-inline" style="padding:0; width:10%;margin-right:0;">
-									<input type="text" class="form-control form-control-sm" id="mrg_months" name="mrg_months" style="border-bottom: 1px dotted #f30956;" >
+									<input type="text" class="form-control form-control-sm" id="mrg_months" name="mrg_months" style="border-bottom: 1px dotted #f30956;text-align:center;" >
 								</div>
 								,
 								<div class="custom-control custom-control-inline" style="padding:0; width:7%;margin-right:0;">
-									<input type="text" class="form-control form-control-sm" id="mrg_years" name="mrg_years" maxlength="4" style="border-bottom: 1px dotted #f30956;" >
+									<input type="text" class="form-control form-control-sm" id="mrg_years" name="mrg_years" maxlength="4" style="border-bottom: 1px dotted #f30956; text-align:center;" >
 								</div>
 								</h6>
 			  				</div>
-			  			</div><!--close row-->
-			  			<div class="row">
+			  			</div><div class="row">
 							<div class="col-6" align="center">
 								<input type="text" class="form-control form-control-sm" style="background-color:white; border-bottom: 1px dotted #f30956; border-radius:0; text-align:center;" id="father_sign" name="" disabled="">
 								<h6 style="font-size:14px;">(Signature of Husband)</h6>
@@ -800,15 +766,15 @@
 		      						<label class="custom-control-label" for="mrg_license" style="font-size: 14px;">&nbsp;a. Marriage License No.</label>
 								</div>
 								<div class="custom-control custom-checkbox custom-control-inline mt-1" style="padding: 0;width: 23%;margin-right: 0;">
-									<input type="text" class="form-control form-control-sm" id="mrg_license_no" name="mrg_license_no" >
+									<input type="text" class="form-control form-control-sm" id="mrg_license_no" name="mrg_license_no" style="text-align:center;">
 								</div>
 								issued on
 								<div class="custom-control custom-checkbox custom-control-inline mt-1" style="padding: 0;width: 23%;margin-right: 0;">
-									<input type="text" class="form-control form-control-sm" id="mrg_license_on" name="mrg_license_on">
+									<input type="text" class="form-control form-control-sm" id="mrg_license_on" name="mrg_license_on" style="text-align:center;">
 								</div>
 								at
 								<div class="custom-control custom-checkbox custom-control-inline mt-1" style="padding: 0;width: 23%;margin-right: 0;">
-									<input type="text" class="form-control form-control-sm" id="mrg_license_at" name="mrg_license_at" >
+									<input type="text" class="form-control form-control-sm" id="mrg_license_at" name="mrg_license_at" style="text-align:center;">
 								</div><br>
 								&emsp;&emsp;&emsp;in favor of said parties, was exhibited to me.<br>
 								<div class="custom-control custom-checkbox custom-control-inline" style="margin-right: 0;">
@@ -817,7 +783,7 @@
 								</div>
 								was necessary, the marriage being solemnized under Art
 								<div class="custom-control custom-checkbox custom-control-inline mt-1" style="padding: 0;width: 10%;margin-right: 0;">
-									<input type="text" class="form-control form-control-sm" id="no_license_art" name="no_license_art">
+									<input type="text" class="form-control form-control-sm" id="no_license_art" name="no_license_art" style="text-align:center;">
 								</div>
 								of Executive Order No. 209.<br>
 								<div class="custom-control custom-checkbox custom-control-inline" style="margin-right: 0;">
@@ -827,18 +793,17 @@
 								was solemnized in accordance with the provisions of Presidential Decree No. 1083.
 								</h6>
 			  				</div>
-			  			</div><!--close row-->
-			  			<div class="row">
+			  			</div><div class="row">
 							<div class="col-4" align="center">
-								<input type="text" class="form-control form-control-sm" style="background-color:white; border-bottom: 1px dotted #f30956; border-radius:0; text-align:center;" id="father_sign" name="mrg_solemn_name" >
+								<input type="text" class="form-control form-control-sm" style="background-color:white; border-bottom: 1px dotted #f30956; border-radius:0; text-align:center;" id="father_sign" name="mrg_solemn_name" style="text-align:center;">
 								<h6 style="font-size:10.5px;">(Signature Over Printed Name of Solemnizing Officer)</h6>
 							</div>
 							<div class="col-3" align="center">
-								<input type="text" class="form-control form-control-sm" style="background-color:white; border-bottom: 1px dotted #f30956; border-radius:0; text-align:center;" id="mother_sign" name="mrg_solemn_position">
+								<input type="text" class="form-control form-control-sm" style="background-color:white; border-bottom: 1px dotted #f30956; border-radius:0; text-align:center;" id="mother_sign" name="mrg_solemn_position" style="text-align:center;">
 								<h6 style="font-size:11px;">(Position/Designation)</h6>
 							</div>
 							<div class="col-5" align="center">
-								<input type="text" class="form-control form-control-sm" style="background-color:white; border-bottom: 1px dotted #f30956; border-radius:0; text-align:center;" id="mother_sign" name="mrg_solemn_other">
+								<input type="text" class="form-control form-control-sm" style="background-color:white; border-bottom: 1px dotted #f30956; border-radius:0; text-align:center;" id="mother_sign" name="mrg_solemn_other" style="text-align:center;">
 								<h6 style="font-size:11px;">(Religion/Religious Sect, Registry No.and Exiration Date, if applicable)</h6>
 							</div>
 						</div>
@@ -847,27 +812,21 @@
 			  		  			<h6 style="padding-top:2px; font-size:14px;">20a.&nbsp;WITNESSES (Print Name and Sign):<br>
 			  		  			&emsp;&emsp;Addition at the back</h6>
 			  				</div>
-			  			</div><!--close row-->
-			  			<div class="row" style="padding-bottom: 2px;">
+			  			</div><div class="row" style="padding-bottom: 2px;">
 							<div class="col-3" align="center">
-								<input type="text" class="form-control form-control-sm" style="background-color:white; border-bottom: 1px dotted #f30956; border-radius:0; text-align:center;" id="father_sign" name="witness1" >
+								<input type="text" class="form-control form-control-sm" style="background-color:white; border-bottom: 1px dotted #f30956; border-radius:0; text-align:center;" id="father_sign" name="witness1" style="text-align:center;">
 							</div>
 							<div class="col-3" align="center">
-								<input type="text" class="form-control form-control-sm" style="background-color:white; border-bottom: 1px dotted #f30956; border-radius:0; text-align:center;" id="mother_sign" name="witness2" >
+								<input type="text" class="form-control form-control-sm" style="background-color:white; border-bottom: 1px dotted #f30956; border-radius:0; text-align:center;" id="mother_sign" name="witness2" style="text-align:center;">
 							</div>
 							<div class="col-3" align="center">
-								<input type="text" class="form-control form-control-sm" style="background-color:white; border-bottom: 1px dotted #f30956; border-radius:0; text-align:center;" id="mother_sign" name="witness3" >
+								<input type="text" class="form-control form-control-sm" style="background-color:white; border-bottom: 1px dotted #f30956; border-radius:0; text-align:center;" id="mother_sign" name="witness3" style="text-align:center;">
 							</div>
 							<div class="col-3" align="center">
-								<input type="text" class="form-control form-control-sm" style="background-color:white; border-bottom: 1px dotted #f30956; border-radius:0; text-align:center;" id="mother_sign" name="witness4" >
+								<input type="text" class="form-control form-control-sm" style="background-color:white; border-bottom: 1px dotted #f30956; border-radius:0; text-align:center;" id="mother_sign" name="witness4" style="text-align:center;">
 							</div>
-						</div><!--close row-->
-
-					</div>
-				</div><!--close row-->
-  
-	 		<!-- Received by -->
-	 			<div class="row" style="border-right: 2px solid #f30956; border-left: 2px solid #f30956;">
+						</div></div>
+				</div><div class="row" style="border-right: 2px solid #f30956; border-left: 2px solid #f30956;">
 		  			<div class="col">
 		  				<div class="row">
 			  				<div class="col-6" style="border-right: 2px solid #f30956;">
@@ -882,19 +841,19 @@
 					  				<div class="input-group-prepend">
 					      				<span class="input-group-text" style="padding:0;border:none; background-color:white; color:black;font-size:14px;">Name in Print&nbsp;</span>
 					  				</div>
-					    			<input type="text" class="form-control form-control-sm" placeholder="" name="received_name" >
+					    			<input type="text" class="form-control form-control-sm" placeholder="" name="received_name" style="text-align:center;">
 								</div>
 								<div class="input-group mt-1">
 					  				<div class="input-group-prepend">
-					      				<span class="input-group-text" style="padding:0;border:none; background-color:white; color:black;font-size:14px;">Title or Position&nbsp;</span>
+					      				<span class="input-group-text" style="padding:0;border:none; background-color:white; color:black;font-size:14px; text-align:center;">Title or Position&nbsp;</span>
 					  				</div>
 					    			<input type="text" class="form-control form-control-sm" placeholder="" name="received_position">
 								</div>
 								<div class="input-group mt-1">
 					  				<div class="input-group-prepend">
-					      				<span class="input-group-text" style="padding:0;border:none; background-color:white; color:black;font-size:14px;">Date&nbsp;</span>
+					      				<span class="input-group-text" style="padding:0;border:none; background-color:white; color:black;font-size:14px; text-align:center;">Date&nbsp;</span>
 					  				</div>
-					    			<input type="text" class="form-control form-control-sm" placeholder="" id="rec_date" name="received_date"  value="<?php echo date('F j, Y', strtotime('now')); ?>">
+					    			<input type="text" class="form-control form-control-sm" name="received_date" id="rec_date" value="">
 								</div>
 			  				</div>
 					  		<div class="col-6">
@@ -903,33 +862,28 @@
 					  				<div class="input-group-prepend">
 					      				<span class="input-group-text" style="padding:0;border:none; background-color:white; color:black;font-size:14px;">Signature&nbsp;</span>
 					  				</div>
-					    			<input type="text" class="form-control form-control-sm" placeholder="" style="background-color: white;border-top:none;border-left:none;border-right:none;border-color: #f30956;border-radius: 0;" name="signature" disabled>
+					    			<input type="text" class="form-control form-control-sm" placeholder="" style="background-color: white;border-top:none;border-left:none;border-right:none;border-color: #f30956;border-radius: 0; text-align:center;" name="signature" disabled>
 								</div>
 								<div class="input-group mt-1">
 					  				<div class="input-group-prepend">
 					      				<span class="input-group-text" style="padding:0;border:none; background-color:white; color:black;font-size:14px;">Name in Print&nbsp;</span>
 					  				</div>
-					    			<input type="text" class="form-control form-control-sm" placeholder="" name="civil_name" >
+					    			<input type="text" class="form-control form-control-sm" placeholder="" name="civil_name" style="text-align:center;">
 								</div>
 								<div class="input-group mt-1">
 					  				<div class="input-group-prepend">
 					      				<span class="input-group-text" style="padding:0;border:none; background-color:white; color:black;font-size:14px;">Title or Position&nbsp;</span>
 					  				</div>
-					    			<input type="text" class="form-control form-control-sm" placeholder="" name="civil_position">
+					    			<input type="text" class="form-control form-control-sm" placeholder="" name="civil_position" style="text-align:center;">
 								</div>
 								<div class="input-group mt-1">
 					  				<div class="input-group-prepend">
 					      				<span class="input-group-text" style="padding:0;border:none; background-color:white; color:black;font-size:14px;">Date&nbsp;</span>
 					  				</div>
-					    			<input type="text" class="form-control form-control-sm" placeholder="" id="civil_date" name="civil_date"  value="<?php echo date('F j, Y', strtotime('now')); ?>">
+					    			<input type="text" class="form-control form-control-sm" name="civil_date" id="civil_date" value="">	
 								</div>
 					  		</div>
-			    		</div><!--close row-->
-
-				  	</div><!--close row-->
-	 			</div><!--close col-->
-	 		<!-- Remarks -->
-	 			<div class="row" style="border: 2px solid #f30956; border-bottom:none;">
+			    		</div></div></div><div class="row" style="border: 2px solid #f30956; border-bottom:none;">
 		  			<div class="col">
 		  				<div class="row">
 			  				<div class="col">
@@ -937,8 +891,7 @@
 			  					<textarea style="width: 100%; height: 80px; font-size: 13px;" id="r"></textarea>
 			  					<textarea style="width: 100%; height: 80px; font-size: 13px; display: none;" name="remarks" id="re"></textarea>
 					  		</div>
-			    		</div><!--close row-->
-			    		<script>
+			    		</div><script>
 			    			$(document).ready(function(){
 			    				$("#r").keyup(function(){
 			    					var r = $("#r").val();
@@ -949,10 +902,7 @@
 			    			});
 			    		</script>
 
-				  	</div><!--close row-->
-	 			</div><!--close col-->
-	 		<!-- To be filled -->
-	 			<div class="row" style="border: 2px solid #f30956;">
+				  	</div></div><div class="row" style="border: 2px solid #f30956;">
 		  			<div class="col">
 		  				<div class="row">
 			  				<div class="col">
@@ -1027,14 +977,33 @@
 								  	</div>
 								</div>
 					  		</div>
-			    		</div><!--close row-->
-
-				  	</div><!--close row-->
-	 			</div><!--close col-->
-
-	 </div>
+			    		</div></div></div></div>
 </div>
-<!-- <script src = "../../js/input_tno_only.js"></script> -->
+
+<!--javascript-->
+<script>
+document.addEventListener('keydown', function(e) {
+    if (e.key === 'Enter' && (e.target.tagName === 'INPUT' || e.target.tagName === 'SELECT')) {
+        e.preventDefault();
+
+        // Target Date Fields for Page 1
+        if (e.target.name === 'received_date' || e.target.name === 'civil_date') {
+            const now = new Date();
+            const months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+            // Formats as: March 5, 2026
+            e.target.value = months[now.getMonth()] + " " + now.getDate() + ", " + now.getFullYear();
+        }
+
+        // Move to next field
+        const focusable = Array.from(document.querySelectorAll('input:not([type="hidden"]):not([disabled]):not([readonly]), select:not([disabled])'));
+        const index = focusable.indexOf(e.target);
+        if (index > -1 && index < focusable.length - 1) {
+            focusable[index + 1].focus();
+        }
+    }
+});
+</script>
+
 <script>
 	const hFname = document.getElementById('h_fname');
 	const hMname = document.getElementById('h_mname');
@@ -1122,4 +1091,41 @@
     })
   });
 
+</script>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const inputs = document.querySelectorAll('input, select, textarea');
+
+    // 1. BROADCAST ON LOAD: Save everything to memory immediately
+    inputs.forEach(el => {
+        if (el.name) {
+            sessionStorage.setItem(el.name, el.value);
+        }
+    });
+
+    // 2. LIVE UPDATE: Update memory whenever you type
+    inputs.forEach(el => {
+        el.addEventListener('input', function() {
+            if (this.name) {
+                sessionStorage.setItem(this.name, this.value);
+            }
+        });
+    });
+
+    // 3. ENTER KEY: Navigate to next box
+    document.addEventListener('keydown', function(e) {
+        if (e.key === 'Enter') {
+            const current = document.activeElement;
+            if (current.tagName === 'INPUT' || current.tagName === 'SELECT') {
+                e.preventDefault();
+                const focusable = Array.from(document.querySelectorAll('input:not([type="hidden"]):not([disabled]):not([readonly]), select:not([disabled])'));
+                const index = focusable.indexOf(current);
+                if (index > -1 && index < focusable.length - 1) {
+                    focusable[index + 1].focus();
+                }
+            }
+        }
+    });
+});
 </script>

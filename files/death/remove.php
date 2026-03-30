@@ -1,5 +1,7 @@
 <?php
+   if (session_status() == PHP_SESSION_NONE) {
     session_start();
+    }
     require_once 'login_db_death.php';
 
     $conn = new mysqli($hn, $un, $pw, $db);

@@ -9,9 +9,11 @@ require_once 'login_db_death.php';
     if (isset($_POST['add_death'])) 
     {
       //==================================reg_info================================
-      $registry_no = $conn->real_escape_string($_POST['registry_no'] ?? '');
-      $book_no = $_POST['book_no'] ?? '';
-      $page_no = $_POST['page_no'] ?? '';
+      // FIXED: Fallback to 0 instead of '' for integer columns
+      $registry_no = !empty($_POST['registry_no']) ? $conn->real_escape_string($_POST['registry_no']) : 0;
+      $book_no = !empty($_POST['book_no']) ? $_POST['book_no'] : 0;
+      $page_no = !empty($_POST['page_no']) ? $_POST['page_no'] : 0;
+      
       $province = $conn->real_escape_string($_POST['provinces'] ?? '');
       $municipal = $conn->real_escape_string($_POST['municipal'] ?? '');
       $date = date("Y-m-d");
@@ -130,9 +132,11 @@ require_once 'login_db_death.php';
       $remarks = preg_replace("#\[nl\]#", "<br>\n", $remarks);
 
       //=====================================infant cause=====================================
-      $mother_age = $conn->real_escape_string($_POST['mother_age'] ?? '');
+      // FIXED: Fallback to 0 instead of '' for integer columns
+      $mother_age = !empty($_POST['mother_age']) ? $conn->real_escape_string($_POST['mother_age']) : 0;
+      $pregnancy_length = !empty($_POST['pregnancy_length']) ? $conn->real_escape_string($_POST['pregnancy_length']) : 0;
+
       $delivery_method = $conn->real_escape_string($_POST['delivery_method'] ?? '');
-      $pregnancy_length = $conn->real_escape_string($_POST['pregnancy_length'] ?? '');
       $birth_type = $conn->real_escape_string($_POST['birth_type'] ?? '');
       $multi_birth_was = $conn->real_escape_string($_POST['multi_birth_was'] ?? '');
       $main_disease = $conn->real_escape_string($_POST['main_disease'] ?? '');
