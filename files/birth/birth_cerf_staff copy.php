@@ -137,7 +137,7 @@
 		  <button data-toggle="collapse" data-target="#birth_page_2" id="page2" class="btn btn-outline-info">Page 2</button>
 		  <a href="birth_records_staff.php" class="btn btn-outline-info">View Records</a>
 
-  		<form method="post" action="reg_info_action_staff.php" id="addbirth_form">
+  		<form method="post" action="reg_info_action.php" id="addbirth_form" novalidate>
   			<div id="birth_page_1" class="collapse coll show" data-parent="#accordion">
   				<?php
   			    include 'birth_page_1.php';
