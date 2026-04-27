@@ -1,217 +1,71 @@
 <?php
+// ... (Connection and session code at top)
 
+if (isset($_POST['add_birth'])) {
 
-    if (isset($_POST['legal_update']) && isset($_POST['reg_no'])) 
-    {
-      
-      require_once 'login_db_birth.php';
+    // 1. USE THE NULL COALESCING OPERATOR (?? '') 
+    // This stops the "Undefined array key" and "Passing null" warnings.
+    
+    $registry_no = mysqli_real_escape_string($conn, $_POST['registry_no'] ?? '');
+    
+    // Father's Information (Handling the missing keys)
+    $f_fname    = mysqli_real_escape_string($conn, $_POST['father_fname'] ?? '');
+    $f_mname    = mysqli_real_escape_string($conn, $_POST['father_mname'] ?? '');
+    $f_lname    = mysqli_real_escape_string($conn, $_POST['father_lname'] ?? '');
+    $f_citiz    = mysqli_real_escape_string($conn, $_POST['father_citizen'] ?? '');
+    $f_relig    = mysqli_real_escape_string($conn, $_POST['father_sect'] ?? '');
+    $f_occup    = mysqli_real_escape_string($conn, $_POST['father_occupation'] ?? '');
+    $f_age      = mysqli_real_escape_string($conn, $_POST['father_age'] ?? '');
+    $f_brgy     = mysqli_real_escape_string($conn, $_POST['father_brgy'] ?? '');
+    $f_city     = mysqli_real_escape_string($conn, $_POST['father_city'] ?? '');
+    $f_prov     = mysqli_real_escape_string($conn, $_POST['father_province'] ?? '');
+    $f_country  = mysqli_real_escape_string($conn, $_POST['father_country'] ?? '');
+    
+    // Mother's Information
+    $m_fname    = mysqli_real_escape_string($conn, $_POST['mother_fname'] ?? '');
+    $m_mname    = mysqli_real_escape_string($conn, $_POST['mother_mname'] ?? '');
+    $m_lname    = mysqli_real_escape_string($conn, $_POST['mother_lname'] ?? '');
+    
+    // 2. FIX THE "OUT OF RANGE" FATAL ERROR
+    // Convert these to integers. If they are empty, they become 0.
+    $ttl_child   = (int)($_POST['ttl_no_child'] ?? 0);
+    $child_alive = (int)($_POST['no_child_alive'] ?? 0);
+    $child_dead  = (int)($_POST['no_child_dead'] ?? 0);
 
-      $conn = new mysqli($hn, $un, $pw, $db);
-      if ($conn->connect_error) die($conn->connect_error);
+    $m_mdate    = mysqli_real_escape_string($conn, $_POST['parent_mdate'] ?? '');
+    $m_mplace   = mysqli_real_escape_string($conn, $_POST['marriage_place'] ?? '');
 
-      $sql = "UPDATE no_tbl SET status = 1 WHERE no = '".$_POST['reg_no']."'";
-      $result = $conn->query($sql);
-      if (!$result) echo "INSERT failed: $sql<br>" .
-      $conn->error . "<br><br>";
+    // ... (Child data collection using ?? '')
 
-      require_once 'login_db_legal.php';
-      
-      $conn = new mysqli($hn, $un, $pw, $db);
-      if ($conn->connect_error) die($conn->connect_error);
-      $error = array();
+    $conn->begin_transaction();
 
-      //====================reg_info===========================================
-      $registry_no = $conn->real_escape_string($_POST['registry_no']);
-      $book_no = $_POST['book_no'];
-      $page_no = $_POST['page_no'];
-      $province = $conn->real_escape_string($_POST['provinces']);
-      $municipal = $conn->real_escape_string($_POST['municipal']);
-      $date = date("Y-m-d");
-      $time = $_POST['time'];
-      $e_name = $conn->real_escape_string($_POST['emp_name']);
-      $u_date = date("Y-m-d");
-      $u_time = $_POST['time'];
-      $u_name = $conn->real_escape_string($_POST['emp_name']);
+    try {
+        // ... (Insert into registration_tbl and child_tbl)
 
-      //=====================child_info==========================================
-      $child_lname = $conn->real_escape_string($_POST['child_lname']);
-      $child_fname = $conn->real_escape_string($_POST['child_fname']);
-      $child_mname = $conn->real_escape_string($_POST['child_mname']);
-      $child_sex = $conn->real_escape_string($_POST['child_sex']);
-      $child_birth_date = $conn->real_escape_string($_POST['child_birth_date']);
+        // Table 3: mother_tbl
+        // Using the (int) values ensures no "Out of Range" errors
+        $sql3 = "INSERT INTO mother_tbl (registry_no, mother_fname, mother_mname, mother_lname, ttl_no_child, no_child_alive, no_child_dead, marriage_date, marriage_place) 
+                 VALUES ('$registry_no', '$m_fname', '$m_mname', '$m_lname', $ttl_child, $child_alive, $child_dead, '$m_mdate', '$m_mplace')";
+        
+        if (!$conn->query($sql3)) {
+            throw new Exception("Mother Table Error: " . $conn->error);
+        }
 
-      $birth_brgy = $conn->real_escape_string($_POST['birth_brgy']);
-      $birth_city = $conn->real_escape_string($_POST['birth_city']);
-      $birth_province = $conn->real_escape_string($_POST['birth_province']);
-      $birth_type = $conn->real_escape_string($_POST['birth_type']);
-      $multi_birth_was = $conn->real_escape_string($_POST['multi_birth_was']);
-      $birth_order = $conn->real_escape_string($_POST['birth_order']);
-      $birth_weight = $conn->real_escape_string($_POST['birth_weight']);
+        // Table 4: father_tbl
+        $sql4 = "INSERT INTO father_tbl (registry_no, father_fname, father_mname, father_lname, father_citizen, father_religion, father_occupation, father_age) 
+                 VALUES ('$registry_no', '$f_fname', '$f_mname', '$f_lname', '$f_citiz', '$f_relig', '$f_occup', '$f_age')";
+        
+        if (!$conn->query($sql4)) {
+            throw new Exception("Father Table Error: " . $conn->error);
+        }
 
-      //============================mother_info===================================
-      $mother_lname = $conn->real_escape_string($_POST['mother_lname']);
-      $mother_fname = $conn->real_escape_string($_POST['mother_fname']);
-      $mother_mname = $conn->real_escape_string($_POST['mother_mname']);
-      $mother_citizen = $conn->real_escape_string($_POST['mother_citizen']);
-      $mother_sect = $conn->real_escape_string($_POST['mother_sect']);
-      $ttl_no_child = $conn->real_escape_string($_POST['ttl_no_child']);
-      $no_child_alive = $conn->real_escape_string($_POST['no_child_alive']);
-      $no_child_dead = $conn->real_escape_string($_POST['no_child_dead']);
-      $mother_occupation = $conn->real_escape_string($_POST['mother_occupation']);
-      $mother_age = $conn->real_escape_string($_POST['mother_age']);
-      $mother_brgy = $conn->real_escape_string($_POST['mother_brgy']);
-      $mother_city = $conn->real_escape_string($_POST['mother_city']);
-      $mother_province = $conn->real_escape_string($_POST['mother_province']);
-      $mother_country = $conn->real_escape_string($_POST['mother_country']);
+        // ... (Late registration insert)
 
-      //==========================father info=======================================
-      $father_lname = $conn->real_escape_string($_POST['father_lname']);
-      $father_fname = $conn->real_escape_string($_POST['father_fname']);
-      $father_mname = $conn->real_escape_string($_POST['father_mname']);
-      $father_citizen = $conn->real_escape_string($_POST['father_citizen']);
-      $father_sect = $conn->real_escape_string($_POST['father_sect']);
-      $father_occupation = $conn->real_escape_string($_POST['father_occupation']);
-      $father_age = $conn->real_escape_string($_POST['father_age']);
-      $father_brgy = $conn->real_escape_string($_POST['father_brgy']);
-      $father_city = $conn->real_escape_string($_POST['father_city']);
-      $father_province = $conn->real_escape_string($_POST['father_province']);
-      $father_country = $conn->real_escape_string($_POST['father_country']);
+        $conn->commit();
+        echo "<script>alert('Record Saved Successfully!'); window.location='birth_records.php';</script>";
 
-      //====================================marriage_info===========================
-      $marriage_date = $conn->real_escape_string($_POST['marriage_date']);
-      $marriage_place = $conn->real_escape_string($_POST['marriage_place']);
-
-      //=================attendant_informant_prepared===============================
-      if($_POST['attendant1'] == 'Physician'){
-        $attendant_type = $_POST['attendant1'];   
-      }else if($_POST['attendant2'] == 'Nurse'){
-        $attendant_type = $_POST['attendant2'];   
-      }else if($_POST['attendant3'] == 'Midwife'){
-        $attendant_type = $_POST['attendant3'];   
-      }else if($_POST['attendant4'] == 'Hilot'){
-        $attendant_type = $_POST['attendant4'];   
-      }else{
-        $attendant_type = $conn->real_escape_string($_POST['attendant5']);   
-      }
-      $birth_time = $conn->real_escape_string($_POST['birth_time']);
-      $attendant_name = $conn->real_escape_string($_POST['attendant_name']);
-      $attendant_position = $conn->real_escape_string($_POST['attendant_position']);
-      $attendant_address = $conn->real_escape_string($_POST['attendant_address']);
-      $informant_name = $conn->real_escape_string($_POST['informant_name']);
-      $rel_child = $conn->real_escape_string($_POST['rel_child']);
-      $informant_address = $conn->real_escape_string($_POST['informant_address']);
-      $prepared_name = $conn->real_escape_string($_POST['prepared_name']);
-      $prepared_position = $conn->real_escape_string($_POST['prepared_position']);
-      $attendant_date = $conn->real_escape_string($_POST['attendant_date']);
-      $informant_date = $conn->real_escape_string($_POST['informant_date']);
-      $prepared_date = $conn->real_escape_string($_POST['prepared_date']);
-
-      //============================receive_civil====================================
-      $received_name = $conn->real_escape_string($_POST['received_name']);
-      $received_position = $conn->real_escape_string($_POST['received_position']);
-      $civil_name = $conn->real_escape_string($_POST['civil_name']);
-      $civil_position = $conn->real_escape_string($_POST['civil_position']);
-      $received_date = $conn->real_escape_string($_POST['received_date']);
-      $civil_date = $conn->real_escape_string($_POST['civil_date']);
-
-       //===========================remarks==========================================
-      $remarks = $conn->real_escape_string($_POST['remarks']);
-      $remarks = preg_replace("#\[sp\]#", "&nbsp;", $remarks);
-      $remarks = preg_replace("#\[nl\]#", "<br>\n", $remarks);
-
-      //============================paternity=======================================
-      $father_name = $conn->real_escape_string($_POST['father_name']);
-      $mother_name = $conn->real_escape_string($_POST['mother_name']);
-      $child_name = $conn->real_escape_string($_POST['child_name']);
-      $birth_date = $conn->real_escape_string($_POST['birth_date']);
-      $birth_place = $conn->real_escape_string($_POST['birth_place']);
-      $sworn_day = $conn->real_escape_string($_POST['ack_sworn_day']);
-      $sworn_month = $conn->real_escape_string($_POST['ack_sworn_month']);
-      $sworn_year = $conn->real_escape_string($_POST['ack_sworn_year']);
-
-      $birth_gender = $_POST['birth_gender'];
-      $sworn_ctc = $conn->real_escape_string($_POST['ack_ctc']);
-      $sworn_issuedon = $conn->real_escape_string($_POST['ack_issued_on']);
-      $sworn_issuedat = $conn->real_escape_string($_POST['ack_issued_at']);
-      $sworn_name = $conn->real_escape_string($_POST['ack_sworn_name']);
-      $sworn_position = $conn->real_escape_string($_POST['ack_sworn_position']);
-      $sworn_address = $conn->real_escape_string($_POST['ack_sworn_address']);
-
-      //===============================late registration=============================
-      $late_name = $conn->real_escape_string($_POST['late_name']);
-      $late_address = $conn->real_escape_string($_POST['late_address']);
-      $late_birth_type = $conn->real_escape_string($_POST['late_birth_type']);
-      $late_birth_of = $conn->real_escape_string($_POST['late_birth_of']);
-      $late_birth_in = $conn->real_escape_string($_POST['late_birth_in']);
-      $late_birth_on = $conn->real_escape_string($_POST['late_birth_on']);
-      $attend_birth_by = $conn->real_escape_string($_POST['attend_birth_by']);
-      $who_resides_at = $conn->real_escape_string($_POST['who_resides_at']);
-      $late_citizen = $conn->real_escape_string($_POST['late_citizen']);
-      $married_type = $conn->real_escape_string($_POST['married_type']);
-      $married_on = $conn->real_escape_string($_POST['married_on']);
-      $married_at = $conn->real_escape_string($_POST['married_at']);
-      $not_married_name = $conn->real_escape_string($_POST['not_married_name']);
-      $late_reg_reason = $conn->real_escape_string($_POST['late_reason_1'].' '.$_POST['late_reason_2']);
-      $applicant_only = $conn->real_escape_string($_POST['applicant_only']);
-      $applicant_than_owner = $conn->real_escape_string($_POST['applicant_than_owner']);
-      $sign_day = $conn->real_escape_string($_POST['sign_day']);
-      $sign_month = $conn->real_escape_string($_POST['sign_month']);
-      $sign_year = $conn->real_escape_string($_POST['sign_year']);
-      $sign_at = $conn->real_escape_string($_POST['sign_at']);
-      $affiant_name = $conn->real_escape_string($_POST['affiant_name']);
-      $late_sworn_day = $conn->real_escape_string($_POST['late_sworn_day']);
-      $late_sworn_month = $conn->real_escape_string($_POST['late_sworn_month']);
-      $late_sworn_year = $conn->real_escape_string($_POST['late_sworn_year']);
-      $late_sworn_at = $conn->real_escape_string($_POST['late_sworn_at']);
-      $late_ctc = $conn->real_escape_string($_POST['late_ctc']);
-      $late_issued_on = $conn->real_escape_string($_POST['late_issued_on']);
-      $late_issued_at = $conn->real_escape_string($_POST['late_issued_at']);
-      $late_sworn_name = $conn->real_escape_string($_POST['late_sworn_name']);
-      $late_sworn_position = $conn->real_escape_string($_POST['late_sworn_position']);
-      $late_sworn_address = $conn->real_escape_string($_POST['late_sworn_address']);
-
-
-      //=======================================database=======================================
-      
-      $sql = "INSERT INTO registration_tbl VALUES (NULL, '$registry_no', '$book_no', '$page_no', '$province', '$municipal', '$date', '$time', '$e_name', '$u_date', '$u_time', '$u_name')";
-      $result = $conn->query($sql);
-
-      $no = mysqli_insert_id($conn);
-
-      $sql = "INSERT INTO no_tbl VALUES ('$no', '$registry_no', 1)";
-      $result = $conn->query($sql);
-
-      $sql = "INSERT INTO child_tbl VALUES ('$registry_no', '$child_lname', '$child_fname', '$child_mname', '$child_sex', '$child_birth_date', '$birth_brgy', '$birth_city', '$birth_province', '$birth_type', '$multi_birth_was', '$birth_order', '$birth_weight', '$no')";
-      $result = $conn->query($sql);
-
-      $sql = "INSERT INTO mother_tbl VALUES ('$registry_no', '$mother_lname', '$mother_fname', '$mother_mname', '$mother_citizen', '$mother_sect', '$mother_brgy', '$mother_city', '$mother_province', '$mother_country', '$mother_occupation', '$mother_age', '$ttl_no_child', '$no_child_dead', '$no_child_alive', '$marriage_date', '$marriage_place', '$no')";
-      $result = $conn->query($sql);
-
-      $sql = "INSERT INTO father_tbl VALUES ('$registry_no', '$father_lname', '$father_fname', '$father_mname', '$father_age', '$father_sect', '$father_citizen', '$father_brgy', '$father_city', '$father_province', '$father_country', '$father_occupation', '$marriage_date', '$marriage_place', '$no')";
-      $result = $conn->query($sql);
-
-      $sql = "INSERT INTO att_inf_tbl VALUES ('$registry_no', '$attendant_type', '$birth_time', '$attendant_name', '$attendant_position', '$attendant_address', '$informant_name', '$rel_child', '$informant_address', '$prepared_name', '$prepared_position', '$attendant_date', '$informant_date', '$prepared_date', '$no')";
-      $result = $conn->query($sql);
-
-      $sql = "INSERT INTO receive_civil_tbl VALUES ('$registry_no', '$received_name', '$received_position', '$civil_name', '$civil_position', '$received_date', '$civil_date', '$no')";
-      $result = $conn->query($sql);
-
-      $sql = "INSERT INTO remarks_tbl VALUES ('$registry_no', '$remarks', '$no')";
-      $result = $conn->query($sql);
-
-      $sql = "INSERT INTO admission_paternity_tbl VALUES ('$registry_no', '$father_name', '$mother_name', '$child_name', '$birth_date', '$birth_place', '$sworn_day', '$sworn_month', '$sworn_year', '$birth_gender', '$sworn_ctc', '$sworn_issuedon', '$sworn_issuedat', '$sworn_name', '$sworn_position', '$sworn_address', '$no')";
-      $result = $conn->query($sql);
-
-      $sql = "INSERT INTO late_reg_tbl VALUES ('$registry_no', '$late_name', '$late_address', '$late_birth_type', '$late_birth_of', '$late_birth_in', '$late_birth_on', '$attend_birth_by', '$who_resides_at', '$late_citizen', '$married_type', '$married_on', '$married_at', '$not_married_name', '$late_reg_reason', '$applicant_only', '$applicant_than_owner', '$sign_day', '$sign_month', '$sign_year', '$sign_at', '$affiant_name', '$late_sworn_day', '$late_sworn_month', '$late_sworn_year', '$late_sworn_at', '$late_ctc', '$late_issued_on', '$late_issued_at', '$late_sworn_name', '$late_sworn_position', '$late_sworn_address', '$no')";
-      $result = $conn->query($sql);
-
-      if (!$result) echo "INSERT failed: $sql<br>" .
-      $conn->error . "<br><br>";
-
-
-      header('location: legal_records.php');
-
-      mysqli_close($conn);
-	}
-
-?>
+    } catch (Exception $e) {
+        $conn->rollback();
+        die("Save Failed: " . $e->getMessage());
+    }
+}
