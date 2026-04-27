@@ -214,7 +214,7 @@ $(document).ready(function(){
 
 
 <!--Javascript-->
-<script src = "../js/addbirth.js"></script>
+
 <script>
 $(document).ready(function(){
 	var x = new Date();

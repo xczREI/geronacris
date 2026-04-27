@@ -231,7 +231,7 @@ $(document).ready(function(){
 
 <?php include '../../report/report_modal1.php'; ?>
 <!--Javascript-->
-<script src = "../js/addbirth.js"></script>
+
 <script>
 $(document).ready(function(){
 	var x = new Date();

@@ -162,8 +162,7 @@
 <script src="../../bootstrap4/js/bootstrap.min.js"></script>
 <script src="../../alertifyjs/alertify.min.js"></script>
 
-<script src="js/btnfile.js"></script>
-<script src="js/addbirth.js"></script>
+<script src="../../js/btnfile.js"></script>
 
 <script>
 $(document).ready(function(){

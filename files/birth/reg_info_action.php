@@ -1,4 +1,6 @@
 <?php
+error_reporting(E_ALL);
+ini_set('display_errors', 1);
     require_once 'login_db_birth.php';
     $conn = new mysqli($hn, $un, $pw, $db);
     if ($conn->connect_error) die($conn->connect_error);
