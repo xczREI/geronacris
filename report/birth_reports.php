@@ -20,42 +20,24 @@
     <style>
     #navbar{ display: none; }
     @media only screen and (max-width: 768px) {
-                /* For mobile phones: */
-      [class*="col-"] {
-        width: 100%;
-      }
+      [class*="col-"] { width: 100%; }
       #navbar{ display: block; display: flex;}
       #topbar{ display: none;  }
       #sidebar{ display: none; }
       #body{ padding-left: 12%; }
       .navbar-collapse {
-        padding: 0;
-        width: 50%;
-        position: absolute;
-        top: 72px;
-        right: 20px;
-        z-index: 1000;
+        padding: 0; width: 50%; position: absolute; top: 72px; right: 20px; z-index: 1000;
       }
       .navbar-collapse #nav-link_active, #nav-link{ 
-        font-size:13px; 
-        font-family: century gothic;
-        text-transform: uppercase;
-        color: white;
-        display:  block;
-        padding: 10px;
-        transition: all 0.3s ease;
-        letter-spacing: 1px;
+        font-size:13px; font-family: century gothic; text-transform: uppercase;
+        color: white; display:  block; padding: 10px; transition: all 0.3s ease; letter-spacing: 1px;
       }
-
     }
   </style>
-
 </head>
 <body>
 
-<!-- nav top -->
 <nav class="navbar navbar-expand-md bg-success navbar-dark" id="navbar">
-  <!-- Brand -->
   <a class="navbar-brand" href="#">
     <div class="media pl-1 mb-3">
       <div class="media-body">
@@ -65,25 +47,19 @@
           <?php } else if ($type == 'Staff') { ?>
               <img src="../images/img_avatar2.png" class="mr-3 mt-0 rounded-circle" style="width:40px;">
           <?php } ?>
-
           <?php echo $_SESSION['firstname'].' '.$_SESSION['lastname']; ?>
         </h6>
       </div>
     </div>
   </a>
-
-  <!-- Toggler/collapsibe Button -->
   <button class="navbar-toggler mr-2" type="button" data-toggle="collapse" data-target="#collapsibleNavbar" style="float: right;">
     <span class="navbar-toggler-icon"></span>
   </button>
-
-  <!-- Navbar links -->
   <div class="collapse navbar-collapse bg-light" id="collapsibleNavbar">
     <ul class="navbar-nav bg-dark mx-auto h-100">
       <li class="nav-item"><a class="active nav-link" id="nav-link" href="../home.php">&emsp;<i class="fa fa-clock-o fa-fw"></i>Dashboard</a></li>
       <li class="nav-item"><a class="nav-link" id="nav-link" href="../files/files.php" >&emsp;<i class="fa fa-bookmark-o fa-fw"></i>Registration</a></li>
-      <li class="nav-item"><a class="nav-link" data-toggle="modal" href="#myreport" id="nav-link_active">
-      &emsp;<i class="fa fa-file-o fa-fw"></i>Report</a></li>
+      <li class="nav-item"><a class="nav-link" data-toggle="modal" data-target="#myreport" href="javascript:void(0)" id="nav-link_active">&emsp;<i class="fa fa-file-o fa-fw"></i>Report</a></li>
       <li class="nav-item"><a class="nav-link" id="nav-link" href="../employee/view_users.php">&emsp;<i class="fa fa-user-o fa-fw"></i>Account</a></li>
       <li class="nav-item"><a class="nav-link" id="nav-link" href="../php/logout.php">&emsp;<i class="fa fa-eject fa-fw"></i>Logout</a></li>
     </ul>
@@ -100,38 +76,29 @@
         <?php } else if ($type == 'Staff') { ?>
             <img src="../images/img_avatar2.png" class="mr-3 mt-0 rounded-circle" style="width:40px;">
         <?php } ?>
-
         <?php echo $_SESSION['firstname'].' '.$_SESSION['lastname']; ?>
       </h6>
     </div>
   </div>
 </div>
 
-<!--navbar-->
 <div class="row" id="row">
     <div class="col-sm-3 bg-success" style="border-left: 15px solid;" id="sidebar">
       <div class="pic" style="margin-top: 2em;">
-        <center>
-          <img src="../images/logo.png" class="logo">
-          <h4 class="text-uppercase">Civil Registry Information<br><span class="lblspan">System</span></h4>
-        </center>
+        <center><img src="../images/logo.png" class="logo"><h4 class="text-uppercase">Civil Registry Information<br><span class="lblspan">System</span></h4></center>
       </div>
-
-    <!--nav-side-->
-    <div class="aside" style="margin-top: 3em;">
-      <nav class="navbar">
-        <ul class="navbar-nav" style="padding-bottom:6em;">
-            <li class="nav-item"><a class="active nav-link" id="nav-link" href="../home.php">&emsp;<i class="fa fa-clock-o fa-fw"></i>Dashboard</a></li>
-            <li class="nav-item"><a class="nav-link" id="nav-link" href="../files/files.php" >&emsp;<i class="fa fa-bookmark-o fa-fw"></i>Registration</a></li>
-            <li class="nav-item"><a class="nav-link" data-toggle="modal" href="#myreport" id="nav-link_active">
-              &emsp;<i class="fa fa-file-o fa-fw"></i>Report</a></li>
-            <li class="nav-item"><a class="nav-link" id="nav-link" href="../employee/view_users.php">&emsp;<i class="fa fa-user-o fa-fw"></i>Account</a></li>
-            <li class="nav-item"><a class="nav-link" id="nav-link" href="../php/logout.php">&emsp;<i class="fa fa-eject fa-fw"></i>Logout</a></li>
-        </ul>
-      </nav>
+      <div class="aside" style="margin-top: 3em;">
+        <nav class="navbar">
+          <ul class="navbar-nav" style="padding-bottom:6em;">
+              <li class="nav-item"><a class="active nav-link" id="nav-link" href="../home.php">&emsp;<i class="fa fa-clock-o fa-fw"></i>Dashboard</a></li>
+              <li class="nav-item"><a class="nav-link" id="nav-link" href="../files/files.php" >&emsp;<i class="fa fa-bookmark-o fa-fw"></i>Registration</a></li>
+              <li class="nav-item"><a class="nav-link" data-toggle="modal" data-target="#myreport" href="javascript:void(0)" id="nav-link_active">&emsp;<i class="fa fa-file-o fa-fw"></i>Report</a></li>
+              <li class="nav-item"><a class="nav-link" id="nav-link" href="../employee/view_users.php">&emsp;<i class="fa fa-user-o fa-fw"></i>Account</a></li>
+              <li class="nav-item"><a class="nav-link" id="nav-link" href="../php/logout.php">&emsp;<i class="fa fa-eject fa-fw"></i>Logout</a></li>
+          </ul>
+        </nav>
+      </div>
     </div>
-
-    </div><!--end col-3-->
 
   <div class="col-sm-9" style="padding-top: 7%;" id="body">
   		<h5 align="center">= BIRTH REGISTRATION =</h5>
@@ -142,203 +109,89 @@
       <div class="col-sm-2 p-0 mb-1">
           <select class="custom-select" id="byear" name="year" required>
           <?php 
-        require_once 'login_db_birth.php';
-        $conn = new mysqli($hn, $un, $pw, $db);
-        if ($conn->connect_error) die($conn->connect_error);
+            require_once 'login_db_birth.php';
+            $conn = new mysqli($hn, $un, $pw, $db);
+            if ($conn->connect_error) die($conn->connect_error);
 
-        // Extracts the last 4 characters (the year) from the "DD MONTH YYYY" string
-                 $sql = "SELECT 
-                          CASE 
-                            WHEN child_birth_date LIKE '%-%' THEN LEFT(TRIM(child_birth_date), 4) 
-                            ELSE RIGHT(TRIM(child_birth_date), 4) 
-                          END AS yr 
-                        FROM child_tbl 
-                        WHERE child_birth_date IS NOT NULL AND child_birth_date != '' AND child_birth_date != '0000-00-00'
-                        GROUP BY yr 
-                        ORDER BY yr DESC";
-
-        $result = $conn->query($sql);  
-
-        echo "<option value='' style='display:none;'>-- Select Year --</option>";
-
-        if ($result && $result->num_rows > 0) {
-            // This will now display 2026, 2004, 3333, 2131, etc.
-            while($row = $result->fetch_assoc()) { 
-                $validYear = $row['yr'];
-                // Extra check to ensure it's actually a 4-digit number
-                if (is_numeric($validYear) && strlen($validYear) == 4) {
-                    echo "<option value='".$validYear."'>".$validYear."</option>";   
+            // Extract 4-digit years from both formats: "YYYY-MM-DD" and "Month DD, YYYY"
+            $sql = "SELECT DISTINCT 
+                      CASE 
+                        WHEN child_birth_date LIKE '%-%' THEN LEFT(TRIM(child_birth_date), 4) 
+                        ELSE RIGHT(TRIM(child_birth_date), 4) 
+                      END AS yr 
+                    FROM child_tbl 
+                    WHERE child_birth_date IS NOT NULL AND child_birth_date != '' AND child_birth_date != '0000-00-00'
+                    ORDER BY yr DESC";
+            
+            $result = $conn->query($sql);  
+            echo "<option value='' style='display:none;'>-- Select Year --</option>";
+            if ($result && $result->num_rows > 0) {
+                while($row = $result->fetch_assoc()) { 
+                    $y = trim($row['yr']);
+                    if (is_numeric($y) && strlen($y) == 4) {
+                        echo "<option value='$y'>$y</option>";   
+                    }
                 }
             }
-        } else {
-            echo "<option value=''>No records found</option>";
-        }
-    ?>
+          ?>
           </select>
           </div>
           <div class="col-sm-2 p-0">
           <select class="custom-select" id="bmonth" name="month" required>
               <option value="" style="display: none;" selected>-- Select Month --</option>
               <option value="">All</option>
-              <option value="01">January</option>
-              <option value="02">February</option>
-              <option value="03">March</option>
-              <option value="04">April</option>
-              <option value="05">May</option>
-              <option value="06">June</option>
-              <option value="07">July</option>
-              <option value="08">August</option>
-              <option value="09">September</option>
-              <option value="10">October</option>
-              <option value="11">November</option>
-              <option value="12">December</option>
+              <option value="01">January</option><option value="02">February</option><option value="03">March</option>
+              <option value="04">April</option><option value="05">May</option><option value="06">June</option>
+              <option value="07">July</option><option value="08">August</option><option value="09">September</option>
+              <option value="10">October</option><option value="11">November</option><option value="12">December</option>
           </select>
-          
           </div>
           <div class="col-sm-4"></div>
       </div>
       </center>
       <div id="chartContainer" style="height: 450px; max-width: 100%; margin: 0px;"></div>
-
   </div>
 </div>
 
-<!--modal-->
-<?php include 'report_modal3.php'; ?>
-
-<!--Javascrpt theme-->
+<?php include '../report/report_modal1.php'; ?>
 <script src = "../alertifyjs/alertify.min.js"></script>
 
 <script>
 $(document).ready(function(){
-
-$("#byear").change(function(){
+  $("#byear, #bmonth").change(function(){
     var year = $("#byear").val();
     var month = $("#bmonth").val();
-    if(month == ''){ var mm = ''; } else {
-      var d = new Date(month);
-      var months = ["January","February","March","April","May","June","July","August","September","October","November","December"];
-      var mm =  months[d.getMonth()];
-    }
+    var months = ["January","February","March","April","May","June","July","August","September","October","November","December"];
+    var mm = (month !== "") ? months[parseInt(month) - 1] : "All Months";
 
-    if(year == ''){
-      alertify.dialog('alert').set({transition:'zoom',message: 'Pls. select month and enter year'}).show(); 
-    }else{
+    if(year !== ''){
       $.ajax({
         url: "birth_charts.php",
-        data:{year:year,month:month},
+        data:{year:year, month:month},
         method: "POST",
         success:function(data){
-
-        var chart = new CanvasJS.Chart("chartContainer",
-        {
-          theme: "light",
-          exportEnabled: true,
-          animationEnabled: true,
-          title:{
-            text: "Birth Statistics",
-            horizontalAlign: "center",
-            fontSize: 25
-          },
-          subtitles: [{
-            text: "(" + mm + " " + year + " )",
-            fontSize: 15
-          }],
-          legend:{
-            cursor: "pointer",
-            itemclick: explodePie
-          },
-          data: [{
-            type: "pie",
-            showInLegend: true,
-            toolTipContent: "<b>{name}:</b> {y}",
-            indexLabel: "{name}: {y}",
-            dataPoints: data
-          }]
-        });
-        chart.render();
-        function explodePie (e) {
-          if(typeof (e.dataSeries.dataPoints[e.dataPointIndex].exploded) === "undefined" || !e.dataSeries.dataPoints[e.dataPointIndex].exploded) {
-            e.dataSeries.dataPoints[e.dataPointIndex].exploded = true;
-          } else {
-            e.dataSeries.dataPoints[e.dataPointIndex].exploded = false;
-          }
-          e.chart.render();
-
-        }
-
+          var chart = new CanvasJS.Chart("chartContainer", {
+            theme: "light", exportEnabled: true, animationEnabled: true,
+            title:{ text: "Birth Statistics", horizontalAlign: "center", fontSize: 25 },
+            subtitles: [{ text: "(" + mm + " " + year + " )", fontSize: 15 }],
+            legend:{ cursor: "pointer", itemclick: function(e) {
+                e.dataSeries.dataPoints[e.dataPointIndex].exploded = !(e.dataSeries.dataPoints[e.dataPointIndex].exploded || false);
+                e.chart.render();
+            }},
+            data: [{ 
+              type: "pie", 
+              showInLegend: true, 
+              toolTipContent: "<b>{label}:</b> {y}", 
+              indexLabel: "{label}: {y}", 
+              dataPoints: data 
+            }]
+          });
+          chart.render();
         }
       });
-
     }
-  
   });
-
-$("#bmonth").change(function(){
-    var year = $("#byear").val();
-    var month = $("#bmonth").val();
-    if(month == ''){ var mm = ''; } else {
-      var d = new Date(month);
-      var months = ["January","February","March","April","May","June","July","August","September","October","November","December"];
-      var mm =  months[d.getMonth()];
-    }
-
-    if(year == ''){
-      alertify.dialog('alert').set({transition:'zoom',message: 'Pls. select month and enter year'}).show(); 
-    }else{
-      $.ajax({
-        url: "birth_charts.php",
-        data:{year:year,month:month},
-        method: "POST",
-        success:function(data){
-
-        var chart = new CanvasJS.Chart("chartContainer",
-        {
-          theme: "light",
-          exportEnabled: true,
-          animationEnabled: true,
-          title:{
-            text: "Birth Statistics",
-            horizontalAlign: "center",
-            fontSize: 25
-          },
-          subtitles: [{
-            text: "( " + mm + " " + year + " )",
-            fontSize: 15
-          }],
-          legend:{
-            cursor: "pointer",
-            itemclick: explodePie
-          },
-          data: [{
-            type: "pie",
-            showInLegend: true,
-            toolTipContent: "<b>{name}:</b> {y}",
-            indexLabel: "{name}: {y}",
-            dataPoints: data
-          }]
-        });
-        chart.render();
-        function explodePie (e) {
-          if(typeof (e.dataSeries.dataPoints[e.dataPointIndex].exploded) === "undefined" || !e.dataSeries.dataPoints[e.dataPointIndex].exploded) {
-            e.dataSeries.dataPoints[e.dataPointIndex].exploded = true;
-          } else {
-            e.dataSeries.dataPoints[e.dataPointIndex].exploded = false;
-          }
-          e.chart.render();
-
-        }
-
-        }
-      });
-
-    }
-  
-  });
-
 });
-
 </script>
-
 </body>
 </html>

@@ -1,4 +1,5 @@
 <?php
+// Enable error reporting to catch any remaining issues
 error_reporting(E_ALL);
 ini_set('display_errors', 1);
 
@@ -16,11 +17,16 @@ if ($conn->connect_error) {
 // This tells MySQL: "If a field is missing from our form, just make it blank and save anyway!"
 $conn->query("SET SESSION sql_mode = ''");
 
-
-if (isset($_POST['add_birth'])) {
+// BULLETPROOF CHECK: Will run if the button is clicked OR if the form submits natively
+if (isset($_POST['add_birth']) || $_SERVER['REQUEST_METHOD'] == 'POST') {
     
     // --- 1. CORE REGISTRATION DATA ---
     $registry_no = mysqli_real_escape_string($conn, $_POST['registry_no'] ?? '');
+    
+    // ADDED: Book No and Page No for registration_tbl
+    $book_no     = (int)($_POST['book_no'] ?? 0);
+    $page_no     = (int)($_POST['page_no'] ?? 0);
+    
     $province    = mysqli_real_escape_string($conn, $_POST['provinces'] ?? '');
     $municipal   = mysqli_real_escape_string($conn, $_POST['municipals'] ?? '');
     $reg_user    = ($_SESSION['firstname'] ?? 'Unknown') . ' ' . ($_SESSION['lastname'] ?? 'User');
@@ -90,18 +96,21 @@ if (isset($_POST['add_birth'])) {
         $l_on = mysqli_real_escape_string($conn, $_POST['late_birth_onx'] ?? '');
     }
 
-
     // --- DATABASE INSERTS ---
     $conn->begin_transaction();
 
     try {
-        // 1. Check for duplicates
+        // 1. Check for duplicates safely
+        if (empty($registry_no)) {
+            throw new Exception("Registry Number is missing from the form submission.");
+        }
+        
         $check = $conn->query("SELECT registry_no FROM registration_tbl WHERE registry_no = '$registry_no'");
         if ($check && $check->num_rows > 0) {
             throw new Exception("Registry Number '$registry_no' already exists in the system.");
         }
 
-        // 2. Helper Function to generate the next 'no' manually (Bypasses the Auto_Increment error)
+        // 2. Helper Function to generate the next 'no' manually
         function getNextNo($conn, $table) {
             $result = $conn->query("SELECT MAX(no) AS max_no FROM $table");
             if ($result) {
@@ -118,10 +127,9 @@ if (isset($_POST['add_birth'])) {
         $dad_no   = getNextNo($conn, 'father_tbl');
         $late_no  = getNextNo($conn, 'late_reg_tbl');
 
-
-        // Query 1: registration_tbl
-        $sql1 = "INSERT INTO registration_tbl (no, registry_no, province, municipal, reg_date, reg_time, reg_user, update_date, update_time, update_user) 
-                 VALUES ($reg_no, '$registry_no', '$province', '$municipal', '$reg_date', '$reg_time', '$reg_user', '$reg_date', '$reg_time', '$reg_user')";
+        // Query 1: registration_tbl (NOW INCLUDES BOOK NO AND PAGE NO)
+        $sql1 = "INSERT INTO registration_tbl (no, registry_no, book_no, page_no, province, municipal, reg_date, reg_time, reg_user, update_date, update_time, update_user) 
+                 VALUES ($reg_no, '$registry_no', $book_no, $page_no, '$province', '$municipal', '$reg_date', '$reg_time', '$reg_user', '0000-00-00', '00:00:00', '')";
         if (!$conn->query($sql1)) throw new Exception("Reg Table Error: " . $conn->error);
 
         // Query 2: child_tbl
@@ -156,5 +164,8 @@ if (isset($_POST['add_birth'])) {
         echo "<br><button onclick='window.history.back()' style='padding:10px 20px; cursor:pointer;'>Go Back and Fix Form</button>";
         echo "</div>";
     }
+} else {
+    // If the file is opened directly without submitting a form
+    echo "<h2>No data received from form.</h2>";
 }
 ?>
