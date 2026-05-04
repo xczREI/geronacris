@@ -20,18 +20,18 @@
       </thead>
       <tbody id="myTable">
       <?php
-        require_once '../php/login_db_birth.php';
-        $conn = new mysqli($hn, $un, $pw, $db);
-        if ($conn->connect_error) die($conn->connect_error);
+        require '../php/login_db_birth.php';
+        $connB = new mysqli($hn, $un, $pw, $db);
+        if ($connB->connect_error) die($connB->connect_error);
 
         $sql = "SELECT * FROM registration_tbl WHERE reg_date LIKE '$yy%'";
-        $result = $conn->query($sql);  
-        if (!$result) die ("Database access failed: " . $conn->error);
+        $result = $connB->query($sql);  
+        if (!$result) die ("Database access failed: " . $connB->error);
         $rows = $result->num_rows;
 
         $sql = "SELECT COUNT(*) AS xx, reg_user FROM registration_tbl WHERE reg_date LIKE '$yy%' GROUP BY reg_user";
-        $result = $conn->query($sql);  
-        if (!$result) die ("Database access failed: " . $conn->error);
+        $result = $connB->query($sql);  
+        if (!$result) die ("Database access failed: " . $connB->error);
 
         if ($result->num_rows > 0) {
           while($row = $result->fetch_assoc()) { 
@@ -44,7 +44,8 @@
         echo '<tr>';
         echo '<td></td>';
         echo '<td align="right" style="font-weight:bold;">Total: '.$rows.'</td>';
-        echo '</tr>';            
+        echo '</tr>';   
+        $connB->close();         
       ?>
       </tbody>
     </table>
@@ -63,18 +64,18 @@
       </thead>
       <tbody id="myTable">
       <?php
-        require_once '../php/login_db_death.php';
-        $conn = new mysqli($hn, $un, $pw, $db);
-        if ($conn->connect_error) die($conn->connect_error);
+        require '../php/login_db_death.php';
+        $connD = new mysqli($hn, $un, $pw, $db);
+        if ($connD->connect_error) die($connD->connect_error);
 
         $sql = "SELECT * FROM registration_tbl WHERE reg_date LIKE '$yy%'";
-        $result = $conn->query($sql);  
-        if (!$result) die ("Database access failed: " . $conn->error);
+        $result = $connD->query($sql);  
+        if (!$result) die ("Database access failed: " . $connD->error);
         $rows = $result->num_rows;
 
         $sql = "SELECT COUNT(*) AS xx, reg_user FROM registration_tbl WHERE reg_date LIKE '$yy%' GROUP BY reg_user";
-        $result = $conn->query($sql);  
-        if (!$result) die ("Database access failed: " . $conn->error);
+        $result = $connD->query($sql);  
+        if (!$result) die ("Database access failed: " . $connD->error);
 
         if ($result->num_rows > 0) {
           while($row = $result->fetch_assoc()) { 
@@ -88,6 +89,7 @@
         echo '<td></td>';
         echo '<td align="right" style="font-weight:bold;">Total: '.$rows.'</td>';
         echo '</tr>';            
+        $connD->close();
       ?>
       </tbody>
     </table>
@@ -106,18 +108,18 @@
       </thead>
       <tbody id="myTable">
       <?php
-        require_once '../php/login_db_mrg.php';
-        $conn = new mysqli($hn, $un, $pw, $db);
-        if ($conn->connect_error) die($conn->connect_error);
+        require '../php/login_db_mrg.php';
+        $connM = new mysqli($hn, $un, $pw, $db);
+        if ($connM->connect_error) die($connM->connect_error);
 
         $sql = "SELECT * FROM registration_tbl WHERE reg_date LIKE '$yy%'";
-        $result = $conn->query($sql);  
-        if (!$result) die ("Database access failed: " . $conn->error);
+        $result = $connM->query($sql);  
+        if (!$result) die ("Database access failed: " . $connM->error);
         $rows = $result->num_rows;
 
         $sql = "SELECT COUNT(*) AS xx, reg_user FROM registration_tbl WHERE reg_date LIKE '$yy%' GROUP BY reg_user";
-        $result = $conn->query($sql);  
-        if (!$result) die ("Database access failed: " . $conn->error);
+        $result = $connM->query($sql);  
+        if (!$result) die ("Database access failed: " . $connM->error);
 
         if ($result->num_rows > 0) {
           while($row = $result->fetch_assoc()) { 
@@ -131,6 +133,7 @@
         echo '<td></td>';
         echo '<td align="right" style="font-weight:bold;">Total: '.$rows.'</td>';
         echo '</tr>';            
+        $connM->close();
       ?>
       </tbody>
     </table>
@@ -152,18 +155,18 @@
       </thead>
       <tbody id="myTable">
       <?php
-        require_once '../php/login_db_birth.php';
-        $conn = new mysqli($hn, $un, $pw, $db);
-        if ($conn->connect_error) die($conn->connect_error);
+        require '../php/login_db_birth.php';
+        $connB = new mysqli($hn, $un, $pw, $db);
+        if ($connB->connect_error) die($connB->connect_error);
 
         $sql = "SELECT * FROM registration_tbl WHERE reg_date BETWEEN '$xx' AND '$zz'";
-        $result = $conn->query($sql);  
-        if (!$result) die ("Database access failed: " . $conn->error);
+        $result = $connB->query($sql);  
+        if (!$result) die ("Database access failed: " . $connB->error);
         $rows = $result->num_rows;
 
         $sql = "SELECT COUNT(*) AS xx, reg_user FROM registration_tbl WHERE reg_date BETWEEN '$xx' AND '$zz' GROUP BY reg_user";
-        $result = $conn->query($sql);  
-        if (!$result) die ("Database access failed: " . $conn->error);
+        $result = $connB->query($sql);  
+        if (!$result) die ("Database access failed: " . $connB->error);
 
         if ($result->num_rows > 0) {
           while($row = $result->fetch_assoc()) { 
@@ -176,7 +179,8 @@
         echo '<tr>';
         echo '<td></td>';
         echo '<td align="right" style="font-weight:bold;">Total: '.$rows.'</td>';
-        echo '</tr>';            
+        echo '</tr>';   
+        $connB->close();         
       ?>
       </tbody>
     </table>
@@ -195,18 +199,18 @@
       </thead>
       <tbody id="myTable">
       <?php
-        require_once '../php/login_db_death.php';
-        $conn = new mysqli($hn, $un, $pw, $db);
-        if ($conn->connect_error) die($conn->connect_error);
+        require '../php/login_db_death.php';
+        $connD = new mysqli($hn, $un, $pw, $db);
+        if ($connD->connect_error) die($connD->connect_error);
 
         $sql = "SELECT * FROM registration_tbl WHERE reg_date BETWEEN '$xx' AND '$zz'";
-        $result = $conn->query($sql);  
-        if (!$result) die ("Database access failed: " . $conn->error);
+        $result = $connD->query($sql);  
+        if (!$result) die ("Database access failed: " . $connD->error);
         $rows = $result->num_rows;
 
         $sql = "SELECT COUNT(*) AS xx, reg_user FROM registration_tbl WHERE reg_date BETWEEN '$xx' AND '$zz' GROUP BY reg_user";
-        $result = $conn->query($sql);  
-        if (!$result) die ("Database access failed: " . $conn->error);
+        $result = $connD->query($sql);  
+        if (!$result) die ("Database access failed: " . $connD->error);
 
         if ($result->num_rows > 0) {
           while($row = $result->fetch_assoc()) { 
@@ -219,7 +223,8 @@
         echo '<tr>';
         echo '<td></td>';
         echo '<td align="right" style="font-weight:bold;">Total: '.$rows.'</td>';
-        echo '</tr>';            
+        echo '</tr>';   
+        $connD->close();         
       ?>
       </tbody>
     </table>
@@ -238,18 +243,18 @@
       </thead>
       <tbody id="myTable">
       <?php
-        require_once '../php/login_db_mrg.php';
-        $conn = new mysqli($hn, $un, $pw, $db);
-        if ($conn->connect_error) die($conn->connect_error);
+        require '../php/login_db_mrg.php';
+        $connM = new mysqli($hn, $un, $pw, $db);
+        if ($connM->connect_error) die($connM->connect_error);
 
         $sql = "SELECT * FROM registration_tbl WHERE reg_date BETWEEN '$xx' AND '$zz'";
-        $result = $conn->query($sql);  
-        if (!$result) die ("Database access failed: " . $conn->error);
+        $result = $connM->query($sql);  
+        if (!$result) die ("Database access failed: " . $connM->error);
         $rows = $result->num_rows;
 
         $sql = "SELECT COUNT(*) AS xx, reg_user FROM registration_tbl WHERE reg_date BETWEEN '$xx' AND '$zz' GROUP BY reg_user";
-        $result = $conn->query($sql);  
-        if (!$result) die ("Database access failed: " . $conn->error);
+        $result = $connM->query($sql);  
+        if (!$result) die ("Database access failed: " . $connM->error);
 
         if ($result->num_rows > 0) {
           while($row = $result->fetch_assoc()) { 
@@ -263,6 +268,7 @@
         echo '<td></td>';
         echo '<td align="right" style="font-weight:bold;">Total: '.$rows.'</td>';
         echo '</tr>';            
+        $connM->close();
       ?>
       </tbody>
     </table>

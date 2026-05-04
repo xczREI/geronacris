@@ -1,164 +1,56 @@
 <?php include ('logout_session.php'); ?>
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-	<title>CRS-Birth Registration</title>
-	<meta charset="utf-8">
-  	<meta name="viewport" content="width=device-width, initial-scale=1">
-  	<link rel="shortcut icon" type="image/x-icon" href="../../images/logo-3.png">
-	<link rel="stylesheet" type="text/css" href="../../bootstrap4/css/bootstrap.min.css"/>
+    <title>CRS-Birth Registration (Staff Edit)</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="shortcut icon" type="image/x-icon" href="../../images/logo-3.png">
+    <link rel="stylesheet" type="text/css" href="../../bootstrap4/css/bootstrap.min.css"/>
     <script src="../../bootstrap4/jquery/jquery-3.3.1.min.js" type="text/javascript"></script>
     <script src="../../bootstrap4/js/bootstrap.min.js"></script>
     <link href="../../bootstrap4/font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css">
     <link rel="stylesheet" href="../../alertifyjs/css/alertify.min.css"/>
     <link rel="stylesheet" href="../../alertifyjs/css/themes/default.min.css"/>
     <link href="../../css/style_css.css" rel="stylesheet" type="text/css">
-
-	<style>
-		input, select{ 
-			text-transform: uppercase;
-		}
-		#birth_txt{
-			background-color: white;
-			border-top:none;
-			border-left:none;
-			border-right:none;
-			border-color: green;
-			border-radius: 0;
-		}
-		textarea{ 
-    		text-transform: uppercase;
-	   	}
-	</style>
-
-	<style>
-	    #navbar{ display: none; }
-	    .coll{ overflow:scroll; height:50em; }
-	    @media only screen and (max-width: 768px) {
-	                /* For mobile phones: */
-		  #navbar{ display: block; display: flex;}
-	      #topbar{ display: none;  }
-	      #sidebar{ display: none; }
-	      #body{ padding-left: 12%; }
-	      .navbar-collapse {
-	        padding: 0;
-	        width: 50%;
-	        position: absolute;
-	        top: 72px;
-	        right: 20px;
-	        z-index: 1000;
-	      }
-	      .navbar-collapse #nav-link_active, #nav-link{ 
-	        font-size:13px; 
-	        font-family: century gothic;
-	        text-transform: uppercase;
-	        color: white;
-	        display:  block;
-	        padding: 10px;
-	        transition: all 0.3s ease;
-	        letter-spacing: 1px;
-	      }
-	      .coll{ overflow:scroll; height:30em; }
-	      #modal1A{ overflow:scroll; height:30em; }
-	    }
-  	</style>
     
     <style>
-        /* =========================================
-           1. CSS FOR PRINTING THE DOCUMENT
-           ========================================= */
-        @media print {
-            /* Hide the main background page */
-            body * {
-                visibility: visible;
-            }
-            /* Only show the preview inside the modal */
-            #livePreviewBody, #livePreviewBody * {
-                visibility: visible;
-            }
-            /* Stretch the preview to fit the paper */
-            #livePreviewBody {
-                position: absolute;
-                left: 0;
-                top: 0;
-                width: 100%;
-                margin: 0;
-                padding: 0;
-            }
-            /* Hide pop-up borders, close buttons, and the dark background shadow */
-            .modal-header, .modal-footer, .modal-backdrop { 
-                display: none !important; 
-            }
-            .modal-content { 
-                border: none !important; 
-                box-shadow: none !important;
-            }
-           
-            /* Hide placeholders so they don't print */
-            input::placeholder, textarea::placeholder {
-                color: transparent !important; 
-            }
-            @page {
-                size: legal; /* Default to Legal size paper */
-                margin: 10mm;
-            }
+        input, select { text-transform: uppercase; }
+        textarea { text-transform: uppercase; }
+        .coll { overflow:scroll; height:50em; }
+        #navbar { display: none; }
+        @media only screen and (max-width: 768px) {
+            #navbar { display: block; display: flex;}
+            #topbar { display: none;  }
+            #sidebar { display: none; }
+            #body { padding-left: 12%; }
+            .navbar-collapse { padding: 0; width: 50%; position: absolute; top: 72px; right: 20px; z-index: 1000; }
+            .navbar-collapse #nav-link_active, #nav-link { font-size:13px; font-family: century gothic; text-transform: uppercase; color: white; display: block; padding: 10px; transition: all 0.3s ease; letter-spacing: 1px; }
+            .coll { overflow:scroll; height:30em; }
         }
-
-        /* =========================================
-           2. CSS FOR THE SCREEN (Wider Pop-up)
-           ========================================= */
-        @media (min-width: 768px) {
-            #livePreviewModal .modal-dialog {
-                max-width: 1050px !important; /* Forces the modal to be wide enough for Form 102 */
-                width: 95% !important;
-            }
-        }
-
-				/* Make text prominent ONLY inside the Live Preview Modal */
-		#livePreviewBody .ctf-birth input, 
-		#livePreviewBody .ctf-birth select, 
-		#livePreviewBody .ctf-birth textarea {
-			font-size: 11.5px !important;       /* Slightly larger */
-			font-weight: 600 !important;        /* Maximum bold */
-			color: #000000 !important;          /* Pure black text */
-			-webkit-text-fill-color: #000000 !important; /* Overrides Chrome's gray disabled text */
-			opacity: 1 !important;              /* Stops fading */
-		}
     </style>
 </head>
 <body>
 
-<!-- nav top -->
 <nav class="navbar navbar-expand-md bg-dark navbar-dark" id="navbar">
-  <!-- Brand -->
   <a class="navbar-brand" href="#">
     <div class="media pl-1 mb-3">
       <div class="media-body">
         <h6 class="text-left mb-3 text-light">
-          <?php $type = $_SESSION['type']; if ($type == 'Admin') { ?>
-              <img src="../../images/img_avatar3.png" class="mr-3 mt-0 rounded-circle" style="width:40px;">
-          <?php } else if ($type == 'Staff') { ?>
-              <img src="../../images/img_avatar2.png" class="mr-3 mt-0 rounded-circle" style="width:40px;">
-          <?php } ?>
-
+          <img src="../../images/img_avatar2.png" class="mr-3 mt-0 rounded-circle" style="width:40px;">
           <?php echo $_SESSION['firstname'].' '.$_SESSION['lastname']; ?>
         </h6>
       </div>
     </div>
   </a>
-
-  <!-- Toggler/collapsibe Button -->
   <button class="navbar-toggler mr-2" type="button" data-toggle="collapse" data-target="#collapsibleNavbar" style="float: right;">
     <span class="navbar-toggler-icon"></span>
   </button>
-
-  <!-- Navbar links -->
   <div class="collapse navbar-collapse bg-light" id="collapsibleNavbar">
     <ul class="navbar-nav bg-dark mx-auto h-100">
 		<li class="nav-item"><a class="active nav-link" id="nav-link" href="../../home_staff.php">&emsp;<i class="fa fa-clock-o fa-fw"></i>Dashboard</a></li>
         <li class="nav-item"><a class="nav-link" id="nav-link_active" href="../files_staff.php" >&emsp;<i class="fa fa-bookmark-o fa-fw"></i>Registration</a></li>
-        <li class="nav-item"><a class="nav-link" data-toggle="modal" href="#myreport" id="nav-link">
-        &emsp;<i class="fa fa-file-o fa-fw"></i>Report</a></li>
+        <li class="nav-item"><a class="nav-link" data-toggle="modal" href="#myreport" id="nav-link">&emsp;<i class="fa fa-file-o fa-fw"></i>Report</a></li>
         <li class="nav-item"><a class="nav-link" id="nav-link" href="../../php/logout.php">&emsp;<i class="fa fa-eject fa-fw"></i>Logout</a></li>
     </ul>
   </div>
@@ -166,22 +58,16 @@
 
 <div class="nav-top" id="topbar">
 	<div class="media">
-	    <h5 class="text-left pt-2 text-uppercase" style="font-family: century gothic;"><i class="fa fa-angle-right"></i> <?php echo $_SESSION['type']; ?> Account</h5>
+	    <h5 class="text-left pt-2 text-uppercase" style="font-family: century gothic;"><i class="fa fa-angle-right"></i> STAFF Account</h5>
 	    <div class="media-body">
 	      <h6 class="text-right mb-3">
-		      <?php $type = $_SESSION['type']; if ($type == 'Admin') { ?>
-	            <img src="../../images/img_avatar3.png" class="mr-3 mt-0 rounded-circle" style="width:40px;">
-	        <?php } else if ($type == 'Staff') { ?>
-	            <img src="../../images/img_avatar2.png" class="mr-3 mt-0 rounded-circle" style="width:40px;">
-	        <?php } ?>
-
-		      <?php echo $_SESSION['firstname'].' '.$_SESSION['lastname']; ?>
+	        <img src="../../images/img_avatar2.png" class="mr-3 mt-0 rounded-circle" style="width:40px;">
+		    <?php echo $_SESSION['firstname'].' '.$_SESSION['lastname']; ?>
 	      </h6>
 		</div>
 	</div>
 </div>
 
-<!--navbar-->
 <div class="row" id="row">
   	<div class="col-sm-3 bg-dark" style="border-left: 15px solid;" id="sidebar">
 	    <div class="pic" style="margin-top: 2em;">
@@ -189,56 +75,58 @@
 	            <h4 class="text-uppercase">Civil Registry<br><span class="lblspan">System</span></h4>
  	       </center>
         </div>
-
-	  <!--nav-side-->
 	    <div class="aside" style="margin-top: 3em;">
 	      <nav class="navbar">
 	        <ul class="navbar-nav" style="padding-bottom:6em;">
 	            <li class="nav-item"><a class="active nav-link" id="nav-link" href="../../home_staff.php">&emsp;<i class="fa fa-clock-o fa-fw"></i>Dashboard</a></li>
 	            <li class="nav-item"><a class="nav-link" id="nav-link_active" href="../files_staff.php" >&emsp;<i class="fa fa-bookmark-o fa-fw"></i>Registration</a></li>
-	            <li class="nav-item"><a class="nav-link" data-toggle="modal" href="#myreport" id="nav-link">
-	              &emsp;<i class="fa fa-file-o fa-fw"></i>Report</a></li>
+	            <li class="nav-item"><a class="nav-link" data-toggle="modal" href="#myreport" id="nav-link">&emsp;<i class="fa fa-file-o fa-fw"></i>Report</a></li>
 	            <li class="nav-item"><a class="nav-link" id="nav-link" href="../../php/logout.php">&emsp;<i class="fa fa-eject fa-fw"></i>Logout</a></li>
 	        </ul>
 	      </nav>
 	    </div>
-
-  	</div><!--end col-3-->
+  	</div>
   
   	<div class="col-sm-9" style="padding-top: 7%;" id="body">
         <div id="accordion">
-            <div class="row">
-                <div class="col-sm-6 mb-1">
+            <div class="row mb-3">
+                <div class="col-sm-6">
                     <a href="birth_records_staff.php" class="btn btn-light"><i class="fa fa-angle-double-left"></i> Back</a>
                     <button data-toggle="collapse" data-target="#birth_page_1" id="page1" class="btn btn-outline-info">Page 1</button>
                     <button data-toggle="collapse" data-target="#birth_page_2" id="page2" class="btn btn-outline-info">Page 2</button>
                 </div>
-                <div class="col-sm-2 mb-1 pr-0">
-                    <button type="button" class="btn btn-outline-dark btn-block" onclick="openLivePreview()">Preview</button>
-                </div>
-                <div class="col-sm-2 mb-1 pr-0">
-                    <button type="button" class="btn btn-outline-dark btn-block" data-toggle="modal" data-target="#my1A">Print Form 1A</button>
+                <div class="col-sm-2 pr-0">
+                    <button type="button" class="btn btn-outline-dark btn-block font-weight-bold" onclick="openLivePreview()">Preview</button>
                 </div>
                 <div class="col-sm-2 pr-0">
-                    <button type="button" class="btn btn-outline-dark btn-block" data-toggle="modal" data-target="#my102">Print Form 102</button>
+                    <button type="button" class="btn btn-outline-dark btn-block font-weight-bold" data-toggle="modal" data-target="#my1A">Print 1A</button>
+                </div>
+                <div class="col-sm-2 pr-0">
+                    <button type="button" class="btn btn-outline-dark btn-block font-weight-bold" data-toggle="modal" data-target="#my102">Print 102</button>
                 </div>
             </div>
 
-          <?php
+    <?php
     require_once 'login_db_birth.php';
     $conn = new mysqli($hn, $un, $pw, $db);
     if ($conn->connect_error) die($conn->connect_error);
 
-    $reg_no=null;
-    if (!empty($_GET['reg_no'])){ $reg_no = $_REQUEST['reg_no']; }
-
-    // Added LIMIT 1 to ensure the database only ever grabs one record
-    $sql = "SELECT * FROM registration_tbl NATURAL JOIN (child_tbl NATURAL JOIN mother_tbl NATURAL JOIN father_tbl NATURAL JOIN att_inf_tbl NATURAL JOIN receive_civil_tbl NATURAL JOIN remarks_tbl NATURAL JOIN admission_paternity_tbl NATURAL JOIN late_reg_tbl) WHERE no = '$reg_no' LIMIT 1";
+    $reg_no = $_GET['reg_no'] ?? '';
+    
+    // Robust SQL: Using LEFT JOIN so the form loads even if optional tables are empty
+    $sql = "SELECT *, registration_tbl.no as no FROM registration_tbl 
+            LEFT JOIN child_tbl ON registration_tbl.no = child_tbl.no 
+            LEFT JOIN mother_tbl ON registration_tbl.no = mother_tbl.no 
+            LEFT JOIN father_tbl ON registration_tbl.no = father_tbl.no 
+            LEFT JOIN att_inf_tbl ON registration_tbl.no = att_inf_tbl.no 
+            LEFT JOIN receive_civil_tbl ON registration_tbl.no = receive_civil_tbl.no 
+            LEFT JOIN remarks_tbl ON registration_tbl.no = remarks_tbl.no 
+            LEFT JOIN admission_paternity_tbl ON registration_tbl.no = admission_paternity_tbl.no 
+            LEFT JOIN late_reg_tbl ON registration_tbl.no = late_reg_tbl.no 
+            WHERE registration_tbl.no = '$reg_no' LIMIT 1";
     
     $result = $conn->query($sql);  
-    
-    if ($result->num_rows > 0) {
-        // Removed the while loop entirely. Just fetch the single row once!
+    if ($result && $result->num_rows > 0) {
         $row = $result->fetch_assoc(); 
 ?>
 <form method="post" action="birth_cerf_update_action_staff.php" id="updatebirth_form" novalidate>
@@ -250,13 +138,16 @@
         <?php include 'birth_page_2_edit.php'; ?>
     </div>
     <br>
-    <button type="submit" class="btn btn-info btn-block" name="birth_update" id="btnadd" style="font-weight:bold; letter-spacing:5px; font-size:20px;">UPDATE</button>
+    <button type="submit" class="btn btn-info btn-block font-weight-bold" name="birth_update" id="btnadd" style="letter-spacing:5px; font-size:20px;">UPDATE RECORD</button>
     <br>
 </form>
 <?php 
     } else {
-        // Optional: Good practice to show a message if the ID is totally missing
-        echo "<div class='alert alert-danger'>No record found for this Registry Number.</div>";
+        echo "<div class='alert alert-danger mt-5'>
+                <h4><i class='fa fa-exclamation-triangle'></i> Record Not Found</h4>
+                <p>Unable to find birth record with ID: <strong>" . htmlspecialchars($reg_no) . "</strong></p>
+                <a href='birth_records_staff.php' class='btn btn-outline-danger'>Return to Records</a>
+              </div>";
     } 
 ?>
         </div>
@@ -294,113 +185,24 @@
 <script src = "../../js/input_no_only.js"></script>
 <script src = "../../js/input_txt_only.js"></script>
 <script src = "../../js/inputs.js"></script>
+<script src="../../alertifyjs/alertify.min.js"></script>
 
 <script>
-$(document).ready(function(){
-    $("#regno").keyup(function(){
-	    var registryno = $(this).val();
-	    $.ajax({
-		    url:"birth_check_regNo.php",
-		    method:"POST",
-		    data:{registry_no:registryno},
-		    dataType:"text",
-		    success:function(html){
-		        $("#error").html(html);
-		    }
-	    });
-	});
-
-});
-</script>
-
-<script>
-$(document).ready(function(){
-	var x = new Date();
-    document.getElementById("time").value = x.toLocaleTimeString();
-});
-</script>
-
-<!--Javascrpt theme-->
-<script src = "../../alertifyjs/alertify.min.js"></script>
-
-<script>
-// Logic to handle the Preview generation
 function openLivePreview() {
-    // 1. Target the original page content
-    var $original = $('#birth_page_1');
+    var $original1 = $('#birth_page_1');
+    var $original2 = $('#birth_page_2');
+    var $clone1 = $original1.clone();
+    var $clone2 = $original2.clone();
     
-    // 2. Create the clone and strip scripts to prevent crashes
-    var $clone = $original.clone();
-    $clone.find('script').remove();
+    $clone1.find('script').remove();
+    $clone2.find('script').remove();
     
-    // 3. FORCE fixed layout: Wrap clone in a div that matches your form's 960px width
-    // This prevents the Bootstrap "cols" from stretching and breaking alignment
-    var $previewWrapper = $('<div style="width: 960px; margin: auto; background: white; padding: 20px;"></div>');
+    $clone1.removeClass('collapse coll hidden show').css({'display': 'block', 'visibility': 'visible', 'height': 'auto'});
+    $clone2.removeClass('collapse coll hidden show').css({'display': 'block', 'visibility': 'visible', 'height': 'auto'});
     
-    $clone.removeClass('collapse coll hidden show');
-    $clone.css({
-        'display': 'block',
-        'visibility': 'visible',
-        'height': 'auto',
-        'overflow': 'visible'
-    });
-
-    // 4. Copy current input values (dropdowns, text, checkboxes)
-    var originalSelects = $original.find('select');
-    $clone.find('select').each(function(index, item) {
-         $(item).val(originalSelects.eq(index).val());
-    });
-
-    var originalInputs = $original.find('input');
-    $clone.find('input').each(function(index, item) {
-         if($(item).attr('type') === 'checkbox' || $(item).attr('type') === 'radio') {
-             $(item).prop('checked', originalInputs.eq(index).prop('checked'));
-         } else {
-             $(item).val(originalInputs.eq(index).val());
-         }
-    });
-
-    // 5. Clean up IDs and lock inputs so it's a "View Only" snapshot
-    $clone.find('*').removeAttr('id');
-    $clone.find('input, textarea').prop('readonly', true).css({
-        'background-color': 'transparent', 
-        'border': 'none' 
-    });
-    $clone.find('select, input[type="checkbox"], input[type="radio"]').prop('disabled', true);
-    
-    // 6. EMPTY the body first to prevent stacking, then add the wrapper
-    $('#livePreviewBody').empty().append($previewWrapper.append($clone));
-    
-    // 7. Show the modal (Don't use appendTo("body") here, it's already in the HTML)
+    $('#livePreviewBody').empty().append($clone1).append($clone2);
     $('#livePreviewModal').modal('show');
 }
-</script>
-
-<script>
-// Find any invalid inputs when the user hits UPDATE
-$('#updatebirth_form').on('invalid', function () {
-    return false;
-} , true);
-
-document.getElementById('updatebirth_form').addEventListener('invalid', function(e){
-    // Find the closest accordion collapse container to the invalid field
-    var $closestCollapse = $(e.target).closest('.collapse');
-    
-    // If it's closed, open it!
-    if(!$closestCollapse.hasClass('show')) {
-        $closestCollapse.collapse('show');
-    }
-}, true);
-</script>
-
-
-// DELETE THIS ENTIRE SCRIPT FROM THE BOTTOM OF YOUR EDIT PAGES
-<script>
-// Force Sync Hidden Fields Before Form Submission
-$(document).ready(function() {
-    $('#updatebirth_form').on('submit', function() {
- })
- }) // ... delete all of this ...
 </script>
 
 </body>

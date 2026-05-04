@@ -31,7 +31,16 @@
         $reg_no=null;
         if (!empty($_GET['reg_no'])){ $reg_no = $_REQUEST['reg_no']; }
 
-        $sql = "SELECT * FROM registration_tbl NATURAL JOIN (child_tbl NATURAL JOIN mother_tbl NATURAL JOIN father_tbl NATURAL JOIN att_inf_tbl NATURAL JOIN receive_civil_tbl NATURAL JOIN remarks_tbl NATURAL JOIN admission_paternity_tbl NATURAL JOIN late_reg_tbl) WHERE no = '$reg_no'";
+        $sql = "SELECT *, registration_tbl.no as no FROM registration_tbl 
+                LEFT JOIN child_tbl ON registration_tbl.no = child_tbl.no 
+                LEFT JOIN mother_tbl ON registration_tbl.no = mother_tbl.no 
+                LEFT JOIN father_tbl ON registration_tbl.no = father_tbl.no 
+                LEFT JOIN att_inf_tbl ON registration_tbl.no = att_inf_tbl.no 
+                LEFT JOIN receive_civil_tbl ON registration_tbl.no = receive_civil_tbl.no 
+                LEFT JOIN remarks_tbl ON registration_tbl.no = remarks_tbl.no 
+                LEFT JOIN admission_paternity_tbl ON registration_tbl.no = admission_paternity_tbl.no 
+                LEFT JOIN late_reg_tbl ON registration_tbl.no = late_reg_tbl.no 
+                WHERE registration_tbl.no = '$reg_no' LIMIT 1";
         $result = $conn->query($sql);  
         if (!$result) die ("Database access failed: " . $conn->error);
 
@@ -51,7 +60,7 @@
               </div>
               <br><br>
               <h6>TO WHOM IT MAY CONCERN:</h6>
-              <h6 style="text-indent:8%;">We certify that, among others, the following facts of birth appear in<br>our Register of Birth on page <input type="text" name="birthpage" id="birthpage" style="outline: none; border: 0; width: 80px; text-align: center; background-color: green;" maxlength="4" value="<?php echo $row['page_no']; ?>"> of book number <input type="text" name="birthbook" id="birthbook" style="outline: none; border: 0; width: 80px; text-align: center; background-color: green;" maxlength="4" value="<?php echo $row['book_no']; ?>">:</h6><br>
+              <h6 style="text-indent:8%;">We certify that, among others, the following facts of birth appear in<br>our Register of Birth on page <input type="text" name="birthpage" id="birthpage" style="outline: none; border: 0; width: 80px; text-align: center; border-bottom: 1px solid #ced4da;" maxlength="4" value="<?php echo $row['page_no']; ?>"> of book number <input type="text" name="birthbook" id="birthbook" style="outline: none; border: 0; width: 80px; text-align: center; border-bottom: 1px solid #ced4da;" maxlength="4" value="<?php echo $row['book_no']; ?>">:</h6><br>
 
               <div class="row" style="padding-left:8%;">
               <!-- Hidden text -->
@@ -80,18 +89,17 @@
                             echo date('F d, Y', strtotime($raw_reg));
                         } else {
                             echo 'N/A';
-                        } ?>" readonly="">
-                  <input class="input" type="text" name="reg_date" value="<?php echo date_format(date_create($row['reg_date']),'F d, Y'); ?>" readonly="">
-                  <input class="input" type="text" name="child_name" value="<?php echo ucwords($row['child_fname'].' '.$row['child_mname'].' '.$row['child_lname']); ?>" readonly="">
-                  <input class="input" type="text" name="child_sex" value="<?php echo ucwords($row['child_sex']); ?>" readonly="">
-                  <input class="input" type="text" name="birth_date" value="<?php echo ucwords($row['child_birth_date']); ?>" readonly=""><br> 
-                  <input class="input" type="text" name="birth_place" value="<?php echo ucwords($row['birth_brgy'].', '.$row['birth_municipal'].', '.$row['birth_province']); ?>" readonly="">   
-                  <input class="input" type="text" name="mother_name" value="<?php echo ucwords($row['mother_fname'].' '.$row['mother_mname'].' '.$row['mother_lname']); ?>" readonly=""><br> 
-                  <input class="input" type="text" name="mother_citizen" value="<?php echo ucwords($row['mother_citizen']); ?>" readonly="">
-                  <input class="input" type="text" name="father_name" value="<?php echo ucwords($row['father_fname'].' '.$row['father_mname'].' '.$row['father_lname']); ?>" readonly=""><br>
-                  <input class="input" type="text" name="father_citizen" value="<?php echo ucwords($row['father_citizen']); ?>" readonly="">
-                  <input class="input" type="text" name="mrg_date" value="<?php echo ucwords($row['marriage_date']); ?>" readonly="">
-                  <input class="input" type="text" name="mrg_place" value="<?php echo ucwords($row['marriage_place']); ?>" readonly="">
+                        } ?>" readonly>
+                  <input class="input" type="text" name="child_name" value="<?php echo ucwords(($row['child_fname'] ?? '').' '.($row['child_mname'] ?? '').' '.($row['child_lname'] ?? '')); ?>" readonly>
+                  <input class="input" type="text" name="child_sex" value="<?php echo ucwords($row['child_sex'] ?? ''); ?>" readonly>
+                  <input class="input" type="text" name="birth_date" value="<?php echo ucwords($row['child_birth_date'] ?? ''); ?>" readonly><br> 
+                  <input class="input" type="text" name="birth_place" value="<?php echo ucwords(($row['birth_brgy'] ?? '').', '.($row['birth_municipal'] ?? '').', '.($row['birth_province'] ?? '')); ?>" readonly>   
+                  <input class="input" type="text" name="mother_name" value="<?php echo ucwords(($row['mother_fname'] ?? '').' '.($row['mother_mname'] ?? '').' '.($row['mother_lname'] ?? '')); ?>" readonly><br> 
+                  <input class="input" type="text" name="mother_citizen" value="<?php echo ucwords($row['mother_citizen'] ?? ''); ?>" readonly>
+                  <input class="input" type="text" name="father_name" value="<?php echo ucwords(($row['father_fname'] ?? '').' '.($row['father_mname'] ?? '').' '.($row['father_lname'] ?? '')); ?>" readonly><br>
+                  <input class="input" type="text" name="father_citizen" value="<?php echo ucwords($row['father_citizen'] ?? ''); ?>" readonly>
+                  <input class="input" type="text" name="mrg_date" value="<?php echo ucwords($row['marriage_date'] ?? ''); ?>" readonly>
+                  <input class="input" type="text" name="mrg_place" value="<?php echo ucwords($row['marriage_place'] ?? ''); ?>" readonly>
                   </h6>
                 </div>
                 <div class="row" style="padding-left:2%;">
@@ -99,7 +107,7 @@
                     <h6>Remarks:</h6>      
                   </div>
                   <div class="col-9">
-                    <p style="font-size: 13px; text-transform:uppercase; margin-left:25px" readonly=""><?php echo $row['remarks']; ?></p>
+                    <p style="font-size: 13px; text-transform:uppercase; margin-left:25px"><?php echo $row['remarks'] ?? ''; ?></p>
                   </div>
                 </div>
               </div>

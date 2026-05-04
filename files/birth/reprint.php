@@ -13,8 +13,17 @@
         $reg_no=null;
         if (!empty($_GET['reg_no'])){ $reg_no = $_REQUEST['reg_no']; }
 
-        // THE FIX: Here is the FULL query with all 8 tables written out, plus LIMIT 1
-        $sql = "SELECT * FROM registration_tbl NATURAL JOIN (child_tbl NATURAL JOIN mother_tbl NATURAL JOIN father_tbl NATURAL JOIN att_inf_tbl NATURAL JOIN receive_civil_tbl NATURAL JOIN remarks_tbl NATURAL JOIN admission_paternity_tbl NATURAL JOIN late_reg_tbl) WHERE no = '$reg_no' LIMIT 1";
+        // IMPROVED QUERY: Using LEFT JOIN to ensure the record loads even if optional tables are empty
+        $sql = "SELECT *, registration_tbl.no as no FROM registration_tbl 
+                LEFT JOIN child_tbl ON registration_tbl.no = child_tbl.no 
+                LEFT JOIN mother_tbl ON registration_tbl.no = mother_tbl.no 
+                LEFT JOIN father_tbl ON registration_tbl.no = father_tbl.no 
+                LEFT JOIN att_inf_tbl ON registration_tbl.no = att_inf_tbl.no 
+                LEFT JOIN receive_civil_tbl ON registration_tbl.no = receive_civil_tbl.no 
+                LEFT JOIN remarks_tbl ON registration_tbl.no = remarks_tbl.no 
+                LEFT JOIN admission_paternity_tbl ON registration_tbl.no = admission_paternity_tbl.no 
+                LEFT JOIN late_reg_tbl ON registration_tbl.no = late_reg_tbl.no 
+                WHERE registration_tbl.no = '$reg_no' LIMIT 1";
         
         $result = $conn->query($sql);  
         if (!$result) die ("Database access failed: " . $conn->error);

@@ -7,7 +7,7 @@
 
     if (isset($_POST['add_marriage'])) 
     {
-      // --- FIX 1: Cast integer values to handle empty strings ---
+      // --- REGISTRATION INFO ---
       $registry_no = $conn->real_escape_string($_POST['registry_no'] ?? '');
       $book_no = !empty($_POST['book_no']) ? (int)$_POST['book_no'] : 0;
       $page_no = !empty($_POST['page_no']) ? (int)$_POST['page_no'] : 0;
@@ -21,7 +21,7 @@
       $u_time = $_POST['time'] ?? '';
       $u_name = $conn->real_escape_string($_POST['emp_name'] ?? '');
 
-      //=====================================================================hus_info
+      // --- HUSBAND INFO ---
       $husband_lname = $conn->real_escape_string($_POST['husband_lname'] ?? '');
       $husband_fname = $conn->real_escape_string($_POST['husband_fname'] ?? '');
       $husband_mname = $conn->real_escape_string($_POST['husband_mname'] ?? '');
@@ -41,7 +41,7 @@
       $husband_person_rel = $conn->real_escape_string($_POST['h_person_rel'] ?? '');
       $husband_person_residence = $conn->real_escape_string($_POST['h_person_residence'] ?? '');
 
-      //=====================================================================wife_info
+      // --- WIFE INFO ---
       $wife_lname = $conn->real_escape_string($_POST['wife_lname'] ?? '');
       $wife_fname = $conn->real_escape_string($_POST['wife_fname'] ?? '');
       $wife_mname = $conn->real_escape_string($_POST['wife_mname'] ?? '');
@@ -61,7 +61,7 @@
       $wife_person_rel = $conn->real_escape_string($_POST['w_person_rel'] ?? '');
       $wife_person_residence = $conn->real_escape_string($_POST['w_person_residence'] ?? '');
 
-      //=====================================================================mrg_info
+      // --- MARRIAGE INFO ---
       $mrg_brgy = $conn->real_escape_string($_POST['mrg_brgy'] ?? '');
       $mrg_city = $conn->real_escape_string($_POST['mrg_city'] ?? '');
       $mrg_province = $conn->real_escape_string($_POST['mrg_province'] ?? '');
@@ -70,11 +70,11 @@
       $husband_name = $conn->real_escape_string($_POST['husband_name'] ?? '');
       $wife_name = $conn->real_escape_string($_POST['wife_name'] ?? '');
       
-      // --- FIX 2: Null coalescing for checkboxes that might be blank ---
       $certify_type = $conn->real_escape_string($_POST['certify_type'] ?? '');
-      $mrg_days = $conn->real_escape_string($_POST['mrg_days'] ?? '');
-      $mrg_months = $conn->real_escape_string($_POST['mrg_months'] ?? '');
-      $mrg_years = $conn->real_escape_string($_POST['mrg_years'] ?? '');
+      $mrg_days = !empty($_POST['mrg_days']) ? (int)$_POST['mrg_days'] : 0;
+      $mrg_months = !empty($_POST['mrg_months']) ? (int)$_POST['mrg_months'] : 0;
+      $mrg_years = !empty($_POST['mrg_years']) ? (int)$_POST['mrg_years'] : 0;
+      
       $mrg_solemn_type = $conn->real_escape_string($_POST['mrg_solemn_type'] ?? '');
       $mrg_license_no = $conn->real_escape_string($_POST['mrg_license_no'] ?? '');
       $mrg_license_on = $conn->real_escape_string($_POST['mrg_license_on'] ?? '');
@@ -108,7 +108,7 @@
       $witness11 = $conn->real_escape_string($_POST['witness11'] ?? '');
       $witness12 = $conn->real_escape_string($_POST['witness12'] ?? '');
 
-      //=====================================================================aff_solemn
+      // --- AFFIDAVIT SOLEMN ---
       $aff_solemn_name = $conn->real_escape_string($_POST['aff_solemn_name'] ?? '');
       $aff_solemn_of = $conn->real_escape_string($_POST['aff_solemn_of'] ?? '');
       $aff_solemn_at = $conn->real_escape_string($_POST['aff_solemn_at'] ?? '');
@@ -117,14 +117,18 @@
       $aff_2type = $conn->real_escape_string($_POST['aff_2type'] ?? '');
       $aff_1party = $conn->real_escape_string($_POST['aff_1party'] ?? '');
       $aff_2party = $conn->real_escape_string($_POST['aff_2party'] ?? '');
-      $aff_sign_day = $conn->real_escape_string($_POST['aff_sign_day'] ?? '');
-      $aff_sign_month = $conn->real_escape_string($_POST['aff_sign_month'] ?? '');
-      $aff_sign_year = $conn->real_escape_string($_POST['aff_sign_year'] ?? '');
+      
+      $aff_sign_day = !empty($_POST['aff_sign_day']) ? (int)$_POST['aff_sign_day'] : 0;
+      $aff_sign_month = !empty($_POST['aff_sign_month']) ? (int)$_POST['aff_sign_month'] : 0;
       $aff_sign_year  = !empty($_POST['aff_sign_year']) ? (int)$_POST['aff_sign_year'] : 0;
+      
+      $aff_sign_at = $conn->real_escape_string($_POST['aff_sign_at'] ?? '');
+      $aff_sign_name = $conn->real_escape_string($_POST['aff_sign_name'] ?? '');
+      
+      $aff_sworn_day = !empty($_POST['aff_sworn_day']) ? (int)$_POST['aff_sworn_day'] : 0;
+      $aff_sworn_month = !empty($_POST['aff_sworn_month']) ? (int)$_POST['aff_sworn_month'] : 0;
       $aff_sworn_year = !empty($_POST['aff_sworn_year']) ? (int)$_POST['aff_sworn_year'] : 0;
-      $aff_sworn_day = $conn->real_escape_string($_POST['aff_sworn_day'] ?? '');
-      $aff_sworn_month = $conn->real_escape_string($_POST['aff_sworn_month'] ?? '');
-      $aff_sworn_year = $conn->real_escape_string($_POST['aff_sworn_year'] ?? '');
+      
       $aff_sworn_at = $conn->real_escape_string($_POST['aff_sworn_at'] ?? '');
       $aff_sworn_ctc = $conn->real_escape_string($_POST['aff_sworn_ctc'] ?? '');
       $aff_issued_on = $conn->real_escape_string($_POST['aff_issued_on'] ?? '');
@@ -133,7 +137,7 @@
       $aff_admin_title = $conn->real_escape_string($_POST['aff_admin_title'] ?? '');
       $aff_admin_address = $conn->real_escape_string($_POST['aff_admin_address'] ?? '');
 
-      //=====================================================================late_reg
+      // --- LATE REGISTRATION ---
       $late_name = $conn->real_escape_string($_POST['late_name'] ?? '');
       $late_address = $conn->real_escape_string($_POST['late_address'] ?? '');
       $late_marriage_type = $conn->real_escape_string($_POST['late_marriage_type'] ?? '');
@@ -146,22 +150,26 @@
       $late_sect_type = $conn->real_escape_string($_POST['late_sect_type'] ?? '');
       $late_mrg_type = $conn->real_escape_string($_POST['late_mrg_type'] ?? '');
       $late_mrg_no = $conn->real_escape_string($_POST['late_mrg_no'] ?? '');
-      $late_sign_year  = !empty($_POST['late_sign_year']) ? (int)$_POST['late_sign_year'] : 0;
-      $late_sworn_year = !empty($_POST['late_sworn_year']) ? (int)$_POST['late_sworn_year'] : 0;
+      $late_mrg_issued_on = $conn->real_escape_string($_POST['late_mrg_issued_on'] ?? '');
+      $late_mrg_issued_at = $conn->real_escape_string($_POST['late_mrg_issued_at'] ?? '');
       $late_under_art = $conn->real_escape_string($_POST['late_under_art'] ?? '');
       $late_h_citizen = $conn->real_escape_string($_POST['late_h_citizen'] ?? '');
       $late_w_citizen = $conn->real_escape_string($_POST['late_w_citizen'] ?? '');
       $late_h_citizen1 = $conn->real_escape_string($_POST['late_h_citizen1'] ?? '');
       $late_w_citizen1 = $conn->real_escape_string($_POST['late_w_citizen1'] ?? '');
       $late_reason = $conn->real_escape_string($_POST['late_reason'] ?? '');
-      $late_sign_day = $conn->real_escape_string($_POST['late_sign_day'] ?? '');
-      $late_sign_month = $conn->real_escape_string($_POST['late_sign_month'] ?? '');
-      $late_sign_year = $conn->real_escape_string($_POST['late_sign_year'] ?? '');
+      
+      $late_sign_day = !empty($_POST['late_sign_day']) ? (int)$_POST['late_sign_day'] : 0;
+      $late_sign_month = !empty($_POST['late_sign_month']) ? (int)$_POST['late_sign_month'] : 0;
+      $late_sign_year  = !empty($_POST['late_sign_year']) ? (int)$_POST['late_sign_year'] : 0;
+      
       $late_sign_at = $conn->real_escape_string($_POST['late_sign_at'] ?? '');
       $affiant_name = $conn->real_escape_string($_POST['affiant_name'] ?? '');
-      $late_sworn_day = $conn->real_escape_string($_POST['late_sworn_day'] ?? '');
-      $late_sworn_month = $conn->real_escape_string($_POST['late_sworn_month'] ?? '');
-      $late_sworn_year = $conn->real_escape_string($_POST['late_sworn_year'] ?? '');
+      
+      $late_sworn_day = !empty($_POST['late_sworn_day']) ? (int)$_POST['late_sworn_day'] : 0;
+      $late_sworn_month = !empty($_POST['late_sworn_month']) ? (int)$_POST['late_sworn_month'] : 0;
+      $late_sworn_year = !empty($_POST['late_sworn_year']) ? (int)$_POST['late_sworn_year'] : 0;
+      
       $late_sworn_at = $conn->real_escape_string($_POST['late_sworn_at'] ?? '');
       $late_ctc = $conn->real_escape_string($_POST['late_ctc'] ?? '');
       $late_issued_on = $conn->real_escape_string($_POST['late_issued_on'] ?? '');
@@ -170,32 +178,36 @@
       $late_sworn_position = $conn->real_escape_string($_POST['late_sworn_position'] ?? '');
       $late_sworn_address = $conn->real_escape_string($_POST['late_sworn_address'] ?? '');
 
-      // --- FIX 3: Use the same connection for IDs to avoid mismatch ---
-      $servername = "localhost";
-      $username = "root";
-      $password = "";
-      $dbname = "geronamarriage";
-
-      $conn2 = new mysqli($servername, $username, $password, $dbname);
-      if ($conn2->connect_error) {
-        die("Connection failed: " . $conn2->connect_error);
-      }
+      // --- GET UNIQUE ID ---
+      $conn2 = new mysqli('localhost', 'root', '', 'geronamarriage');
+      if ($conn2->connect_error) die("Connection failed: " . $conn2->connect_error);
 
       $sql = "INSERT INTO no_tbl (registry_no, status) VALUES ('$registry_no', '0')";
       if ($conn2->query($sql) === TRUE) {
-      $no = $conn2->insert_id; 
+          $no = $conn2->insert_id; 
+      } else {
+          die("ID Generation Error: " . $conn2->error);
       }
+      $conn2->close();
 
-      // Execute main inserts
-      $conn->query("INSERT INTO registration_tbl VALUES ('$registry_no', '$book_no', '$page_no', '$province', '$municipal', '$date', '$time', '$e_name', '$u_date', '$u_time', '$u_name','$no')");
-      $conn->query("INSERT INTO husband_tbl VALUES ('$registry_no', '$husband_lname', '$husband_fname', '$husband_mname', '$husband_bdate', '$husband_age', '$husband_bplace', '$husband_sex', '$husband_citizen', '$husband_residence', '$husband_religion', '$husband_cstatus', '$husband_father_name', '$husband_father_citizen', '$husband_mother_name', '$husband_mother_citizen', '$husband_person_name', '$husband_person_rel', '$husband_person_residence', '$no')");
-      $conn->query("INSERT INTO wife_tbl VALUES ('$registry_no', '$wife_lname', '$wife_fname', '$wife_mname', '$wife_bdate', '$wife_age', '$wife_bplace', '$wife_sex', '$wife_citizen', '$wife_residence', '$wife_religion', '$wife_cstatus', '$wife_father_name', '$wife_father_citizen', '$wife_mother_name', '$wife_mother_citizen', '$wife_person_name', '$wife_person_rel', '$wife_person_residence', '$no')");
-      $conn->query("INSERT INTO marriage_tbl VALUES ('$registry_no', '$mrg_brgy', '$mrg_city', '$mrg_province', '$mrg_date', '$mrg_time', '$husband_name', '$wife_name', '$certify_type', '$mrg_days', '$mrg_months', '$mrg_years', '$mrg_solemn_type', '$mrg_license_no', '$mrg_license_on', '$mrg_license_at', '$no_license_art', '$mrg_solemn_name', '$mrg_solemn_position', '$mrg_solemn_other', '$no')");
-      $conn->query("INSERT INTO receive_civil_tbl VALUES ('$registry_no', '$received_name', '$received_position', '$civil_name', '$civil_position', '$received_date', '$civil_date', '$no')");
-      $conn->query("INSERT INTO remarks_tbl VALUES ('$registry_no', '$remarks', '$no')");
-      $conn->query("INSERT INTO witness_tbl VALUES ('$registry_no', '$witness1', '$witness2', '$witness3', '$witness4', '$witness5', '$witness6', '$witness7', '$witness8', '$witness9', '$witness10', '$witness11', '$witness12', '$no')");
-      $conn->query("INSERT INTO aff_solemn_tbl VALUES ('$registry_no', '$aff_solemn_name', '$aff_solemn_of', '$aff_solemn_at', '$aff_hus_name', '$aff_wife_name', '$aff_2type', '$aff_1party', '$aff_2party', '$aff_sign_day', '$aff_sign_month', '$aff_sign_year', '$aff_sign_at', '$aff_sign_name', '$aff_sworn_day', '$aff_sworn_month', '$aff_sworn_year', '$aff_sworn_at', '$aff_sworn_ctc', '$aff_issued_on', '$aff_issued_at', '$aff_admin_name', '$aff_admin_title', '$aff_admin_address', '$no')");
-      $conn->query("INSERT INTO late_reg_tbl VALUES ('$registry_no', '$late_name', '$late_address', '$late_marriage_type', '$late_marriage_with', '$late_marriage_in', '$late_marriage_on', '$late_mrg_husband', '$late_mrg_wife', '$solemnized_by', '$late_sect_type', '$late_mrg_type', '$late_mrg_no', '$late_mrg_issued_on', '$late_mrg_issued_at', '$late_under_art', '$late_h_citizen', '$late_w_citizen', '$late_h_citizen1', '$late_w_citizen1', '$late_reason', '$late_sign_day', '$late_sign_month', '$late_sign_year', '$late_sign_at', '$affiant_name', '$late_sworn_day', '$late_sworn_month', '$late_sworn_year', '$late_sworn_at', '$late_ctc', '$late_issued_on', '$late_issued_at', '$late_sworn_name', '$late_sworn_position', '$late_sworn_address', '$no')");
+      // --- EXECUTE MAIN INSERTS (No quotes for integers) ---
+      $conn->query("INSERT INTO registration_tbl VALUES ('$registry_no', $book_no, $page_no, '$province', '$municipal', '$date', '$time', '$e_name', '$u_date', '$u_time', '$u_name', $no)");
+      
+      $conn->query("INSERT INTO husband_tbl VALUES ('$registry_no', '$husband_lname', '$husband_fname', '$husband_mname', '$husband_bdate', '$husband_age', '$husband_bplace', '$husband_sex', '$husband_citizen', '$husband_residence', '$husband_religion', '$husband_cstatus', '$husband_father_name', '$husband_father_citizen', '$husband_mother_name', '$husband_mother_citizen', '$husband_person_name', '$husband_person_rel', '$husband_person_residence', $no)");
+      
+      $conn->query("INSERT INTO wife_tbl VALUES ('$registry_no', '$wife_lname', '$wife_fname', '$wife_mname', '$wife_bdate', '$wife_age', '$wife_bplace', '$wife_sex', '$wife_citizen', '$wife_residence', '$wife_religion', '$wife_cstatus', '$wife_father_name', '$wife_father_citizen', '$wife_mother_name', '$wife_mother_citizen', '$wife_person_name', '$wife_person_rel', '$wife_person_residence', $no)");
+      
+      $conn->query("INSERT INTO marriage_tbl VALUES ('$registry_no', '$mrg_brgy', '$mrg_city', '$mrg_province', '$mrg_date', '$mrg_time', '$husband_name', '$wife_name', '$certify_type', $mrg_days, $mrg_months, $mrg_years, '$mrg_solemn_type', '$mrg_license_no', '$mrg_license_on', '$mrg_license_at', '$no_license_art', '$mrg_solemn_name', '$mrg_solemn_position', '$mrg_solemn_other', $no)");
+      
+      $conn->query("INSERT INTO receive_civil_tbl VALUES ('$registry_no', '$received_name', '$received_position', '$civil_name', '$civil_position', '$received_date', '$civil_date', $no)");
+      
+      $conn->query("INSERT INTO remarks_tbl VALUES ('$registry_no', '$remarks', $no)");
+      
+      $conn->query("INSERT INTO witness_tbl VALUES ('$registry_no', '$witness1', '$witness2', '$witness3', '$witness4', '$witness5', '$witness6', '$witness7', '$witness8', '$witness9', '$witness10', '$witness11', '$witness12', $no)");
+      
+      $conn->query("INSERT INTO aff_solemn_tbl VALUES ('$registry_no', '$aff_solemn_name', '$aff_solemn_of', '$aff_solemn_at', '$aff_hus_name', '$aff_wife_name', '$aff_2type', '$aff_1party', '$aff_2party', $aff_sign_day, $aff_sign_month, $aff_sign_year, '$aff_sign_at', '$aff_sign_name', $aff_sworn_day, $aff_sworn_month, $aff_sworn_year, '$aff_sworn_at', '$aff_sworn_ctc', '$aff_issued_on', '$aff_issued_at', '$aff_admin_name', '$aff_admin_title', '$aff_admin_address', $no)");
+      
+      $conn->query("INSERT INTO late_reg_tbl VALUES ('$registry_no', '$late_name', '$late_address', '$late_marriage_type', '$late_marriage_with', '$late_marriage_in', '$late_marriage_on', '$late_mrg_husband', '$late_mrg_wife', '$solemnized_by', '$late_sect_type', '$late_mrg_type', '$late_mrg_no', '$late_mrg_issued_on', '$late_mrg_issued_at', '$late_under_art', '$late_h_citizen', '$late_w_citizen', '$late_h_citizen1', '$late_w_citizen1', '$late_reason', $late_sign_day, $late_sign_month, $late_sign_year, '$late_sign_at', '$affiant_name', $late_sworn_day, $late_sworn_month, $late_sworn_year, '$late_sworn_at', '$late_ctc', '$late_issued_on', '$late_issued_at', '$late_sworn_name', '$late_sworn_position', '$late_sworn_address', $no)");
 
       header('location: marriage_records.php');
       mysqli_close($conn);

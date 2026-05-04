@@ -11,7 +11,16 @@ if ($conn->connect_error) die($conn->connect_error);
 $reg_no = $_POST['reg_no'] ?? '';
 if (!empty($_GET['reg_no'])){ $reg_no = $_REQUEST['reg_no']; }
 
-$sql = "SELECT * FROM registration_tbl NATURAL JOIN (child_tbl NATURAL JOIN mother_tbl NATURAL JOIN father_tbl NATURAL JOIN att_inf_tbl NATURAL JOIN receive_civil_tbl NATURAL JOIN remarks_tbl NATURAL JOIN admission_paternity_tbl NATURAL JOIN late_reg_tbl) WHERE no = '$reg_no' LIMIT 1";
+$sql = "SELECT *, registration_tbl.no as no FROM registration_tbl 
+        LEFT JOIN child_tbl ON registration_tbl.no = child_tbl.no 
+        LEFT JOIN mother_tbl ON registration_tbl.no = mother_tbl.no 
+        LEFT JOIN father_tbl ON registration_tbl.no = father_tbl.no 
+        LEFT JOIN att_inf_tbl ON registration_tbl.no = att_inf_tbl.no 
+        LEFT JOIN receive_civil_tbl ON registration_tbl.no = receive_civil_tbl.no 
+        LEFT JOIN remarks_tbl ON registration_tbl.no = remarks_tbl.no 
+        LEFT JOIN admission_paternity_tbl ON registration_tbl.no = admission_paternity_tbl.no 
+        LEFT JOIN late_reg_tbl ON registration_tbl.no = late_reg_tbl.no 
+        WHERE registration_tbl.no = '$reg_no' LIMIT 1";
 $result = $conn->query($sql);
 if (!$result) die ("Database access failed: " . $conn->error);
 
@@ -428,15 +437,17 @@ if ($result->num_rows > 0) {
     $pdf->SetFont('Arial', '', 9.5);
     
     // SUFFIX FUNCTION
-    function addOrdinalSuffix($num) {
-        if (!in_array(($num % 100), [11, 12, 13])) {
-            switch ($num % 10) {
-                case 1:  return $num . 'st';
-                case 2:  return $num . 'nd';
-                case 3:  return $num . 'rd';
+    if (!function_exists('addOrdinalSuffix')) {
+        function addOrdinalSuffix($num) {
+            if (!in_array(($num % 100), [11, 12, 13])) {
+                switch ($num % 10) {
+                    case 1:  return $num . 'st';
+                    case 2:  return $num . 'nd';
+                    case 3:  return $num . 'rd';
+                }
             }
+            return $num . 'th';
         }
-        return $num . 'th';
     }
     
     // Sworn Day
@@ -602,13 +613,13 @@ if ($result->num_rows > 0) {
     fitTextInCellAddress($pdf, 132, 308, 66, 5, $row['late_issued_at'] ?? '');
     // Late Administer Name
     $pdf->SetXY(25, 326.5);
-    fitTextInCell($pdf, 25, 326.5, 76, 5, $row['late_administer_name'] ?? '');
+    fitTextInCell($pdf, 25, 326.5, 76, 5, ($row['late_administer_name'] ?? '') . ' (SGD)');
     // Late Administer address
     $pdf->SetXY(130, 303);
-    fitTextInCellAddress($pdf, 127, 326.5, 76, 5, $row['late_administer_address'] ?? '');
+    fitTextInCellAddress($pdf, 127, 326.5, 76, 5, ($row['late_administer_address'] ?? '') . ' (SGD)');
     // Late Administer position
     $pdf->SetXY(127, 314.5);
-    fitTextInCellAddress($pdf, 127, 314.5, 76, 5, $row['late_administer_position'] ?? '');
+    fitTextInCellAddress($pdf, 127, 314.5, 76, 5, ($row['late_administer_position'] ?? '') . ' (SGD)');
 
     $pdf->Output('birth_'.($row['child_fname'] ?? 'certificate').'_'.($row['child_lname'] ?? '').'.pdf', 'I');
 }

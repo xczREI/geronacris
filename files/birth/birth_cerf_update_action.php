@@ -1,4 +1,8 @@
 <?php
+    // Enable error reporting to catch issues
+    error_reporting(E_ALL);
+    ini_set('display_errors', 1);
+
     require_once 'login_db_birth.php';
     $conn = new mysqli($hn, $un, $pw, $db);
     if ($conn->connect_error) die($conn->connect_error);
@@ -8,7 +12,7 @@
       $reg_no = $conn->real_escape_string($_POST['reg_no']);
       $registry_no = $conn->real_escape_string($_POST['registry_no'] ?? '');
       
-      // STRICT MODE FIX: Default empty book/page to 0 instead of a blank string
+      // --- FIX 1: Explicitly handle numeric fields to avoid MySQL Fatal Errors ---
       $book_no = !empty($_POST['book_no']) ? (int)$_POST['book_no'] : 0;
       $page_no = !empty($_POST['page_no']) ? (int)$_POST['page_no'] : 0;
       
@@ -69,12 +73,10 @@
       $clean_marriage = strtoupper(trim($raw_marriage));
       $non_date_keywords = ['NOT MARRIED', 'NOT APPLICABLE', 'N/A', 'NONE'];
 
-      // Check if empty or matches a non-date keyword
       if (empty($clean_marriage) || in_array($clean_marriage, $non_date_keywords)) {
           $marriage_val = $conn->real_escape_string($clean_marriage ?: 'NOT APPLICABLE');
           $marriage_date_sql = "'$marriage_val'"; 
       } else {
-          // If it's a valid date, format it. Otherwise, treat as a string.
           $timestamp = strtotime($raw_marriage);
           if ($timestamp) {
               $marriage_date_sql = "'" . date("Y-m-d", $timestamp) . "'";
@@ -82,7 +84,6 @@
               $marriage_date_sql = "'" . $conn->real_escape_string($raw_marriage) . "'";
           }
       }
-
       $marriage_place = $conn->real_escape_string($_POST['marriage_place'] ?? '');
 
       //==========================attendant_informant_prepared====================================
@@ -125,7 +126,6 @@
       $received_date = $conn->real_escape_string($_POST['received_date'] ?? '');
       $civil_date = $conn->real_escape_string($_POST['civil_date'] ?? '');
 
-       //===================================remarks===========================================
       $remarks = $conn->real_escape_string($_POST['remarks'] ?? '');
       $remarks = preg_replace("#\[sp\]#", "&nbsp;", $remarks);
       $remarks = preg_replace("#\[nl\]#", "<br>\n", $remarks);
@@ -136,9 +136,10 @@
       $child_name = $conn->real_escape_string($_POST['child_name'] ?? '');
       $birth_date = $conn->real_escape_string($_POST['birth_date'] ?? '');
       $birth_place = $conn->real_escape_string($_POST['birth_place'] ?? '');
-      $sworn_day = $conn->real_escape_string($_POST['ack_sworn_day'] ?? '');
-      $sworn_month = $conn->real_escape_string($_POST['ack_sworn_month'] ?? '');
-      $sworn_year = $conn->real_escape_string($_POST['ack_sworn_year'] ?? '');
+      
+      $sworn_day = !empty($_POST['ack_sworn_day']) ? (int)$_POST['ack_sworn_day'] : 0;
+      $sworn_month = !empty($_POST['ack_sworn_month']) ? (int)$_POST['ack_sworn_month'] : 0;
+      $sworn_year = !empty($_POST['ack_sworn_year']) ? (int)$_POST['ack_sworn_year'] : 0;
 
       $birth_gender = $_POST['birth_gender'] ?? '';
       $sworn_ctc = $conn->real_escape_string($_POST['ack_ctc'] ?? '');
@@ -153,9 +154,7 @@
       $late_address = $conn->real_escape_string($_POST['late_address'] ?? '');
       $late_birth_type = $conn->real_escape_string($_POST['late_birth_type'] ?? '');
       
-      $late_birth_in = '';
-      $late_birth_on = '';
-      $late_birth_of = '';
+      $late_birth_in = ''; $late_birth_on = ''; $late_birth_of = '';
 
       if($late_birth_type == 'my birth'){
             $late_birth_in = $conn->real_escape_string($_POST['late_birth_in'] ?? '');
@@ -180,15 +179,18 @@
 
       $applicant_only = $conn->real_escape_string($_POST['applicant_only'] ?? '');
       $applicant_than_owner = $conn->real_escape_string($_POST['applicant_than_owner'] ?? '');
-      $sign_day = $conn->real_escape_string($_POST['sign_day'] ?? '');
-      $sign_month = $conn->real_escape_string($_POST['sign_month'] ?? '');
-      $sign_year = $conn->real_escape_string($_POST['sign_year'] ?? '');
+      
+      $sign_day = !empty($_POST['sign_day']) ? (int)$_POST['sign_day'] : 0;
+      $sign_month = !empty($_POST['sign_month']) ? (int)$_POST['sign_month'] : 0;
+      $sign_year = !empty($_POST['sign_year']) ? (int)$_POST['sign_year'] : 0;
+      
       $sign_at = $conn->real_escape_string($_POST['sign_at'] ?? '');
       $affiant_name = $conn->real_escape_string($_POST['affiant_name'] ?? '');
 
-      $late_sworn_day = $conn->real_escape_string($_POST['late_sworn_day'] ?? '');
-      $late_sworn_month = $conn->real_escape_string($_POST['late_sworn_month'] ?? '');
-      $late_sworn_year = $conn->real_escape_string($_POST['late_sworn_year'] ?? '');
+      $late_sworn_day = !empty($_POST['late_sworn_day']) ? (int)$_POST['late_sworn_day'] : 0;
+      $late_sworn_month = !empty($_POST['late_sworn_month']) ? (int)$_POST['late_sworn_month'] : 0;
+      $late_sworn_year = !empty($_POST['late_sworn_year']) ? (int)$_POST['late_sworn_year'] : 0;
+      
       $late_sworn_at = $conn->real_escape_string($_POST['late_sworn_at'] ?? '');
       $late_ctc = $conn->real_escape_string($_POST['late_ctc'] ?? '');
       $late_issued_on = $conn->real_escape_string($_POST['late_issued_on'] ?? '');
@@ -197,46 +199,43 @@
       $late_sworn_position = $conn->real_escape_string($_POST['late_sworn_position'] ?? '');
       $late_sworn_address = $conn->real_escape_string($_POST['late_sworn_address'] ?? '');
 
-      //==============================database=====================================
-      $sql = "UPDATE no_tbl SET registry_no='$registry_no' WHERE no = '$reg_no'";
-      $result = $conn->query($sql);
+      // --- CRITICAL FIX: Ensure all related table rows exist before updating (for older records) ---
+      $conn->query("INSERT IGNORE INTO no_tbl (no, registry_no) VALUES ('$reg_no', '$registry_no')");
+      $conn->query("INSERT IGNORE INTO registration_tbl (no, registry_no) VALUES ('$reg_no', '$registry_no')");
+      $conn->query("INSERT IGNORE INTO child_tbl (no, registry_no) VALUES ('$reg_no', '$registry_no')");
+      $conn->query("INSERT IGNORE INTO mother_tbl (no, registry_no) VALUES ('$reg_no', '$registry_no')");
+      $conn->query("INSERT IGNORE INTO father_tbl (no, registry_no) VALUES ('$reg_no', '$registry_no')");
+      $conn->query("INSERT IGNORE INTO att_inf_tbl (no, registry_no) VALUES ('$reg_no', '$registry_no')");
+      $conn->query("INSERT IGNORE INTO receive_civil_tbl (no, registry_no) VALUES ('$reg_no', '$registry_no')");
+      $conn->query("INSERT IGNORE INTO remarks_tbl (no, registry_no) VALUES ('$reg_no', '$registry_no')");
+      $conn->query("INSERT IGNORE INTO admission_paternity_tbl (no, registry_no) VALUES ('$reg_no', '$registry_no')");
+      $conn->query("INSERT IGNORE INTO late_reg_tbl (no, registry_no) VALUES ('$reg_no', '$registry_no')");
 
-      $sql = "UPDATE registration_tbl SET registry_no='$registry_no', book_no='$book_no', page_no='$page_no', province='$province', municipal='$municipal', update_date='$u_date', update_time='$u_time', update_user='$u_name' WHERE no = '$reg_no'";
-      $result = $conn->query($sql);
+      //==============================database updates=====================================
+      $conn->query("UPDATE no_tbl SET registry_no='$registry_no' WHERE no = '$reg_no'");
 
-      $sql = "UPDATE child_tbl SET registry_no='$registry_no', child_lname='$child_lname', child_fname='$child_fname', child_mname='$child_mname', child_sex='$child_sex', child_birth_date='$child_birth_date', birth_brgy='$birth_brgy', birth_municipal='$birth_city', birth_province='$birth_province', birth_type='$birth_type', if_multi_birth_was='$multi_birth_was', birth_order='$birth_order', birth_weight='$birth_weight' WHERE no = '$reg_no'";
-      $result = $conn->query($sql);
+      $conn->query("UPDATE registration_tbl SET registry_no='$registry_no', book_no=$book_no, page_no=$page_no, province='$province', municipal='$municipal', update_date='$u_date', update_time='$u_time', update_user='$u_name' WHERE no = '$reg_no'");
 
-      // Using $marriage_date_sql (quotes are already included in the variable)
-      $sql = "UPDATE mother_tbl SET registry_no='$registry_no', mother_lname='$mother_lname', mother_fname='$mother_fname', mother_mname='$mother_mname', mother_citizen='$mother_citizen', mother_religion='$mother_sect', mother_brgy='$mother_brgy', mother_municipal='$mother_city', mother_province='$mother_province', mother_country='$mother_country', mother_occupation='$mother_occupation', mother_age='$mother_age', ttl_no_child='$ttl_no_child', no_child_dead='$no_child_dead', no_child_alive='$no_child_alive',  marriage_date=$marriage_date_sql, marriage_place='$marriage_place' WHERE no = '$reg_no'";
-      $result = $conn->query($sql);
+      $conn->query("UPDATE child_tbl SET registry_no='$registry_no', child_lname='$child_lname', child_fname='$child_fname', child_mname='$child_mname', child_sex='$child_sex', child_birth_date='$child_birth_date', birth_brgy='$birth_brgy', birth_municipal='$birth_city', birth_province='$birth_province', birth_type='$birth_type', if_multi_birth_was='$multi_birth_was', birth_order='$birth_order', birth_weight='$birth_weight' WHERE no = '$reg_no'");
 
-      // Using $marriage_date_sql (quotes are already included in the variable)
-      $sql = "UPDATE father_tbl SET registry_no='$registry_no', father_lname='$father_lname', father_fname='$father_fname', father_mname='$father_mname', father_age='$father_age', father_religion='$father_sect', father_citizen='$father_citizen', father_brgy='$father_brgy', father_municipal='$father_city', father_province='$father_province', father_country='$father_country', father_occupation='$father_occupation', marriage_date=$marriage_date_sql, marriage_place='$marriage_place' WHERE no = '$reg_no'";
-      $result = $conn->query($sql);
+      $conn->query("UPDATE mother_tbl SET registry_no='$registry_no', mother_lname='$mother_lname', mother_fname='$mother_fname', mother_mname='$mother_mname', mother_citizen='$mother_citizen', mother_religion='$mother_sect', mother_brgy='$mother_brgy', mother_municipal='$mother_city', mother_province='$mother_province', mother_country='$mother_country', mother_occupation='$mother_occupation', mother_age='$mother_age', ttl_no_child='$ttl_no_child', no_child_dead='$no_child_dead', no_child_alive='$no_child_alive',  marriage_date=$marriage_date_sql, marriage_place='$marriage_place' WHERE no = '$reg_no'");
 
-      $sql = "UPDATE att_inf_tbl SET registry_no='$registry_no', attendant_type='$attendant_type', birth_time='$birth_time', attendant_name='$attendant_name', attendant_position='$attendant_position', attendant_address='$attendant_address', informant_name='$informant_name', rel_child='$rel_child', informant_address='$informant_address', prepared_name='$prepared_name', prepared_position='$prepared_position', attendant_date='$attendant_date', informant_date='$informant_date', prepared_date='$prepared_date' WHERE no = '$reg_no'";
-      $result = $conn->query($sql);
+      $conn->query("UPDATE father_tbl SET registry_no='$registry_no', father_lname='$father_lname', father_fname='$father_fname', father_mname='$father_mname', father_age='$father_age', father_religion='$father_sect', father_citizen='$father_citizen', father_brgy='$father_brgy', father_municipal='$father_city', father_province='$father_province', father_country='$father_country', father_occupation='$father_occupation', marriage_date=$marriage_date_sql, marriage_place='$marriage_place' WHERE no = '$reg_no'");
 
-      $sql = "UPDATE receive_civil_tbl SET registry_no='$registry_no', received_name='$received_name', received_position='$received_position', civil_name='$civil_name', civil_position='$civil_position', received_date='$received_date', civil_date='$civil_date' WHERE no = '$reg_no'";
-      $result = $conn->query($sql);
+      $conn->query("UPDATE att_inf_tbl SET registry_no='$registry_no', attendant_type='$attendant_type', birth_time='$birth_time', attendant_name='$attendant_name', attendant_position='$attendant_position', attendant_address='$attendant_address', informant_name='$informant_name', rel_child='$rel_child', informant_address='$informant_address', prepared_name='$prepared_name', prepared_position='$prepared_position', attendant_date='$attendant_date', informant_date='$informant_date', prepared_date='$prepared_date' WHERE no = '$reg_no'");
 
-      $sql = "UPDATE remarks_tbl SET registry_no='$registry_no', remarks='$remarks' WHERE no = '$reg_no'";
-      $result = $conn->query($sql);
+      $conn->query("UPDATE receive_civil_tbl SET registry_no='$registry_no', received_name='$received_name', received_position='$received_position', civil_name='$civil_name', civil_position='$civil_position', received_date='$received_date', civil_date='$civil_date' WHERE no = '$reg_no'");
 
-      $sql = "UPDATE admission_paternity_tbl SET registry_no='$registry_no', father_name='$father_name', mother_name='$mother_name', child_name='$child_name', birth_date='$birth_date', birth_place='$birth_place', sworn_day ='$sworn_day', sworn_month ='$sworn_month', sworn_year ='$sworn_year', child_gender='$birth_gender', ctc='$sworn_ctc', issued_on='$sworn_issuedon', issued_at='$sworn_issuedat', administer_name='$sworn_name', administer_position='$sworn_position', administer_address='$sworn_address' WHERE no = '$reg_no'";
-      $result = $conn->query($sql);
+      $conn->query("UPDATE remarks_tbl SET registry_no='$registry_no', remarks='$remarks' WHERE no = '$reg_no'");
 
-      $sql = "UPDATE late_reg_tbl SET registry_no='$registry_no', late_name='$late_name', late_address='$late_address', late_birth_type='$late_birth_type', late_birth_of='$late_birth_of', late_birth_in='$late_birth_in', late_birth_on='$late_birth_on', attend_birth_by='$attend_birth_by', who_resides_at='$who_resides_at', late_citizen='$late_citizen', married_type='$married_type', married_on='$married_on', married_at='$married_at', not_married_name='$not_married_name', late_reg_reason='$late_reg_reason', applicant_only='$applicant_only', applicant_than_owner='$applicant_than_owner', sign_day='$sign_day', sign_month='$sign_month', sign_year='$sign_year', sign_at='$sign_at', affiant_name='$affiant_name', late_sworn_day='$late_sworn_day', late_sworn_month='$late_sworn_month', late_sworn_year='$late_sworn_year', late_sworn_at='$late_sworn_at', late_ctc='$late_ctc', late_issued_on='$late_issued_on', late_issued_at='$late_issued_at', late_administer_name='$late_sworn_name', late_administer_position='$late_sworn_position', late_administer_address='$late_sworn_address' WHERE no = '$reg_no'";
-      $result = $conn->query($sql);
+      $conn->query("UPDATE admission_paternity_tbl SET registry_no='$registry_no', father_name='$father_name', mother_name='$mother_name', child_name='$child_name', birth_date='$birth_date', birth_place='$birth_place', sworn_day=$sworn_day, sworn_month=$sworn_month, sworn_year=$sworn_year, child_gender='$birth_gender', ctc='$sworn_ctc', issued_on='$sworn_issuedon', issued_at='$sworn_issuedat', administer_name='$sworn_name', administer_position='$sworn_position', administer_address='$sworn_address' WHERE no = '$reg_no'");
 
-      if (!$result) echo "UPDATE failed: $sql<br>" . $conn->error . "<br><br>";
+      $conn->query("UPDATE late_reg_tbl SET registry_no='$registry_no', late_name='$late_name', late_address='$late_address', late_birth_type='$late_birth_type', late_birth_of='$late_birth_of', late_birth_in='$late_birth_in', late_birth_on='$late_birth_on', attend_birth_by='$attend_birth_by', who_resides_at='$who_resides_at', late_citizen='$late_citizen', married_type='$married_type', married_on='$married_on', married_at='$married_at', not_married_name='$not_married_name', late_reg_reason='$late_reg_reason', applicant_only='$applicant_only', applicant_than_owner='$applicant_than_owner', sign_day=$sign_day, sign_month=$sign_month, sign_year=$sign_year, sign_at='$sign_at', affiant_name='$affiant_name', late_sworn_day=$late_sworn_day, late_sworn_month=$late_sworn_month, late_sworn_year=$late_sworn_year, late_sworn_at='$late_sworn_at', late_ctc='$late_ctc', late_issued_on='$late_issued_on', late_issued_at='$late_issued_at', late_administer_name='$late_sworn_name', late_administer_position='$late_sworn_position', late_administer_address='$late_sworn_address' WHERE no = '$reg_no'");
 
-      // Close connection before exiting
       mysqli_close($conn);
 
       // Go back to previous page
       header('Location: ' . $_SERVER['HTTP_REFERER']);
       exit();
-}
+    }
 ?>

@@ -10,8 +10,17 @@ if ($conn->connect_error) die($conn->connect_error);
 $reg_no=$_POST['reg_no'];
 if (!empty($_GET['reg_no'])){ $reg_no = $_REQUEST['reg_no']; }
 
-    // Added LIMIT 1
-    $sql = "SELECT * FROM registration_tbl NATURAL JOIN (child_tbl NATURAL JOIN mother_tbl NATURAL JOIN father_tbl NATURAL JOIN att_inf_tbl NATURAL JOIN receive_civil_tbl NATURAL JOIN remarks_tbl NATURAL JOIN admission_paternity_tbl NATURAL JOIN late_reg_tbl) WHERE no = '$reg_no' LIMIT 1";
+    // IMPROVED QUERY: Using LEFT JOIN to ensure the record loads even if optional tables are empty
+    $sql = "SELECT *, registration_tbl.no as no FROM registration_tbl 
+            LEFT JOIN child_tbl ON registration_tbl.no = child_tbl.no 
+            LEFT JOIN mother_tbl ON registration_tbl.no = mother_tbl.no 
+            LEFT JOIN father_tbl ON registration_tbl.no = father_tbl.no 
+            LEFT JOIN att_inf_tbl ON registration_tbl.no = att_inf_tbl.no 
+            LEFT JOIN receive_civil_tbl ON registration_tbl.no = receive_civil_tbl.no 
+            LEFT JOIN remarks_tbl ON registration_tbl.no = remarks_tbl.no 
+            LEFT JOIN admission_paternity_tbl ON registration_tbl.no = admission_paternity_tbl.no 
+            LEFT JOIN late_reg_tbl ON registration_tbl.no = late_reg_tbl.no 
+            WHERE registration_tbl.no = '$reg_no' LIMIT 1";
     $result = $conn->query($sql);  
     if (!$result) die ("Database access failed: " . $conn->error);
 
@@ -391,54 +400,68 @@ $pdf->Cell(0, 10, strtoupper($row['remarks'] ?? ''), 0, 1);
 
 // 2nd Page
 $pdf->AddPage('P', array(215.9, 355.6));
-// $templateId = $pdf->importPage(2);
-// $pdf->useTemplate($templateId);
 
 $pdf->SetFont('Arial', '', 12);
 $pdf->SetTextColor(0, 0, 0);
 
 // Father Name
 $pdf->SetXY(33, 18.5);
-fitTextInCell($pdf, 33, 21, 77, 5, $row['father_name']);
+fitTextInCell($pdf, 33, 21, 77, 5, $row['father_name'] ?? '');
 // Mother Name
 $pdf->SetXY(120, 18.5);
-fitTextInCell($pdf, 120, 21, 77, 5, $row['mother_name']);
+fitTextInCell($pdf, 120, 21, 77, 5, $row['mother_name'] ?? '');
 // Child Name
 $pdf->SetFont('Arial', '', 10);
 $pdf->SetXY(109, 23);
 $pdf->Cell(0, 10, strtoupper($row['child_name'] ?? ''), 0, 1);
 // Birth Date
 $pdf->SetXY(31, 27.5);
-$pdf->Cell(0, 10, strtoupper($row['child_birth_date'] ?? ''), 0, 1);
+$date = !empty($row['child_birth_date']) ? date('F j, Y', strtotime($row['child_birth_date'])) : '';
+$pdf->Cell(0, 10, strtoupper($date), 0, 1);
 // Birth Place
 $pdf->SetFont('Arial', '', 10);
 $pdf->SetXY(93, 27.5);
-fitTextInCellAddress($pdf, 93, 30.5, 100, 5, $row['birth_place']);
+fitTextInCellAddress($pdf, 93, 30.5, 100, 5, $row['birth_place'] ?? '');
 
 // Signature Father Name
 $pdf->SetXY(22, 49.5);
-fitTextInCell($pdf, 15, 52, 64, 5, $row['father_name']);
+fitTextInCell($pdf, 15, 52, 64, 5, $row['father_name'] ?? '');
 // Signature Mother Name
 $pdf->SetXY(139, 49.5);
-fitTextInCell($pdf, 132, 52, 64, 5, $row['mother_name']);
+fitTextInCell($pdf, 132, 52, 64, 5, $row['mother_name'] ?? '');
 
-// Sword Day
+// SUFFIX FUNCTION
+if (!function_exists('addOrdinalSuffix')) {
+    function addOrdinalSuffix($num) {
+        if (!in_array(($num % 100), [11, 12, 13])) {
+            switch ($num % 10) {
+                case 1:  return $num . 'st';
+                case 2:  return $num . 'nd';
+                case 3:  return $num . 'rd';
+            }
+        }
+        return $num . 'th';
+    }
+}
+
+// Sworn Day
+$sworn_day = addOrdinalSuffix((int)($row['sworn_day'] ?? 0));
 $pdf->SetXY(94.5, 65.5);
-$pdf->Cell(0, 10, strtoupper($row['sworn_day'] ?? ''), 0, 1);
-// Sword month
+$pdf->Cell(0, 10, strtolower($sworn_day), 0, 1);
+// Sworn month
 $pdf->SetXY(135.5, 65.5);
 $pdf->Cell(0, 10, strtoupper($row['sworn_month'] ?? ''), 0, 1);
-// Sword year
+// Sworn year
 $pdf->SetXY(173.5, 65.5);
 $pdf->Cell(0, 10, strtoupper($row['sworn_year'] ?? ''), 0, 1);
 
 // Sworn Father Name
 $pdf->SetXY(14, 71);
-fitTextInCell($pdf, 14, 73.4, 64, 5, $row['father_name']);
+fitTextInCell($pdf, 14, 73.4, 64, 5, $row['father_name'] ?? '');
 // Sworn Mother Name
 $pdf->SetXY(85  , 71);
-fitTextInCell($pdf, 85, 73.4, 64, 5, $row['mother_name']);
-
+fitTextInCell($pdf, 85, 73.4, 64, 5, $row['mother_name'] ?? '');
+$pdf->SetFont('Arial', '', 9.5);
 // CTC
 $pdf->SetXY(36, 76);
 $pdf->Cell(0, 10, strtoupper($row['ctc'] ?? ''), 0, 1);
@@ -447,26 +470,26 @@ $pdf->SetXY(136, 76);
 $pdf->Cell(0, 10, strtoupper($row['issued_on'] ?? ''), 0, 1);
 // Issued at
 $pdf->SetXY(14, 81);
-fitTextInCell($pdf, 14, 83, 75, 5, $row['issued_at']);
+fitTextInCell($pdf, 14, 83, 75, 5, $row['issued_at'] ?? '');
 
 // Administer Name
 $pdf->SetXY(22, 109);
-fitTextInCell($pdf, 15, 111, 64, 5, $row['administer_name']);
+fitTextInCell($pdf, 15, 111, 64, 5, $row['administer_name'] ?? '');
 // Administer position
 $pdf->SetXY(133, 100);
-fitTextInCell($pdf, 132, 102, 64, 5, $row['administer_position']);
+fitTextInCell($pdf, 132, 102, 64, 5, $row['administer_position'] ?? '');
 // Administer address
 $pdf->SetXY(142, 108.8);
-fitTextInCell($pdf, 132, 111, 64, 5, $row['administer_address']);
+fitTextInCell($pdf, 132, 111, 64, 5, $row['administer_address'] ?? '');
 
 
 // Late Name
 $pdf->SetXY(25, 130.5);
-fitTextInCell($pdf, 26, 133, 77, 5, $row['late_name']);
+fitTextInCell($pdf, 26, 133, 77, 5, $row['late_name'] ?? '');
 
 // Late address
 $pdf->SetXY(70, 137.5);
-fitTextInCell($pdf, 70, 139.5, 127, 5, $row['late_address']);
+fitTextInCell($pdf, 70, 139.5, 127, 5, $row['late_address'] ?? '');
 
 $pdf->SetFont('Arial', '', 10);
 // Late Birth Type
@@ -476,33 +499,35 @@ if ($late_birth == 'my birth') {
     $pdf->Cell(0, 10, 'X', 0, 1);
     // Late Birth In
     $pdf->SetXY(54.3, 156.5);
-    fitTextInCell($pdf, 55, 158.5, 66, 5, $row['late_birth_in']);
+    fitTextInCell($pdf, 55, 158.5, 66, 5, $row['late_birth_in'] ?? '');
     // Late Birth on
     $pdf->SetXY(128.3, 156.5);
-    fitTextInCell($pdf, 128, 158.5, 68, 5, $row['late_birth_on']);
+    $date2 = !empty($row['late_birth_on']) ? date('F j, Y', strtotime($row['late_birth_on'])) : '';
+    fitTextInCell($pdf, 128, 158.5, 68, 5, strtoupper($date2));
 } else if ($late_birth == 'the birth'){
     $pdf->SetXY(29.3, 163.8);
     $pdf->Cell(0, 10, 'X', 0, 1);
     // Late Birth of
     $pdf->SetXY(54.3, 164.5);
-    fitTextInCell($pdf, 55, 167, 60, 5, $row['late_birth_of']);
+    fitTextInCell($pdf, 55, 167, 60, 5, $row['late_birth_of'] ?? '');
     // Late Birth in
     $pdf->SetXY(146.3, 164.5);
-    fitTextInCell($pdf, 147, 167, 50, 5, $row['late_birth_in']);
+    fitTextInCell($pdf, 147, 167, 50, 5, $row['late_birth_in'] ?? '');
     // Late Birth on
     $pdf->SetXY(102.3, 170.5);
-    $pdf->Cell(0, 10, strtoupper($row['late_birth_on'] ?? ''), 0, 1);
+    $date2 = !empty($row['late_birth_on']) ? date('F j, Y', strtotime($row['late_birth_on'])) : '';
+    $pdf->Cell(0, 10, strtoupper($date2), 0, 1);
 }
 
 // Attend birth by
 $pdf->SetXY(95.3, 177.5);
-fitTextInCell($pdf, 93, 180, 78, 5, $row['attend_birth_by']);
+fitTextInCell($pdf, 93, 180, 78, 5, $row['attend_birth_by'] ?? '');
 // Who resides at
 $pdf->SetXY(27.3, 182.5);
-fitTextInCell($pdf, 27, 184.5, 138, 5, $row['who_resides_at']);
+fitTextInCell($pdf, 27, 184.5, 138, 5, $row['who_resides_at'] ?? '');
 // Late Citizen
 $pdf->SetXY(83.3, 190.2);
-fitTextInCell($pdf, 82, 192, 88, 5, $row['late_citizen']);
+fitTextInCell($pdf, 82, 192, 88, 5, $row['late_citizen'] ?? '');
 
 
 $pdf->SetFont('Arial', '', 10);
@@ -586,13 +611,13 @@ $pdf->SetXY(126, 305.5);
 fitTextInCellAddress($pdf, 132, 310.5, 66, 5, $row['late_issued_at']);
 // Late Administer Name
 $pdf->SetXY(25, 329);
-fitTextInCell($pdf, 25, 329, 76, 5, $row['late_administer_name']);
+fitTextInCell($pdf, 25, 329, 76, 5, ($row['late_administer_name'] ?? '') . ' (SGD)');
 // Late Administer address
 $pdf->SetXY(130, 305.5);
-fitTextInCellAddress($pdf, 127, 329, 76, 5, $row['late_administer_address']);
+fitTextInCellAddress($pdf, 127, 329, 76, 5, ($row['late_administer_address'] ?? '') . ' (SGD)');
 // Late Administer position
 $pdf->SetXY(127, 317);
-fitTextInCellAddress($pdf, 127, 317, 76, 5, $row['late_administer_position']);
+fitTextInCellAddress($pdf, 127, 317, 76, 5, ($row['late_administer_position'] ?? '') . ' (SGD)');
 
 // Output the PDF
 $pdf->Output('birth_'.$row['child_fname'].'_'.$row['child_lname'].'.pdf', 'I');

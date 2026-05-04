@@ -23,71 +23,14 @@
       text-transform: uppercase;
     }
 
-    /* --- NEW DESKTOP SIDEBAR STYLES --- */
-    #sidebar {
-      background-color: #2ea84b !important; 
-      padding-left: 0;
-      padding-right: 0;
-    }
-
-    #sidebar .pic h4 {
-      color: #ffffff;
-      font-family: 'Century Gothic', sans-serif;
-      text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
-      margin-top: 10px;
-      font-size: 1.2rem;
-    }
-
-    #sidebar .pic .lblspan {
-      font-size: 0.7rem;
-      letter-spacing: 1px;
-    }
-
-    #sidebar .aside {
-      width: 100%;
-    }
-
-    #sidebar .navbar {
-      padding: 0;
-      width: 100%;
-    }
-
-    #sidebar .navbar-nav {
-      width: 100%;
-      padding-bottom: 6em;
-    }
-
-    #sidebar .nav-link {
-      color: #ffffff !important;
-      font-family: 'Century Gothic', sans-serif;
-      text-transform: uppercase;
-      letter-spacing: 1px;
-      padding: 15px 20px 15px 30px !important;
-      transition: all 0.3s ease;
-      width: 100%;
-    }
-
-    #sidebar .nav-link i {
-      margin-right: 15px;
-    }
-
-    #sidebar .nav-link:hover {
-      background-color: #c2ba15;
-      color: #ffffff !important;
-    }
-
-    #sidebar .nav-link.active,
-    #sidebar #nav-link_active {
-      background-color: #ffcc00 !important; 
-      color: #ffffff !important;
-      font-weight: 500;
-      border-left: 12px solid #009688; 
-      text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.4); 
-      padding-left: 18px !important; 
-    }
-    /* ----------------------------------- */
-
     #navbar{ display: none; }
+
+    /* Override blue/teal styles from global CSS */
+    #nav-link_active, #nav-link:hover {
+        background: #ffcc00 !important; /* Gold matching theme */
+        border-left: 12px solid #2ea84b !important; /* Green matching theme */
+        text-shadow: 1px 1px 3px rgba(0,0,0,0.5) !important;
+    }
     
     @media only screen and (max-width: 768px) {
         /* For mobile phones: */
@@ -167,7 +110,7 @@
 </div>
 
 <div class="row" id="row">
-  <div class="col-sm-3" id="sidebar">
+  <div class="col-sm-3 bg-success" style="border-left: 15px solid; height: 50em;" id="sidebar">
     <div class="pic" style="margin-top: 2em;">
      <center>
         <img src="../../images/logo.png" class="logo">
@@ -176,12 +119,12 @@
     </div>
     <div class="aside" style="margin-top: 3em;">
       <nav class="navbar">
-        <ul class="navbar-nav">
-          <li class="nav-item"><a class="nav-link" href="../../home.php"><i class="fa fa-clock-o fa-fw"></i>Dashboard</a></li>
-          <li class="nav-item"><a class="nav-link active" id="nav-link_active" href="../files.php" ><i class="fa fa-bookmark-o fa-fw"></i>Registration</a></li>
-          <li class="nav-item"><a class="nav-link" data-toggle="modal" href="#myreport"><i class="fa fa-file-o fa-fw"></i>Report</a></li>
-          <li class="nav-item"><a class="nav-link" href="../../employee/view_users.php"><i class="fa fa-user-o fa-fw"></i>Account</a></li>
-          <li class="nav-item"><a class="nav-link" href="../../php/logout.php"><i class="fa fa-eject fa-fw"></i>Logout</a></li>
+        <ul class="navbar-nav" style="padding-bottom:6em;">
+          <li class="nav-item"><a class="nav-link" id="nav-link" href="../../home.php">&emsp;<i class="fa fa-clock-o fa-fw"></i>Dashboard</a></li>
+          <li class="nav-item"><a class="nav-link active" id="nav-link_active" href="../files.php" >&emsp;<i class="fa fa-bookmark-o fa-fw"></i>Registration</a></li>
+          <li class="nav-item"><a class="nav-link" data-toggle="modal" href="#myreport" id="nav-link">&emsp;<i class="fa fa-file-o fa-fw"></i>Report</a></li>
+          <li class="nav-item"><a class="nav-link" id="nav-link" href="../../employee/view_users.php">&emsp;<i class="fa fa-user-o fa-fw"></i>Account</a></li>
+          <li class="nav-item"><a class="nav-link" id="nav-link" href="../../php/logout.php">&emsp;<i class="fa fa-eject fa-fw"></i>Logout</a></li>
         </ul>
       </nav>
     </div>
@@ -194,7 +137,7 @@
       </div>
       <div class="col-sm-3"></div>
       <div class="col-sm-2">
-        <a class="btn btn-outline-info btn-block" href="death_cerf.php">Data Entry</a>
+        <a class="btn btn-outline-success btn-block" href="death_cerf.php">Data Entry</a>
       </div>
     </div>
     <br>
@@ -251,18 +194,19 @@
             </td>
             
             <td>
-                <button type="button" class="btn btn-danger btn-sm font-weight-bold" data-toggle="modal" data-target="#delete_<?php echo $row['no']; ?>">
+                <a href="remove.php?reg_no=<?php echo $row['no']; ?>" 
+                   class="btn btn-danger btn-sm font-weight-bold" 
+                   onclick="return confirm('WARNING: Are you sure you want to permanently delete this record?')">
                     Delete
-                </button>
+                </a>
             </td>
-        </tr>
-        <?php include('remove.php'); ?>
-    <?php
-        }
-    } else {
-        echo "<tr><td colspan='8'>Error loading database records.</td></tr>";
-    }
-    ?>
+            </tr>
+            <?php
+            }
+            } else {
+            echo "<tr><td colspan='8'>Error loading database records: " . $conn->error . "</td></tr>";
+            }
+            ?>
 </tbody>
       </table>
     </div>

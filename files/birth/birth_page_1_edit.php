@@ -365,6 +365,29 @@
                                 <input type="text" id="bd_year" class="text-center" style="width: 33.33%; border: none; background: transparent; outline: none;">
                             </div>
                             <input type="hidden" id="child_birth_date" name="birth_day" value="<?php echo $row['child_birth_date'] ?? ''; ?>">
+                            
+                            <script>
+                            $(document).ready(function() {
+                                var fullDate = $('#child_birth_date').val();
+                                if(fullDate) {
+                                    var parts = fullDate.split('-');
+                                    if(parts.length === 3) {
+                                        $('#bd_year').val(parts[0]);
+                                        $('#bd_month').val(parts[1]);
+                                        $('#bd_day').val(parts[2]);
+                                    }
+                                }
+                                
+                                $('#bd_day, #bd_month, #bd_year').on('input', function() {
+                                    var d = $('#bd_day').val();
+                                    var m = $('#bd_month').val();
+                                    var y = $('#bd_year').val();
+                                    if(d && m && y) {
+                                        $('#child_birth_date').val(y + '-' + m + '-' + d);
+                                    }
+                                });
+                            });
+                            </script>
                         </div>
                     </div>
                     <div class="row align-bottom-inputs" style="border-top:2px solid green;">

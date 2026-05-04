@@ -120,37 +120,52 @@ if (isset($_POST['add_birth']) || $_SERVER['REQUEST_METHOD'] == 'POST') {
             return 1;
         }
 
-        // Generate the new IDs
-        $reg_no   = getNextNo($conn, 'registration_tbl');
-        $child_no = getNextNo($conn, 'child_tbl');
-        $mom_no   = getNextNo($conn, 'mother_tbl');
-        $dad_no   = getNextNo($conn, 'father_tbl');
-        $late_no  = getNextNo($conn, 'late_reg_tbl');
+        // --- CRITICAL FIX: Synchronize the 'no' ID across ALL tables ---
+        // We use the same ID for everything so they can be joined perfectly.
+        $reg_no = getNextNo($conn, 'registration_tbl');
 
-        // Query 1: registration_tbl (NOW INCLUDES BOOK NO AND PAGE NO)
+        // Query 1: registration_tbl
         $sql1 = "INSERT INTO registration_tbl (no, registry_no, book_no, page_no, province, municipal, reg_date, reg_time, reg_user, update_date, update_time, update_user) 
                  VALUES ($reg_no, '$registry_no', $book_no, $page_no, '$province', '$municipal', '$reg_date', '$reg_time', '$reg_user', '0000-00-00', '00:00:00', '')";
         if (!$conn->query($sql1)) throw new Exception("Reg Table Error: " . $conn->error);
 
         // Query 2: child_tbl
         $sql2 = "INSERT INTO child_tbl (no, registry_no, child_lname, child_fname, child_mname, child_sex, child_birth_date, birth_brgy, birth_municipal, birth_province, birth_type, if_multi_birth_was, birth_order, birth_weight) 
-                 VALUES ($child_no, '$registry_no', '$c_lname', '$c_fname', '$c_mname', '$c_sex', '$formatted_bdate', '$c_brgy', '$c_muni', '$c_prov', '$c_type', '$c_multi', '$c_order', '$c_weight')";
+                 VALUES ($reg_no, '$registry_no', '$c_lname', '$c_fname', '$c_mname', '$c_sex', '$formatted_bdate', '$c_brgy', '$c_muni', '$c_prov', '$c_type', '$c_multi', '$c_order', '$c_weight')";
         if (!$conn->query($sql2)) throw new Exception("Child Table Error: " . $conn->error);
 
         // Query 3: mother_tbl
         $sql3 = "INSERT INTO mother_tbl (no, registry_no, mother_lname, mother_fname, mother_mname, mother_citizen, mother_religion, mother_brgy, mother_municipal, mother_province, mother_country, mother_occupation, mother_age, ttl_no_child, no_child_dead, no_child_alive, marriage_date, marriage_place) 
-                 VALUES ($mom_no, '$registry_no', '$m_lname', '$m_fname', '$m_mname', '$m_citiz', '$m_relig', '$m_brgy', '$m_muni', '$m_prov', '$m_country', '$m_occup', '$m_age', $m_ttl, $m_dead, $m_alive, '$m_mdate_formatted', '$m_mplace')";
+                 VALUES ($reg_no, '$registry_no', '$m_lname', '$m_fname', '$m_mname', '$m_citiz', '$m_relig', '$m_brgy', '$m_muni', '$m_prov', '$m_country', '$m_occup', '$m_age', $m_ttl, $m_dead, $m_alive, '$m_mdate_formatted', '$m_mplace')";
         if (!$conn->query($sql3)) throw new Exception("Mother Table Error: " . $conn->error);
 
         // Query 4: father_tbl
         $sql4 = "INSERT INTO father_tbl (no, registry_no, father_lname, father_fname, father_mname, father_age, father_religion, father_citizen, father_brgy, father_municipal, father_province, father_country, father_occupation, marriage_date, marriage_place) 
-                 VALUES ($dad_no, '$registry_no', '$f_lname', '$f_fname', '$f_mname', '$f_age', '$f_relig', '$f_citiz', '$f_brgy', '$f_muni', '$f_prov', '$f_country', '$f_occup', '$m_mdate_formatted', '$m_mplace')";
+                 VALUES ($reg_no, '$registry_no', '$f_lname', '$f_fname', '$f_mname', '$f_age', '$f_relig', '$f_citiz', '$f_brgy', '$f_muni', '$f_prov', '$f_country', '$f_occup', '$m_mdate_formatted', '$m_mplace')";
         if (!$conn->query($sql4)) throw new Exception("Father Table Error: " . $conn->error);
 
         // Query 5: late_reg_tbl
         $sql5 = "INSERT INTO late_reg_tbl (no, registry_no, late_birth_type, late_birth_of, late_birth_in, late_birth_on) 
-                 VALUES ($late_no, '$registry_no', '$l_type', '$l_of', '$l_in', '$l_on')";
+                 VALUES ($reg_no, '$registry_no', '$l_type', '$l_of', '$l_in', '$l_on')";
         if (!$conn->query($sql5)) throw new Exception("Late Reg Table Error: " . $conn->error);
+
+        // --- NEW: Initialize the remaining 4 tables so LEFT JOIN and UPDATE work correctly ---
+        
+        // Query 6: att_inf_tbl
+        $sql6 = "INSERT INTO att_inf_tbl (no, registry_no) VALUES ($reg_no, '$registry_no')";
+        $conn->query($sql6);
+
+        // Query 7: receive_civil_tbl
+        $sql7 = "INSERT INTO receive_civil_tbl (no, registry_no) VALUES ($reg_no, '$registry_no')";
+        $conn->query($sql7);
+
+        // Query 8: remarks_tbl
+        $sql8 = "INSERT INTO remarks_tbl (no, registry_no) VALUES ($reg_no, '$registry_no')";
+        $conn->query($sql8);
+
+        // Query 9: admission_paternity_tbl (CRITICAL for Page 2)
+        $sql9 = "INSERT INTO admission_paternity_tbl (no, registry_no) VALUES ($reg_no, '$registry_no')";
+        $conn->query($sql9);
 
         // If we get here, all 5 inserts succeeded!
         $conn->commit();

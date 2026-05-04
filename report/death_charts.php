@@ -13,7 +13,7 @@ if(isset($_POST['year']) && isset($_POST['month'])){
   $mm = $con->real_escape_string($_POST['month']);
 
   // CONDITION 1: BOTH YEAR AND MONTH ARE SELECTED
-  if (!empty($yy) && !empty($mm)) {
+  if (!empty($yy) && !empty($mm) && $mm != 'All') {
     
     // Get the text version of the month for legacy records (if any use text format)
     $dateObj = DateTime::createFromFormat('!m', $mm);
@@ -34,8 +34,8 @@ if(isset($_POST['year']) && isset($_POST['month'])){
     }
   
   } 
-  // CONDITION 2: ONLY YEAR IS SELECTED
-  else if (!empty($yy) && empty($mm)) {
+  // CONDITION 2: ONLY YEAR IS SELECTED (OR ALL MONTHS)
+  else if (!empty($yy)) {
 
     // Search for both 'YYYY-%' AND '%YYYY'
     $sql = "SELECT sex, count(*) as number 

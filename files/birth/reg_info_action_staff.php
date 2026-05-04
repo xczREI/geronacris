@@ -159,64 +159,56 @@
       $late_sworn_address = $conn->real_escape_string($_POST['late_sworn_address']);
 
       //=======================================database=======================================
-
-      /*$no = mysqli_insert_id($conn);
-
-      $sql = "INSERT INTO no_tbl VALUES ('$no', '$registry_no', 0)";
-      $result = $conn->query($sql); */
-
-      $servername = "localhost";
-      $username = "root";
-      $password = "";
-      $dbname = "geronacris";
-
-      // Create connection
-      $conn2 = new mysqli($servername, $username, $password, $dbname);
-      // Check connection
-      if ($conn2->connect_error) {
-        die("Connection failed: " . $conn->connect_error);
-      }
-
-      $sql = "INSERT INTO no_tbl (registry_no, status)
-      VALUES ('$registry_no', '0')";
-
-      if ($conn2->query($sql) === TRUE) {
-        $no = $conn2->insert_id;
-      }
-
-
-
-     
-      $sql = "INSERT INTO registration_tbl VALUES ('$registry_no', '$book_no', '$page_no', '$province', '$municipal', '$date', '$time', '$e_name', '$u_date', '$u_time', '$u_name', '$no')";
-      $result = $conn->query($sql);
-
-
+      // Use the connection established at the top with variables from login_db_birth.php
       
+      // 1. Initialize no_tbl and get the shared 'no' ID
+      $sql_no = "INSERT INTO no_tbl (registry_no, status) VALUES ('$registry_no', '0')";
+      if ($conn->query($sql_no)) {
+          $no = $conn->insert_id;
+      } else {
+          // Fallback if no_tbl doesn't have auto-increment
+          $res = $conn->query("SELECT MAX(no) AS max_no FROM registration_tbl");
+          $row_no = $res->fetch_assoc();
+          $no = (int)($row_no['max_no'] ?? 0) + 1;
+      }
 
-  
-      $sql = "INSERT INTO child_tbl VALUES ('$registry_no', '$child_lname', '$child_fname', '$child_mname', '$child_sex', '$child_birth_date', '$birth_brgy', '$birth_city', '$birth_province', '$birth_type', '$multi_birth_was', '$birth_order', '$birth_weight', '$no')";
-      $result = $conn->query($sql);
+      // --- CRITICAL FIX: Explicitly name columns to match Admin version and ensure reliability ---
+      
+      $sql1 = "INSERT INTO registration_tbl (no, registry_no, book_no, page_no, province, municipal, reg_date, reg_time, reg_user, update_date, update_time, update_user) 
+               VALUES ($no, '$registry_no', '$book_no', '$page_no', '$province', '$municipal', '$date', '$time', '$e_name', '0000-00-00', '00:00:00', '')";
+      $conn->query($sql1);
 
-      $sql = "INSERT INTO mother_tbl VALUES ('$registry_no', '$mother_lname', '$mother_fname', '$mother_mname', '$mother_citizen', '$mother_sect', '$mother_brgy', '$mother_city', '$mother_province', '$mother_country', '$mother_occupation', '$mother_age', '$ttl_no_child', '$no_child_dead', '$no_child_alive', '$marriage_date', '$marriage_place', '$no')";
-      $result = $conn->query($sql);
+      $sql2 = "INSERT INTO child_tbl (no, registry_no, child_lname, child_fname, child_mname, child_sex, child_birth_date, birth_brgy, birth_municipal, birth_province, birth_type, if_multi_birth_was, birth_order, birth_weight) 
+               VALUES ($no, '$registry_no', '$child_lname', '$child_fname', '$child_mname', '$child_sex', '$child_birth_date', '$birth_brgy', '$birth_city', '$birth_province', '$birth_type', '$multi_birth_was', '$birth_order', '$birth_weight')";
+      $conn->query($sql2);
 
-      $sql = "INSERT INTO father_tbl VALUES ('$registry_no', '$father_lname', '$father_fname', '$father_mname', '$father_age', '$father_sect', '$father_citizen', '$father_brgy', '$father_city', '$father_province', '$father_country', '$father_occupation', '$marriage_date', '$marriage_place', '$no')";
-      $result = $conn->query($sql);
+      $sql3 = "INSERT INTO mother_tbl (no, registry_no, mother_lname, mother_fname, mother_mname, mother_citizen, mother_religion, mother_brgy, mother_municipal, mother_province, mother_country, mother_occupation, mother_age, ttl_no_child, no_child_dead, no_child_alive, marriage_date, marriage_place) 
+               VALUES ($no, '$registry_no', '$mother_lname', '$mother_fname', '$mother_mname', '$mother_citizen', '$mother_sect', '$mother_brgy', '$mother_city', '$mother_province', '$mother_country', '$mother_occupation', '$mother_age', '$ttl_no_child', '$no_child_dead', '$no_child_alive', '$marriage_date', '$marriage_place')";
+      $conn->query($sql3);
 
-      $sql = "INSERT INTO att_inf_tbl VALUES ('$registry_no', '$attendant_type', '$birth_time', '$attendant_name', '$attendant_position', '$attendant_address', '$informant_name', '$rel_child', '$informant_address', '$prepared_name', '$prepared_position', '$attendant_date', '$informant_date', '$prepared_date', '$no')";
-      $result = $conn->query($sql);
+      $sql4 = "INSERT INTO father_tbl (no, registry_no, father_lname, father_fname, father_mname, father_age, father_religion, father_citizen, father_brgy, father_municipal, father_province, father_country, father_occupation, marriage_date, marriage_place) 
+               VALUES ($no, '$registry_no', '$father_lname', '$father_fname', '$father_mname', '$father_age', '$father_sect', '$father_citizen', '$father_brgy', '$father_city', '$father_province', '$father_country', '$father_occupation', '$marriage_date', '$marriage_place')";
+      $conn->query($sql4);
 
-      $sql = "INSERT INTO receive_civil_tbl VALUES ('$registry_no', '$received_name', '$received_position', '$civil_name', '$civil_position', '$received_date', '$civil_date', '$no')";
-      $result = $conn->query($sql);
+      $sql5 = "INSERT INTO att_inf_tbl (no, registry_no, attendant_type, birth_time, attendant_name, attendant_position, attendant_address, informant_name, rel_child, informant_address, prepared_name, prepared_position, attendant_date, informant_date, prepared_date) 
+               VALUES ($no, '$registry_no', '$attendant_type', '$birth_time', '$attendant_name', '$attendant_position', '$attendant_address', '$informant_name', '$rel_child', '$informant_address', '$prepared_name', '$prepared_position', '$attendant_date', '$informant_date', '$prepared_date')";
+      $conn->query($sql5);
 
-      $sql = "INSERT INTO remarks_tbl VALUES ('$registry_no', '$remarks', '$no')";
-      $result = $conn->query($sql);
+      $sql6 = "INSERT INTO receive_civil_tbl (no, registry_no, received_name, received_position, civil_name, civil_position, received_date, civil_date) 
+               VALUES ($no, '$registry_no', '$received_name', '$received_position', '$civil_name', '$civil_position', '$received_date', '$civil_date')";
+      $conn->query($sql6);
 
-      $sql = "INSERT INTO admission_paternity_tbl VALUES ('$registry_no', '$father_name', '$mother_name', '$child_name', '$birth_date', '$birth_place', '$sworn_day', '$sworn_month', '$sworn_year', '$birth_gender', '$sworn_ctc', '$sworn_issuedon', '$sworn_issuedat', '$sworn_name', '$sworn_position', '$sworn_address', '$no')";
-      $result = $conn->query($sql);
+      $sql7 = "INSERT INTO remarks_tbl (no, registry_no, remarks) 
+               VALUES ($no, '$registry_no', '$remarks')";
+      $conn->query($sql7);
 
-      $sql = "INSERT INTO late_reg_tbl VALUES ('$registry_no', '$late_name', '$late_address', '$late_birth_type', '$late_birth_of', '$late_birth_in', '$late_birth_on', '$attend_birth_by', '$who_resides_at', '$late_citizen', '$married_type', '$married_on', '$married_at', '$not_married_name', '$late_reg_reason', '$applicant_only', '$applicant_than_owner', '$sign_day', '$sign_month', '$sign_year', '$sign_at', '$affiant_name', '$late_sworn_day', '$late_sworn_month', '$late_sworn_year', '$late_sworn_at', '$late_ctc', '$late_issued_on', '$late_issued_at', '$late_sworn_name', '$late_sworn_position', '$late_sworn_address', '$no')";
-      $result = $conn->query($sql);
+      $sql8 = "INSERT INTO admission_paternity_tbl (no, registry_no, father_name, mother_name, child_name, birth_date, birth_place, sworn_day, sworn_month, sworn_year, child_gender, ctc, issued_on, issued_at, administer_name, administer_position, administer_address) 
+               VALUES ($no, '$registry_no', '$father_name', '$mother_name', '$child_name', '$birth_date', '$birth_place', '$sworn_day', '$sworn_month', '$sworn_year', '$birth_gender', '$sworn_ctc', '$sworn_issuedon', '$sworn_issuedat', '$sworn_name', '$sworn_position', '$sworn_address')";
+      $conn->query($sql8);
+
+      $sql9 = "INSERT INTO late_reg_tbl (no, registry_no, late_name, late_address, late_birth_type, late_birth_of, late_birth_in, late_birth_on, attend_birth_by, who_resides_at, late_citizen, married_type, married_on, married_at, not_married_name, late_reg_reason, applicant_only, applicant_than_owner, sign_day, sign_month, sign_year, sign_at, affiant_name, late_sworn_day, late_sworn_month, late_sworn_year, late_sworn_at, late_ctc, late_issued_on, late_issued_at, late_administer_name, late_administer_position, late_administer_address) 
+               VALUES ($no, '$registry_no', '$late_name', '$late_address', '$late_birth_type', '$late_birth_of', '$late_birth_in', '$late_birth_on', '$attend_birth_by', '$who_resides_at', '$late_citizen', '$married_type', '$married_on', '$married_at', '$not_married_name', '$late_reg_reason', '$applicant_only', '$applicant_than_owner', '$sign_day', '$sign_month', '$sign_year', '$sign_at', '$affiant_name', '$late_sworn_day', '$late_sworn_month', '$late_sworn_year', '$late_sworn_at', '$late_ctc', '$late_issued_on', '$late_issued_at', '$late_sworn_name', '$late_sworn_position', '$late_sworn_address')";
+      $result = $conn->query($sql9);
 
       if (!$result) echo "INSERT failed: $sql<br>" .
       $conn->error . "<br><br>";
