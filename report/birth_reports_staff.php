@@ -125,68 +125,56 @@
 
   <div class="col-sm-9" style="padding-top: 7%;" id="body">
   		<h5 align="center">= BIRTH REGISTRATION =</h5>
-      <center>
-      <h6 class="mt-3 text-uppercase"><span>Monthly/Yearly Records</span></h6>
-      <div class="row mb-5">
-      <div class="col-sm-4"></div>
-      <div class="col-sm-2 p-0 mb-1">
-          <select class="custom-select" id="byear" name="year" required>
-            <?php 
-                require_once 'login_db_birth.php';
-                $conn = new mysqli($hn, $un, $pw, $db);
-                if ($conn->connect_error) die($conn->connect_error);
+      <h6 class="mt-3 text-uppercase text-center"><span>Monthly/Yearly Records</span></h6>
+      <div class="row mb-5 justify-content-center">
+          <div class="col-6 col-md-3 mb-2">
+              <label class="small font-weight-bold text-success">YEAR</label>
+              <select class="custom-select" id="byear" name="year" required>
+                <?php 
+                    require_once 'login_db_birth.php';
+                    $conn = new mysqli($hn, $un, $pw, $db);
+                    if ($conn->connect_error) die($conn->connect_error);
 
-                // Extracts the last 4 characters (the year) from the "DD MONTH YYYY" string
-                // Smart Query: Checks if the date has dashes (2005-05-03) or spaces (03 MAY 2005)
-                $sql = "SELECT 
-                          CASE 
-                            WHEN child_birth_date LIKE '%-%' THEN LEFT(TRIM(child_birth_date), 4) 
-                            ELSE RIGHT(TRIM(child_birth_date), 4) 
-                          END AS yr 
-                        FROM child_tbl 
-                        WHERE child_birth_date IS NOT NULL AND child_birth_date != '' AND child_birth_date != '0000-00-00'
-                        GROUP BY yr 
-                        ORDER BY yr DESC";
+                    $sql = "SELECT DISTINCT LEFT(child_birth_date, 4) AS yr 
+                            FROM child_tbl 
+                            WHERE child_birth_date IS NOT NULL 
+                            ORDER BY yr DESC";
+                    $result = $conn->query($sql);  
+                    echo "<option value='' style='display:none;'>-- Select Year --</option>";
 
-                $result = $conn->query($sql);  
-
-                echo "<option value='' style='display:none;'>-- Select Year --</option>";
-
-                if ($result && $result->num_rows > 0) {
-                    while($row = $result->fetch_assoc()) { 
-                        $validYear = $row['yr'];
-                        if (is_numeric($validYear) && strlen($validYear) == 4) {
-                            echo "<option value='".$validYear."'>".$validYear."</option>";   
+                    if ($result && $result->num_rows > 0) {
+                        while($row = $result->fetch_assoc()) { 
+                            $validYear = $row['yr'];
+                            if (is_numeric($validYear) && strlen($validYear) == 4) {
+                                echo "<option value='".$validYear."'>".$validYear."</option>";   
+                            }
                         }
+                    } else {
+                        echo "<option value=''>No records found</option>";
                     }
-                } else {
-                    echo "<option value=''>No records found</option>";
-                }
-            ?>
-          </select>
+                ?>
+              </select>
           </div>
-          <div class="col-sm-2 p-0">
-          <select class="custom-select" id="bmonth" name="month" required>
-              <option value="" style="display: none;" selected>-- Select Month --</option>
-              <option value="">All</option>
-              <option value="01">January</option>
-              <option value="02">February</option>
-              <option value="03">March</option>
-              <option value="04">April</option>
-              <option value="05">May</option>
-              <option value="06">June</option>
-              <option value="07">July</option>
-              <option value="08">August</option>
-              <option value="09">September</option>
-              <option value="10">October</option>
-              <option value="11">November</option>
-              <option value="12">December</option>
-          </select>
-          
+          <div class="col-6 col-md-3 mb-2">
+              <label class="small font-weight-bold text-success">MONTH</label>
+              <select class="custom-select" id="bmonth" name="month" required>
+                  <option value="" style="display: none;" selected>-- Select Month --</option>
+                  <option value="">All</option>
+                  <option value="01">January</option>
+                  <option value="02">February</option>
+                  <option value="03">March</option>
+                  <option value="04">April</option>
+                  <option value="05">May</option>
+                  <option value="06">June</option>
+                  <option value="07">July</option>
+                  <option value="08">August</option>
+                  <option value="09">September</option>
+                  <option value="10">October</option>
+                  <option value="11">November</option>
+                  <option value="12">December</option>
+              </select>
           </div>
-          <div class="col-sm-4"></div>
       </div>
-      </center>
       <div id="chartContainer" style="height: 450px; max-width: 100%; margin: 0px;"></div>
 
   </div>

@@ -29,7 +29,7 @@
         if (!$result) die ("Database access failed: " . $conn->error);
         $rows = $result->num_rows;
 
-        $sql = "SELECT COUNT(*) AS xx, reg_date, reg_user FROM registration_tbl WHERE reg_date LIKE '$yy%' GROUP BY reg_user";
+        $sql = "SELECT COUNT(*) AS xx, reg_user FROM registration_tbl WHERE reg_date LIKE '$yy%' GROUP BY reg_user";
         $result = $conn->query($sql);  
         if (!$result) die ("Database access failed: " . $conn->error);
 
@@ -72,7 +72,7 @@
         if (!$result) die ("Database access failed: " . $conn->error);
         $rows = $result->num_rows;
 
-        $sql = "SELECT COUNT(*) AS xx, reg_date, reg_user FROM registration_tbl WHERE reg_date LIKE '$yy%' GROUP BY reg_user";
+        $sql = "SELECT COUNT(*) AS xx, reg_user FROM registration_tbl WHERE reg_date LIKE '$yy%' GROUP BY reg_user";
         $result = $conn->query($sql);  
         if (!$result) die ("Database access failed: " . $conn->error);
 
@@ -115,7 +115,7 @@
         if (!$result) die ("Database access failed: " . $conn->error);
         $rows = $result->num_rows;
 
-        $sql = "SELECT COUNT(*) AS xx, reg_date, reg_user FROM registration_tbl WHERE reg_date LIKE '$yy%' GROUP BY reg_user";
+        $sql = "SELECT COUNT(*) AS xx, reg_user FROM registration_tbl WHERE reg_date LIKE '$yy%' GROUP BY reg_user";
         $result = $conn->query($sql);  
         if (!$result) die ("Database access failed: " . $conn->error);
 
@@ -161,7 +161,7 @@
         if (!$result) die ("Database access failed: " . $conn->error);
         $rows = $result->num_rows;
 
-        $sql = "SELECT COUNT(*) AS xx, reg_date, reg_user FROM registration_tbl WHERE reg_date BETWEEN '$xx' AND '$zz' GROUP BY reg_user";
+        $sql = "SELECT COUNT(*) AS xx, reg_user FROM registration_tbl WHERE reg_date BETWEEN '$xx' AND '$zz' GROUP BY reg_user";
         $result = $conn->query($sql);  
         if (!$result) die ("Database access failed: " . $conn->error);
 
@@ -204,7 +204,7 @@
         if (!$result) die ("Database access failed: " . $conn->error);
         $rows = $result->num_rows;
 
-        $sql = "SELECT COUNT(*) AS xx, reg_date, reg_user FROM registration_tbl WHERE reg_date BETWEEN '$xx' AND '$zz' GROUP BY reg_user";
+        $sql = "SELECT COUNT(*) AS xx, reg_user FROM registration_tbl WHERE reg_date BETWEEN '$xx' AND '$zz' GROUP BY reg_user";
         $result = $conn->query($sql);  
         if (!$result) die ("Database access failed: " . $conn->error);
 
@@ -247,7 +247,7 @@
         if (!$result) die ("Database access failed: " . $conn->error);
         $rows = $result->num_rows;
 
-        $sql = "SELECT COUNT(*) AS xx, reg_date, reg_user FROM registration_tbl WHERE reg_date BETWEEN '$xx' AND '$zz' GROUP BY reg_user";
+        $sql = "SELECT COUNT(*) AS xx, reg_user FROM registration_tbl WHERE reg_date BETWEEN '$xx' AND '$zz' GROUP BY reg_user";
         $result = $conn->query($sql);  
         if (!$result) die ("Database access failed: " . $conn->error);
 

@@ -134,9 +134,9 @@
       <center>
       <h6 class="mt-3 text-uppercase"><span>Monthly/Yearly Records</span></h6>
       <form method="post" action="other-print.php" target="_blank">
-        <div class="row mb-5">
-          <div class="col-sm-4"></div>
-          <div class="col-sm-2 p-0 mb-1">
+        <div class="row mb-5 justify-content-center">
+          <div class="col-sm-2 mb-1">
+            <label class="small font-weight-bold">YEAR</label>
             <select class="custom-select" id="year" name="year">
               <?php 
                   require_once 'login_db_birth.php';
@@ -159,7 +159,8 @@
               ?>
             </select>
             </div>
-            <div class="col-sm-2 p-0">
+            <div class="col-sm-2 mb-1">
+            <label class="small font-weight-bold">MONTH</label>
             <select class="custom-select" id="month" name="month">
                 <option value="" style="display: none;" selected>-- Select Month --</option>
                 <option value="All">All</option>
@@ -176,15 +177,14 @@
                 <option value="11">November</option>
                 <option value="12">December</option>
             </select>
-            
+
             </div>
             <div class="col-sm-1">
+              <label class="small font-weight-bold invisible">PRINT</label>
               <button class="btn btn-outline-danger btn-block" type="submit" name="pdf"><i class="fa fa-print"></i></button>
             </div>
-            <div class="col-sm-2"></div>
         </div>
-      </form>
-      </center>
+      </form>      </center>
       <div class="row" id="myTable">
 
       </div>

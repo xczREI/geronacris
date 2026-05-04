@@ -133,9 +133,9 @@
   		<h5 align="center">= DEATH REGISTRATION =</h5>
       <center>
       <h6 class="mt-3 text-uppercase"><span>Monthly/Yearly Records</span></h6>
-      <div class="row mb-5">
-      <div class="col-sm-4"></div>
-      <div class="col-sm-2 p-0 mb-1">
+      <div class="row mb-5 justify-content-center">
+      <div class="col-sm-2 mb-1">
+          <label class="small font-weight-bold">YEAR</label>
           <select class="custom-select" id="byear" name="year" required>
             <?php 
                 require_once 'login_db_death.php';
@@ -147,16 +147,18 @@
                 $result = $conn->query($sql);  
                 if (!$result) die ("Database access failed: " . $conn->error);
 
+                echo "<option value='' style='display:none;'>-- Select Year --</option>";
                 if ($result->num_rows > 0) {
-                  echo "<option value='' style='display:none;'>-- Select Year --</option>";
                   while($row = $result->fetch_assoc()) { 
                     echo " <option value='".$row['yr']."'>".$row['yr']."</option>";   
                   }
                 } 
+                $conn->close();
             ?>
           </select>
           </div>
-          <div class="col-sm-2 p-0">
+          <div class="col-sm-2">
+          <label class="small font-weight-bold">MONTH</label>
           <select class="custom-select" id="bmonth" name="month" required>
               <option value="" style="display: none;" selected>-- Select Month --</option>
               <option value="">All</option>
@@ -173,9 +175,7 @@
               <option value="11">November</option>
               <option value="12">December</option>
           </select>
-          
           </div>
-          <div class="col-sm-4"></div>
       </div>
       </center>
       <div id="chartContainer" style="height: 450px; max-width: 100%; margin: 0px;"></div>
@@ -192,130 +192,62 @@
 <script>
 $(document).ready(function(){
 
-$("#byear").change(function(){
+  function loadChart() {
     var year = $("#byear").val();
     var month = $("#bmonth").val();
-    if(month == ''){ var mm = ''; } else {
-      var d = new Date(month);
-      var months = ["January","February","March","April","May","June","July","August","September","October","November","December"];
-      var mm =  months[d.getMonth()];
-    }
+    var months = ["January","February","March","April","May","June","July","August","September","October","November","December"];
+    var mm = (month !== "" && month !== null) ? months[parseInt(month) - 1] : "All Months";
 
-    if(year == ''){
-      alertify.dialog('alert').set({transition:'zoom',message: 'Pls. select month and enter year'}).show(); 
-    }else{
+    if(year && year !== ''){
       $.ajax({
         url: "death_charts.php",
-        data:{year:year,month:month},
+        data:{year:year, month:month},
         method: "POST",
+        dataType: "json",
         success:function(data){
-
-        var chart = new CanvasJS.Chart("chartContainer",
-        {
-          theme: "light",
-          exportEnabled: true,
-          animationEnabled: true,
-          title:{
-            text: "Death Statistics",
-            horizontalAlign: "center",
-            fontSize: 25
-          },
-          subtitles: [{
-            text: "(" + mm + " " + year + " )",
-            fontSize: 15
-          }],
-          legend:{
-            cursor: "pointer",
-            itemclick: explodePie
-          },
-          data: [{
-            type: "pie",
-            showInLegend: true,
-            toolTipContent: "<b>{name}:</b> {y}",
-            indexLabel: "{name}: {y}",
-            dataPoints: data
-          }]
-        });
-        chart.render();
-        function explodePie (e) {
-          if(typeof (e.dataSeries.dataPoints[e.dataPointIndex].exploded) === "undefined" || !e.dataSeries.dataPoints[e.dataPointIndex].exploded) {
-            e.dataSeries.dataPoints[e.dataPointIndex].exploded = true;
+          
+          if(!data || data.length === 0) {
+              data = [{ label: "No Data Found", y: 0 }];
           } else {
-            e.dataSeries.dataPoints[e.dataPointIndex].exploded = false;
+              for(var i = 0; i < data.length; i++) {
+                  data[i].y = Number(data[i].y);
+                  if(data[i].name) data[i].label = data[i].name; 
+              }
           }
-          e.chart.render();
 
-        }
-
+          var chart = new CanvasJS.Chart("chartContainer", {
+            theme: "light", exportEnabled: true, animationEnabled: true,
+            title:{ text: "Death Statistics", horizontalAlign: "center", fontSize: 25 },
+            subtitles: [{ text: "(" + mm + " " + year + " )", fontSize: 15 }],
+            legend:{ cursor: "pointer", itemclick: function(e) {
+                e.dataSeries.dataPoints[e.dataPointIndex].exploded = !(e.dataSeries.dataPoints[e.dataPointIndex].exploded || false);
+                e.chart.render();
+            }},
+            data: [{ 
+              type: "pie", 
+              showInLegend: true, 
+              toolTipContent: "<b>{label}:</b> {y}", 
+              indexLabel: "{label}: {y}", 
+              dataPoints: data 
+            }]
+          });
+          chart.render();
+        },
+        error: function(xhr, status, error) {
+            console.error("Chart AJAX Error: ", error); 
+            $("#chartContainer").html("<p class='text-center text-danger'>Error loading chart data.</p>");
         }
       });
-
     }
-  
+  }
+
+  $("#byear, #bmonth").change(function(){
+      loadChart();
   });
 
-$("#bmonth").change(function(){
-    var year = $("#byear").val();
-    var month = $("#bmonth").val();
-    if(month == ''){ var mm = ''; } else {
-      var d = new Date(month);
-      var months = ["January","February","March","April","May","June","July","August","September","October","November","December"];
-      var mm =  months[d.getMonth()];
-    }
-
-    if(year == ''){
-      alertify.dialog('alert').set({transition:'zoom',message: 'Pls. select month and enter year'}).show(); 
-    }else{
-      $.ajax({
-        url: "death_charts.php",
-        data:{year:year,month:month},
-        method: "POST",
-        success:function(data){
-
-        var chart = new CanvasJS.Chart("chartContainer",
-        {
-          theme: "light",
-          exportEnabled: true,
-          animationEnabled: true,
-          title:{
-            text: "Death Statistics",
-            horizontalAlign: "center",
-            fontSize: 25
-          },
-          subtitles: [{
-            text: "( " + mm + " " + year + " )",
-            fontSize: 15
-          }],
-          legend:{
-            cursor: "pointer",
-            itemclick: explodePie
-          },
-          data: [{
-            type: "pie",
-            showInLegend: true,
-            toolTipContent: "<b>{name}:</b> {y}",
-            indexLabel: "{name}: {y}",
-            dataPoints: data
-          }]
-        });
-        chart.render();
-        function explodePie (e) {
-          if(typeof (e.dataSeries.dataPoints[e.dataPointIndex].exploded) === "undefined" || !e.dataSeries.dataPoints[e.dataPointIndex].exploded) {
-            e.dataSeries.dataPoints[e.dataPointIndex].exploded = true;
-          } else {
-            e.dataSeries.dataPoints[e.dataPointIndex].exploded = false;
-          }
-          e.chart.render();
-
-        }
-
-        }
-      });
-
-    }
-  
-  });
-
+  if($("#byear").val() !== '') {
+    loadChart();
+  }
 });
 
 </script>
