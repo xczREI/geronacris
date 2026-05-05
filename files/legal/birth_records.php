@@ -61,7 +61,7 @@
 <body>
 
 <!-- nav top -->
-<nav class="navbar navbar-expand-md bg-dark navbar-dark" id="navbar">
+<nav class="navbar navbar-expand-md bg-success navbar-dark" id="navbar">
   <!-- Brand -->
   <a class="navbar-brand" href="#">
     <div class="media pl-1 mb-3">
@@ -87,8 +87,8 @@
   <!-- Navbar links -->
   <div class="collapse navbar-collapse bg-light" id="collapsibleNavbar">
     <ul class="navbar-nav bg-dark mx-auto h-100">
-		<li class="nav-item"><a class="active nav-link" id="nav-link" href="../../home.php">&emsp;<i class="fa fa-clock-o fa-fw"></i>Dashboard</a></li>
-		<li class="nav-item"><a class="nav-link" id="nav-link_active" href="../files.php" >&emsp;<i class="fa fa-bookmark-o fa-fw"></i>Registration</a></li>
+		<li class="nav-item"><a class="nav-link" id="nav-link" href="../../home.php">&emsp;<i class="fa fa-clock-o fa-fw"></i>Dashboard</a></li>
+		<li class="nav-item"><a class="nav-link active" id="nav-link_active" href="../files.php" >&emsp;<i class="fa fa-bookmark-o fa-fw"></i>Registration</a></li>
 		<li class="nav-item"><a class="nav-link" data-toggle="modal" href="#myreport" id="nav-link">
 		&emsp;<i class="fa fa-file-o fa-fw"></i>Report</a></li>
 		<li class="nav-item"><a class="nav-link" id="nav-link" href="../../employee/view_users.php">&emsp;<i class="fa fa-user-o fa-fw"></i>Account</a></li>
@@ -116,11 +116,11 @@
 
 <!--navbar-->
 <div class="row" id="row">
-  	<div class="col-sm-3 bg-dark" style="border-left: 15px solid;" id="sidebar">
+  	<div class="col-sm-3 bg-success" style="border-left: 15px solid; min-height: 100vh;" id="sidebar">
   		<div class="pic" style="margin-top: 2em;">
 	  		<center>
-	  			<img src="../../images/logo-3.png" class="logo">
-	  			<h4 class="text-uppercase">Civil Registry<br><span class="lblspan">System</span></h4>
+	  			<img src="../../images/logo.png" class="logo">
+	  			<h4 class="text-uppercase">Civil Registry Information<br><span class="lblspan">System</span></h4>
 	  		</center>
 	  	</div>
 
@@ -128,8 +128,8 @@
 		<div class="aside" style="margin-top: 3em;">
 			<nav class="navbar">
 				<ul class="navbar-nav" style="padding-bottom:6em;">
-			  		<li class="nav-item"><a class="active nav-link" id="nav-link" href="../../home.php">&emsp;<i class="fa fa-clock-o fa-fw"></i>Dashboard</a></li>
-			  		<li class="nav-item"><a class="nav-link" id="nav-link_active" href="../files.php" >&emsp;<i class="fa fa-bookmark-o fa-fw"></i>Registration</a></li>
+			  		<li class="nav-item"><a class="nav-link" id="nav-link" href="../../home.php">&emsp;<i class="fa fa-clock-o fa-fw"></i>Dashboard</a></li>
+			  		<li class="nav-item"><a class="nav-link active" id="nav-link_active" href="../files.php" >&emsp;<i class="fa fa-bookmark-o fa-fw"></i>Registration</a></li>
 			  		<li class="nav-item"><a class="nav-link" data-toggle="modal" href="#myreport" id="nav-link">
 			        &emsp;<i class="fa fa-file-o fa-fw"></i>Report</a></li>
 			  		<li class="nav-item"><a class="nav-link" id="nav-link" href="../../employee/view_users.php">&emsp;<i class="fa fa-user-o fa-fw"></i>Account</a></li>
@@ -151,7 +151,7 @@
       	</div>
   		</div>
 		<br>
-  		<div class="table-responsive" style="overflow:scroll; height:50em;">
+  		<div class="table-responsive">
   		<h5 style="text-transform:uppercase;" align="center">-- Birth Records --</h5>
 		  	<table class="table table-striped table-sm">
 			    <thead class="thead-dark">

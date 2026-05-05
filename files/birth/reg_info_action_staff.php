@@ -159,18 +159,27 @@
       $late_sworn_address = $conn->real_escape_string($_POST['late_sworn_address']);
 
       //=======================================database=======================================
-      // Use the connection established at the top with variables from login_db_birth.php
-      
-      // 1. Initialize no_tbl and get the shared 'no' ID
-      $sql_no = "INSERT INTO no_tbl (registry_no, status) VALUES ('$registry_no', '0')";
-      if ($conn->query($sql_no)) {
-          $no = $conn->insert_id;
-      } else {
-          // Fallback if no_tbl doesn't have auto-increment
-          $res = $conn->query("SELECT MAX(no) AS max_no FROM registration_tbl");
-          $row_no = $res->fetch_assoc();
-          $no = (int)($row_no['max_no'] ?? 0) + 1;
-      }
+      try {
+          $conn->begin_transaction();
+
+          // 1. Check for duplicates safely (ONLY IF NOT EMPTY)
+          if (!empty($registry_no)) {
+              $check = $conn->query("SELECT registry_no FROM registration_tbl WHERE registry_no = '$registry_no'");
+              if ($check && $check->num_rows > 0) {
+                  throw new Exception("Registry Number '$registry_no' already exists in the system.");
+              }
+          }
+
+          // 2. Initialize no_tbl and get the shared 'no' ID
+          $sql_no = "INSERT INTO no_tbl (registry_no, status) VALUES ('$registry_no', '0')";
+          if ($conn->query($sql_no)) {
+              $no = $conn->insert_id;
+          } else {
+              // Fallback if no_tbl doesn't have auto-increment
+              $res = $conn->query("SELECT MAX(no) AS max_no FROM registration_tbl");
+              $row_no = $res->fetch_assoc();
+              $no = (int)($row_no['max_no'] ?? 0) + 1;
+          }
 
       // --- CRITICAL FIX: Explicitly name columns to match Admin version and ensure reliability ---
       

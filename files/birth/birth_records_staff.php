@@ -36,7 +36,7 @@
 </head>
 <body>
 
-<nav class="navbar navbar-expand-md bg-dark navbar-dark" id="navbar">
+<nav class="navbar navbar-expand-md bg-success navbar-dark" id="navbar">
     <a class="navbar-brand" href="#">
         <div class="media pl-1">
             <?php $type = $_SESSION['type']; $avatar = ($type == 'Admin') ? 'img_avatar3.png' : 'img_avatar2.png'; ?>
@@ -51,10 +51,10 @@
     </button>
     <div class="collapse navbar-collapse bg-light" id="collapsibleNavbar">
         <ul class="navbar-nav bg-dark mx-auto w-100">
-            <li class="nav-item"><a class="nav-link" href="../../home_staff.php"><i class="fa fa-clock-o fa-fw"></i> Dashboard</a></li>
-            <li class="nav-item"><a class="nav-link active" href="../files_staff.php"><i class="fa fa-bookmark-o fa-fw"></i> Registration</a></li>
-            <li class="nav-item"><a class="nav-link" data-toggle="modal" href="#myreport"><i class="fa fa-file-o fa-fw"></i> Report</a></li>
-            <li class="nav-item"><a class="nav-link" href="../../php/logout.php"><i class="fa fa-eject fa-fw"></i> Logout</a></li>
+            <li class="nav-item"><a class="nav-link" id="nav-link" href="../../home_staff.php"><i class="fa fa-clock-o fa-fw"></i> Dashboard</a></li>
+            <li class="nav-item"><a class="nav-link active" id="nav-link_active" href="../files_staff.php"><i class="fa fa-bookmark-o fa-fw"></i> Registration</a></li>
+            <li class="nav-item"><a class="nav-link" data-toggle="modal" href="#myreport" id="nav-link"><i class="fa fa-file-o fa-fw"></i> Report</a></li>
+            <li class="nav-item"><a class="nav-link" id="nav-link" href="../../php/logout.php"><i class="fa fa-eject fa-fw"></i> Logout</a></li>
         </ul>
     </div>
 </nav>
@@ -73,16 +73,18 @@
 
 <div class="container-fluid">
     <div class="row">
-        <div class="col-md-3 bg-dark text-white min-vh-100" id="sidebar" style="border-left: 15px solid #343a40;">
+        <div class="col-md-3 bg-success text-white min-vh-100" id="sidebar" style="border-left: 15px solid;">
             <div class="text-center mt-4">
-                <img src="../../images/logo-3.png" class="logo mb-2" style="width: 80px;">
-                <h4 class="text-uppercase small">Civil Registry<br><span class="lblspan">System</span></h4>
+                <img src="../../images/logo.png" class="logo mb-2" style="width: 80px;">
+                <h4 class="text-uppercase">Civil Registry Information<br><span class="lblspan">System</span></h4>
             </div>
-            <nav class="nav flex-column mt-5">
-                <a class="nav-link text-white" href="../../home_staff.php"><i class="fa fa-clock-o fa-fw"></i> Dashboard</a>
-                <a class="nav-link text-white font-weight-bold" href="../files_staff.php"><i class="fa fa-bookmark-o fa-fw"></i> Registration</a>
-                <a class="nav-link text-white" data-toggle="modal" href="#myreport"><i class="fa fa-file-o fa-fw"></i> Report</a>
-                <a class="nav-link text-white" href="../../php/logout.php"><i class="fa fa-eject fa-fw"></i> Logout</a>
+            <nav class="navbar mt-5">
+                <ul class="navbar-nav w-100" style="padding-bottom:6em;">
+                    <li class="nav-item"><a class="nav-link" id="nav-link" href="../../home_staff.php"><i class="fa fa-clock-o fa-fw"></i> Dashboard</a></li>
+                    <li class="nav-item"><a class="nav-link active" id="nav-link_active" href="../files_staff.php"><i class="fa fa-bookmark-o fa-fw"></i> Registration</a></li>
+                    <li class="nav-item"><a class="nav-link" data-toggle="modal" href="#myreport" id="nav-link"><i class="fa fa-file-o fa-fw"></i> Report</a></li>
+                    <li class="nav-item"><a class="nav-link" id="nav-link" href="../../php/logout.php"><i class="fa fa-eject fa-fw"></i> Logout</a></li>
+                </ul>
             </nav>
         </div>
 
@@ -92,11 +94,11 @@
                     <input class="form-control" id="myInput" type="text" placeholder="Search records...">
                 </div>
                 <div class="col-md-4">
-                    <a class="btn btn-outline-info btn-block" href="birth_cerf_staff.php">Data Entry</a>
+                    <a class="btn btn-outline-success btn-block" href="birth_cerf_staff.php">Data Entry</a>
                 </div>
             </div>
 
-            <div class="table-responsive" style="height:70vh; overflow-y: auto;">
+            <div class="table-responsive">
                 <table class="table table-hover table-sm">
                     <thead class="thead-dark">
                         <tr>

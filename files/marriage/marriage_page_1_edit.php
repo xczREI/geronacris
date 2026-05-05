@@ -894,6 +894,43 @@
 	 </div>
 </div>
 
+<script>
+// Specialized Horizontal Navigation (Enter to move right)
+$(document).ready(function() {
+    const sequences = [
+        ['h_fname', 'h_mname', 'h_lname'],
+        ['w_fname', 'w_mname', 'w_lname'],
+        ['husband_bday', 'husband_bmonth', 'husband_byear', 'husband_age'],
+        ['wife_bday', 'wife_bmonth', 'wife_byear', 'wife_age'],
+        ['h_fa_name', 'h_fa_nameM', 'h_fa_nameL'],
+        ['w_fa_name', 'w_fa_nameM', 'w_fa_nameL'],
+        ['h_mo_name', 'h_mo_nameM', 'h_mo_nameL'],
+        ['w_mo_name', 'w_mo_nameM', 'w_mo_nameL'],
+        ['h_person_name', 'h_person_nameM', 'h_person_nameL'],
+        ['w_person_name', 'w_person_nameM', 'w_person_nameL'],
+        ['mrg_brgy', 'mrg_city', 'mrg_province'],
+        ['mrg_days', 'mrg_months', 'mrg_years']
+    ];
+
+    $('input, select').on('keydown', function(e) {
+        if (e.key === "Enter") {
+            const id = $(this).attr('id');
+            const name = $(this).attr('name');
+            
+            for (const seq of sequences) {
+                const idx = seq.indexOf(id) !== -1 ? seq.indexOf(id) : seq.indexOf(name);
+                if (idx !== -1 && idx < seq.length - 1) {
+                    e.preventDefault();
+                    const nextField = seq[idx + 1];
+                    $(`[id="${nextField}"], [name="${nextField}"]`).first().focus();
+                    return;
+                }
+            }
+        }
+    });
+});
+</script>
+
 <script src = "../../js/input_txt_only.js"></script>
 <script src = "../../js/input_no_only.js"></script>
 <script src = "../../js/mrg_time_js.js"></script>
@@ -956,14 +993,16 @@ $(document).ready(function() {
 	const wFullName = document.getElementById('wife_name');
 
 	function updateWFullName() {
-		const fname = wFname.value;
-		const mname = wMname.value;
-		const lname = wLname.value;
-		wFullName.value = fname + ' ' + mname + ' ' + lname;
+		const fname = wFname.value || '';
+		const mname = wMname.value || '';
+		const lname = wLname.value || '';
+		wFullName.value = (fname + ' ' + mname + ' ' + lname).trim();
 	}
 	wFname.addEventListener('input', updateWFullName);
 	wMname.addEventListener('input', updateWFullName);
 	wLname.addEventListener('input', updateWFullName);
+    // Sync on load
+    updateWFullName();
 </script>
 <script>
 

@@ -10,16 +10,21 @@ $date = date_create();
 $year = date_format($date,"Y"); 
 
 
-$sql = "SELECT sex,count(*) as number, reg_date FROM person_tbl NATURAL JOIN registration_tbl WHERE reg_date LIKE '$year%' GROUP BY sex";
-	$result = mysqli_query($con, $sql);
-	
-	$data = array();
-	foreach ($result as $rows) {
-		array_push($data, array('name' =>$rows['sex'] , 'y'=>$rows['number'] ));
-	}
+$sql = "SELECT sex, COUNT(*) as number 
+        FROM person_tbl 
+        JOIN registration_tbl ON person_tbl.no = registration_tbl.no 
+        GROUP BY sex";
+$result = $con->query($sql);
 
-$result->close();
+$data = array();
+if ($result) {
+    while ($rows = $result->fetch_assoc()) {
+        $sex = !empty($rows['sex']) ? strtoupper($rows['sex']) : "UNKNOWN";
+        array_push($data, array('name' => $sex, 'y' => $rows['number']));
+    }
+    $result->close();
+}
 $con->close();
 
-print json_encode($data, JSON_NUMERIC_CHECK);
+echo json_encode($data, JSON_NUMERIC_CHECK);
 ?>

@@ -189,7 +189,7 @@ $(document).ready(function(){
         }
     });
 </script>
-
+<!--  
 <script>
 // Force Sync Hidden Fields & Validate Before Form Submission
 $(document).ready(function() {
@@ -220,7 +220,7 @@ $(document).ready(function() {
         }
     });
 });
-</script>
+</script> -->
 
 </body>
 </html>

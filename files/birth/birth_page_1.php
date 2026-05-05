@@ -305,9 +305,8 @@
                 <div class="col-3" id="book" style="border:2px solid green; border-left:none; border-top:none;">
                     <div class="form-group mb-0">
                         <label id="ltxt" style="margin-bottom:0;">Registry No.</label>
-                        <input type="text" class="regNo form-control form-control-sm" name="registry_no" id="regno" style="background-color: #7FFFD4;" value="" required> 
-                        <div id="error"></div>
-                    </div>
+                        <input type="text" class="regNo form-control form-control-sm" name="registry_no" id="regno" style="background-color: #7FFFD4;" value="">
+                        <div id="error"></div>                    </div>
                 </div>
             </div>
             
@@ -1147,10 +1146,10 @@ $(document).ready(function() {
         }
     }
 
-    // 2. Spacebar Navigation Logic
+    // 2. Keyboard Navigation Logic (Spacebar and Enter)
     $('#bd_day, #bd_month, #bd_year').on('keydown', function(e) {
-        if (e.key === " ") {
-            e.preventDefault(); // Stop the space from actually being typed
+        if (e.key === " " || e.key === "Enter") {
+            e.preventDefault(); // Stop the space/enter from being typed
 
             const currentId = $(this).attr('id');
             if (currentId === 'bd_day') {
@@ -1551,25 +1550,6 @@ $(document).ready(function() {
             } else if (currentId === 'marriage_country') {
                 // Move to the first checkbox in Section 21a
                 $('#physician').focus();
-            }
-        }
-    });
-});
-</script>
-
-<script>
-// 16. Keyboard Navigation for Date of Birth (Section 3)
-$(document).ready(function() {
-    $('#bd_day, #bd_month, #bd_year').on('keydown', function(e) {
-        if (e.key === " " || e.key === "Enter") {
-            e.preventDefault(); 
-            const currentId = $(this).attr('id');
-            if (currentId === 'bd_day') {
-                $('#bd_month').focus();
-            } else if (currentId === 'bd_month') {
-                $('#bd_year').focus();
-            } else if (currentId === 'bd_year') {
-                $('#birth_brgy').focus(); // Jumps to Section 4: Place of Birth
             }
         }
     });

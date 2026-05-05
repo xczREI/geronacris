@@ -32,7 +32,7 @@
 </style>
     <style>
 	    #navbar{ display: none; }
-	    .coll{ overflow:scroll; height:50em; }
+	    .coll{ overflow:visible; height:auto; }
 	    @media only screen and (max-width: 768px) {
 	                /* For mobile phones: */
 		  #navbar{ display: block; display: flex;}
@@ -65,7 +65,7 @@
 <body>
 
 <!-- nav top -->
-<nav class="navbar navbar-expand-md bg-dark navbar-dark" id="navbar">
+<nav class="navbar navbar-expand-md bg-success navbar-dark" id="navbar">
   <!-- Brand -->
   <a class="navbar-brand" href="#">
     <div class="media pl-1 mb-3">
@@ -91,8 +91,8 @@
   <!-- Navbar links -->
   <div class="collapse navbar-collapse bg-light" id="collapsibleNavbar">
     <ul class="navbar-nav bg-dark mx-auto h-100">
-		<li class="nav-item"><a class="active nav-link" id="nav-link" href="../../home_staff.php">&emsp;<i class="fa fa-clock-o fa-fw"></i>Dashboard</a></li>
-        <li class="nav-item"><a class="nav-link" id="nav-link_active" href="../files_staff.php" >&emsp;<i class="fa fa-bookmark-o fa-fw"></i>Registration</a></li>
+		<li class="nav-item"><a class="nav-link" id="nav-link" href="../../home_staff.php">&emsp;<i class="fa fa-clock-o fa-fw"></i>Dashboard</a></li>
+        <li class="nav-item"><a class="nav-link active" id="nav-link_active" href="../files_staff.php" >&emsp;<i class="fa fa-bookmark-o fa-fw"></i>Registration</a></li>
         <li class="nav-item"><a class="nav-link" data-toggle="modal" href="#myreport" id="nav-link">
         &emsp;<i class="fa fa-file-o fa-fw"></i>Report</a></li>
         <li class="nav-item"><a class="nav-link" id="nav-link" href="../../php/logout.php">&emsp;<i class="fa fa-eject fa-fw"></i>Logout</a></li>
@@ -119,10 +119,10 @@
 
 <!--navbar-->
 <div class="row" id="row">
-  <div class="col-sm-3 bg-dark" style="border-left: 15px solid;" id="sidebar">
+  <div class="col-sm-3 bg-success" style="border-left: 15px solid; min-height: 100vh;" id="sidebar">
       <div class="pic" style="margin-top: 2em;">
-        <center><img src="../../images/logo-3.png" class="logo">
-            <h4 class="text-uppercase">Civil Registry<br><span class="lblspan">System</span></h4>
+        <center><img src="../../images/logo.png" class="logo">
+            <h4 class="text-uppercase">Civil Registry Information<br><span class="lblspan">System</span></h4>
         </center>
       </div>
 
@@ -130,8 +130,8 @@
     <div class="aside" style="margin-top: 3em;">
       <nav class="navbar">
         <ul class="navbar-nav" style="padding-bottom:6em;">
-            <li class="nav-item"><a class="active nav-link" id="nav-link" href="../../home_staff.php">&emsp;<i class="fa fa-clock-o fa-fw"></i>Dashboard</a></li>
-            <li class="nav-item"><a class="nav-link" id="nav-link_active" href="../files_staff.php" >&emsp;<i class="fa fa-bookmark-o fa-fw"></i>Registration</a></li>
+            <li class="nav-item"><a class="nav-link" id="nav-link" href="../../home_staff.php">&emsp;<i class="fa fa-clock-o fa-fw"></i>Dashboard</a></li>
+            <li class="nav-item"><a class="nav-link active" id="nav-link_active" href="../files_staff.php" >&emsp;<i class="fa fa-bookmark-o fa-fw"></i>Registration</a></li>
             <li class="nav-item"><a class="nav-link" data-toggle="modal" href="#myreport" id="nav-link">
               &emsp;<i class="fa fa-file-o fa-fw"></i>Report</a></li>
             <li class="nav-item"><a class="nav-link" id="nav-link" href="../../php/logout.php">&emsp;<i class="fa fa-eject fa-fw"></i>Logout</a></li>
@@ -165,9 +165,18 @@
             if ($conn->connect_error) die($conn->connect_error);
 
 			$reg_no=null;
-			if (!empty($_GET['reg_no'])){ $reg_no = $_REQUEST['reg_no']; }
+			if (!empty($_GET['reg_no'])){ $reg_no = $conn->real_escape_string($_REQUEST['reg_no']); }
 
-			$sql = "SELECT * FROM registration_tbl NATURAL JOIN (child_tbl NATURAL JOIN mother_tbl NATURAL JOIN father_tbl NATURAL JOIN att_inf_tbl NATURAL JOIN receive_civil_tbl NATURAL JOIN remarks_tbl NATURAL JOIN admission_paternity_tbl NATURAL JOIN late_reg_tbl) WHERE no = '$reg_no'";
+			$sql = "SELECT * FROM registration_tbl 
+                    LEFT JOIN child_tbl ON registration_tbl.no = child_tbl.no
+                    LEFT JOIN mother_tbl ON registration_tbl.no = mother_tbl.no
+                    LEFT JOIN father_tbl ON registration_tbl.no = father_tbl.no
+                    LEFT JOIN att_inf_tbl ON registration_tbl.no = att_inf_tbl.no
+                    LEFT JOIN receive_civil_tbl ON registration_tbl.no = receive_civil_tbl.no
+                    LEFT JOIN remarks_tbl ON registration_tbl.no = remarks_tbl.no
+                    LEFT JOIN admission_paternity_tbl ON registration_tbl.no = admission_paternity_tbl.no
+                    LEFT JOIN late_reg_tbl ON registration_tbl.no = late_reg_tbl.no
+                    WHERE registration_tbl.no = '$reg_no'";
 			$result = $conn->query($sql);  
 			if (!$result) die ("Database access failed: " . $conn->error);
 

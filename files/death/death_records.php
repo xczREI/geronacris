@@ -110,7 +110,7 @@
 </div>
 
 <div class="row" id="row">
-  <div class="col-sm-3 bg-success" style="border-left: 15px solid; height: 50em;" id="sidebar">
+  <div class="col-sm-3 bg-success" style="border-left: 15px solid; min-height: 100vh;" id="sidebar">
     <div class="pic" style="margin-top: 2em;">
      <center>
         <img src="../../images/logo.png" class="logo">
@@ -141,7 +141,7 @@
       </div>
     </div>
     <br>
-    <div class="table-responsive" style="overflow:scroll; height:50em;">
+    <div class="table-responsive">
       <table class="table table-hover table-sm">
         <thead class="thead-dark">
           <tr>

@@ -497,8 +497,7 @@ $(document).ready(function() {
     });
 
    // 4. FIX THE UI IMMEDIATELY ON PAGE LOAD
-    // 4. FIX THE UI IMMEDIATELY ON PAGE LOAD
-    setTimeout(function() {
+    function initializeMarriageUI() {
         let dbStatus = "<?php echo $row['married_type'] ?? ''; ?>";
         let dbStatus2 = "<?php echo $row['married_type2'] ?? ''; ?>";
         let dateBoxVal = $('#married_txt1').val().trim().toUpperCase();
@@ -546,7 +545,9 @@ $(document).ready(function() {
                 $('#not_married_txt').val('');
             }
         }
-    }, 600); // 600ms ensures this runs LAST and overrides the auto-fill script!
+    }
+
+    initializeMarriageUI();
 });
 </script>
 

@@ -687,6 +687,33 @@
 </div>
 
 <script>
+// Specialized Horizontal Navigation (Enter to move right)
+$(document).ready(function() {
+    const sequences = [
+        ['person_fname', 'person_mname', 'person_lname'],
+        ['cemetery', 'municipalityCemetery', 'provinceCemetery']
+    ];
+
+    $('input, select').on('keydown', function(e) {
+        if (e.key === "Enter") {
+            const id = $(this).attr('id');
+            const name = $(this).attr('name');
+            
+            for (const seq of sequences) {
+                const idx = seq.indexOf(id) !== -1 ? seq.indexOf(id) : seq.indexOf(name);
+                if (idx !== -1 && idx < seq.length - 1) {
+                    e.preventDefault();
+                    const nextField = seq[idx + 1];
+                    $(`[id="${nextField}"], [name="${nextField}"]`).first().focus();
+                    return;
+                }
+            }
+        }
+    });
+});
+</script>
+
+<script>
 // Universal Keyboard Navigation (Enter to next, Backspace to delete char)
 $(document).ready(function() {
     $('input, select, textarea').on('keydown', function(e) {

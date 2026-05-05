@@ -193,72 +193,41 @@ require_once 'login_db_death.php';
 
       
       //==============================database====================================
-      
-      $servername = "localhost";
-      $username = "root";
-      $password = "";
-      $dbname = "geronacrisdeath";
+      try {
+          $conn->begin_transaction();
 
-      // Create connection
-      $conn2 = new mysqli($servername, $username, $password, $dbname);
-      // Check connection
-      if ($conn2->connect_error) {
-        die("Connection failed: " . $conn2->connect_error);
+          // 1. Check for duplicate registry_no in no_tbl
+          $check = $conn->query("SELECT registry_no FROM no_tbl WHERE registry_no = '$registry_no'");
+          if ($check && $check->num_rows > 0) {
+              throw new Exception("Registry Number '$registry_no' already exists in the system.");
+          }
+
+          // 2. Insert into no_tbl first to get the auto-increment 'no'
+          $sql_no = "INSERT INTO no_tbl (registry_no, status) VALUES ('$registry_no', '0')";
+          if (!$conn->query($sql_no)) throw new Exception("Error creating reference ID: " . $conn->error);
+          $no = $conn->insert_id;
+
+          // 3. Insert into all 12 data tables using the new 'no'
+          $conn->query("INSERT INTO registration_tbl VALUES ('$registry_no', '$book_no', '$page_no', '$province', '$municipal', '$date', '$time', '$e_name', '$u_date', '$u_time', '$u_name','$no')");
+          $conn->query("INSERT INTO person_tbl VALUES ('$registry_no', '$person_lname', '$person_fname', '$person_mname', '$sex', '$date_birth', '$date_death', '$death_place', '$age_type', '$age', '$ages', '$civil_status', '$religion', '$citizen', '$residence', '$occupation', '$father_name', '$mother_name', '$no')");
+          $conn->query("INSERT INTO death_cause_eight_days VALUES ('$registry_no', '$immediate_cause', '$immediate_interval', '$antecedent_cause', '$antecedent_interval', '$underlying_cause', '$underlying_interval', '$other_condition_death', '$maternal_condition', '$death_manner', '$place_external_cause', '$autopsy', '$no')");
+          $conn->query("INSERT INTO att_rev_tbl VALUES ('$registry_no', '$attendant', '$date_from', '$date_to', '$certify_type', '$death_time', '$attendant_name', '$attendant_position', '$attendant_address', '$reviewed_name', '$attendant_date', '$reviewed_date', '$no')");
+          $conn->query("INSERT INTO corpse_disposal_tbl VALUES ('$registry_no', '$corpse_disposal', '$burial_no', '$burial_issued_date', '$transfer_no', '$transfer_issued_date', '$cemetery', '$no')");
+          $conn->query("INSERT INTO inf_pre_tbl VALUES ('$registry_no', '$informant_name', '$rel_death', '$informant_address', '$prepared_name', '$prepared_position', '$informant_date', '$prepared_date', '$no')");
+          $conn->query("INSERT INTO receive_civil_tbl VALUES ('$registry_no', '$received_name', '$received_position', '$civil_name', '$civil_position', '$received_date', '$civil_date', '$no')");
+          $conn->query("INSERT INTO remarks_tbl VALUES ('$registry_no', '$remarks', '$no')");
+          $conn->query("INSERT INTO death_cause_zero_seven VALUES ('$registry_no', '$mother_age', '$delivery_method', '$pregnancy_length', '$birth_type', '$multi_birth_was', '$main_disease', '$other_disease', '$main_maternal', '$other_maternal', '$other_relevant', '$no')");
+          $conn->query("INSERT INTO autopsy_tbl VALUES ('$registry_no', '$autopsy_txt1', '$autopsy_txt2', '$autopsy_name', '$autopsy_address', '$autopsy_title', '$autopsy_date', '$no')");
+          $conn->query("INSERT INTO embalmer_tbl VALUES ('$registry_no', '$embalmer_txt', '$embalmer_name', '$embalmer_address', '$embalmer_title', '$embalmer_no', '$embalmer_on', '$embalmer_at', '$embalmer_expdate', '$no')");
+          $conn->query("INSERT INTO late_reg_tbl VALUES ('$registry_no', '$late_name', '$late_address', '$death_name', '$died_on', '$died_in', '$buried_in', '$buried_on', '$attended_type', '$attended_by', '$late_death_cause', '$late_reg_reason', '$sign_day', '$sign_month', '$sign_year', '$sign_at', '$affiant_name', '$sworn_day', '$sworn_month', '$sworn_year', '$sworn_at', '$sworn_ctc', '$sworn_issuedon', '$sworn_issuedat', '$administer_name', '$administer_position', '$administer_address', '$no')");
+
+          $conn->commit();
+          echo "<script>alert('Death record successfully saved!'); window.location.href = 'death_records.php';</script>";
+
+      } catch (Exception $e) {
+          $conn->rollback();
+          echo "<script>alert('Error: " . $e->getMessage() . "'); window.history.back();</script>";
       }
-
-      // Check if 'status' column exists, if not, add it automatically
-      $check_col = $conn2->query("SHOW COLUMNS FROM no_tbl LIKE 'status'");
-      if ($check_col->num_rows == 0) {
-          $conn2->query("ALTER TABLE no_tbl ADD status VARCHAR(50) DEFAULT 'Active'");
-      }
-
-      // Now it is safe to insert
-      $sql = "INSERT INTO no_tbl (registry_no, status) VALUES ('$registry_no', '0')";
-
-      if ($conn2->query($sql) === TRUE) {
-        $no = $conn2->insert_id;
-      }
-
-      $sql = "INSERT INTO registration_tbl VALUES ('$registry_no', '$book_no', '$page_no', '$province', '$municipal', '$date', '$time', '$e_name', '$u_date', '$u_time', '$u_name','$no')";
-      $result = $conn->query($sql);
-
-      $sql = "INSERT INTO person_tbl VALUES ('$registry_no', '$person_lname', '$person_fname', '$person_mname', '$sex', '$date_birth', '$date_death', '$death_place', '$age_type', '$age', '$ages', '$civil_status', '$religion', '$citizen', '$residence', '$occupation', '$father_name', '$mother_name', '$no')";
-      $result = $conn->query($sql);
-
-      $sql = "INSERT INTO death_cause_eight_days VALUES ('$registry_no', '$immediate_cause', '$immediate_interval', '$antecedent_cause', '$antecedent_interval', '$underlying_cause', '$underlying_interval', '$other_condition_death', '$maternal_condition', '$death_manner', '$place_external_cause', '$autopsy', '$no')";
-      $result = $conn->query($sql);
-
-      $sql = "INSERT INTO att_rev_tbl VALUES ('$registry_no', '$attendant', '$date_from', '$date_to', '$certify_type', '$death_time', '$attendant_name', '$attendant_position', '$attendant_address', '$reviewed_name', '$attendant_date', '$reviewed_date', '$no')";
-      $result = $conn->query($sql);
-
-      $sql = "INSERT INTO corpse_disposal_tbl VALUES ('$registry_no', '$corpse_disposal', '$burial_no', '$burial_issued_date', '$transfer_no', '$transfer_issued_date', '$cemetery', '$no')";
-      $result = $conn->query($sql);
-
-      $sql = "INSERT INTO inf_pre_tbl VALUES ('$registry_no', '$informant_name', '$rel_death', '$informant_address', '$prepared_name', '$prepared_position', '$informant_date', '$prepared_date', '$no')";
-      $result = $conn->query($sql);
-
-      $sql = "INSERT INTO receive_civil_tbl VALUES ('$registry_no', '$received_name', '$received_position', '$civil_name', '$civil_position', '$received_date', '$civil_date', '$no')";
-      $result = $conn->query($sql);
-
-      $sql = "INSERT INTO remarks_tbl VALUES ('$registry_no', '$remarks', '$no')";
-      $result = $conn->query($sql);
-
-      $sql = "INSERT INTO death_cause_zero_seven VALUES ('$registry_no', '$mother_age', '$delivery_method', '$pregnancy_length', '$birth_type', '$multi_birth_was', '$main_disease', '$other_disease', '$main_maternal', '$other_maternal', '$other_relevant', '$no')";
-      $result = $conn->query($sql);
-
-      $sql = "INSERT INTO autopsy_tbl VALUES ('$registry_no', '$autopsy_txt1', '$autopsy_txt2', '$autopsy_name', '$autopsy_address', '$autopsy_title', '$autopsy_date', '$no')";
-      $result = $conn->query($sql);
-
-      $sql = "INSERT INTO embalmer_tbl VALUES ('$registry_no', '$embalmer_txt', '$embalmer_name', '$embalmer_address', '$embalmer_title', '$embalmer_no', '$embalmer_on', '$embalmer_at', '$embalmer_expdate', '$no')";
-      $result = $conn->query($sql);
-
-      $sql = "INSERT INTO late_reg_tbl VALUES ('$registry_no', '$late_name', '$late_address', '$death_name', '$died_on', '$died_in', '$buried_in', '$buried_on', '$attended_type', '$attended_by', '$late_death_cause', '$late_reg_reason', '$sign_day', '$sign_month', '$sign_year', '$sign_at', '$affiant_name', '$sworn_day', '$sworn_month', '$sworn_year', '$sworn_at', '$sworn_ctc', '$sworn_issuedon', '$sworn_issuedat', '$administer_name', '$administer_position', '$administer_address', '$no')";
-      $result = $conn->query($sql);
-
-      if (!$result) echo "INSERT failed: $sql<br>" .
-      $conn->error . "<br><br>";
-
-      header('location: death_records.php');
 
       mysqli_close($conn);
     }

@@ -150,11 +150,11 @@
 
 <!--navbar-->
 <div class="row" id="row">
-  	<div class="col-sm-3 bg-info" style="border-left: 15px solid;" id="sidebar">
+  	<div class="col-sm-3 bg-success" style="border-left: 15px solid;" id="sidebar">
   		<div class="pic" style="margin-top: 2em;">
 	  		<center>
 	  			<img src="../../images/logo.png" class="logo">
-	  			<h4 class="text-uppercase">Civil Registry<br><span class="lblspan">System</span></h4>
+	  			<h4 class="text-uppercase">Civil Registry Information<br><span class="lblspan">System</span></h4>
 	  		</center>
 	  	</div>
 
@@ -162,7 +162,7 @@
 		<div class="aside" style="margin-top: 3em;">
 			<nav class="navbar">
 				<ul class="navbar-nav" style="padding-bottom:6em;">
-			  		<li class="nav-item"><a class="active nav-link" id="nav-link" href="../../home.php">&emsp;<i class="fa fa-clock-o fa-fw"></i>Dashboard</a></li>
+			  		<li class="nav-item"><a class="nav-link" id="nav-link" href="../../home.php">&emsp;<i class="fa fa-clock-o fa-fw"></i>Dashboard</a></li>
 			  		<li class="nav-item"><a class="nav-link" id="nav-link_active" href="../files.php" >&emsp;<i class="fa fa-bookmark-o fa-fw"></i>Registration</a></li>
 			  		<li class="nav-item"><a class="nav-link" data-toggle="modal" href="#myreport" id="nav-link">
 			        &emsp;<i class="fa fa-file-o fa-fw"></i>Report</a></li>
@@ -205,9 +205,18 @@
 			if ($conn->connect_error) die($conn->connect_error);
 
 			$reg_no=null;
-			if (!empty($_GET['reg_no'])){ $reg_no = $_REQUEST['reg_no']; }
+			if (!empty($_GET['reg_no'])){ $reg_no = $conn->real_escape_string($_REQUEST['reg_no']); }
 
-			$sql = "SELECT * FROM registration_tbl NATURAL JOIN (husband_tbl NATURAL JOIN wife_tbl NATURAL JOIN marriage_tbl NATURAL JOIN receive_civil_tbl NATURAL JOIN remarks_tbl NATURAL JOIN witness_tbl NATURAL JOIN aff_solemn_tbl NATURAL JOIN late_reg_tbl) WHERE no = '$reg_no'";
+			$sql = "SELECT *, registration_tbl.no as no FROM registration_tbl 
+                    LEFT JOIN husband_tbl ON registration_tbl.no = husband_tbl.no
+                    LEFT JOIN wife_tbl ON registration_tbl.no = wife_tbl.no
+                    LEFT JOIN marriage_tbl ON registration_tbl.no = marriage_tbl.no
+                    LEFT JOIN receive_civil_tbl ON registration_tbl.no = receive_civil_tbl.no
+                    LEFT JOIN remarks_tbl ON registration_tbl.no = remarks_tbl.no
+                    LEFT JOIN witness_tbl ON registration_tbl.no = witness_tbl.no
+                    LEFT JOIN aff_solemn_tbl ON registration_tbl.no = aff_solemn_tbl.no
+                    LEFT JOIN late_reg_tbl ON registration_tbl.no = late_reg_tbl.no
+                    WHERE registration_tbl.no = '$reg_no'";
 			$result = $conn->query($sql);  
 			if (!$result) die ("Database access failed: " . $conn->error);
 

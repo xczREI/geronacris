@@ -35,6 +35,10 @@
       $sql = "DELETE FROM embalmer_tbl WHERE no = '$reg_no'";
       $result = $conn->query($sql); 
       
+      // Finally remove from the reference table
+      $sql = "DELETE FROM no_tbl WHERE no = '$reg_no'";
+      $result = $conn->query($sql); 
+      
       if (!$result) die ("Database access failed: " . $conn->error);
 
       header('location: death_records.php');

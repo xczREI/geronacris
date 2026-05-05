@@ -133,7 +133,7 @@
       </div>
     </div>
     <br>
-    <div class="table-responsive" style="overflow:scroll; height:50em;">
+    <div class="table-responsive">
       <table class="table table-hover table-sm">
         <thead class="thead-dark">
           <tr>

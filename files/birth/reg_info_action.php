@@ -100,14 +100,12 @@ if (isset($_POST['add_birth']) || $_SERVER['REQUEST_METHOD'] == 'POST') {
     $conn->begin_transaction();
 
     try {
-        // 1. Check for duplicates safely
-        if (empty($registry_no)) {
-            throw new Exception("Registry Number is missing from the form submission.");
-        }
-        
-        $check = $conn->query("SELECT registry_no FROM registration_tbl WHERE registry_no = '$registry_no'");
-        if ($check && $check->num_rows > 0) {
-            throw new Exception("Registry Number '$registry_no' already exists in the system.");
+        // 1. Check for duplicates safely (ONLY IF NOT EMPTY)
+        if (!empty($registry_no)) {
+            $check = $conn->query("SELECT registry_no FROM registration_tbl WHERE registry_no = '$registry_no'");
+            if ($check && $check->num_rows > 0) {
+                throw new Exception("Registry Number '$registry_no' already exists in the system.");
+            }
         }
 
         // 2. Helper Function to generate the next 'no' manually

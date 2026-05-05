@@ -358,15 +358,13 @@
     <div class="row pt-5">
       <div class="col-sm-6">
         <h5 class="text-uppercase pl-3 text-center"><strong>Birth Statistics</strong><br>
-        <span class="text-primary text-capitalize" style="font-size: 15px;"><i>Year <?php $date = date_create(); echo date_format($date,"Y"); ?></i></span></h5>
+        <span class="text-primary text-capitalize" style="font-size: 15px;"><i>Gender Distribution</i></span></h5>
         <div id="chartContainer" style="height: 370px; max-width: 920px; margin: 0px;"></div>
-        <canvas id="myChart"></canvas>
       </div>
       <div class="col-sm-6">
         <h5 class="text-uppercase pl-3 text-center"><strong>Death Statistics</strong><br>
-        <span class="text-danger text-capitalize" style="font-size: 15px;"><i>Year <?php $date = date_create(); echo date_format($date,"Y"); ?></i></span></h5>
+        <span class="text-danger text-capitalize" style="font-size: 15px;"><i>Gender Distribution</i></span></h5>
         <div id="chartContainer1" style="height: 370px; max-width: 920px; margin: 0px;"></div>
-        <canvas id="myChart1"></canvas>
       </div>
     </div>
 

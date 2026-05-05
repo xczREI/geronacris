@@ -113,7 +113,7 @@
 
 <!--navbar-->
 <div class="row" id="row">
-  	<div class="col-sm-3 bg-success" style="border-left: 15px solid;" id="sidebar">
+  	<div class="col-sm-3 bg-success" style="border-left: 15px solid; min-height: 100vh;" id="sidebar">
   		<div class="pic" style="margin-top: 2em;">
 	  		<center>
 	  			<img src="../images/logo.png" class="logo">
@@ -125,8 +125,8 @@
 		<div class="aside" style="margin-top: 3em;">
 			<nav class="navbar">
 				<ul class="navbar-nav" style="padding-bottom:6em;">
-			  		<li class="nav-item"><a class="active nav-link" id="nav-link" href="../home.php">&emsp;<i class="fa fa-clock-o fa-fw"></i>Dashboard</a></li>
-			  		<li class="nav-item"><a class="nav-link" id="nav-link_active" href="files.php" >&emsp;<i class="fa fa-bookmark-o fa-fw"></i>Registration</a></li>
+			  		<li class="nav-item"><a class="nav-link" id="nav-link" href="../home.php">&emsp;<i class="fa fa-clock-o fa-fw"></i>Dashboard</a></li>
+			  		<li class="nav-item"><a class="nav-link active" id="nav-link_active" href="files.php" >&emsp;<i class="fa fa-bookmark-o fa-fw"></i>Registration</a></li>
 			  		<li class="nav-item"><a class="nav-link" data-toggle="modal" href="#myreport" id="nav-link">
 			        &emsp;<i class="fa fa-file-o fa-fw"></i>Report</a></li>
 			  		<li class="nav-item"><a class="nav-link" id="nav-link" href="../employee/view_users.php">&emsp;<i class="fa fa-user-o fa-fw"></i>Account</a></li>

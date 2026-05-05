@@ -18,180 +18,189 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['no'])) {
         return $connx->real_escape_string(strtoupper(trim($val ?? '')));
     }
 
-    // 1. REGISTRATION TABLE
-    $book_no = e($_POST['book_no']);
-    $page_no = e($_POST['page_no']);
-    $registry_no = e($_POST['registry_no']);
-    $provinces = e($_POST['provinces']);
-    $municipal = e($_POST['municipal']);
-    $update_user = e($_SESSION['firstname'].' '.$_SESSION['lastname']);
-    $update_date = date('Y-m-d');
-    $update_time = date('H:i:s');
-    $connx->query("UPDATE registration_tbl SET book_no='$book_no', page_no='$page_no', registry_no='$registry_no', province='$provinces', municipal='$municipal', update_user='$update_user', update_date='$update_date', update_time='$update_time' WHERE no='$no'");
+    try {
+        $connx->begin_transaction();
 
-    // 2. PERSON TABLE
-    $fname = e($_POST['deceased_fname']);
-    $mname = e($_POST['deceased_mname']);
-    $lname = e($_POST['deceased_lname']);
-    $sex = e($_POST['sex']);
-    $dbirth = e($_POST['date_birth']);
-    $ddeath = e($_POST['date_of_death']);
-    $pdeath = e($_POST['place_of_death']);
-    $civil = e($_POST['civil_status']);
-    $religion = e($_POST['religion']);
-    $citizen = e($_POST['citizenship']);
-    $residence = e($_POST['residence']);
-    $occupation = e($_POST['occupation']);
-    $father = e($_POST['parent_father_name']);
-    $mother = e($_POST['parent_mother_name']);
+        // 1. REGISTRATION TABLE
+        $book_no = e($_POST['book_no']);
+        $page_no = e($_POST['page_no']);
+        $registry_no = e($_POST['registry_no']);
+        $provinces = e($_POST['provinces']);
+        $municipal = e($_POST['municipal']);
+        $update_user = e($_SESSION['firstname'].' '.$_SESSION['lastname']);
+        $update_date = date('Y-m-d');
+        $update_time = date('H:i:s');
+        
+        $connx->query("UPDATE registration_tbl SET book_no='$book_no', page_no='$page_no', registry_no='$registry_no', province='$provinces', municipal='$municipal', update_user='$update_user', update_date='$update_date', update_time='$update_time' WHERE no='$no'");
+        $connx->query("UPDATE no_tbl SET registry_no='$registry_no' WHERE no='$no'");
 
-    // Age Logic
-    $age_at_death = e($_POST['age_at_death']);
-    $age_one_month = e($_POST['age_one_month']);
-    $age_one_day = e($_POST['age_one_day']);
-    $age_hrs_hrs = e($_POST['age_hrs_hrs']);
-    $age_hrs_min = e($_POST['age_hrs_min']);
-    
-    $age_time = ''; $age_type = ''; $age_min = '';
-    if ($age_at_death != '' && $age_at_death != 'N/A') { $age_time = $age_at_death; $age_type = 'YEARS'; }
-    elseif ($age_one_month != '' && $age_one_month != 'N/A') { $age_time = $age_one_month; $age_type = 'MONTHS'; $age_min = $age_one_day; }
-    elseif ($age_one_day != '' && $age_one_day != 'N/A') { $age_time = $age_one_day; $age_type = 'DAYS'; }
-    elseif ($age_hrs_hrs != '' && $age_hrs_hrs != 'N/A') { $age_time = $age_hrs_hrs; $age_type = 'HOURS'; $age_min = $age_hrs_min; }
+        // 2. PERSON TABLE
+        $fname = e($_POST['deceased_fname']);
+        $mname = e($_POST['deceased_mname']);
+        $lname = e($_POST['deceased_lname']);
+        $sex = e($_POST['sex']);
+        $dbirth = e($_POST['date_birth']);
+        $ddeath = e($_POST['date_of_death']);
+        $pdeath = e($_POST['place_of_death']);
+        $civil = e($_POST['civil_status']);
+        $religion = e($_POST['religion']);
+        $citizen = e($_POST['citizenship']);
+        $residence = e($_POST['residence']);
+        $occupation = e($_POST['occupation']);
+        $father = e($_POST['parent_father_name']);
+        $mother = e($_POST['parent_mother_name']);
 
-    $connx->query("UPDATE person_tbl SET first_name='$fname', middle_name='$mname', last_name='$lname', sex='$sex', date_birth='$dbirth', date_death='$ddeath', place_death='$pdeath', civil_status='$civil', religion='$religion', citizen='$citizen', residence='$residence', occupation='$occupation', father_name='$father', mother_name='$mother', age_time_of_death='$age_time', age_type='$age_type', age_day_min='$age_min' WHERE no='$no'");
+        // Age Logic
+        $age_at_death = e($_POST['age_at_death']);
+        $age_one_month = e($_POST['age_one_month']);
+        $age_one_day = e($_POST['age_one_day']);
+        $age_hrs_hrs = e($_POST['age_hrs_hrs']);
+        $age_hrs_min = e($_POST['age_hrs_min']);
+        
+        $age_time = ''; $age_type = ''; $age_min = '';
+        if ($age_at_death != '' && $age_at_death != 'N/A') { $age_time = $age_at_death; $age_type = 'YEARS'; }
+        elseif ($age_one_month != '' && $age_one_month != 'N/A') { $age_time = $age_one_month; $age_type = 'MONTHS'; $age_min = $age_one_day; }
+        elseif ($age_one_day != '' && $age_one_day != 'N/A') { $age_time = $age_one_day; $age_type = 'DAYS'; }
+        elseif ($age_hrs_hrs != '' && $age_hrs_hrs != 'N/A') { $age_time = $age_hrs_hrs; $age_type = 'HOURS'; $age_min = $age_hrs_min; }
 
-    // 3. ATTENDANT TABLE
-    $att = e($_POST['attendant'] ?? '');
-    if($att == 'OTHERS' || $att == '') $att = e($_POST['attendant5'] ?? '');
-    $dfrom = e($_POST['date_from']);
-    $dto = e($_POST['date_to']);
-    $ctype = e($_POST['certify_type'] ?? '');
-    $dtime = $_POST['death_time'] ?? ''; // Keep exact time format
-    $aname = e($_POST['attendant_name']);
-    $apos = e($_POST['attendant_position']);
-    $aadd = e($_POST['attendant_address']);
-    $rname = e($_POST['reviewed_name']);
-    $adate = e($_POST['attendant_date']);
-    $rdate = e($_POST['reviewed_date']);
-    $connx->query("UPDATE att_rev_tbl SET attendant='$att', date_from='$dfrom', date_to='$dto', certify_type='$ctype', death_time='$dtime', attendant_name='$aname', attendant_position='$apos', attendant_address='$aadd', reviewed_name='$rname', attendant_date='$adate', reviewed_date='$rdate' WHERE no='$no'");
+        $connx->query("UPDATE person_tbl SET first_name='$fname', middle_name='$mname', last_name='$lname', sex='$sex', date_birth='$dbirth', date_death='$ddeath', place_death='$pdeath', civil_status='$civil', religion='$religion', citizen='$citizen', residence='$residence', occupation='$occupation', father_name='$father', mother_name='$mother', age_time_of_death='$age_time', age_type='$age_type', age_day_min='$age_min' WHERE no='$no'");
 
-    // 4. AUTOPSY TABLE
-    $atx1 = e($_POST['autopsy_txt1']);
-    $atx2 = e($_POST['autopsy_txt2']);
-    $auname = e($_POST['autopsy_name']);
-    $auadd = e($_POST['autopsy_address']);
-    $autit = e($_POST['autopsy_title']);
-    $audate = e($_POST['autopsy_date']);
-    $connx->query("UPDATE autopsy_tbl SET autopsy_txt1='$atx1', autopsy_txt2='$atx2', autopsy_name='$auname', autopsy_address='$auadd', autopsy_title='$autit', autopsy_date='$audate' WHERE no='$no'");
+        // 3. ATTENDANT TABLE
+        $att = e($_POST['attendant'] ?? '');
+        if($att == 'OTHERS' || $att == '') $att = e($_POST['attendant5'] ?? '');
+        $dfrom = e($_POST['date_from']);
+        $dto = e($_POST['date_to']);
+        $ctype = e($_POST['certify_type'] ?? '');
+        $dtime = $_POST['death_time'] ?? ''; 
+        $aname = e($_POST['attendant_name']);
+        $apos = e($_POST['attendant_position']);
+        $aadd = e($_POST['attendant_address']);
+        $rname = e($_POST['reviewed_name']);
+        $adate = e($_POST['attendant_date']);
+        $rdate = e($_POST['reviewed_date']);
+        $connx->query("UPDATE att_rev_tbl SET attendant='$att', date_from='$dfrom', date_to='$dto', certify_type='$ctype', death_time='$dtime', attendant_name='$aname', attendant_position='$apos', attendant_address='$aadd', reviewed_name='$rname', attendant_date='$adate', reviewed_date='$rdate' WHERE no='$no'");
 
-    // 5. CORPSE DISPOSAL TABLE
-    $cdisp = e($_POST['corpse_disposal'] ?? ''); 
-    $bno = e($_POST['burial_no']);
-    $bdate = e($_POST['burial_issued_date']);
-    $tno = e($_POST['transfer_no']);
-    $tdate = e($_POST['transfer_issued_date']);
-    $cem = e($_POST['cemetery']); 
-    $munCem = e($_POST['municipalityCemetery'] ?? '');
-    $provCem = e($_POST['provinceCemetery'] ?? '');
-    if($munCem != '' || $provCem != '') { $cem = trim($cem . ' | ' . $munCem . ' | ' . $provCem); }
-    $connx->query("UPDATE corpse_disposal_tbl SET corpse_disposal_type='$cdisp', burial_permit_no='$bno', burial_date_issued='$bdate', transfer_permit_no='$tno', transfer_date_issued='$tdate', cemetery_name_address='$cem' WHERE no='$no'");
+        // 4. AUTOPSY TABLE
+        $atx1 = e($_POST['autopsy_txt1']);
+        $atx2 = e($_POST['autopsy_txt2']);
+        $auname = e($_POST['autopsy_name']);
+        $auadd = e($_POST['autopsy_address']);
+        $autit = e($_POST['autopsy_title']);
+        $audate = e($_POST['autopsy_date']);
+        $connx->query("UPDATE autopsy_tbl SET autopsy_txt1='$atx1', autopsy_txt2='$atx2', autopsy_name='$auname', autopsy_address='$auadd', autopsy_title='$autit', autopsy_date='$audate' WHERE no='$no'");
 
-    // 6. CAUSE OF DEATH (ADULT)
-    $ic = e($_POST['immediate_cause']);
-    $ii = e($_POST['immediate_interval']);
-    $ac = e($_POST['antecedent_cause']);
-    $ai = e($_POST['antecedent_interval']);
-    $uc = e($_POST['underlying_cause']);
-    $ui = e($_POST['underlying_interval']);
-    $oc = e($_POST['other_condition_death']);
-    $mc = e($_POST['maternal_condition'] ?? '');
-    $dm = e($_POST['death_manner']);
-    $pe = e($_POST['place_external_cause']);
-    $au = e($_POST['autopsy']);
-    $connx->query("UPDATE death_cause_eight_days SET immediate_cause='$ic', immediate_interval='$ii', antecedent_cause='$ac', antecedent_interval='$ai', underlying_cause='$uc', underlying_interval='$ui', other_condition_death='$oc', maternal_condition='$mc', manner_of_death='$dm', place_of_occurrence='$pe', autopsy='$au' WHERE no='$no'");
+        // 5. CORPSE DISPOSAL TABLE
+        $cdisp = e($_POST['corpse_disposal'] ?? ''); 
+        $bno = e($_POST['burial_no']);
+        $bdate = e($_POST['burial_issued_date']);
+        $tno = e($_POST['transfer_no']);
+        $tdate = e($_POST['transfer_issued_date']);
+        $cem = e($_POST['cemetery']); 
+        $munCem = e($_POST['municipalityCemetery'] ?? '');
+        $provCem = e($_POST['provinceCemetery'] ?? '');
+        if($munCem != '' || $provCem != '') { $cem = trim($cem . ' | ' . $munCem . ' | ' . $provCem); }
+        $connx->query("UPDATE corpse_disposal_tbl SET corpse_disposal_type='$cdisp', burial_permit_no='$bno', burial_date_issued='$bdate', transfer_permit_no='$tno', transfer_date_issued='$tdate', cemetery_name_address='$cem' WHERE no='$no'");
 
-    // 7. CAUSE OF DEATH (INFANT)
-    $ma = e($_POST['mother_age']);
-    $dmeth = e($_POST['delivery_method']);
-    $pl = e($_POST['pregnancy_length']);
-    $bt = e($_POST['birth_type']);
-    $mb = e($_POST['multi_birth_was'] ?? '');
-    $md = e($_POST['main_disease']);
-    $od = e($_POST['other_disease']);
-    $mmd = e($_POST['main_maternal_disease'] ?? '');
-    $omd = e($_POST['other_maternal_disease'] ?? '');
-    $or = e($_POST['other_relevant']);
-    $connx->query("UPDATE death_cause_zero_seven SET mother_age='$ma', delivery_method='$dmeth', pregnancy_length='$pl', birth_type='$bt', if_multi_child_was='$mb', main_disease='$md', other_disease='$od', main_maternal_disease='$mmd', other_maternal_disease='$omd', other_relevant='$or' WHERE no='$no'");
+        // 6. CAUSE OF DEATH (ADULT)
+        $ic = e($_POST['immediate_cause']);
+        $ii = e($_POST['immediate_interval']);
+        $ac = e($_POST['antecedent_cause']);
+        $ai = e($_POST['antecedent_interval']);
+        $uc = e($_POST['underlying_cause']);
+        $ui = e($_POST['underlying_interval']);
+        $oc = e($_POST['other_condition_death']);
+        $mc = e($_POST['maternal_condition'] ?? '');
+        $dm = e($_POST['death_manner']);
+        $pe = e($_POST['place_external_cause']);
+        $au = e($_POST['autopsy']);
+        $connx->query("UPDATE death_cause_eight_days SET immediate_cause='$ic', immediate_interval='$ii', antecedent_cause='$ac', antecedent_interval='$ai', underlying_cause='$uc', underlying_interval='$ui', other_condition_death='$oc', maternal_condition='$mc', manner_of_death='$dm', place_of_occurrence='$pe', autopsy='$au' WHERE no='$no'");
 
-    // 8. EMBALMER TABLE
-    $etxt = e($_POST['embalmer_txt']);
-    $ename = e($_POST['embalmer_name']);
-    $eadd = e($_POST['embalmer_address']);
-    $etit = e($_POST['embalmer_title']);
-    $eno = e($_POST['embalmer_no']);
-    $eon = e($_POST['embalmer_on']);
-    $eat = e($_POST['embalmer_at']);
-    $eexp = e($_POST['embalmer_expdate']);
-    $connx->query("UPDATE embalmer_tbl SET embalmer_txt='$etxt', embalmer_name='$ename', embalmer_address='$eadd', embalmer_title='$etit', embalmer_no='$eno', embalmer_on='$eon', embalmer_at='$eat', embalmer_expdate='$eexp' WHERE no='$no'");
+        // 7. CAUSE OF DEATH (INFANT)
+        $ma = e($_POST['mother_age']);
+        $dmeth = e($_POST['delivery_method']);
+        $pl = e($_POST['pregnancy_length']);
+        $bt = e($_POST['birth_type']);
+        $mb = e($_POST['multi_birth_was'] ?? '');
+        $md = e($_POST['main_disease']);
+        $od = e($_POST['other_disease']);
+        $mmd = e($_POST['main_maternal_disease'] ?? '');
+        $omd = e($_POST['other_maternal_disease'] ?? '');
+        $or = e($_POST['other_relevant']);
+        $connx->query("UPDATE death_cause_zero_seven SET mother_age='$ma', delivery_method='$dmeth', pregnancy_length='$pl', birth_type='$bt', if_multi_child_was='$mb', main_disease='$md', other_disease='$od', main_maternal_disease='$mmd', other_maternal_disease='$omd', other_relevant='$or' WHERE no='$no'");
 
-    // 9. INFORMANT & PREPARED BY TABLE
-    $iname = e($_POST['informant_name']);
-    $rel = e($_POST['rel_death']);
-    $iadd = e($_POST['informant_address']);
-    $pname = e($_POST['prepared_name']);
-    $ppos = e($_POST['prepared_position']);
-    $idate = e($_POST['informant_date']);
-    $pdate = e($_POST['prepared_date']);
-    $connx->query("UPDATE inf_pre_tbl SET informant_name='$iname', rel_death='$rel', informant_address='$iadd', prepared_name='$pname', prepared_position='$ppos', informant_date='$idate', prepared_date='$pdate' WHERE no='$no'");
+        // 8. EMBALMER TABLE
+        $etxt = e($_POST['embalmer_txt']);
+        $ename = e($_POST['embalmer_name']);
+        $eadd = e($_POST['embalmer_address']);
+        $etit = e($_POST['embalmer_title']);
+        $eno = e($_POST['embalmer_no']);
+        $eon = e($_POST['embalmer_on']);
+        $eat = e($_POST['embalmer_at']);
+        $eexp = e($_POST['embalmer_expdate']);
+        $connx->query("UPDATE embalmer_tbl SET embalmer_txt='$etxt', embalmer_name='$ename', embalmer_address='$eadd', embalmer_title='$etit', embalmer_no='$eno', embalmer_on='$eon', embalmer_at='$eat', embalmer_expdate='$eexp' WHERE no='$no'");
 
-    // 10. LATE REGISTRATION TABLE
-    $lname2 = e($_POST['late_name']);
-    $ladd = e($_POST['late_address']);
-    $dname = e($_POST['death_name']);
-    $don = e($_POST['died_on']);
-    $din = e($_POST['died_in']);
-    $bin = e($_POST['buried_in']);
-    $bon = e($_POST['buried_on']);
-    $atype = e($_POST['attended_type'] ?? '');
-    $aby = e($_POST['attended_by']);
-    $ldc = e($_POST['late_death_cause']);
-    $lrr = e($_POST['late_reg_reason'] ?? '');
-    $sd = e($_POST['sign_day']);
-    $sm = e($_POST['sign_month']);
-    $sy = e($_POST['sign_year']);
-    $sa = e($_POST['sign_at']);
-    $aff = e($_POST['affiant_name']);
-    $swd = e($_POST['sworn_day']);
-    $swm = e($_POST['sworn_month']);
-    $swy = e($_POST['sworn_year']);
-    $swa = e($_POST['sworn_at']);
-    $ctc = e($_POST['ctc']);
-    $ion = e($_POST['issued_on']);
-    $iat = e($_POST['issued_at']);
-    $admn = e($_POST['administer_name']);
-    $admp = e($_POST['administer_position']);
-    $adma = e($_POST['administer_address']);
-    $connx->query("UPDATE late_reg_tbl SET late_name='$lname2', late_address='$ladd', death_name='$dname', died_on='$don', died_in='$din', buried_in='$bin', buried_on='$bon', attended_type='$atype', attended_by='$aby', late_death_cause='$ldc', late_reg_reason='$lrr', sign_day='$sd', sign_month='$sm', sign_year='$sy', sign_at='$sa', affiant_name='$aff', sworn_day='$swd', sworn_month='$swm', sworn_year='$swy', sworn_at='$swa', ctc='$ctc', issued_on='$ion', issued_at='$iat', administer_name='$admn', administer_position='$admp', administer_address='$adma' WHERE no='$no'");
+        // 9. INFORMANT & PREPARED BY TABLE
+        $iname = e($_POST['informant_name']);
+        $rel = e($_POST['rel_death']);
+        $iadd = e($_POST['informant_address']);
+        $pname = e($_POST['prepared_name']);
+        $ppos = e($_POST['prepared_position']);
+        $idate = e($_POST['informant_date']);
+        $pdate = e($_POST['prepared_date']);
+        $connx->query("UPDATE inf_pre_tbl SET informant_name='$iname', rel_death='$rel', informant_address='$iadd', prepared_name='$pname', prepared_position='$ppos', informant_date='$idate', prepared_date='$pdate' WHERE no='$no'");
 
-    // 11. RECEIVED & CIVIL REGISTRAR TABLE
-    $rcv = e($_POST['received_name']);
-    $rpo = e($_POST['received_position']);
-    $cvn = e($_POST['civil_name']);
-    $cpo = e($_POST['civil_position']);
-    $rcd = e($_POST['received_date']);
-    $cvd = e($_POST['civil_date']);
-    $connx->query("UPDATE receive_civil_tbl SET received_name='$rcv', received_position='$rpo', civil_name='$cvn', civil_position='$cpo', received_date='$rcd', civil_date='$cvd' WHERE no='$no'");
+        // 10. LATE REGISTRATION TABLE
+        $lname2 = e($_POST['late_name']);
+        $ladd = e($_POST['late_address']);
+        $dname = e($_POST['death_name']);
+        $don = e($_POST['died_on']);
+        $din = e($_POST['died_in']);
+        $bin = e($_POST['buried_in']);
+        $bon = e($_POST['buried_on']);
+        $atype = e($_POST['attended_type'] ?? '');
+        $aby = e($_POST['attended_by']);
+        $ldc = e($_POST['late_death_cause']);
+        $lrr = e($_POST['late_reg_reason'] ?? '');
+        $sd = e($_POST['sign_day']);
+        $sm = e($_POST['sign_month']);
+        $sy = e($_POST['sign_year']);
+        $sa = e($_POST['sign_at']);
+        $aff = e($_POST['affiant_name']);
+        $swd = e($_POST['sworn_day']);
+        $swm = e($_POST['sworn_month']);
+        $swy = e($_POST['sworn_year']);
+        $swa = e($_POST['sworn_at']);
+        $ctc = e($_POST['ctc']);
+        $ion = e($_POST['issued_on']);
+        $iat = e($_POST['issued_at']);
+        $admn = e($_POST['administer_name']);
+        $admp = e($_POST['administer_position']);
+        $adma = e($_POST['administer_address']);
+        $connx->query("UPDATE late_reg_tbl SET late_name='$lname2', late_address='$ladd', death_name='$dname', died_on='$don', died_in='$din', buried_in='$bin', buried_on='$bon', attended_type='$atype', attended_by='$aby', late_death_cause='$ldc', late_reg_reason='$lrr', sign_day='$sd', sign_month='$sm', sign_year='$sy', sign_at='$sa', affiant_name='$aff', sworn_day='$swd', sworn_month='$swm', sworn_year='$swy', sworn_at='$swa', ctc='$ctc', issued_on='$ion', issued_at='$iat', administer_name='$admn', administer_position='$admp', administer_address='$adma' WHERE no='$no'");
 
-    // 12. REMARKS TABLE
-    $rem = e($_POST['remarks']);
-    $connx->query("UPDATE remarks_tbl SET remarks='$rem' WHERE no='$no'");
+        // 11. RECEIVED & CIVIL REGISTRAR TABLE
+        $rcv = e($_POST['received_name']);
+        $rpo = e($_POST['received_position']);
+        $cvn = e($_POST['civil_name']);
+        $cpo = e($_POST['civil_position']);
+        $rcd = e($_POST['received_date']);
+        $cvd = e($_POST['civil_date']);
+        $connx->query("UPDATE receive_civil_tbl SET received_name='$rcv', received_position='$rpo', civil_name='$cvn', civil_position='$cpo', received_date='$rcd', civil_date='$cvd' WHERE no='$no'");
 
-    // Instant pop-up and redirect!
-    echo "<script>
-        alert('All 12 Tables Successfully Updated!');
-        window.location.href = 'death_records.php';
-    </script>";
-    exit; // Stop the page from loading the form
+        // 12. REMARKS TABLE
+        $rem = e($_POST['remarks']);
+        $connx->query("UPDATE remarks_tbl SET remarks='$rem' WHERE no='$no'");
+
+        $connx->commit();
+        echo "<script>
+            alert('Record updated successfully!');
+            window.location.href = 'death_records.php';
+        </script>";
+        exit;
+    } catch (Exception $err) {
+        $connx->rollback();
+        echo "<script>alert('Update failed: " . $connx->error . "');</script>";
+    }
 }
 
 // =========================================================================
@@ -284,6 +293,8 @@ if (!empty($id)) {
   <link href="../../css/style_css.css" rel="stylesheet" type="text/css">
 
   <style>
+    input, select { text-transform: uppercase; }
+    textarea { text-transform: uppercase; }
     #navbar{ display: none; }
     @media only screen and (max-width: 768px) {
       #navbar{ display: block; display: flex;}
@@ -293,6 +304,7 @@ if (!empty($id)) {
       .navbar-collapse {
         padding: 0; width: 50%; position: absolute; top: 72px; right: 20px; z-index: 1000;
       }
+      .navbar-collapse #nav-link_active, #nav-link { font-size:13px; font-family: century gothic; text-transform: uppercase; color: white; display: block; padding: 10px; transition: all 0.3s ease; letter-spacing: 1px; }
     }
   </style>
 </head>
@@ -317,12 +329,12 @@ if (!empty($id)) {
     <span class="navbar-toggler-icon"></span>
   </button>
   <div class="collapse navbar-collapse bg-light" id="collapsibleNavbar">
-    <ul class="navbar-nav bg-success mx-auto h-100">
-        <li class="nav-item"><a class="nav-link" href="../../home.php">&emsp;<i class="fa fa-clock-o fa-fw"></i>Dashboard</a></li>
+    <ul class="navbar-nav bg-dark mx-auto h-100">
+        <li class="nav-item"><a class="nav-link" id="nav-link" href="../../home.php">&emsp;<i class="fa fa-clock-o fa-fw"></i>Dashboard</a></li>
         <li class="nav-item"><a class="nav-link active" id="nav-link_active" href="../files.php" >&emsp;<i class="fa fa-bookmark-o fa-fw"></i>Registration</a></li>
-        <li class="nav-item"><a class="nav-link" data-toggle="modal" href="#myreport">&emsp;<i class="fa fa-file-o fa-fw"></i>Report</a></li>
-        <li class="nav-item"><a class="nav-link" href="../../employee/view_users.php">&emsp;<i class="fa fa-user-o fa-fw"></i>Account</a></li>
-        <li class="nav-item"><a class="nav-link" href="../../php/logout.php">&emsp;<i class="fa fa-eject fa-fw"></i>Logout</a></li>
+        <li class="nav-item"><a class="nav-link" data-toggle="modal" href="#myreport" id="nav-link">&emsp;<i class="fa fa-file-o fa-fw"></i>Report</a></li>
+        <li class="nav-item"><a class="nav-link" id="nav-link" href="../../employee/view_users.php">&emsp;<i class="fa fa-user-o fa-fw"></i>Account</a></li>
+        <li class="nav-item"><a class="nav-link" id="nav-link" href="../../php/logout.php">&emsp;<i class="fa fa-eject fa-fw"></i>Logout</a></li>
     </ul>
   </div>
 </nav>
@@ -354,11 +366,11 @@ if (!empty($id)) {
     <div class="aside" style="margin-top: 3em;">
       <nav class="navbar">
         <ul class="navbar-nav" style="padding-bottom:6em;">
-          <li class="nav-item"><a class="nav-link" href="../../home.php">&emsp;<i class="fa fa-clock-o fa-fw"></i>Dashboard</a></li>
-          <li class="nav-item"><a class="nav-link active" id="nav-link_active" href="../files.php" >&emsp;<i class="fa fa-bookmark-o fa-fw"></i>Registration</a></li>
-          <li class="nav-item"><a class="nav-link" data-toggle="modal" href="#myreport">&emsp;<i class="fa fa-file-o fa-fw"></i>Report</a></li>
-          <li class="nav-item"><a class="nav-link" href="../../employee/view_users.php">&emsp;<i class="fa fa-user-o fa-fw"></i>Account</a></li>
-          <li class="nav-item"><a class="nav-link" href="../../php/logout.php">&emsp;<i class="fa fa-eject fa-fw"></i>Logout</a></li>
+          <li class="nav-item"><a class="nav-link" id="nav-link" href="../../home.php">&emsp;<i class="fa fa-clock-o fa-fw"></i>Dashboard</a></li>
+          <li class="nav-item"><a class="nav-link" id="nav-link_active" href="../files.php" >&emsp;<i class="fa fa-bookmark-o fa-fw"></i>Registration</a></li>
+          <li class="nav-item"><a class="nav-link" data-toggle="modal" href="#myreport" id="nav-link">&emsp;<i class="fa fa-file-o fa-fw"></i>Report</a></li>
+          <li class="nav-item"><a class="nav-link" id="nav-link" href="../../employee/view_users.php">&emsp;<i class="fa fa-user-o fa-fw"></i>Account</a></li>
+          <li class="nav-item"><a class="nav-link" id="nav-link" href="../../php/logout.php">&emsp;<i class="fa fa-eject fa-fw"></i>Logout</a></li>
         </ul>
       </nav>
     </div>
@@ -441,7 +453,7 @@ $(document).ready(function() {
             if (dod >= dob) {
                 var years = dod.getFullYear() - dob.getFullYear();
                 var months = dod.getMonth() - dob.getMonth();
-                var days = dod.getDate() - dod.getDate();
+                var days = dod.getDate() - dob.getDate();
                 if (days < 0) { months--; days += new Date(dod.getFullYear(), dod.getMonth(), 0).getDate(); }
                 if (months < 0) { years--; months += 12; }
 
@@ -524,57 +536,42 @@ $(document).ready(function() {
     toggleAutopsyFields();
 
     // =======================================================================
-    // NEW MAGIC: HIDE DATA AND POP IT ON FOCUS
+    // UNIVERSAL KEYBOARD NAVIGATION
     // =======================================================================
 
-    // 1. Hide the values immediately after the page loads and the logic runs
-    $('form input:not([type="hidden"]):not([type="submit"]):not([type="checkbox"]):not([type="radio"]), form select').each(function() {
-        var originalValue = $(this).val();
-        
-        // Don't hide 'N/A' from disabled/locked fields so the user knows they are locked
-        if (originalValue !== 'N/A' && !$(this).prop('readonly')) {
-            $(this).attr('data-old-val', originalValue); // Save it secretly
-            $(this).val(''); // Wipe the box clean visually
-        }
-    });
+    const sequences = [
+        ['person_fname', 'person_mname', 'person_lname'],
+        ['cemetery', 'municipalityCemetery', 'provinceCemetery']
+    ];
 
-   // 2. When the user presses ENTER in a box, pop the old data back in AND jump to next box
-    $('form').on('keydown', 'input, select', function(e) {
-        // Check if the key pressed is the Enter key
+    $('form').on('keydown', 'input, select, textarea', function(e) {
         if (e.key === 'Enter' || e.keyCode === 13) {
-            e.preventDefault(); // CRITICAL: Stop the form from submitting/saving
-
-            // 1. Reveal the hidden data if the box is empty and not locked
-            if ($(this).val() === '' && !$(this).prop('readonly')) {
-                var oldData = $(this).attr('data-old-val');
-                if (oldData !== undefined) {
-                    $(this).val(oldData);
-                    $(this).trigger('change'); // Alert your smart logic that data was added
+            const id = $(this).attr('id');
+            const name = $(this).attr('name');
+            
+            // Check for horizontal sequences first
+            for (const seq of sequences) {
+                const idx = seq.indexOf(id) !== -1 ? seq.indexOf(id) : seq.indexOf(name);
+                if (idx !== -1 && idx < seq.length - 1) {
+                    e.preventDefault();
+                    const nextField = seq[idx + 1];
+                    $(`[id="${nextField}"], [name="${nextField}"]`).first().focus();
+                    return;
                 }
             }
 
-            // 2. Find all form fields that you can actually type in (visible, not locked/disabled)
+            // Otherwise, move to next focusable element
+            if (this.tagName === 'TEXTAREA' && !e.ctrlKey) return; 
+            e.preventDefault(); 
+            
             var $focusable = $(this).closest('form').find('input, select, textarea').filter(':visible:not([readonly]):not([disabled])');
             var currentIndex = $focusable.index(this);
             var nextIndex = currentIndex + 1;
 
-            // 3. Move the cursor to the next available field
             if (nextIndex < $focusable.length) {
                 $focusable.eq(nextIndex).focus();
             }
         }
-    });
-
-    // 3. SAFETY NET: When saving, put all untouched old data back into the empty boxes
-    $('form').on('submit', function() {
-        $(this).find('input, select').each(function() {
-            if ($(this).val() === '') {
-                var oldData = $(this).attr('data-old-val');
-                if (oldData !== undefined) {
-                    $(this).val(oldData);
-                }
-            }
-        });
     });
 
 });
