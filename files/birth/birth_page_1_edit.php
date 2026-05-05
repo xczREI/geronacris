@@ -1052,22 +1052,15 @@ $(document).ready(function() {
 </script>
 
 <script>
-    // 3. Child Last Name to Parents Last Name Auto-fill
+    // 3. Child Last Name to Parents Last Name Auto-fill (Triggering Sync)
     $(document).ready(function(){
-        var inputBox = document.getElementById('child_mname');
-        var inputBox2 = document.getElementById('child_lname');
+        $('#child_mname').on('input keyup', function(){
+            $('#mother_lname').val($(this).val()).trigger('input');
+        });
 
-        if(inputBox) {
-            inputBox.onkeyup = function(){
-                document.getElementById('mother_lname').value = inputBox.value;
-            }
-        }
-
-        if(inputBox2) {
-            inputBox2.onkeyup = function(){
-                document.getElementById('father_lname').value = inputBox2.value;
-            }
-        }
+        $('#child_lname').on('input keyup', function(){
+            $('#father_lname').val($(this).val()).trigger('input');
+        });
     });
 </script>
 
@@ -1617,10 +1610,10 @@ $(document).ready(function() {
 </script>
 
 <script>
-// 16. Spacebar Navigation for Date of Birth (Section 3)
+// 16. Keyboard Navigation for Date of Birth (Section 3)
 $(document).ready(function() {
     $('#bd_day, #bd_month, #bd_year').on('keydown', function(e) {
-        if (e.key === " ") {
+        if (e.key === " " || e.key === "Enter") {
             e.preventDefault(); 
             const currentId = $(this).attr('id');
             if (currentId === 'bd_day') {
@@ -1636,24 +1629,18 @@ $(document).ready(function() {
 </script>
 
 <script>
-// 17. Combined Backspace Logic: Clear All AND Jump Back
-// Pressing Backspace clears the entire input box but KEEPS it selected
+// 17. Standard Backspace & Enter Navigation
 $(document).ready(function() {
-    $('input[type="text"]').on('keydown', function(e) {
-        if (e.key === "Backspace") {
+    // Enter to move to next field
+    $('input, select, textarea').on('keydown', function(e) {
+        if (e.key === "Enter") {
+            e.preventDefault(); 
             
-            // Only trigger if there is actually text in the box to delete
-            if ($(this).val() !== "") {
-                e.preventDefault(); // Stop the normal letter-by-letter deletion
-                
-                // 1. Clear the entire box instantly
-                $(this).val('');
-                
-                // 2. Alert your other scripts (like the "Not Married" lock) that the box is now empty
-                $(this).trigger('input'); 
-                
-                // 3. Save the empty box to memory directly (without blurring/deselecting)
-                if (typeof saveToMemory === "function") saveToMemory();
+            // Find all visible, enabled inputs/selects/textareas
+            let $canfocus = $('input, select, textarea').filter(':visible:enabled:not([readonly])');
+            let index = $canfocus.index(this) + 1;
+            if (index < $canfocus.length) {
+                $canfocus.eq(index).focus();
             }
         }
     });

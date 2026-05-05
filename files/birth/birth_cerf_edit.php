@@ -516,5 +516,77 @@ function openLivePreview() {
     }
 </script>
 
+<script>
+// Synchronization of Form Fields to Print Modals
+$(document).ready(function() {
+    function toTitleCase(str) {
+        if (!str) return '';
+        return str.toLowerCase().split(' ').map(function(word) {
+            return (word.charAt(0).toUpperCase() + word.slice(1));
+        }).join(' ');
+    }
+
+    function syncAll() {
+        // --- CHILD NAME ---
+        let cfname = $('#child_fname').val() || '';
+        let cmname = $('#child_mname').val() || '';
+        let clname = $('#child_lname').val() || '';
+        let childFullNameUpper = (clname.trim() + ', ' + cfname.trim() + ' ' + cmname.trim()).toUpperCase();
+        let childFullNameTitle = toTitleCase(cfname.trim() + ' ' + cmname.trim() + ' ' + clname.trim());
+        
+        $('#modal-child-name-102').text(childFullNameUpper);
+        $('#modal-child-name-reprint').text(childFullNameUpper);
+        $('.sync-child-name').val(childFullNameTitle);
+
+        // --- REGISTRY NO ---
+        $('.sync-registry-no').val($('#regno').val() || '');
+
+        // --- SEX ---
+        $('.sync-child-sex').val(toTitleCase($('#child_sex').val() || ''));
+
+        // --- BIRTH DATE ---
+        $('.sync-birth-date').val($('#child_birth_date').val() || '');
+
+        // --- BIRTH PLACE ---
+        let bbrgy = $('#birth_brgy').val() || '';
+        let bcity = $('#birth_city').val() || '';
+        let bprov = $('#birth_province').val() || '';
+        let bPlace = (bbrgy.trim() + ', ' + bcity.trim() + ', ' + bprov.trim()).replace(/^, |, $/g, '');
+        $('.sync-birth-place').val(toTitleCase(bPlace));
+
+        // --- MOTHER ---
+        let mfname = $('#mother_fname').val() || '';
+        let mmname = $('#mother_mname').val() || '';
+        let mlname = $('#mother_lname').val() || '';
+        let mFullName = toTitleCase(mfname.trim() + ' ' + mmname.trim() + ' ' + mlname.trim());
+        $('.sync-mother-name').val(mFullName);
+        $('.sync-mother-citizen').val(toTitleCase($('#mother_citizen').val() || ''));
+
+        // --- FATHER ---
+        let ffname = $('#father_fname').val() || '';
+        let fmname = $('#father_mname').val() || '';
+        let flname = $('#father_lname').val() || '';
+        let fFullName = toTitleCase(ffname.trim() + ' ' + fmname.trim() + ' ' + flname.trim());
+        $('.sync-father-name').val(fFullName);
+        $('.sync-father-citizen').val(toTitleCase($('#father_citizen').val() || ''));
+
+        // --- MARRIAGE ---
+        $('.sync-mrg-date').val($('#marriage_date').val() || '');
+        $('.sync-mrg-place').val($('#marriage_place').val() || '');
+
+        // --- REMARKS ---
+        let remarks = $('#r').val() || '';
+        $('.sync-remarks-text').text(remarks.toUpperCase());
+        $('.sync-remarks-textarea').val(toTitleCase(remarks));
+    }
+
+    // Listen to all relevant inputs
+    $(document).on('input change blur', 'input, select, textarea', syncAll);
+    
+    // Initial sync on load
+    syncAll();
+});
+</script>
+
 </body>
 </html>

@@ -186,25 +186,34 @@ $txt1 = '
 ';
 $pdf->writeHTML($txt1); 
 
+$informant_name_val = trim($row['informant_name'] ?? '');
+$check_name = strtoupper($informant_name_val);
+$is_empty = empty($informant_name_val) || $check_name === 'N/A' || $check_name === 'UNKNOWN' || $check_name === 'NOT APPLICABLE';
+
+$informant_name_display = !$is_empty ? strtoupper($informant_name_val) : '';
+$informant_rel_val = !$is_empty ? strtoupper($row['rel_child'] ?? '') : '';
+$informant_addr_val = !$is_empty ? strtoupper($row['informant_address'] ?? '') : '';
+$informant_date_val = !$is_empty ? strtoupper($row['informant_date'] ?? '') : '';
+
 $pdf->Ln(11);
 $pdf->Cell(28);
 $txt2 = '
 <table cellpadding="3">
   <tr>
-    <td width="57%">'.strtoupper($row['informant_name']).'</td>
+    <td width="57%">'.$informant_name_display.'</td>
     <td width="50%">'.strtoupper($row['prepared_name']).'</td>
   </tr>
   <tr>
     <td width="7%"></td>
-    <td width="55%">'.strtoupper($row['rel_child']).'</td>
+    <td width="55%">'.$informant_rel_val.'</td>
     <td width="50%">'.strtoupper($row['prepared_position']).'</td>
   </tr>
   <tr>
-    <td width="53%">'.strtoupper($row['informant_address']).'</td>
+    <td width="53%">'.$informant_addr_val.'</td>
     <td width="50%">'.strtoupper($row['prepared_date']).'</td>
   </tr>
   <tr>
-    <td width="53%">'.strtoupper($row['informant_date']).'</td>
+    <td width="53%">'.$informant_date_val.'</td>
     <td width="50%"></td>
   </tr>
 </table>

@@ -929,18 +929,20 @@ document.addEventListener('DOMContentLoaded', function() {
             if (this.name) { sessionStorage.setItem(this.name, this.value); }
         });
     });
+});
+</script>
 
-    // 3. ENTER KEY: Navigate to next box
-    document.addEventListener('keydown', function(e) {
-        if (e.key === 'Enter') {
-            const current = document.activeElement;
-            if (current.tagName === 'INPUT' || current.tagName === 'SELECT') {
-                e.preventDefault();
-                const focusable = Array.from(document.querySelectorAll('input:not([type="hidden"]):not([disabled]):not([readonly]), select:not([disabled])'));
-                const index = focusable.indexOf(current);
-                if (index > -1 && index < focusable.length - 1) {
-                    focusable[index + 1].focus();
-                }
+<script>
+// Universal Keyboard Navigation (Enter to next, Backspace to delete char)
+$(document).ready(function() {
+    $('input, select, textarea').on('keydown', function(e) {
+        if (e.key === "Enter") {
+            if (this.tagName === 'TEXTAREA' && !e.ctrlKey) return; 
+            e.preventDefault();
+            let $canfocus = $('input, select, textarea').filter(':visible:enabled:not([readonly])');
+            let index = $canfocus.index(this) + 1;
+            if (index < $canfocus.length) {
+                $canfocus.eq(index).focus();
             }
         }
     });

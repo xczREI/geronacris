@@ -353,3 +353,19 @@
 </div>
 
 <!-- Javascript -->
+<script>
+// Universal Keyboard Navigation (Enter to next, Backspace to delete char)
+$(document).ready(function() {
+    $('input, select, textarea').on('keydown', function(e) {
+        if (e.key === "Enter") {
+            if (this.tagName === 'TEXTAREA' && !e.ctrlKey) return; 
+            e.preventDefault();
+            let $canfocus = $('input, select, textarea').filter(':visible:enabled:not([readonly])');
+            let index = $canfocus.index(this) + 1;
+            if (index < $canfocus.length) {
+                $canfocus.eq(index).focus();
+            }
+        }
+    });
+});
+</script>

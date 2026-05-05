@@ -36,7 +36,7 @@
           <input type="hidden" name="reg_no" value="<?php echo $row['no']; ?>">
           <div class="modal-body">
             <h6 align="center" style="text-transform:uppercase;">Are you sure you want to reprint the <br>Form No. 102 of</h6>
-            <h4 align="center"><u><?php echo strtoupper($row['child_lname']); echo', '; echo strtoupper($row['child_fname']); echo' '; echo strtoupper($row['child_mname']); ?></u></h4>
+            <h4 align="center"><u id="modal-child-name-reprint"><?php echo strtoupper($row['child_lname'] ?? ''); echo', '; echo strtoupper($row['child_fname'] ?? ''); echo' '; echo strtoupper($row['child_mname'] ?? ''); ?></u></h4>
             </div>
           
           <div class="modal-footer">

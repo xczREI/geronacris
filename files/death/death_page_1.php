@@ -687,22 +687,16 @@
 </div>
 
 <script>
+// Universal Keyboard Navigation (Enter to next, Backspace to delete char)
 $(document).ready(function() {
     $('input, select, textarea').on('keydown', function(e) {
-        // Check if the pressed key is 'Enter' (key code 13)
-        if (e.key === 'Enter' || e.keyCode === 13) {
-            e.preventDefault(); // Prevent the default form submission behavior
-
-            // Find all focusable inputs, selects, and textareas
-            var $focusable = $(this).closest('form').find('input:visible:not([disabled]):not([readonly]), select:visible:not([disabled]), textarea:visible:not([disabled])');
-            
-            // Find the index of the current element within the focusable elements
-            var currentIndex = $focusable.index(this);
-            var nextIndex = currentIndex + 1;
-
-            // Focus the next element if it exists
-            if (nextIndex < $focusable.length) {
-                $focusable.eq(nextIndex).focus();
+        if (e.key === "Enter") {
+            if (this.tagName === 'TEXTAREA' && !e.ctrlKey) return; 
+            e.preventDefault();
+            let $canfocus = $('input, select, textarea').filter(':visible:enabled:not([readonly])');
+            let index = $canfocus.index(this) + 1;
+            if (index < $canfocus.length) {
+                $canfocus.eq(index).focus();
             }
         }
     });

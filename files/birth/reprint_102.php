@@ -314,7 +314,7 @@ $pdf->SetFont('Arial', '', 10);
 
 // Attendant SGD
 $pdf->SetXY(35, 203);
-$pdf->Cell(0, 10, "(SGD) " . strtoupper($row['attendant_name'] ?? ''), 0, 1);
+$pdf->Cell(0, 10, strtoupper($row['attendant_name'] ?? ''), 0, 1);
 // Attendant Name
 $pdf->SetXY(38, 209);
 $pdf->Cell(0, 10, strtoupper($row['attendant_name'] ?? ''), 0, 1);
@@ -332,29 +332,34 @@ $pdf->Cell(0, 10, strtoupper($row['attendant_date'] ?? ''), 0, 1);
 
 
 $pdf->SetFont('Arial', '', 10);
-// Informant SGD
-$pdf->SetXY(34, 234);
-$pdf->Cell(0, 10, "(SGD) " .  strtoupper($row['informant_name'] ?? ''), 0, 1);
-// Informant Name
-$pdf->SetXY(37, 240);
-$pdf->Cell(0, 10, strtoupper($row['informant_name'] ?? ''), 0, 1);
-// Informant Relationship
-$pdf->SetXY(49, 246.5);
-$pdf->Cell(0, 10, strtoupper($row['rel_child'] ?? ''), 0, 1);
-// Informant Address
-$pdf->SetXY(30, 252);
-fitTextInCell($pdf, 30, 254.5, 80, 5, $row['informant_address']);
-// Informant Date
-$pdf->SetFont('Arial', '', 10);
-$pdf->SetXY(30, 257.5);
-$pdf->Cell(0, 10, strtoupper($row['informant_date'] ?? ''), 0, 1);
+// Informant Section
+$informant_name = trim($row['informant_name'] ?? '');
+$check_name = strtoupper($informant_name);
+if (!empty($informant_name) && $check_name !== 'N/A' && $check_name !== 'UNKNOWN' && $check_name !== 'NOT APPLICABLE') {
+    // Informant SGD
+    $pdf->SetXY(34, 234);
+    $pdf->Cell(0, 10, strtoupper($informant_name), 0, 1);
+    // Informant Name
+    $pdf->SetXY(37, 240);
+    $pdf->Cell(0, 10, strtoupper($informant_name), 0, 1);
+    // Informant Relationship
+    $pdf->SetXY(72, 246.5);
+    $pdf->Cell(0, 10, strtoupper($row['rel_child'] ?? ''), 0, 1);
+    // Informant Address
+    $pdf->SetXY(30, 252);
+    fitTextInCell($pdf, 30, 254.5, 80, 5, $row['informant_address']);
+    // Informant Date
+    $pdf->SetFont('Arial', '', 10);
+    $pdf->SetXY(30, 257.5);
+    $pdf->Cell(0, 10, strtoupper($row['informant_date'] ?? ''), 0, 1);
+}
 
 
 $pdf->SetFont('Arial', '', 10);
 
 // Received SGD
 $pdf->SetXY(36, 267.5);
-$pdf->Cell(0, 10, "(SGD) " .strtoupper($row['received_name'] ?? ''), 0, 1);
+$pdf->Cell(0, 10, strtoupper($row['received_name'] ?? ''), 0, 1);
 
 // Received Name
 $pdf->SetXY(39, 273.5);
@@ -369,7 +374,7 @@ $pdf->Cell(0, 10, strtoupper($row['received_date'] ?? ''), 0, 1);
 $pdf->SetFont('Arial', '', 10);
 // Prepared SGD
 $pdf->SetXY(128, 232.5);
-$pdf->Cell(0, 10, "(SGD) " . strtoupper($row['prepared_name'] ?? ''), 0, 1);
+$pdf->Cell(0, 10, strtoupper($row['prepared_name'] ?? ''), 0, 1);
 // Prepared Name
 $pdf->SetXY(131, 238.5);
 $pdf->Cell(0, 10, strtoupper($row['prepared_name'] ?? ''), 0, 1);
@@ -383,7 +388,7 @@ $pdf->Cell(0, 10, strtoupper($row['prepared_date'] ?? ''), 0, 1);
 $pdf->SetFont('Arial', '', 10);
 // Civil SGD
 $pdf->SetXY(128, 267);
-$pdf->Cell(0, 10, "(SGD) " . strtoupper($row['civil_name'] ?? ''), 0, 1);
+$pdf->Cell(0, 10, strtoupper($row['civil_name'] ?? ''), 0, 1);
 // Civil Name
 $pdf->SetXY(131, 273);
 $pdf->Cell(0, 10, strtoupper($row['civil_name'] ?? ''), 0, 1);
@@ -611,13 +616,13 @@ $pdf->SetXY(126, 305.5);
 fitTextInCellAddress($pdf, 132, 310.5, 66, 5, $row['late_issued_at']);
 // Late Administer Name
 $pdf->SetXY(25, 329);
-fitTextInCell($pdf, 25, 329, 76, 5, ($row['late_administer_name'] ?? '') . ' (SGD)');
+fitTextInCell($pdf, 25, 329, 76, 5, ($row['late_administer_name'] ?? ''));
 // Late Administer address
 $pdf->SetXY(130, 305.5);
-fitTextInCellAddress($pdf, 127, 329, 76, 5, ($row['late_administer_address'] ?? '') . ' (SGD)');
+fitTextInCellAddress($pdf, 127, 329, 76, 5, ($row['late_administer_address'] ?? ''));
 // Late Administer position
 $pdf->SetXY(127, 317);
-fitTextInCellAddress($pdf, 127, 317, 76, 5, ($row['late_administer_position'] ?? '') . ' (SGD)');
+fitTextInCellAddress($pdf, 127, 317, 76, 5, ($row['late_administer_position'] ?? ''));
 
 // Output the PDF
 $pdf->Output('birth_'.$row['child_fname'].'_'.$row['child_lname'].'.pdf', 'I');

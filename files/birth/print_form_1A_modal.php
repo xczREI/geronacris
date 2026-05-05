@@ -83,23 +83,24 @@
                 <div class="col-7">
                   <h6>
                   <input class="input" type="hidden" name="reg_no" value="<?php echo $row['no']; ?>">
-                  <input class="input" type="text" name="reg_date" value="<?php 
+                  <input class="input sync-registry-no" type="text" name="registry_no_val" value="<?php echo $row['registry_no'] ?? ''; ?>" readonly>
+                  <input class="input sync-reg-date" type="text" name="reg_date" value="<?php 
                         $raw_reg = $row['reg_date'] ?? '';
                         if (!empty($raw_reg) && $raw_reg != '0000-00-00') {
                             echo date('F d, Y', strtotime($raw_reg));
                         } else {
                             echo 'N/A';
                         } ?>" readonly>
-                  <input class="input" type="text" name="child_name" value="<?php echo ucwords(($row['child_fname'] ?? '').' '.($row['child_mname'] ?? '').' '.($row['child_lname'] ?? '')); ?>" readonly>
-                  <input class="input" type="text" name="child_sex" value="<?php echo ucwords($row['child_sex'] ?? ''); ?>" readonly>
-                  <input class="input" type="text" name="birth_date" value="<?php echo ucwords($row['child_birth_date'] ?? ''); ?>" readonly><br> 
-                  <input class="input" type="text" name="birth_place" value="<?php echo ucwords(($row['birth_brgy'] ?? '').', '.($row['birth_municipal'] ?? '').', '.($row['birth_province'] ?? '')); ?>" readonly>   
-                  <input class="input" type="text" name="mother_name" value="<?php echo ucwords(($row['mother_fname'] ?? '').' '.($row['mother_mname'] ?? '').' '.($row['mother_lname'] ?? '')); ?>" readonly><br> 
-                  <input class="input" type="text" name="mother_citizen" value="<?php echo ucwords($row['mother_citizen'] ?? ''); ?>" readonly>
-                  <input class="input" type="text" name="father_name" value="<?php echo ucwords(($row['father_fname'] ?? '').' '.($row['father_mname'] ?? '').' '.($row['father_lname'] ?? '')); ?>" readonly><br>
-                  <input class="input" type="text" name="father_citizen" value="<?php echo ucwords($row['father_citizen'] ?? ''); ?>" readonly>
-                  <input class="input" type="text" name="mrg_date" value="<?php echo ucwords($row['marriage_date'] ?? ''); ?>" readonly>
-                  <input class="input" type="text" name="mrg_place" value="<?php echo ucwords($row['marriage_place'] ?? ''); ?>" readonly>
+                  <input class="input sync-child-name" type="text" name="child_name" value="<?php echo ucwords(($row['child_fname'] ?? '').' '.($row['child_mname'] ?? '').' '.($row['child_lname'] ?? '')); ?>" readonly>
+                  <input class="input sync-child-sex" type="text" name="child_sex" value="<?php echo ucwords($row['child_sex'] ?? ''); ?>" readonly>
+                  <input class="input sync-birth-date" type="text" name="birth_date" value="<?php echo ucwords($row['child_birth_date'] ?? ''); ?>" readonly><br> 
+                  <input class="input sync-birth-place" type="text" name="birth_place" value="<?php echo ucwords(($row['birth_brgy'] ?? '').', '.($row['birth_municipal'] ?? '').', '.($row['birth_province'] ?? '')); ?>" readonly>   
+                  <input class="input sync-mother-name" type="text" name="mother_name" value="<?php echo ucwords(($row['mother_fname'] ?? '').' '.($row['mother_mname'] ?? '').' '.($row['mother_lname'] ?? '')); ?>" readonly><br> 
+                  <input class="input sync-mother-citizen" type="text" name="mother_citizen" value="<?php echo ucwords($row['mother_citizen'] ?? ''); ?>" readonly>
+                  <input class="input sync-father-name" type="text" name="father_name" value="<?php echo ucwords(($row['father_fname'] ?? '').' '.($row['father_mname'] ?? '').' '.($row['father_lname'] ?? '')); ?>" readonly><br>
+                  <input class="input sync-father-citizen" type="text" name="father_citizen" value="<?php echo ucwords($row['father_citizen'] ?? ''); ?>" readonly>
+                  <input class="input sync-mrg-date" type="text" name="mrg_date" value="<?php echo ucwords($row['marriage_date'] ?? ''); ?>" readonly>
+                  <input class="input sync-mrg-place" type="text" name="mrg_place" value="<?php echo ucwords($row['marriage_place'] ?? ''); ?>" readonly>
                   </h6>
                 </div>
                 <div class="row" style="padding-left:2%;">
@@ -107,12 +108,12 @@
                     <h6>Remarks:</h6>      
                   </div>
                   <div class="col-9">
-                    <p style="font-size: 13px; text-transform:uppercase; margin-left:25px"><?php echo $row['remarks'] ?? ''; ?></p>
+                    <p class="sync-remarks-text" style="font-size: 13px; text-transform:uppercase; margin-left:25px"><?php echo $row['remarks'] ?? ''; ?></p>
                   </div>
                 </div>
               </div>
               <br>
-              <textarea style="width: 100%; display: none;" name="remarks"><?php echo ucwords($row['remarks']); ?></textarea>
+              <textarea class="sync-remarks-textarea" style="width: 100%; display: none;" name="remarks"><?php echo ucwords($row['remarks'] ?? ''); ?></textarea>
 
               <h6 style="text-indent:8%;">This certification is issued to
               <div class="custom-control custom-checkbox custom-control-inline" style="width:40%;padding-left:0;margin-right:0;">

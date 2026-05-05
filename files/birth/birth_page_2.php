@@ -337,23 +337,6 @@ $(document).ready(function(){
 </script>
 
 <script>
-document.addEventListener("DOMContentLoaded", function() {
-    let inputs = document.querySelectorAll(".form-control");
-    inputs.forEach((input, index) => {
-        input.addEventListener("keydown", function(event) {
-            if(event.key === "Enter"){
-                event.preventDefault();
-                let nextInput = inputs[index + 1];
-                if (nextInput){
-                    nextInput.focus();
-                }
-            }
-        });
-    });
-});
-</script>
-
-<script>
 document.getElementById("childlatename").addEventListener("input", function() {
     if(this.value.trim() !== "") {
         document.getElementById("the_birth").checked = true;
@@ -524,14 +507,7 @@ $(document).ready(function() {
 
     $('input').on('keydown', function(e) {
         if (e.key === "Enter") {
-            e.preventDefault(); 
             syncCurrentField(this);
-
-            const allInputs = $('input:visible:not([disabled])');
-            const index = allInputs.index(this);
-            if (index > -1 && index < allInputs.length - 1) {
-                allInputs.eq(index + 1).focus();
-            }
         }
     });
 });
@@ -572,5 +548,22 @@ const textDisplay = document.getElementById('selected-text');
 
 selectElement.addEventListener('change', function() {
     textDisplay.textContent = this.options[this.selectedIndex].text;
+});
+</script>
+
+<script>
+// Universal Keyboard Navigation (Enter to next, Backspace to delete char)
+$(document).ready(function() {
+    $('input, select, textarea').on('keydown', function(e) {
+        if (e.key === "Enter") {
+            if (this.tagName === 'TEXTAREA' && !e.ctrlKey) return; 
+            e.preventDefault();
+            let $canfocus = $('input, select, textarea').filter(':visible:enabled:not([readonly])');
+            let index = $canfocus.index(this) + 1;
+            if (index < $canfocus.length) {
+                $canfocus.eq(index).focus();
+            }
+        }
+    });
 });
 </script>

@@ -335,22 +335,27 @@ if ($result->num_rows > 0) {
     $pdf->SetXY(120, 215);
     $pdf->Cell(0, 10, strtoupper($row['attendant_date'] ?? ''), 0, 1);
 
-    // Informant SGD
-    $pdf->SetXY(34, 234);
-    $pdf->Cell(0, 10, strtoupper($row['informant_name'] ?? ''), 0, 1);
-    // Informant Name
-    $pdf->SetXY(37, 240);
-    $pdf->Cell(0, 10, strtoupper($row['informant_name'] ?? ''), 0, 1);
-    // Informant Relationship
-    $pdf->SetXY(49, 246.5);
-    $pdf->Cell(0, 10, strtoupper($row['rel_child'] ?? ''), 0, 1);
-    // Informant Address
-    $pdf->SetXY(30, 252);
-    fitTextInCell($pdf, 30, 254.5, 80, 5, $row['informant_address'] ?? '');
-    $pdf->SetFont('Arial', '', 10);
-    // Informant Date
-    $pdf->SetXY(30, 257.5);
-    $pdf->Cell(0, 10, strtoupper($row['informant_date'] ?? ''), 0, 1);
+    // Informant Section
+    $informant_name = trim($row['informant_name'] ?? '');
+    $check_name = strtoupper($informant_name);
+    if (!empty($informant_name) && $check_name !== 'N/A' && $check_name !== 'UNKNOWN' && $check_name !== 'NOT APPLICABLE') {
+        // Informant SGD
+        $pdf->SetXY(34, 234);
+        $pdf->Cell(0, 10, strtoupper($informant_name), 0, 1);
+        // Informant Name
+        $pdf->SetXY(37, 240);
+        $pdf->Cell(0, 10, strtoupper($informant_name), 0, 1);
+        // Informant Relationship
+        $pdf->SetXY(72, 246.5);
+        $pdf->Cell(0, 10, strtoupper($row['rel_child'] ?? ''), 0, 1);
+        // Informant Address
+        $pdf->SetXY(30, 252);
+        fitTextInCell($pdf, 30, 254.5, 80, 5, $row['informant_address'] ?? '');
+        $pdf->SetFont('Arial', '', 10);
+        // Informant Date
+        $pdf->SetXY(30, 257.5);
+        $pdf->Cell(0, 10, strtoupper($row['informant_date'] ?? ''), 0, 1);
+    }
 
     // Received SGD
     $pdf->SetXY(36, 267.5);
@@ -613,13 +618,13 @@ if ($result->num_rows > 0) {
     fitTextInCellAddress($pdf, 132, 308, 66, 5, $row['late_issued_at'] ?? '');
     // Late Administer Name
     $pdf->SetXY(25, 326.5);
-    fitTextInCell($pdf, 25, 326.5, 76, 5, ($row['late_administer_name'] ?? '') . ' (SGD)');
+    fitTextInCell($pdf, 25, 326.5, 76, 5, ($row['late_administer_name'] ?? ''));
     // Late Administer address
     $pdf->SetXY(130, 303);
-    fitTextInCellAddress($pdf, 127, 326.5, 76, 5, ($row['late_administer_address'] ?? '') . ' (SGD)');
+    fitTextInCellAddress($pdf, 127, 326.5, 76, 5, ($row['late_administer_address'] ?? ''));
     // Late Administer position
     $pdf->SetXY(127, 314.5);
-    fitTextInCellAddress($pdf, 127, 314.5, 76, 5, ($row['late_administer_position'] ?? '') . ' (SGD)');
+    fitTextInCellAddress($pdf, 127, 314.5, 76, 5, ($row['late_administer_position'] ?? ''));
 
     $pdf->Output('birth_'.($row['child_fname'] ?? 'certificate').'_'.($row['child_lname'] ?? '').'.pdf', 'I');
 }

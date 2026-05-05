@@ -400,52 +400,17 @@
 <!-- Javascript -->
 <script>
 document.addEventListener('DOMContentLoaded', function() {
-    // Helper to pull from Page 1's memory
     const getStored = (key) => sessionStorage.getItem(key) || '';
 
-    document.addEventListener('keydown', function(e) {
-        if (e.key === 'Enter' && (e.target.tagName === 'INPUT' || e.target.tagName === 'SELECT')) {
-            e.preventDefault();
-
-            // 1. Build the Data Strings
-            const husbandName = (getStored('husband_fname') + ' ' + getStored('husband_mname') + ' ' + getStored('husband_lname')).replace(/\s+/g, ' ').trim();
-            const wifeName = (getStored('wife_fname') + ' ' + getStored('wife_mname') + ' ' + getStored('wife_lname')).replace(/\s+/g, ' ').trim();
-            const mPlace = (getStored('mrg_brgy') + ', ' + getStored('mrg_city') + ', ' + getStored('mrg_province')).replace(/(^,\s*)|(,\s*$)/g, '').trim();
-            const mDate = (getStored('mrg_day') + ' ' + getStored('mrg_month') + ' ' + getStored('mrg_year')).replace(/\s+/g, ' ').trim();
-
-            // 2. Map to Page 2 Fields
-            const field = e.target.name;
-
-            if (field === 'aff_hus_name' || field === 'late_mrg_h') {
-                e.target.value = husbandName;
-            } else if (field === 'aff_wife_name' || field === 'late_mrg_w' || field === 'late_marriage_with') {
-                e.target.value = wifeName;
-            } else if (field === 'late_marriage_in' || field === 'late_marriage_in_alt') {
-                e.target.value = mPlace;
-            } else if (field === 'late_marriage_on' || field === 'late_marriage_on_alt') {
-                e.target.value = mDate;
-            } else if (field === 'solemnized_by') {
-                e.target.value = getStored('mrg_solemn_name');
-            } else if (field === 'aff_solemn_name') {
-				e.target.value = getStored('mrg_solemn_name');
-			} else if (field === 'aff_sign_name') {
-				e.target.value = getStored('mrg_solemn_name');
-			}
-
-            // 3. Move to next field
-            const focusable = Array.from(document.querySelectorAll('input:not([type="hidden"]):not([disabled]):not([readonly]), select:not([disabled])'));
-            const idx = focusable.indexOf(e.target);
-            if (idx > -1 && idx < focusable.length - 1) {
-                focusable[idx + 1].focus();
-            }
-        }
-    });
-});
-</script>
-
-<script>
-document.addEventListener('DOMContentLoaded', function() {
-    const getStored = (key) => sessionStorage.getItem(key) || '';
+    // Function to compile data strings from Page 1
+    const getCompiledData = () => {
+        return {
+            hFull: (getStored('husband_fname') + ' ' + getStored('husband_mname') + ' ' + getStored('husband_lname')).replace(/\s+/g, ' ').trim(),
+            wFull: (getStored('wife_fname') + ' ' + getStored('wife_mname') + ' ' + getStored('wife_lname')).replace(/\s+/g, ' ').trim(),
+            mLoc: (getStored('mrg_brgy') + ', ' + getStored('mrg_city') + ', ' + getStored('mrg_province')).replace(/(^,\s*)|(,\s*$)/g, '').trim(),
+            mDate: (getStored('mrg_day') + ' ' + getStored('mrg_month') + ' ' + getStored('mrg_year')).replace(/\s+/g, ' ').trim()
+        };
+    };
 
     // Date Calculation Helper
     const getDateInfo = () => {
@@ -465,14 +430,42 @@ document.addEventListener('DOMContentLoaded', function() {
         return { day: d + suffix, month: months[now.getMonth()], year: now.getFullYear() };
     };
 
-    document.addEventListener('keydown', function(e) {
-        if (e.key === 'Enter' && (e.target.tagName === 'INPUT' || e.target.tagName === 'SELECT')) {
-            e.preventDefault();
+    // --- BI-DIRECTIONAL CHECKBOX LOGIC (STAYING INTACT) ---
+    const links = [
+        { cb: 'attendc', inputs: ['aff_1party', 'aff_2party'], type: 'names' },
+        { cb: 'my_mrg', inputs: ['late_marriage_with', 'late_marriage_in', 'late_marriage_on'], type: 'my_late' },
+        { cb: 'the_mrg', inputs: ['late_mrg_h', 'late_mrg_w', 'late_marriage_in_alt', 'late_marriage_on_alt'], type: 'the_late' }
+    ];
+
+    links.forEach(link => {
+        const checkbox = document.getElementById(link.cb);
+        if (!checkbox) return;
+        const inputEls = link.inputs.map(name => document.getElementsByName(name)[0]);
+
+        checkbox.addEventListener('change', function() {
+            const data = getCompiledData();
+            if (this.checked) {
+                if (link.type === 'names') { inputEls[0].value = data.hFull; inputEls[1].value = data.wFull; }
+                if (link.type === 'my_late') { inputEls[0].value = data.wFull; inputEls[1].value = data.mLoc; inputEls[2].value = data.mDate; }
+                if (link.type === 'the_late') { inputEls[0].value = data.hFull; inputEls[1].value = data.wFull; inputEls[2].value = data.mLoc; inputEls[3].value = data.mDate; }
+            } else {
+                inputEls.forEach(el => el.value = '');
+            }
+        });
+
+        inputEls.forEach(el => {
+            if (el) el.addEventListener('input', () => { checkbox.checked = inputEls.some(i => i && i.value.trim() !== ''); });
+        });
+    });
+
+    // Universal Keyboard Navigation (Enter to next, Backspace to delete char)
+    $('input, select, textarea').on('keydown', function(e) {
+        if (e.key === "Enter") {
             const name = e.target.name;
             const dateInfo = getDateInfo();
+            const data = getCompiledData();
 
             // --- SPECIFIC DATE PART POPULATION ---
-            // Fills only the specific box you are in with its relevant number/part
             if (name.includes('_day')) {
                 e.target.value = dateInfo.day;
             } else if (name.includes('_month')) {
@@ -481,65 +474,21 @@ document.addEventListener('DOMContentLoaded', function() {
                 e.target.value = dateInfo.year;
             }
 
-            // --- PAGE 1 DATA MAPPING ---
-            const hFull = (getStored('husband_fname') + ' ' + getStored('husband_mname') + ' ' + getStored('husband_lname')).replace(/\s+/g, ' ').trim();
-            const wFull = (getStored('wife_fname') + ' ' + getStored('wife_mname') + ' ' + getStored('wife_lname')).replace(/\s+/g, ' ').trim();
-            const mLoc = (getStored('mrg_brgy') + ', ' + getStored('mrg_city') + ', ' + getStored('mrg_province')).replace(/(^,\s*)|(,\s*$)/g, '').trim();
-            const mDate = (getStored('mrg_day') + ' ' + getStored('mrg_month') + ' ' + getStored('mrg_year')).replace(/\s+/g, ' ').trim();
+            // Fill designated forms on Enter
+            if (name === 'aff_hus_name' || name === 'late_mrg_h') e.target.value = data.hFull;
+            if (name === 'aff_wife_name' || name === 'late_mrg_w' || name === 'late_marriage_with') e.target.value = data.wFull;
+            if (name === 'late_marriage_in' || name === 'late_marriage_in_alt') e.target.value = data.mLoc;
+            if (name === 'late_marriage_on' || name === 'late_marriage_on_alt') e.target.value = data.mDate;
+            if (name === 'solemnized_by' || name === 'aff_solemn_name' || name === 'aff_sign_name') e.target.value = getStored('mrg_solemn_name');
 
-            if (name === 'aff_hus_name' || name === 'late_mrg_h') e.target.value = hFull;
-            if (name === 'aff_wife_name' || name === 'late_mrg_w' || name === 'late_marriage_with') e.target.value = wFull;
-            if (name === 'late_marriage_in' || name === 'late_marriage_in_alt') e.target.value = mLoc;
-            if (name === 'late_marriage_on' || name === 'late_marriage_on_alt') e.target.value = mDate;
-            if (name === 'solemnized_by') e.target.value = getStored('mrg_solemn_name');
-
-            // Move to next field
-            const focusable = Array.from(document.querySelectorAll('input:not([type="hidden"]):not([disabled]):not([readonly]), select:not([disabled])'));
-            const idx = focusable.indexOf(e.target);
-            if (idx > -1 && idx < focusable.length - 1) {
-                focusable[idx + 1].focus();
+            if (this.tagName === 'TEXTAREA' && !e.ctrlKey) return; 
+            e.preventDefault();
+            let $canfocus = $('input, select, textarea').filter(':visible:enabled:not([readonly])');
+            let index = $canfocus.index(this) + 1;
+            if (index < $canfocus.length) {
+                $canfocus.eq(index).focus();
             }
         }
-    });
-});
-
-// --- 1. COMPILE THE DATA FROM STORAGE ---
-const getCompiledData = () => {
-    return {
-        // Combines First, Middle, and Last names into one clean string
-        hFull: (sessionStorage.getItem('husband_fname') + ' ' + 
-                sessionStorage.getItem('husband_mname') + ' ' + 
-                sessionStorage.getItem('husband_lname')).replace(/\s+/g, ' ').trim(),
-        
-        wFull: (sessionStorage.getItem('wife_fname') + ' ' + 
-                sessionStorage.getItem('wife_mname') + ' ' + 
-                sessionStorage.getItem('wife_lname')).replace(/\s+/g, ' ').trim()
-    };
-};
-
-// --- 2. TRIGGER THE AUTO-FILL ON CHECK ---
-const checkboxC = document.getElementById('attendc'); // Checkbox for letter c
-const husbandInput = document.getElementsByName('aff_1party')[0];
-const wifeInput = document.getElementsByName('aff_2party')[0];
-
-checkboxC.addEventListener('change', function() {
-    const data = getCompiledData();
-    if (this.checked) {
-        // Automatically fills Husband into the first box and Wife into the second
-        husbandInput.value = data.hFull;
-        wifeInput.value = data.wFull;
-    } else {
-        // Clears the fields if the box is unchecked
-        husbandInput.value = '';
-        wifeInput.value = '';
-    }
-});
-
-// --- 3. VICE VERSA: TYPE TO CHECK ---
-// If you type in the boxes manually, the checkbox will tick itself
-[husbandInput, wifeInput].forEach(el => {
-    el.addEventListener('input', () => {
-        checkboxC.checked = (husbandInput.value.trim() !== '' || wifeInput.value.trim() !== '');
     });
 });
 </script>

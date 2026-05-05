@@ -1558,10 +1558,10 @@ $(document).ready(function() {
 </script>
 
 <script>
-// 16. Spacebar Navigation for Date of Birth (Section 3)
+// 16. Keyboard Navigation for Date of Birth (Section 3)
 $(document).ready(function() {
     $('#bd_day, #bd_month, #bd_year').on('keydown', function(e) {
-        if (e.key === " ") {
+        if (e.key === " " || e.key === "Enter") {
             e.preventDefault(); 
             const currentId = $(this).attr('id');
             if (currentId === 'bd_day') {
@@ -1577,29 +1577,18 @@ $(document).ready(function() {
 </script>
 
 <script>
-// 17. Combined Backspace Logic: Clear All AND Jump Back
-// Pressing Backspace clears the entire input box but KEEPS it selected
+// Universal Keyboard Navigation (Enter to next, Backspace to delete char)
 $(document).ready(function() {
-    $('input[type="text"]').on('keydown', function(e) {
-        if (e.key === "Backspace") {
-            
-            // Only trigger if there is actually text in the box to delete
-            if ($(this).val() !== "") {
-                e.preventDefault(); // Stop the normal letter-by-letter deletion
-                
-                // 1. Clear the entire box instantly
-                $(this).val('');
-                
-                // 2. Alert your other scripts (like the "Not Married" lock) that the box is now empty
-                $(this).trigger('input'); 
-                
-                // 3. Save the empty box to memory directly (without blurring/deselecting)
-                if (typeof saveToMemory === "function") saveToMemory();
+    $('input, select, textarea').on('keydown', function(e) {
+        if (e.key === "Enter") {
+            if (this.tagName === 'TEXTAREA' && !e.ctrlKey) return; 
+            e.preventDefault();
+            let $canfocus = $('input, select, textarea').filter(':visible:enabled:not([readonly])');
+            let index = $canfocus.index(this) + 1;
+            if (index < $canfocus.length) {
+                $canfocus.eq(index).focus();
             }
         }
     });
 });
-
-
-
 </script>

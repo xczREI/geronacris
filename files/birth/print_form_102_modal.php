@@ -39,13 +39,13 @@
           <div class="modal-body">
             <h6 align="center" style="text-transform:uppercase;">Are you sure you want to print the <br>Form No. 102 of</h6>
             <h4 align="center">
-                <u>
+                <u id="modal-child-name-102">
                     <?php 
-                        echo strtoupper($row['child_lname']) . ', ' . strtoupper($row['child_fname']) . ' ' . strtoupper($row['child_mname']); 
+                        echo strtoupper($row['child_lname'] ?? '') . ', ' . strtoupper($row['child_fname'] ?? '') . ' ' . strtoupper($row['child_mname'] ?? ''); 
                     ?>
                 </u>
             </h4>
-            <textarea style="width: 100%; display: none;" name="remarks"><?php echo ucwords($row['remarks'] ?? ''); ?></textarea>
+            <textarea class="sync-remarks-textarea" style="width: 100%; display: none;" name="remarks"><?php echo ucwords($row['remarks'] ?? ''); ?></textarea>
           </div>
           
           <div class="modal-footer">

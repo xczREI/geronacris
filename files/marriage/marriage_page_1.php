@@ -984,21 +984,12 @@
 <script>
 document.addEventListener('keydown', function(e) {
     if (e.key === 'Enter' && (e.target.tagName === 'INPUT' || e.target.tagName === 'SELECT')) {
-        e.preventDefault();
-
         // Target Date Fields for Page 1
         if (e.target.name === 'received_date' || e.target.name === 'civil_date') {
             const now = new Date();
             const months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
             // Formats as: March 5, 2026
             e.target.value = months[now.getMonth()] + " " + now.getDate() + ", " + now.getFullYear();
-        }
-
-        // Move to next field
-        const focusable = Array.from(document.querySelectorAll('input:not([type="hidden"]):not([disabled]):not([readonly]), select:not([disabled])'));
-        const index = focusable.indexOf(e.target);
-        if (index > -1 && index < focusable.length - 1) {
-            focusable[index + 1].focus();
         }
     }
 });
@@ -1112,18 +1103,20 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         });
     });
+});
+</script>
 
-    // 3. ENTER KEY: Navigate to next box
-    document.addEventListener('keydown', function(e) {
-        if (e.key === 'Enter') {
-            const current = document.activeElement;
-            if (current.tagName === 'INPUT' || current.tagName === 'SELECT') {
-                e.preventDefault();
-                const focusable = Array.from(document.querySelectorAll('input:not([type="hidden"]):not([disabled]):not([readonly]), select:not([disabled])'));
-                const index = focusable.indexOf(current);
-                if (index > -1 && index < focusable.length - 1) {
-                    focusable[index + 1].focus();
-                }
+<script>
+// Universal Keyboard Navigation (Enter to next, Backspace to delete char)
+$(document).ready(function() {
+    $('input, select, textarea').on('keydown', function(e) {
+        if (e.key === "Enter") {
+            if (this.tagName === 'TEXTAREA' && !e.ctrlKey) return; 
+            e.preventDefault();
+            let $canfocus = $('input, select, textarea').filter(':visible:enabled:not([readonly])');
+            let index = $canfocus.index(this) + 1;
+            if (index < $canfocus.length) {
+                $canfocus.eq(index).focus();
             }
         }
     });

@@ -388,26 +388,6 @@ $(document).ready(function(){
 });
 </script>
 
-
-<!-- Move to next input on Enter key -->
-<script>
-document.addEventListener("DOMContentLoaded", function() {
-	let inputs = document.querySelectorAll(".form-control");
-	
-	inputs.forEach((input, index) => {
-		input.addEventListener("keydown", function(event) {
-			if(event.key === "Enter"){
-				event.preventDefault();
-				let nextInput = inputs[index + 1];
-				if (nextInput){
-					nextInput.focus();
-				}
-			}
-		});
-	});
-});
-</script>
-
 <!-- Auto-check "the birth" checkbox when filling child late name -->
 <script>
 document.getElementById("childlatename").addEventListener("input", function() {
@@ -678,14 +658,7 @@ $(document).ready(function() {
     // 2. ON ENTER: Force an overwrite of the current field
     $('input').on('keydown', function(e) {
         if (e.key === "Enter") {
-            e.preventDefault(); 
             syncCurrentField(this, true);
-
-            const allInputs = $('input:visible:not([disabled])');
-            const index = allInputs.index(this);
-            if (index > -1 && index < allInputs.length - 1) {
-                allInputs.eq(index + 1).focus();
-            }
         }
     });
 });
@@ -724,5 +697,22 @@ $(document).ready(function() {
 
     // 2. Refresh suggestions whenever the page loads
     updateSuggestions();
+});
+</script>
+
+<script>
+// Universal Keyboard Navigation (Enter to next, Backspace to delete char)
+$(document).ready(function() {
+    $('input, select, textarea').on('keydown', function(e) {
+        if (e.key === "Enter") {
+            if (this.tagName === 'TEXTAREA' && !e.ctrlKey) return; 
+            e.preventDefault();
+            let $canfocus = $('input, select, textarea').filter(':visible:enabled:not([readonly])');
+            let index = $canfocus.index(this) + 1;
+            if (index < $canfocus.length) {
+                $canfocus.eq(index).focus();
+            }
+        }
+    });
 });
 </script>
