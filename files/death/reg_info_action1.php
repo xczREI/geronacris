@@ -196,10 +196,12 @@ require_once 'login_db_death.php';
       try {
           $conn->begin_transaction();
 
-          // 1. Check for duplicate registry_no in no_tbl
-          $check = $conn->query("SELECT registry_no FROM no_tbl WHERE registry_no = '$registry_no'");
-          if ($check && $check->num_rows > 0) {
-              throw new Exception("Registry Number '$registry_no' already exists in the system.");
+          // 1. Check for duplicate registry_no in no_tbl (ONLY IF NOT EMPTY)
+          if (!empty($registry_no)) {
+              $check = $conn->query("SELECT registry_no FROM no_tbl WHERE registry_no = '$registry_no'");
+              if ($check && $check->num_rows > 0) {
+                  throw new Exception("Registry Number '$registry_no' already exists in the system.");
+              }
           }
 
           // 2. Insert into no_tbl first to get the auto-increment 'no'

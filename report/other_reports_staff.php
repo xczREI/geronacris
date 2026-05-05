@@ -138,29 +138,85 @@
           <div class="col-sm-2 mb-1">
             <label class="small font-weight-bold">YEAR</label>
             <select class="custom-select" id="year" name="year">
-              <?php 
-                  require_once 'login_db_birth.php';
-                  require_once 'login_db_death.php';
-                  require_once 'login_db_mrg.php';
-
-                  $conn = new mysqli($hn, $un, $pw, $db);
-                  if ($conn->connect_error) die($conn->connect_error);
-
-                  $sql = "SELECT DATE_FORMAT(reg_date,'%Y') AS yr FROM registration_tbl GROUP BY yr ORDER BY yr";
-                  $result = $conn->query($sql);  
-                  if (!$result) die ("Database access failed: " . $conn->error);
-
-                  if ($result->num_rows > 0) {
-                    echo "<option value='' style='display:none;'>-- Select Year --</option>";
-                    while($row = $result->fetch_assoc()) { 
-                      echo " <option value='".$row['yr']."'>".$row['yr']."</option>";   
-                    }
-                  } 
-              ?>
+              <option value="" style="display:none;" selected>-- Select Year --</option>
+              <?php foreach($final_years as $y) { echo "<option value='$y'>$y</option>"; } ?>
             </select>
             </div>
             <div class="col-sm-2 mb-1">
             <label class="small font-weight-bold">MONTH</label>
+            <select class="custom-select" id="month" name="month">
+                <option value="" style="display: none;" selected>-- Select Month --</option>
+                <option value="All">All</option>
+                <option value="01">January</option>
+                <option value="02">February</option>
+                <option value="03">March</option>
+                <option value="04">April</option>
+                <option value="05">May</option>
+                <option value="06">June</option>
+                <option value="07">July</option>
+                <option value="08">August</option>
+                <option value="09">September</option>
+                <option value="10">October</option>
+                <option value="11">November</option>
+                <option value="12">December</option>
+            </select>
+
+            </div>
+            <div class="col-sm-1">
+              <label class="small font-weight-bold invisible">PRINT</label>
+              <button class="btn btn-outline-danger btn-block" type="submit" name="pdf"><i class="fa fa-print"></i></button>
+            </div>
+        </div>
+      </form>      </center>
+      <div class="row" id="myTable">
+
+      </div>
+     
+    </div>
+  </div>
+
+<!--modal-->
+<?php include 'report_modal3_staff.php'; ?>
+
+<!--Javascrpt theme-->
+<script src = "../alertifyjs/alertify.min.js"></script>
+
+<script>
+  $(document).ready(function(){
+    $("#month").change(function(){
+      var month = $("#month").val();
+      var year = $("#year").val();
+
+      $.ajax({
+        type:"POST",
+        url: "other-list.php",   
+        data:{year:year, month:month},
+        cache:false,
+        success:function(data) {
+          $("#myTable").html(data);
+        }
+      }); 
+    });
+    $("#year").change(function(){
+      var month = $("#month").val();
+      var year = $("#year").val();
+
+      $.ajax({
+        type:"POST",
+        url: "other-list.php",   
+        data:{year:year, month:month},
+        cache:false,
+        success:function(data) {
+          $("#myTable").html(data);
+        }
+      });            
+    });
+  });
+</script>
+
+</body>
+</html>
+old">MONTH</label>
             <select class="custom-select" id="month" name="month">
                 <option value="" style="display: none;" selected>-- Select Month --</option>
                 <option value="All">All</option>

@@ -182,6 +182,15 @@
       $conn2 = new mysqli('localhost', 'root', '', 'geronamarriage');
       if ($conn2->connect_error) die("Connection failed: " . $conn2->connect_error);
 
+      // Check for duplicates ONLY IF NOT EMPTY
+      if (!empty($registry_no)) {
+          $check = $conn2->query("SELECT registry_no FROM no_tbl WHERE registry_no = '$registry_no'");
+          if ($check && $check->num_rows > 0) {
+              echo "<script>alert('Registry Number already exists!'); window.history.back();</script>";
+              exit;
+          }
+      }
+
       $sql = "INSERT INTO no_tbl (registry_no, status) VALUES ('$registry_no', '0')";
       if ($conn2->query($sql) === TRUE) {
           $no = $conn2->insert_id; 

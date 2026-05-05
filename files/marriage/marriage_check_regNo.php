@@ -5,9 +5,14 @@
 	$conn = new mysqli($hn, $un, $pw, $db);
 	if ($conn->connect_error) die($conn->connect_error);
 
-if(isset($_POST['registry_no'])){
+	if(isset($_POST['registry_no'])){
 	$registry_no = $_POST['registry_no'];
 	$reg_no = strtoupper($registry_no);
+
+	if (empty($registry_no)) {
+		echo "<script>document.getElementById('btn_add').disabled=false;</script>";
+		exit;
+	}
 
 	$sql = "SELECT * FROM registration_tbl NATURAL JOIN husband_tbl WHERE registry_no = '".$_POST['registry_no']."'";
     $result = $conn->query($sql);  

@@ -198,7 +198,16 @@ require_once 'login_db_death.php';
       $conn2 = new mysqli($servername, $username, $password, $dbname);
       // Check connection
       if ($conn2->connect_error) {
-        die("Connection failed: " . $conn->connect_error);
+        die("Connection failed: " . $conn2->connect_error);
+      }
+
+      // Check for duplicates ONLY IF NOT EMPTY
+      if (!empty($registry_no)) {
+          $check = $conn2->query("SELECT registry_no FROM no_tbl WHERE registry_no = '$registry_no'");
+          if ($check && $check->num_rows > 0) {
+              echo "<script>alert('Registry Number already exists!'); window.history.back();</script>";
+              exit;
+          }
       }
 
       $sql = "INSERT INTO no_tbl (registry_no, status)

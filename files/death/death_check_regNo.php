@@ -7,6 +7,11 @@
 		$registry_no = $_POST['registry_no'];
 		$reg_no = strtoupper($registry_no);
 
+		if (empty($registry_no)) {
+			echo "<script>document.getElementById('btn_add').disabled=false;</script>";
+			exit;
+		}
+
 		$sql = "SELECT * FROM registration_tbl NATURAL JOIN person_tbl WHERE registry_no = '".$_POST['registry_no']."'";
 	    $result = $conn->query($sql);  
 		if (!$result) die ("Database access failed: " . $conn->error);

@@ -10,6 +10,27 @@ if(isset($_POST["pdf"]))
     $zz = ("$yy-$mm-31");
     $data = '';
 
+    if (!empty($mm) && $mm != 'All') {
+        $dateObj = DateTime::createFromFormat('!m', $mm);
+        $monthName = strtoupper($dateObj->format('F'));
+    } else {
+        $monthName = '';
+    }
+
+    if (!empty($yy) && (empty($mm) || $mm == 'All')) {
+        $birthCondition = "(child_birth_date LIKE '$yy-%' OR child_birth_date LIKE '%$yy')";
+        $deathCondition = "(date_death LIKE '$yy-%' OR date_death LIKE '%$yy')";
+        $mrgCondition   = "(mrg_date LIKE '$yy-%' OR mrg_date LIKE '%$yy')";
+    } else if (!empty($yy) && $mm != 'All') {
+        $birthCondition = "(child_birth_date LIKE '$yy-$mm-%' OR child_birth_date LIKE '%$monthName%$yy')";
+        $deathCondition = "(date_death LIKE '$yy-$mm-%' OR date_death LIKE '%$monthName%$yy')";
+        $mrgCondition   = "(mrg_date LIKE '$yy-$mm-%' OR mrg_date LIKE '%$monthName%$yy')";
+    } else {
+        $birthCondition = "1=0";
+        $deathCondition = "1=0";
+        $mrgCondition = "1=0";
+    }
+
     if (!empty($yy) && empty($mm) || !empty($yy) && $mm == 'All') {
     $data .='   
       <h3 align="center">BIRTH<br><span style="font-size: 10px;">Month/Year:</span> '.$yy.'</h3>
@@ -26,12 +47,12 @@ if(isset($_POST["pdf"]))
             $connB = new mysqli($hn, $un, $pw, $db);
             if ($connB->connect_error) die($connB->connect_error);
 
-            $sql = "SELECT * FROM registration_tbl WHERE reg_date LIKE '$yy%'";
+            $sql = "SELECT registration_tbl.no FROM registration_tbl NATURAL JOIN child_tbl WHERE $birthCondition";
             $result = $connB->query($sql);  
             if (!$result) die ("Database access failed: " . $connB->error);
             $rows = $result->num_rows;
 
-            $sql = "SELECT COUNT(*) AS xx, reg_date, reg_user FROM registration_tbl WHERE reg_date LIKE '$yy%' GROUP BY reg_user";
+            $sql = "SELECT COUNT(*) AS xx, reg_user FROM registration_tbl NATURAL JOIN child_tbl WHERE $birthCondition GROUP BY reg_user";
             $result = $connB->query($sql);  
             if (!$result) die ("Database access failed: " . $connB->error);
 
@@ -66,12 +87,12 @@ if(isset($_POST["pdf"]))
             $connD = new mysqli($hn, $un, $pw, $db);
             if ($connD->connect_error) die($connD->connect_error);
 
-            $sql = "SELECT * FROM registration_tbl WHERE reg_date LIKE '$yy%'";
+            $sql = "SELECT registration_tbl.no FROM registration_tbl NATURAL JOIN person_tbl WHERE $deathCondition";
             $result = $connD->query($sql);  
             if (!$result) die ("Database access failed: " . $connD->error);
             $rows = $result->num_rows;
 
-            $sql = "SELECT COUNT(*) AS xx, reg_date, reg_user FROM registration_tbl WHERE reg_date LIKE '$yy%' GROUP BY reg_user";
+            $sql = "SELECT COUNT(*) AS xx, reg_user FROM registration_tbl NATURAL JOIN person_tbl WHERE $deathCondition GROUP BY reg_user";
             $result = $connD->query($sql);  
             if (!$result) die ("Database access failed: " . $connD->error);
 
@@ -106,12 +127,12 @@ if(isset($_POST["pdf"]))
             $connM = new mysqli($hn, $un, $pw, $db);
             if ($connM->connect_error) die($connM->connect_error);
 
-            $sql = "SELECT * FROM registration_tbl WHERE reg_date LIKE '$yy%'";
+            $sql = "SELECT registration_tbl.no FROM registration_tbl NATURAL JOIN marriage_tbl WHERE $mrgCondition";
             $result = $connM->query($sql);  
             if (!$result) die ("Database access failed: " . $connM->error);
             $rows = $result->num_rows;
 
-            $sql = "SELECT COUNT(*) AS xx, reg_date, reg_user FROM registration_tbl WHERE reg_date LIKE '$yy%' GROUP BY reg_user";
+            $sql = "SELECT COUNT(*) AS xx, reg_user FROM registration_tbl NATURAL JOIN marriage_tbl WHERE $mrgCondition GROUP BY reg_user";
             $result = $connM->query($sql);  
             if (!$result) die ("Database access failed: " . $connM->error);
 
@@ -149,12 +170,12 @@ if(isset($_POST["pdf"]))
             $connB = new mysqli($hn, $un, $pw, $db);
             if ($connB->connect_error) die($connB->connect_error);
 
-            $sql = "SELECT * FROM registration_tbl WHERE reg_date BETWEEN '$xx' AND '$zz'";
+            $sql = "SELECT registration_tbl.no FROM registration_tbl NATURAL JOIN child_tbl WHERE $birthCondition";
             $result = $connB->query($sql);  
             if (!$result) die ("Database access failed: " . $connB->error);
             $rows = $result->num_rows;
 
-            $sql = "SELECT COUNT(*) AS xx, reg_date, reg_user FROM registration_tbl WHERE reg_date BETWEEN '$xx' AND '$zz' GROUP BY reg_user";
+            $sql = "SELECT COUNT(*) AS xx, reg_user FROM registration_tbl NATURAL JOIN child_tbl WHERE $birthCondition GROUP BY reg_user";
             $result = $connB->query($sql); 
             if (!$result) die ("Database access failed: " . $connB->error);
 
@@ -189,12 +210,12 @@ if(isset($_POST["pdf"]))
             $connD = new mysqli($hn, $un, $pw, $db);
             if ($connD->connect_error) die($connD->connect_error);
 
-            $sql = "SELECT * FROM registration_tbl WHERE reg_date BETWEEN '$xx' AND '$zz'";
+            $sql = "SELECT registration_tbl.no FROM registration_tbl NATURAL JOIN person_tbl WHERE $deathCondition";
             $result = $connD->query($sql);  
             if (!$result) die ("Database access failed: " . $connD->error);
             $rows = $result->num_rows;
 
-            $sql = "SELECT COUNT(*) AS xx, reg_date, reg_user FROM registration_tbl WHERE reg_date BETWEEN '$xx' AND '$zz' GROUP BY reg_user";
+            $sql = "SELECT COUNT(*) AS xx, reg_user FROM registration_tbl NATURAL JOIN person_tbl WHERE $deathCondition GROUP BY reg_user";
             $result = $connD->query($sql); 
             if (!$result) die ("Database access failed: " . $connD->error);
 
@@ -229,12 +250,12 @@ if(isset($_POST["pdf"]))
             $connM = new mysqli($hn, $un, $pw, $db);
             if ($connM->connect_error) die($connM->connect_error);
 
-            $sql = "SELECT * FROM registration_tbl WHERE reg_date BETWEEN '$xx' AND '$zz'";
+            $sql = "SELECT registration_tbl.no FROM registration_tbl NATURAL JOIN marriage_tbl WHERE $mrgCondition";
             $result = $connM->query($sql);  
             if (!$result) die ("Database access failed: " . $connM->error);
             $rows = $result->num_rows;
 
-            $sql = "SELECT COUNT(*) AS xx, reg_date, reg_user FROM registration_tbl WHERE reg_date BETWEEN '$xx' AND '$zz' GROUP BY reg_user";
+            $sql = "SELECT COUNT(*) AS xx, reg_user FROM registration_tbl NATURAL JOIN marriage_tbl WHERE $mrgCondition GROUP BY reg_user";
             $result = $connM->query($sql); 
             if (!$result) die ("Database access failed: " . $connM->error);
 
@@ -300,4 +321,4 @@ $pdf->Output();
 
 }
  
- ?>  
+ ?>

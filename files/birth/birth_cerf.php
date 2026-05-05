@@ -191,35 +191,7 @@ $(document).ready(function(){
 </script>
 <!--  
 <script>
-// Force Sync Hidden Fields & Validate Before Form Submission
-$(document).ready(function() {
-    $('#addbirth_form').on('submit', function(e) {
-        
-        // 1. SAFETY LOCK: Check if Registry Number is blank
-        let regNo = $('#regno').val().trim();
-        if (regNo === "") {
-            e.preventDefault(); // Stop the save
-            alertify.dialog('alert').set({transition:'zoom',message: 'Please enter a Registry Number first!'}).show(); 
-            
-            // Open Page 1 if they are on Page 2
-            $('#birth_page_1').collapse('show');
-            $('#birth_page_2').collapse('hide');
-            
-            setTimeout(function(){ $('#regno').focus(); }, 300); // Focus the box
-            return false;
-        }
-
-        // 2. Grab whatever is currently sitting in the three date boxes
-        let finalD = $('#bd_day').val() ? $('#bd_day').val().trim() : '';
-        let finalM = $('#bd_month').val() ? $('#bd_month').val().trim() : '';
-        let finalY = $('#bd_year').val() ? $('#bd_year').val().trim() : '';
-        
-        // Combine them and shove them into the hidden field that goes to the DB
-        if(finalD && finalM && finalY) {
-            $('#child_birth_date').val(`${finalD} ${finalM} ${finalY}`);
-        }
-    });
-});
+// Synchronization and Other logic can go here
 </script> -->
 
 </body>

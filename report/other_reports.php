@@ -4,20 +4,23 @@ include ('logout_session.php');
 // 1. Gather all unique years from all 3 databases at the top
 $unique_years = array();
 
-// Helper function to safely fetch years from a specific DB
-function getDistinctYears($hn, $un, $pw, $db_name) {
+// Helper function to safely fetch years from a specific DB, table, and column
+function getDistinctYears($hn, $un, $pw, $db_name, $table, $column) {
     $years = array();
     $conn = @new mysqli($hn, $un, $pw, $db_name);
     if (!$conn->connect_error) {
-        // Safe query that avoids '0000-00-00' comparison issues in strict mode
-        $sql = "SELECT DISTINCT YEAR(reg_date) AS yr 
-                FROM registration_tbl 
-                WHERE reg_date IS NOT NULL 
-                AND reg_date > '1900-01-01'"; 
+        // Safe query that extracts the first 4 characters for year
+        $sql = "SELECT DISTINCT LEFT($column, 4) AS yr 
+                FROM $table 
+                WHERE $column IS NOT NULL 
+                AND $column != ''"; 
         $res = $conn->query($sql);
         if ($res) {
             while ($r = $res->fetch_assoc()) {
-                if (!empty($r['yr'])) $years[] = $r['yr'];
+                $y = trim($r['yr']);
+                if (is_numeric($y) && strlen($y) == 4) {
+                    $years[] = $y;
+                }
             }
         }
         $conn->close();
@@ -25,10 +28,10 @@ function getDistinctYears($hn, $un, $pw, $db_name) {
     return $years;
 }
 
-// Fetch from all 3 databases
-$unique_years = array_merge($unique_years, getDistinctYears('localhost', 'root', '', 'geronacris'));
-$unique_years = array_merge($unique_years, getDistinctYears('localhost', 'root', '', 'geronacrisdeath'));
-$unique_years = array_merge($unique_years, getDistinctYears('localhost', 'root', '', 'geronamarriage'));
+// Fetch from all 3 databases using Event Dates
+$unique_years = array_merge($unique_years, getDistinctYears('localhost', 'root', '', 'geronacris', 'child_tbl', 'child_birth_date'));
+$unique_years = array_merge($unique_years, getDistinctYears('localhost', 'root', '', 'geronacrisdeath', 'person_tbl', 'date_death'));
+$unique_years = array_merge($unique_years, getDistinctYears('localhost', 'root', '', 'geronamarriage', 'marriage_tbl', 'mrg_date'));
 
 // Clean and sort the final list
 $final_years = array_unique($unique_years);
