@@ -11,11 +11,7 @@ if ($conn->connect_error) die($conn->connect_error);
 $reg_no = $_POST['reg_no'] ?? '';
 if (!empty($_GET['reg_no'])){ $reg_no = $_REQUEST['reg_no']; }
 
-$sql = "SELECT registration_tbl.registry_no as registry_no, registration_tbl.no as no, 
-        registration_tbl.book_no, registration_tbl.page_no, registration_tbl.province, registration_tbl.municipal,
-        child_tbl.*, mother_tbl.*, father_tbl.*, att_inf_tbl.*, receive_civil_tbl.*, 
-        remarks_tbl.*, admission_paternity_tbl.*, late_reg_tbl.* 
-        FROM registration_tbl 
+$sql = "SELECT *, registration_tbl.no as no FROM registration_tbl 
         LEFT JOIN child_tbl ON registration_tbl.no = child_tbl.no 
         LEFT JOIN mother_tbl ON registration_tbl.no = mother_tbl.no 
         LEFT JOIN father_tbl ON registration_tbl.no = father_tbl.no 
@@ -407,6 +403,9 @@ if ($result->num_rows > 0) {
     // ==========================================
     // PAGE 2 
     // ==========================================
+    // ==========================================
+    // PAGE 2 
+    // ==========================================
     $pdf->AddPage('P', array(215.9, 355.6));
     
     // Apply the MIRRORED Right Margin for Page 2 
@@ -415,33 +414,45 @@ if ($result->num_rows > 0) {
     $pdf->SetFont('Arial', '', 10);
     $pdf->SetTextColor(0, 0, 0);
 
+    // --- NEW FALLBACK LOGIC ---
+    // Pulls from admission_paternity_tbl if available, otherwise concatenates from the main tables
+    $father_full_name = !empty($row['father_name']) ? $row['father_name'] : trim(($row['father_fname'] ?? '') . ' ' . ($row['father_mname'] ?? '') . ' ' . ($row['father_lname'] ?? ''));
+    $mother_full_name = !empty($row['mother_name']) ? $row['mother_name'] : trim(($row['mother_fname'] ?? '') . ' ' . ($row['mother_mname'] ?? '') . ' ' . ($row['mother_lname'] ?? ''));
+    $child_full_name  = !empty($row['child_name'])  ? $row['child_name']  : trim(($row['child_fname'] ?? '') . ' ' . ($row['child_mname'] ?? '') . ' ' . ($row['child_lname'] ?? ''));
+    
+    $birth_place_fallback = !empty($row['birth_place']) ? $row['birth_place'] : trim(($row['birth_brgy'] ?? '') . ', ' . ($row['birth_municipal'] ?? '') . ', ' . ($row['birth_province'] ?? ''));
+    $birth_place_fallback = trim($birth_place_fallback, ', '); // Cleans up trailing commas if data is missing
+
     // Father Name
     $pdf->SetXY(33, 18.5);
-    fitTextInCell($pdf, 33, 21, 77, 5, $row['father_name'] ?? '');
+    fitTextInCell($pdf, 33, 21, 77, 5, $father_full_name);
+    
     // Mother Name
     $pdf->SetXY(120, 18.5);
-    fitTextInCell($pdf, 120, 21, 77, 5, $row['mother_name'] ?? '');
+    fitTextInCell($pdf, 120, 21, 77, 5, $mother_full_name);
+    
     // Child Name
     $pdf->SetFont('Arial', '', 10);
     $pdf->SetXY(109, 23);
-    $pdf->Cell(0, 10, strtoupper($row['child_name'] ?? ''), 0, 1);
+    $pdf->Cell(0, 10, strtoupper($child_full_name), 0, 1);
     
-    // Birth Date
+    // Birth Date (Added safe check for 0000-00-00 to prevent PHP Fatal Errors)
     $pdf->SetXY(31, 27.5);
-    $date = !empty($row['child_birth_date']) ? date('F j, Y', strtotime($row['child_birth_date'])) : '';
+    $date = (!empty($row['child_birth_date']) && $row['child_birth_date'] != '0000-00-00') ? date('F j, Y', strtotime($row['child_birth_date'])) : '';
     $pdf->Cell(0, 10, strtoupper($date), 0, 1);
     
     // Birth Place
     $pdf->SetFont('Arial', '', 10);
     $pdf->SetXY(93, 27.5);
-    fitTextInCellAddress($pdf, 93, 30.5, 100, 5, $row['birth_place'] ?? '');
+    fitTextInCellAddress($pdf, 93, 30.5, 100, 5, $birth_place_fallback);
 
     // Signature Father Name
     $pdf->SetXY(22, 49.5);
-    fitTextInCell($pdf, 15, 52, 64, 5, $row['father_name'] ?? '');
+    fitTextInCell($pdf, 15, 52, 64, 5, $father_full_name);
+    
     // Signature Mother Name
     $pdf->SetXY(139, 49.5);
-    fitTextInCell($pdf, 132, 52, 64, 5, $row['mother_name'] ?? '');
+    fitTextInCell($pdf, 132, 52, 64, 5, $mother_full_name);
 
     $pdf->SetFont('Arial', '', 9.5);
     
@@ -472,10 +483,11 @@ if ($result->num_rows > 0) {
 
     // Sworn Father Name
     $pdf->SetXY(14, 71);
-    fitTextInCell($pdf, 14, 73.4, 64, 5, $row['father_name'] ?? '');
+    fitTextInCell($pdf, 14, 73.4, 64, 5, $father_full_name);
+    
     // Sworn Mother Name
     $pdf->SetXY(85  , 71);
-    fitTextInCell($pdf, 85, 73.4, 64, 5, $row['mother_name'] ?? '');
+    fitTextInCell($pdf, 85, 73.4, 64, 5, $mother_full_name);
     $pdf->SetFont('Arial', '', 9.5);
     // CTC
     $pdf->SetXY(36, 76);
