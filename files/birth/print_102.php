@@ -17,6 +17,7 @@ function showError($title, $message) {
     exit;
 }
 
+<<<<<<< HEAD
 try {
     
     // Check files existence
@@ -53,6 +54,20 @@ try {
     if (!$result) showError("Database Error", "Query failed: " . $conn->error);
 
     if ($result->num_rows === 0) showError("Record Not Found", "The system could not find a Birth Record with ID: <strong>" . htmlspecialchars($reg_no) . "</strong>");
+=======
+$sql = "SELECT *, registration_tbl.no as no FROM registration_tbl 
+        LEFT JOIN child_tbl ON registration_tbl.no = child_tbl.no 
+        LEFT JOIN mother_tbl ON registration_tbl.no = mother_tbl.no 
+        LEFT JOIN father_tbl ON registration_tbl.no = father_tbl.no 
+        LEFT JOIN att_inf_tbl ON registration_tbl.no = att_inf_tbl.no 
+        LEFT JOIN receive_civil_tbl ON registration_tbl.no = receive_civil_tbl.no 
+        LEFT JOIN remarks_tbl ON registration_tbl.no = remarks_tbl.no 
+        LEFT JOIN admission_paternity_tbl ON registration_tbl.no = admission_paternity_tbl.no 
+        LEFT JOIN late_reg_tbl ON registration_tbl.no = late_reg_tbl.no 
+        WHERE registration_tbl.no = '$reg_no' LIMIT 1";
+$result = $conn->query($sql);
+if (!$result) die ("Database access failed: " . $conn->error);
+>>>>>>> 4857b88a4be86b8850fa34bb93fa56fe294fddb0
 
     $row = $result->fetch_assoc();
 
@@ -238,9 +253,23 @@ try {
     $pdf->SetXY(127, 283.5); $pdf->Cell(0, 10, strtoupper($row['civil_date'] ?? ''), 0, 1);
     $pdf->SetXY(30, 297); $pdf->Cell(0, 10, strtoupper($row['remarks'] ?? ''), 0, 1);
 
+<<<<<<< HEAD
     // --- Page 2 Data ---
+=======
+    // Remarks
+    $pdf->SetXY(30, 297);
+    $pdf->Cell(0, 10, strtoupper($row['remarks'] ?? ''), 0, 1);
+
+    // ==========================================
+    // PAGE 2 
+    // ==========================================
+    // ==========================================
+    // PAGE 2 
+    // ==========================================
+>>>>>>> 4857b88a4be86b8850fa34bb93fa56fe294fddb0
     $pdf->AddPage('P', array(215.9, 355.6));
     $pdf->l = isset($_POST['m_right']) ? floatval($_POST['m_right']) : 0;
+<<<<<<< HEAD
     
     fitTextInCell($pdf, 33, 21, 77, 5, $row['father_name'] ?? '');
     fitTextInCell($pdf, 120, 21, 77, 5, $row['mother_name'] ?? '');
@@ -252,6 +281,51 @@ try {
     fitTextInCellAddress($pdf, 93, 30.5, 100, 5, $row['birth_place'] ?? '');
     fitTextInCell($pdf, 15, 52, 64, 5, $row['father_name'] ?? '');
     fitTextInCell($pdf, 132, 52, 64, 5, $row['mother_name'] ?? '');
+=======
+
+    $pdf->SetFont('Arial', '', 10);
+    $pdf->SetTextColor(0, 0, 0);
+
+    // --- NEW FALLBACK LOGIC ---
+    // Pulls from admission_paternity_tbl if available, otherwise concatenates from the main tables
+    $father_full_name = !empty($row['father_name']) ? $row['father_name'] : trim(($row['father_fname'] ?? '') . ' ' . ($row['father_mname'] ?? '') . ' ' . ($row['father_lname'] ?? ''));
+    $mother_full_name = !empty($row['mother_name']) ? $row['mother_name'] : trim(($row['mother_fname'] ?? '') . ' ' . ($row['mother_mname'] ?? '') . ' ' . ($row['mother_lname'] ?? ''));
+    $child_full_name  = !empty($row['child_name'])  ? $row['child_name']  : trim(($row['child_fname'] ?? '') . ' ' . ($row['child_mname'] ?? '') . ' ' . ($row['child_lname'] ?? ''));
+    
+    $birth_place_fallback = !empty($row['birth_place']) ? $row['birth_place'] : trim(($row['birth_brgy'] ?? '') . ', ' . ($row['birth_municipal'] ?? '') . ', ' . ($row['birth_province'] ?? ''));
+    $birth_place_fallback = trim($birth_place_fallback, ', '); // Cleans up trailing commas if data is missing
+
+    // Father Name
+    $pdf->SetXY(33, 18.5);
+    fitTextInCell($pdf, 33, 21, 77, 5, $father_full_name);
+    
+    // Mother Name
+    $pdf->SetXY(120, 18.5);
+    fitTextInCell($pdf, 120, 21, 77, 5, $mother_full_name);
+    
+    // Child Name
+    $pdf->SetFont('Arial', '', 10);
+    $pdf->SetXY(109, 23);
+    $pdf->Cell(0, 10, strtoupper($child_full_name), 0, 1);
+    
+    // Birth Date (Added safe check for 0000-00-00 to prevent PHP Fatal Errors)
+    $pdf->SetXY(31, 27.5);
+    $date = (!empty($row['child_birth_date']) && $row['child_birth_date'] != '0000-00-00') ? date('F j, Y', strtotime($row['child_birth_date'])) : '';
+    $pdf->Cell(0, 10, strtoupper($date), 0, 1);
+    
+    // Birth Place
+    $pdf->SetFont('Arial', '', 10);
+    $pdf->SetXY(93, 27.5);
+    fitTextInCellAddress($pdf, 93, 30.5, 100, 5, $birth_place_fallback);
+
+    // Signature Father Name
+    $pdf->SetXY(22, 49.5);
+    fitTextInCell($pdf, 15, 52, 64, 5, $father_full_name);
+    
+    // Signature Mother Name
+    $pdf->SetXY(139, 49.5);
+    fitTextInCell($pdf, 132, 52, 64, 5, $mother_full_name);
+>>>>>>> 4857b88a4be86b8850fa34bb93fa56fe294fddb0
 
     if (!function_exists('addOrdinalSuffix')) {
         function addOrdinalSuffix($num) {
@@ -262,6 +336,7 @@ try {
         }
     }
     
+<<<<<<< HEAD
     $pdf->SetXY(94.5, 65.5); $pdf->Cell(0, 10, addOrdinalSuffix((int)($row['sworn_day'] ?? 0)), 0, 1);
     $pdf->SetXY(135.5, 65.5); $pdf->Cell(0, 10, strtoupper($row['sworn_month'] ?? ''), 0, 1);
     $pdf->SetXY(173.5, 65.5); $pdf->Cell(0, 10, strtoupper($row['sworn_year'] ?? ''), 0, 1);
@@ -269,6 +344,35 @@ try {
     fitTextInCell($pdf, 85, 73.4, 64, 5, $row['mother_name'] ?? '');
     $pdf->SetXY(36, 76); $pdf->Cell(0, 10, strtoupper($row['ctc'] ?? ''), 0, 1);
     $pdf->SetXY(136, 76); $pdf->Cell(0, 10, strtoupper($row['issued_on'] ?? ''), 0, 1);
+=======
+    // Sworn Day
+    $sworn_day = addOrdinalSuffix((int)($row['sworn_day'] ?? 0));
+    $pdf->SetXY(94.5, 65.5);
+    $pdf->Cell(0, 10, strtolower($sworn_day), 0, 1);
+    // Sworn month
+    $pdf->SetXY(135.5, 65.5);
+    $pdf->Cell(0, 10, strtoupper($row['sworn_month'] ?? ''), 0, 1);
+    // Sworn year
+    $pdf->SetXY(173.5, 65.5);
+    $pdf->Cell(0, 10, strtoupper($row['sworn_year'] ?? ''), 0, 1);
+
+    // Sworn Father Name
+    $pdf->SetXY(14, 71);
+    fitTextInCell($pdf, 14, 73.4, 64, 5, $father_full_name);
+    
+    // Sworn Mother Name
+    $pdf->SetXY(85  , 71);
+    fitTextInCell($pdf, 85, 73.4, 64, 5, $mother_full_name);
+    $pdf->SetFont('Arial', '', 9.5);
+    // CTC
+    $pdf->SetXY(36, 76);
+    $pdf->Cell(0, 10, strtoupper($row['ctc'] ?? ''), 0, 1);
+    // Issued On
+    $pdf->SetXY(136, 76);
+    $pdf->Cell(0, 10, strtoupper($row['issued_on'] ?? ''), 0, 1);
+    // Issued at
+    $pdf->SetXY(14, 81);
+>>>>>>> 4857b88a4be86b8850fa34bb93fa56fe294fddb0
     fitTextInCell($pdf, 14, 83, 75, 5, $row['issued_at'] ?? '');
     fitTextInCell($pdf, 15, 111, 64, 5, $row['administer_name'] ?? '');
     fitTextInCell($pdf, 132, 102, 64, 5, $row['administer_position'] ?? '');
