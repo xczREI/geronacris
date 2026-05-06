@@ -1,4 +1,6 @@
 <?php
+error_reporting(E_ALL & ~E_DEPRECATED & ~E_NOTICE);
+ini_set('display_errors', 0);
 
   if(isset($_POST['print'])){
 
@@ -32,7 +34,16 @@
     $conn = new mysqli($hn, $un, $pw, $db);
     if ($conn->connect_error) die($conn->connect_error);
 
-    $sql = "SELECT * FROM registration_tbl NATURAL JOIN (child_tbl NATURAL JOIN mother_tbl NATURAL JOIN father_tbl NATURAL JOIN att_inf_tbl NATURAL JOIN receive_civil_tbl NATURAL JOIN remarks_tbl NATURAL JOIN admission_paternity_tbl NATURAL JOIN late_reg_tbl) WHERE no = '".$_POST['reg_no']."'";
+    $sql = "SELECT *, registration_tbl.registry_no as registry_no FROM registration_tbl 
+            LEFT JOIN child_tbl ON registration_tbl.no = child_tbl.no 
+            LEFT JOIN mother_tbl ON registration_tbl.no = mother_tbl.no 
+            LEFT JOIN father_tbl ON registration_tbl.no = father_tbl.no 
+            LEFT JOIN att_inf_tbl ON registration_tbl.no = att_inf_tbl.no 
+            LEFT JOIN receive_civil_tbl ON registration_tbl.no = receive_civil_tbl.no 
+            LEFT JOIN remarks_tbl ON registration_tbl.no = remarks_tbl.no 
+            LEFT JOIN admission_paternity_tbl ON registration_tbl.no = admission_paternity_tbl.no 
+            LEFT JOIN late_reg_tbl ON registration_tbl.no = late_reg_tbl.no 
+            WHERE registration_tbl.no = '".$_POST['reg_no']."'";
     $result = $conn->query($sql);  
     if (!$result) die ("Database access failed: " . $conn->error);
 
@@ -284,6 +295,7 @@ $pdf->SetFont('','',12);
 $pdf->Cell(65);
 $pdf->Cell(30,10,'DOCUMENTARY STAMP TAX PAID',0,0,'C');
 
+if (ob_get_length()) ob_end_clean();
 $pdf->Output();
    }
   }

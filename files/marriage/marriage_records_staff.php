@@ -2,7 +2,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-	<title>CRS-Marriage Registration</title>
+	<title>CRS-Marriage Registration (Staff)</title>
 	<meta charset="utf-8">
   	<meta name="viewport" content="width=device-width, initial-scale=1">
   	<link rel="shortcut icon" type="image/x-icon" href="../../images/logo-3.png">
@@ -23,8 +23,8 @@
     		text-transform: uppercase;
     	}
     </style>
- 
-  <style>
+
+    <style>
     #navbar{ display: none; }
     @media only screen and (max-width: 768px) {
                 /* For mobile phones: */
@@ -87,117 +87,133 @@
   <!-- Navbar links -->
   <div class="collapse navbar-collapse bg-light" id="collapsibleNavbar">
     <ul class="navbar-nav bg-dark mx-auto h-100">
-      <li class="nav-item"><a class="nav-link" id="nav-link" href="../../home_staff.php">&emsp;<i class="fa fa-clock-o fa-fw"></i>Dashboard</a></li>
-      <li class="nav-item"><a class="nav-link active" id="nav-link_active" href="../files_staff.php" >&emsp;<i class="fa fa-bookmark-o fa-fw"></i>Registration</a></li>
-      <li class="nav-item"><a class="nav-link" data-toggle="modal" href="#myreport" id="nav-link">
-      &emsp;<i class="fa fa-file-o fa-fw"></i>Report</a></li>
-      <li class="nav-item"><a class="nav-link" id="nav-link" href="../../php/logout.php">&emsp;<i class="fa fa-eject fa-fw"></i>Logout</a></li>
+		<li class="nav-item"><a class="nav-link" id="nav-link" href="../../home_staff.php">&emsp;<i class="fa fa-clock-o fa-fw"></i>Dashboard</a></li>
+		<li class="nav-item"><a class="nav-link active" id="nav-link_active" href="../files_staff.php" >&emsp;<i class="fa fa-bookmark-o fa-fw"></i>Registration</a></li>
+		<li class="nav-item"><a class="nav-link" data-toggle="modal" href="#myreport" id="nav-link">
+		&emsp;<i class="fa fa-file-o fa-fw"></i>Report</a></li>
+		<li class="nav-item"><a class="nav-link" id="nav-link" href="../../php/logout.php">&emsp;<i class="fa fa-eject fa-fw"></i>Logout</a></li>
     </ul>
   </div>
 </nav>
-
 <div class="nav-top" id="topbar">
-  <div class="media">
+	<div class="media">
   <h5 class="text-left pt-2 text-uppercase" style="font-family: century gothic;"><i class="fa fa-angle-right"></i> <?php echo $_SESSION['type']; ?> Account</h5>
     <div class="media-body">
       <h6 class="text-right mb-3">
-        <?php $type = $_SESSION['type']; if ($type == 'Admin') { ?>
+	      <?php $type = $_SESSION['type']; if ($type == 'Admin') { ?>
             <img src="../../images/img_avatar3.png" class="mr-3 mt-0 rounded-circle" style="width:40px;">
         <?php } else if ($type == 'Staff') { ?>
             <img src="../../images/img_avatar2.png" class="mr-3 mt-0 rounded-circle" style="width:40px;">
         <?php } ?>
 
-        <?php echo $_SESSION['firstname'].' '.$_SESSION['lastname']; ?>
+	      <?php echo $_SESSION['firstname'].' '.$_SESSION['lastname']; ?>
       </h6>
-    </div>
-  </div>
+	  </div>
+	</div>
 </div>
+
 
 <!--navbar-->
 <div class="row" id="row">
-  <div class="col-sm-3 bg-dark" style="border-left: 15px solid; min-height: 100vh;" id="sidebar">
-      <div class="pic" style="margin-top: 2em;">
-        <center><img src="../../images/logo.png" class="logo">
-            <h4 class="text-uppercase">Civil Registry Information<br><span class="lblspan">System</span></h4>
-        </center>
-      </div>
+  	<div class="col-sm-3 bg-dark" style="border-left: 15px solid; min-height: 100vh;" id="sidebar">
+  		<div class="pic" style="margin-top: 2em;">
+		  <center>
+			  <img src="../../images/logo.png" class="logo">
+	  			<h4 class="text-uppercase">Civil Registry Information<br><span class="lblspan">System</span></h4>
+	  		</center>
+	  	</div>
 
-  <!--nav-side-->
-    <div class="aside" style="margin-top: 3em;">
-      <nav class="navbar">
-        <ul class="navbar-nav" style="padding-bottom:6em;">
-            <li class="nav-item"><a class="nav-link" id="nav-link" href="../../home_staff.php">&emsp;<i class="fa fa-clock-o fa-fw"></i>Dashboard</a></li>
-            <li class="nav-item"><a class="nav-link active" id="nav-link_active" href="../files_staff.php" >&emsp;<i class="fa fa-bookmark-o fa-fw"></i>Registration</a></li>
-            <li class="nav-item"><a class="nav-link" data-toggle="modal" href="#myreport" id="nav-link">
-              &emsp;<i class="fa fa-file-o fa-fw"></i>Report</a></li>
-            <li class="nav-item"><a class="nav-link" id="nav-link" href="../../php/logout.php">&emsp;<i class="fa fa-eject fa-fw"></i>Logout</a></li>
-        </ul>
-      </nav>
-    </div>
+		<!--nav-side-->
+		<div class="aside" style="margin-top: 3em;">
+			<nav class="navbar">
+				<ul class="navbar-nav" style="padding-bottom:6em;">
+			  		<li class="nav-item"><a class="nav-link" id="nav-link" href="../../home_staff.php">&emsp;<i class="fa fa-clock-o fa-fw"></i>Dashboard</a></li>
+			  		<li class="nav-item"><a class="nav-link active" id="nav-link_active" href="../files_staff.php" >&emsp;<i class="fa fa-bookmark-o fa-fw"></i>Registration</a></li>
+			  		<li class="nav-item"><a class="nav-link" data-toggle="modal" href="#myreport" id="nav-link">
+			        &emsp;<i class="fa fa-file-o fa-fw"></i>Report</a></li>
+			  		<li class="nav-item"><a class="nav-link" id="nav-link" href="../../php/logout.php">&emsp;<i class="fa fa-eject fa-fw"></i>Logout</a></li>
+				</ul>
+			</nav>
+		</div>
 
-  </div><!--end col-3-->
+  	</div><!--end col-3-->
 
   	<div class="col-sm-9" style="padding-top: 7%;" id="body">
-      <div class="row">
-        <div class="col-sm-7 mb-1">
-          <input class="form-control" id="myInput" type="text" placeholder="Search..">
-        </div>
-        <div class="col-sm-3"></div>
-        <div class="col-sm-2">
-          <a class="btn btn-outline-success btn-block" href="marriage_cerf_staff.php" style="overflow:auto;">Data Entry</a>
-        </div>
-      </div>
+  		<div class="row">
+  			<div class="col-sm-7 mb-1">
+  				<input class="form-control" id="myInput" type="text" placeholder="Search..">
+  			</div>
+  			<div class="col-sm-3"></div>
+  			<div class="col-sm-2">
+  				<a class="btn btn-outline-success btn-block" href="marriage_cerf_staff.php" style=" overflow:auto;">Data Entry</a>
+  			</div>
+  		</div>
 		<br>
   		<div class="table-responsive">
-		  	<table class="table table-striped table-sm">
-			    <thead class="thead-dark">
-			      	<tr>
-				      	<th>Time Created</th>
-				        <th>Time Updated</th>
-				        <th>Registry No</th>
-				        <th>Husband Name</th>
-				        <th>Wife Name</th>
-				        <th>Marriage Date</th>
-				        <th>Edit</th>
-                <th>Delete</th>
-			      	</tr>
-			    </thead>
-		    	<tbody id="myTable">
-    <?php
-    require_once 'login_db_mrg.php';
-    $conn = new mysqli($hn, $un, $pw, $db);
-    if ($conn->connect_error) die($conn->connect_error);
+    <table class="table table-striped table-sm">
+        <thead class="thead-dark">
+            <tr>
+                <th>Time Created</th>
+                <th>Time Updated</th>
+                <th>Registry No</th>
+                <th>Husband Name</th>
+                <th>Wife Name</th>
+                <th>Marriage Date</th>
+                <th>Edit</th>
+                <th>Delete</th> </tr>
+        </thead>
+        <tbody id="myTable">
+            <?php
+            require_once 'login_db_mrg.php';
+            $conn = new mysqli($hn, $un, $pw, $db);
+            if ($conn->connect_error) die($conn->connect_error);
 
-    $sql = "SELECT * FROM registration_tbl NATURAL JOIN husband_tbl NATURAL JOIN wife_tbl NATURAL JOIN marriage_tbl ORDER BY mrg_date DESC";
-    $result = $conn->query($sql);  
-    if (!$result) die ("Database access failed: " . $conn->error);
+            $sql = "SELECT registration_tbl.registry_no, registration_tbl.no, registration_tbl.reg_user, registration_tbl.reg_date, registration_tbl.reg_time, registration_tbl.update_user, registration_tbl.update_date, registration_tbl.update_time, husband_tbl.*, wife_tbl.*, marriage_tbl.* 
+                    FROM registration_tbl 
+                    LEFT JOIN husband_tbl ON registration_tbl.no = husband_tbl.no 
+                    LEFT JOIN wife_tbl ON registration_tbl.no = wife_tbl.no 
+                    LEFT JOIN marriage_tbl ON registration_tbl.no = marriage_tbl.no 
+                    ORDER BY mrg_date DESC";
+            $result = $conn->query($sql);  
+            if (!$result) die ("Database access failed: " . $conn->error);
 
-    while($row = $result->fetch_assoc()) {
-    ?>
-    <tr>
-        <td class="tduser"><?php /* Use Admin logic here */ ?></td>
-        <td class="tduser"><?php /* Use Admin logic here */ ?></td>
-        <td class="tduser"><?php echo $row['registry_no']; ?></td>
-        <td class="tduser"><?php echo $row['husband_lname'].', '.$row['husband_fname']; ?></td>
-        <td class="tduser"><?php echo $row['wife_lname'].', '.$row['wife_fname']; ?></td>
-        <td class="tduser"><?php echo $row['mrg_date']; ?></td>
-        <td>
-            <button type="button" class="btn btn-secondary btn-sm" data-toggle="modal" data-target="#staticBackdrop<?php echo $row['no']; ?>">
-                <strong>Edit</strong>
-            </button>
-            </td>
-        <td>
-            <a href="marriage_delete_action.php?reg_no=<?php echo $row['no']; ?>" 
-               class='btn btn-danger btn-sm' 
-               onclick="return confirm('STAFF: ARE YOU SURE YOU WANT TO PERMANENTLY DELETE THIS RECORD?')">
-               <strong>Delete</strong>
-            </a>
-        </td>
-    </tr>
-    <?php } ?>
-</tbody>
-		  	</table>
-		</div>
+            while($row = $result->fetch_assoc()) {
+            ?>
+            <tr>
+                <td class="tduser">
+                    <?php 
+                        $user = !empty($row['reg_user']) ? $row['reg_user'] : 'NO USER';
+                        $rDate = (!empty($row['reg_date']) && $row['reg_date'] != '0000-00-00') ? date("m/d/Y", strtotime($row['reg_date'])) : '';
+                        $rTime = (!empty($row['reg_time']) && $row['reg_time'] != '00:00:00') ? date("h:i A", strtotime($row['reg_time'])) : '';
+                        echo $user . ($rDate || $rTime ? '<br>(' . trim("$rDate $rTime") . ')' : '<br>(No Date/Time)');
+                    ?>
+                </td>
+                <td class="tduser">
+                    <?php 
+                        $uDate = (!empty($row['update_date']) && $row['update_date'] != '0000-00-00') ? date("m/d/Y", strtotime($row['update_date'])) : 'N/A';
+                        $uTime = (!empty($row['update_time']) && $row['update_time'] != '00:00:00') ? date("h:i A", strtotime($row['update_time'])) : '';
+                        echo !empty($row['update_user']) ? $row['update_user'] . '<br>(' . trim("$uDate $uTime") . ')' : 'NO UPDATES'; 
+                    ?>
+                </td>
+                <td class="tduser"><?php echo $row['registry_no']; ?></td>
+                <td class="tduser"><?php echo $row['husband_lname'].', '.$row['husband_fname'].' '.$row['husband_mname']; ?></td>
+                <td class="tduser"><?php echo $row['wife_lname'].', '.$row['wife_fname'] .' '.$row['wife_mname']; ?></td>
+                <td class="tduser"><?php echo $row['mrg_date']; ?></td>
+                <td>
+                    <a href="marriage_cerf_edit_staff.php?reg_no=<?php echo $row['no']; ?>" class='btn btn-light btn-sm'><strong>Edit</strong></a>
+                </td>
+                <td>
+                    <a href="marriage_delete_action.php?reg_no=<?php echo $row['no']; ?>" 
+                       class='btn btn-danger btn-sm' 
+                       onclick="return confirm('ARE YOU SURE YOU WANT TO PERMANENTLY DELETE THIS RECORD?')">
+                       <strong>Delete</strong>
+                    </a>
+                </td>
+            </tr>
+            <?php } ?>
+        </tbody>
+    </table>
+</div>
 	</div>	
 </div>
 
@@ -215,7 +231,7 @@ $(document).ready(function(){
 });
 </script>
 
-<?php include '../../report/report_modal1_staff.php'; ?>
+<?php include '../../report/report_modal_staff.php'; ?>
 <!--Javascript-->
 
 <script>
@@ -240,6 +256,7 @@ $(document).ready(function(){
 
 <!--Javascrpt theme-->
 <script src = "../../alertifyjs/alertify.min.js"></script>
+
 
 </body>
 </html>

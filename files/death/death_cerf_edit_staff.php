@@ -1,94 +1,139 @@
-<?php include ('logout_session.php'); ?>
+<?php 
+include ('logout_session.php'); 
+require_once 'login_db_death.php'; 
+
+// 1. DATABASE CONNECTION
+$conn = new mysqli($hn, $un, $pw, $db);
+if ($conn->connect_error) die($conn->connect_error);
+
+// =========================================================================
+// THE "FETCHER" LOGIC (Executes when you just open the page to view it)
+// =========================================================================
+$id = $_GET['reg_no'] ?? $_GET['id'] ?? $_GET['no'] ?? ''; 
+
+if (!empty($id)) {
+    $sql = "SELECT 
+        r.registry_no, r.book_no, r.page_no, r.province AS provinces, r.municipal,
+        p.first_name AS deceased_fname, p.middle_name AS deceased_mname, p.last_name AS deceased_lname, 
+        p.sex, p.date_birth, p.date_death AS date_of_death, p.place_death AS place_of_death, 
+        p.civil_status, p.religion, p.citizen AS citizenship, p.residence, p.occupation, 
+        p.father_name AS parent_father_name, p.mother_name AS parent_mother_name,
+        p.age_time_of_death, p.age_type, p.age_day_min,
+        ar.attendant, ar.date_from, ar.date_to, ar.certify_type, ar.death_time, ar.attendant_name, ar.attendant_position, ar.attendant_address, ar.reviewed_name, ar.attendant_date, ar.reviewed_date,
+        au.autopsy_txt1, au.autopsy_txt2, au.autopsy_name, au.autopsy_address, au.autopsy_title, au.autopsy_date,
+        cd.corpse_disposal_type AS corpse_disposition, cd.burial_permit_no AS burial_no, cd.burial_date_issued AS burial_issued_date, cd.transfer_permit_no AS transfer_no, cd.transfer_date_issued AS transfer_issued_date, cd.cemetery_name_address AS cemetery,
+        dc8.immediate_cause, dc8.immediate_interval, dc8.antecedent_cause, dc8.antecedent_interval, dc8.underlying_cause, dc8.underlying_interval, dc8.other_condition_death, dc8.maternal_condition, dc8.manner_of_death AS death_manner, dc8.place_of_occurrence AS place_external_cause, dc8.autopsy,
+        dc0.mother_age, dc0.delivery_method, dc0.pregnancy_length, dc0.birth_type, dc0.if_multi_child_was, dc0.main_disease, dc0.other_disease, dc0.main_maternal_disease, dc0.other_maternal_disease, dc0.other_relevant,
+        em.embalmer_txt, em.embalmer_name, em.embalmer_address, em.embalmer_title, em.embalmer_no, em.embalmer_on, em.embalmer_at, em.embalmer_expdate,
+        ip.informant_name, ip.rel_death, ip.informant_address, ip.prepared_name, ip.prepared_position, ip.informant_date, ip.prepared_date,
+        lr.late_name, lr.late_address, lr.death_name, lr.died_on, lr.died_in, lr.buried_in, lr.buried_on, lr.attended_type, lr.attended_by, lr.late_death_cause, lr.late_reg_reason, lr.sign_day, lr.sign_month, lr.sign_year, lr.sign_at, lr.affiant_name, lr.sworn_day, lr.sworn_month, lr.sworn_year, lr.sworn_at, lr.ctc, lr.issued_on, lr.issued_at, lr.administer_name, lr.administer_position, lr.administer_address,
+        rc.received_name, rc.received_position, rc.civil_name, rc.civil_position, rc.received_date, rc.civil_date,
+        rm.remarks,
+        n.no
+    FROM no_tbl n
+    LEFT JOIN registration_tbl r ON n.no = r.no
+    LEFT JOIN person_tbl p ON n.no = p.no
+    LEFT JOIN att_rev_tbl ar ON n.no = ar.no
+    LEFT JOIN autopsy_tbl au ON n.no = au.no
+    LEFT JOIN corpse_disposal_tbl cd ON n.no = cd.no
+    LEFT JOIN death_cause_eight_days dc8 ON n.no = dc8.no
+    LEFT JOIN death_cause_zero_seven dc0 ON n.no = dc0.no
+    LEFT JOIN embalmer_tbl em ON n.no = em.no
+    LEFT JOIN inf_pre_tbl ip ON n.no = ip.no
+    LEFT JOIN late_reg_tbl lr ON n.no = lr.no
+    LEFT JOIN receive_civil_tbl rc ON n.no = rc.no
+    LEFT JOIN remarks_tbl rm ON n.no = rm.no
+    WHERE n.no = '$id' OR r.registry_no = '$id' LIMIT 1";
+
+    $result = $conn->query($sql);
+    if (!$result) die ("Database access failed: " . $conn->error);
+    $row = $result->fetch_assoc();
+    
+    if($row) { 
+        // 1. THE PHP DATE TRANSLATOR
+        $date_columns = ['date_birth', 'date_of_death', 'date_from', 'date_to', 'attendant_date', 'reviewed_date', 'burial_issued_date', 'transfer_issued_date', 'informant_date', 'prepared_date', 'received_date', 'civil_date', 'autopsy_date', 'embalmer_on', 'embalmer_expdate', 'died_on', 'buried_on', 'issued_on'];
+        
+        foreach ($date_columns as $col) {
+            if (!empty($row[$col]) && $row[$col] != '0000-00-00') {
+                $time = strtotime(str_replace('/', '-', trim($row[$col])));
+                $row[$col] = ($time !== false) ? date('Y-m-d', $time) : '';
+            } else {
+                $row[$col] = '';
+            }
+        }
+
+        // 2. THE PHP TIME TRANSLATOR
+        if (!empty($row['death_time'])) {
+            $row['death_time'] = date('H:i', strtotime($row['death_time']));
+        }
+
+        // 3. CLEAN SEX DROPDOWN
+        if(!empty($row['sex'])) {
+            $row['sex'] = ucfirst(strtolower(trim($row['sex'])));
+        }
+		// 4. SPLIT CEMETERY INTO 3 BOXES
+        $cemetery_full = $row['cemetery'] ?? '';
+        $cem_parts = explode(' | ', $cemetery_full);
+        $cemetery_name = $cem_parts[0] ?? $cemetery_full; 
+        $cemetery_mun = $cem_parts[1] ?? '';
+        $cemetery_prov = $cem_parts[2] ?? '';
+    } else {
+        $row = [];
+    }
+}
+?>
 <!DOCTYPE html>
 <html>
 <head>
-	<title>CRS-Death Registration</title>
-	<meta charset="utf-8">
-  	<meta name="viewport" content="width=device-width, initial-scale=1">
-  	<link rel="shortcut icon" type="image/x-icon" href="../../images/logo-3.png">
-	<link rel="stylesheet" type="text/css" href="../../bootstrap4/css/bootstrap.min.css"/>
-    <script src="../../bootstrap4/jquery/jquery-3.3.1.min.js" type="text/javascript"></script>
-    <script src="../../bootstrap4/js/bootstrap.min.js"></script>
-    <link href="../../bootstrap4/font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css">
-    <link rel="stylesheet" href="../../alertifyjs/css/alertify.min.css"/>
-    <link rel="stylesheet" href="../../alertifyjs/css/themes/default.min.css"/>
-    <link href="../../css/style_css.css" rel="stylesheet" type="text/css">
+<title>CRS-Death Registration (Staff Edit)</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="shortcut icon" type="image/x-icon" href="../../images/logo-3.png">
+  <link rel="stylesheet" type="text/css" href="../../bootstrap4/css/bootstrap.min.css"/>
+  <script src="../../bootstrap4/jquery/jquery-3.3.1.min.js" type="text/javascript"></script>
+  <script src="../../bootstrap4/js/bootstrap.min.js"></script>
+  <link href="../../bootstrap4/font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+  <link rel="stylesheet" href="../../alertifyjs/css/alertify.min.css"/>
+  <link rel="stylesheet" href="../../alertifyjs/css/themes/default.min.css"/>
+  <link href="../../css/style_css.css" rel="stylesheet" type="text/css">
 
-	<style>
-		input, select{ 
-			text-transform: uppercase;
-		}
-		textarea{ 
-	    	text-transform: uppercase;
-	    }
-	</style>
-    
-     <style>
-	    #navbar{ display: none; }
-	    .coll{ overflow:scroll; height:50em; }
-	    @media only screen and (max-width: 768px) {
-	                /* For mobile phones: */
-		  #navbar{ display: block; display: flex;}
-	      #topbar{ display: none;  }
-	      #sidebar{ display: none; }
-	      #body{ padding-left: 12%; }
-	      .navbar-collapse {
-	        padding: 0;
-	        width: 50%;
-	        position: absolute;
-	        top: 72px;
-	        right: 20px;
-	        z-index: 1000;
-	      }
-	      .navbar-collapse #nav-link_active, #nav-link{ 
-	        font-size:13px; 
-	        font-family: century gothic;
-	        text-transform: uppercase;
-	        color: white;
-	        display:  block;
-	        padding: 10px;
-	        transition: all 0.3s ease;
-	        letter-spacing: 1px;
-	      }
-	      .coll{ overflow:scroll; height:30em; }
-	      #modal2A{ overflow:scroll; height:30em; }
-	    }
-  	</style>
-
+  <style>
+    input, select { text-transform: uppercase; }
+    textarea { text-transform: uppercase; }
+    #navbar{ display: none; }
+    @media only screen and (max-width: 768px) {
+      #navbar{ display: block; display: flex;}
+      #topbar{ display: none;  }
+      #sidebar{ display: none; }
+      #body{ padding-left: 12%; }
+      .navbar-collapse {
+        padding: 0; width: 50%; position: absolute; top: 72px; right: 20px; z-index: 1000;
+      }
+      .navbar-collapse #nav-link_active, #nav-link { font-size:13px; font-family: century gothic; text-transform: uppercase; color: white; display: block; padding: 10px; transition: all 0.3s ease; letter-spacing: 1px; }
+    }
+  </style>
 </head>
 <body>
 
-<!-- nav top -->
 <nav class="navbar navbar-expand-md bg-dark navbar-dark" id="navbar">
-  <!-- Brand -->
   <a class="navbar-brand" href="#">
     <div class="media pl-1 mb-3">
       <div class="media-body">
         <h6 class="text-left mb-3 text-light">
-          <?php $type = $_SESSION['type']; if ($type == 'Admin') { ?>
-              <img src="../../images/img_avatar3.png" class="mr-3 mt-0 rounded-circle" style="width:40px;">
-          <?php } else if ($type == 'Staff') { ?>
-              <img src="../../images/img_avatar2.png" class="mr-3 mt-0 rounded-circle" style="width:40px;">
-          <?php } ?>
-
+          <img src="../../images/img_avatar2.png" class="mr-3 mt-0 rounded-circle" style="width:40px;">
           <?php echo $_SESSION['firstname'].' '.$_SESSION['lastname']; ?>
         </h6>
       </div>
     </div>
   </a>
-
-  <!-- Toggler/collapsibe Button -->
   <button class="navbar-toggler mr-2" type="button" data-toggle="collapse" data-target="#collapsibleNavbar" style="float: right;">
     <span class="navbar-toggler-icon"></span>
   </button>
-
-  <!-- Navbar links -->
   <div class="collapse navbar-collapse bg-light" id="collapsibleNavbar">
     <ul class="navbar-nav bg-dark mx-auto h-100">
 		<li class="nav-item"><a class="active nav-link" id="nav-link" href="../../home_staff.php">&emsp;<i class="fa fa-clock-o fa-fw"></i>Dashboard</a></li>
         <li class="nav-item"><a class="nav-link" id="nav-link_active" href="../files_staff.php" >&emsp;<i class="fa fa-bookmark-o fa-fw"></i>Registration</a></li>
-        <li class="nav-item"><a class="nav-link" data-toggle="modal" href="#myreport" id="nav-link">
-        &emsp;<i class="fa fa-file-o fa-fw"></i>Report</a></li>
+        <li class="nav-item"><a class="nav-link" data-toggle="modal" href="#myreport" id="nav-link">&emsp;<i class="fa fa-file-o fa-fw"></i>Report</a></li>
         <li class="nav-item"><a class="nav-link" id="nav-link" href="../../php/logout.php">&emsp;<i class="fa fa-eject fa-fw"></i>Logout</a></li>
     </ul>
   </div>
@@ -96,163 +141,276 @@
 
 <div class="nav-top" id="topbar">
 	<div class="media">
-  		<h5 class="text-left pt-2 text-uppercase" style="font-family: century gothic;"><i class="fa fa-angle-right"></i> <?php echo $_SESSION['type']; ?> Account</h5>
+	    <h5 class="text-left pt-2 text-uppercase" style="font-family: century gothic;"><i class="fa fa-angle-right"></i> STAFF Account</h5>
 	    <div class="media-body">
 	      <h6 class="text-right mb-3">
-		      <?php $type = $_SESSION['type']; if ($type == 'Admin') { ?>
-	            <img src="../../images/img_avatar3.png" class="mr-3 mt-0 rounded-circle" style="width:40px;">
-	        <?php } else if ($type == 'Staff') { ?>
-	            <img src="../../images/img_avatar2.png" class="mr-3 mt-0 rounded-circle" style="width:40px;">
-	        <?php } ?>
-
-		      <?php echo $_SESSION['firstname'].' '.$_SESSION['lastname']; ?>
+	        <img src="../../images/img_avatar2.png" class="mr-3 mt-0 rounded-circle" style="width:40px;">
+		    <?php echo $_SESSION['firstname'].' '.$_SESSION['lastname']; ?>
 	      </h6>
 		</div>
 	</div>
 </div>
 
-<!--navbar-->
 <div class="row" id="row">
-  	<div class="col-sm-3 bg-dark" style="border-left: 15px solid;" id="sidebar">
-      	<div class="pic" style="margin-top: 2em;">
+  	<div class="col-sm-3 bg-dark" style="border-left: 15px solid; min-height: 100vh;" id="sidebar">
+	    <div class="pic" style="margin-top: 2em;">
 	        <center><img src="../../images/logo-3.png" class="logo">
 	            <h4 class="text-uppercase">Civil Registry Information<br><span class="lblspan">System</span></h4>
-	        </center>
-    	</div>
-
-	  <!--nav-side-->
+ 	       </center>
+        </div>
 	    <div class="aside" style="margin-top: 3em;">
 	      <nav class="navbar">
 	        <ul class="navbar-nav" style="padding-bottom:6em;">
 	            <li class="nav-item"><a class="active nav-link" id="nav-link" href="../../home_staff.php">&emsp;<i class="fa fa-clock-o fa-fw"></i>Dashboard</a></li>
 	            <li class="nav-item"><a class="nav-link" id="nav-link_active" href="../files_staff.php" >&emsp;<i class="fa fa-bookmark-o fa-fw"></i>Registration</a></li>
-	            <li class="nav-item"><a class="nav-link" data-toggle="modal" href="#myreport" id="nav-link">
-	              &emsp;<i class="fa fa-file-o fa-fw"></i>Report</a></li>
+	            <li class="nav-item"><a class="nav-link" data-toggle="modal" href="#myreport" id="nav-link">&emsp;<i class="fa fa-file-o fa-fw"></i>Report</a></li>
 	            <li class="nav-item"><a class="nav-link" id="nav-link" href="../../php/logout.php">&emsp;<i class="fa fa-eject fa-fw"></i>Logout</a></li>
 	        </ul>
 	      </nav>
 	    </div>
-
-  	</div><!--end col-3-->
+  	</div>
   
   	<div class="col-sm-9" style="padding-top: 7%;" id="body">
-  		<div id="accordion">
-  			<div class="row">
-		  		<div class="col-sm-8 mb-1">
-	  				<a href="death_records_staff.php" class="btn btn-light"><i class="fa fa-angle-double-left"></i> Back</a>
-			  		<button data-toggle="collapse" data-target="#death_page_1" id="page1" class="btn btn-outline-info">Page 1</button>
-					<button data-toggle="collapse" data-target="#death_page_2" id="page2" class="btn btn-outline-info">Page 2</button>
-				</div>
-				<div class="col-sm-2 mb-1 pr-0">
-					<button type="button" id="edit_btn" class="btn btn-outline-dark btn-block" data-toggle="modal" data-target="#my2A">Print Form No. 2A</button>
-				</div>
-				<div class="col-sm-2 pr-0">
-					<button type="button" id="edit_btn" class="btn btn-outline-dark btn-block" data-toggle="modal" data-target="#my103">Print Form No. 103</button>
-				</div>
-			</div>
- 
-			<?php
-				require_once 'login_db_death.php';
-
-				$conn = new mysqli($hn, $un, $pw, $db);
-				if ($conn->connect_error) die($conn->connect_error);
-
-				$reg_no=null;
-				if (!empty($_GET['reg_no'])){ $reg_no = $_REQUEST['reg_no']; }
-
-				$sql = "SELECT registration_tbl.registry_no as registry_no, registration_tbl.no as no, 
-                        registration_tbl.book_no, registration_tbl.page_no, registration_tbl.province, registration_tbl.municipal,
-                        person_tbl.*, death_cause_eight_days.*, att_rev_tbl.*, corpse_disposal_tbl.*, 
-                        inf_pre_tbl.*, receive_civil_tbl.*, remarks_tbl.*, death_cause_zero_seven.*, 
-                        autopsy_tbl.*, embalmer_tbl.*, late_reg_tbl.*
-                        FROM registration_tbl 
-                        LEFT JOIN person_tbl ON registration_tbl.no = person_tbl.no 
-                        LEFT JOIN death_cause_eight_days ON registration_tbl.no = death_cause_eight_days.no 
-                        LEFT JOIN att_rev_tbl ON registration_tbl.no = att_rev_tbl.no 
-                        LEFT JOIN corpse_disposal_tbl ON registration_tbl.no = corpse_disposal_tbl.no 
-                        LEFT JOIN inf_pre_tbl ON registration_tbl.no = inf_pre_tbl.no 
-                        LEFT JOIN receive_civil_tbl ON registration_tbl.no = receive_civil_tbl.no 
-                        LEFT JOIN remarks_tbl ON registration_tbl.no = remarks_tbl.no 
-                        LEFT JOIN death_cause_zero_seven ON registration_tbl.no = death_cause_zero_seven.no 
-                        LEFT JOIN autopsy_tbl ON registration_tbl.no = autopsy_tbl.no 
-                        LEFT JOIN embalmer_tbl ON registration_tbl.no = embalmer_tbl.no 
-                        LEFT JOIN late_reg_tbl ON registration_tbl.no = late_reg_tbl.no 
-                        WHERE registration_tbl.no = '$reg_no'";
-				$result = $conn->query($sql);  
-				if (!$result) die ("Database access failed: " . $conn->error);
-
-				if ($result->num_rows > 0) {
-	    			while($row = $result->fetch_assoc()) { 
-			?>
-
-			<form method="post" action="death_cerf_update_action_staff.php" id="adddeath_form">
-				<input type="hidden" name="reg_no" value="<?php echo $row['no']; ?>">
-				<div id="death_page_1" class="collapse coll show" data-parent="#accordion">
-				<?php
-				    include 'death_page_1_edit.php';
-				?>
-				</div>
-		  		<div id="death_page_2" class="collapse coll" data-parent="#accordion">
-	    		<?php
-				    include 'death_page_2_edit.php';
-				?>
-		  		</div>
-		  		<br>
-		     	<button type="submit" class="btn btn-info btn-block" name="update_death" id="btn_add" style="font-weight:bold; letter-spacing:5px; font-size:20px;">UPDATE</button>
-		     	<br>
-			</form>
-			<?php 
-				}
-			} 
-			?>
-		</div>
-		
-  	</div>
+    <div class="container-fluid mb-5">
+        <form action="death_cerf_update_action_staff.php" method="POST">
+            <input type="hidden" name="reg_no" value="<?php echo $row['no'] ?? $id; ?>">
+            <div class="card shadow">
+                
+                <div class="card-header bg-white pb-3 pt-4 border-bottom-0">
+                    <div class="row align-items-center">
+                        
+                        <div class="col-md-3 d-flex align-items-center">
+                            <a href="death_records_staff.php" class="text-secondary mr-3" style="text-decoration: none; font-size: 14px;">&laquo; Back</a>
+                            <a class="btn btn-outline-info btn-sm active mr-2" data-toggle="tab" href="#page1" role="tab" style="border-radius:0;">Page 1</a>
+                            <a class="btn btn-outline-info btn-sm" data-toggle="tab" href="#page2" role="tab" style="border-radius:0;">Page 2</a>
+                        </div>
+                        
+                        <div class="col-md-9 d-flex justify-content-between">
+                            <button type="button" class="btn btn-light border py-1 font-weight-bold" style="background: white; width: 32%;" onclick="openLivePreview()">Preview</button>
+                            
+                            <a href="print_103.php?no=<?php echo $row['no'] ?? $id; ?>" target="_blank" class="btn btn-light border py-1" style="background: white; width: 32%; text-align: center; text-decoration: none; color: black; font-size: 13px;">Print Form No. 103</a>
+                            
+                            <a href="print_2A.php?no=<?php echo $row['no'] ?? $id; ?>" target="_blank" class="btn btn-light border py-1" style="background: white; width: 32%; text-align: center; text-decoration: none; color: black; font-size: 13px;">Print Form No. 2A</a>
+                        </div>
+                        
+                    </div>
+                </div>
+                <div class="card-body pt-0">
+                    <div class="tab-content">
+                        <div class="tab-pane fade show active" id="page1" role="tabpanel">
+                            <?php include 'death_page_1_edit.php'; ?>
+                        </div>
+                        <div class="tab-pane fade" id="page2" role="tabpanel">
+                            <?php include 'death_page_2_edit.php'; ?>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="card-footer text-right py-3">
+                    <a href="death_records_staff.php" class="btn btn-secondary mr-2">Cancel</a>
+                    <button type="submit" name="update_death" class="btn btn-info px-5 font-weight-bold">SAVE ALL CHANGES</button>
+                </div>
+            </div>
+        </form>
+    </div>
+  </div>  
 </div>
 
-	<?php  
-		include 'print_form_2A_modal.php';
-		include 'print_form_103_modal.php';
-	?>
-
 <?php include '../../report/report_modal1_staff.php'; ?>
-<!--Javascript-->
-<script src = "../../js/death_attendant1.js"></script>
-<script src = "../../js/death_cerf_att_js.js"></script>
-<script src = "../../js/death_delayed_registry_jse.js"></script>
-<script src = "../../js/death_maternal_condition.js"></script>
-<script src = "../../js/death_time_js.js"></script>
-<script src = "../../js/date_db.js"></script>
-<script src = "../../js/input_no_only.js"></script>
-<script src = "../../js/input_txt_only.js"></script>
-<script src = "../../js/inputs.js"></script>
 
-<script>
-$(document).ready(function(){
-    $(".regNo").keyup(function(){
-	  	var registryno = $(this).val();
-	    $.ajax({
-	      url:"death_check_regNo.php",
-	      method:"POST",
-	      data:{registry_no:registryno},
-	      dataType:"text",
-	      success:function(html){
-	        $("#error").html(html);
-	      }
-	    });
-	});
-});
-</script>
+<!-- LIVE PREVIEW MODAL -->
+<div class="modal fade" id="livePreviewModal" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-xl" role="document">
+        <div class="modal-content">
+            <div class="modal-header bg-dark text-white">
+                <h5 class="modal-title">Live Preview (Data Entry Review)</h5>
+                <button type="button" class="close text-white" data-dismiss="modal">&times;</button>
+            </div>
+            <div class="modal-body" id="livePreviewBody" style="background-color: #f4f4f4;"></div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" onclick="window.print()"><i class="fa fa-print"></i> Print This Preview</button>
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
 
-<script>
-$(document).ready(function(){
-	var x = new Date();
-    document.getElementById("time").value = x.toLocaleTimeString();
-});
-</script>
-
-<!--Javascrpt theme-->
 <script src = "../../alertifyjs/alertify.min.js"></script>
 
+<script>
+$(document).ready(function() {
+    
+    // UNBIND OLD CONFLICTING SCRIPTS
+    $("input[name='date_birth'], input[name='date_of_death'], select[name='sex'], select[name='autopsy']").off();
+    $("input[name='maternal_condition']").off();
+
+    // 1. Radio Buttons for 19c
+    $("input[name='maternal_condition']").on('change', function() {
+        if($(this).is(':checked')) {
+            $("input[name='maternal_condition']").not(this).prop('checked', false);
+        }
+    });
+
+    // 2. Smart Age, Infant Locks, and Maternal Locks
+    function runSmartLogic() {
+        var birthVal = $("input[name='date_birth']").val();
+        var deathVal = $("input[name='date_of_death']").val();
+        var allAgeFields = $("input[name='age_at_death'], input[name='age_one_month'], input[name='age_one_day'], input[name='age_hrs_hrs'], input[name='age_hrs_min']");
+
+        if (birthVal && deathVal) {
+            var dob = new Date(birthVal);
+            var dod = new Date(deathVal);
+            if (dod >= dob) {
+                var years = dod.getFullYear() - dob.getFullYear();
+                var months = dod.getMonth() - dob.getMonth();
+                var days = dod.getDate() - dob.getDate();
+                if (days < 0) { months--; days += new Date(dod.getFullYear(), dod.getMonth(), 0).getDate(); }
+                if (months < 0) { years--; months += 12; }
+
+                allAgeFields.val('').prop('readonly', false).css('background-color', '#fff');
+
+                if (years >= 1) {
+                    $("input[name='age_at_death']").val(years);
+                    $("input[name='age_one_month'], input[name='age_one_day'], input[name='age_hrs_hrs'], input[name='age_hrs_min']").val('N/A').prop('readonly', true).css('background-color', '#e9ecef');
+                } else if (months > 0 || days > 0) {
+                    $("input[name='age_one_month']").val(months);
+                    $("input[name='age_one_day']").val(days);
+                    $("input[name='age_at_death'], input[name='age_hrs_hrs'], input[name='age_hrs_min']").val('N/A').prop('readonly', true).css('background-color', '#e9ecef');
+                } else if (years === 0 && months === 0 && days === 0) {
+                    $("input[name='age_at_death'], input[name='age_one_month'], input[name='age_one_day']").val('N/A').prop('readonly', true).css('background-color', '#e9ecef');
+                }
+            }
+        }
+
+        var yrs = parseInt($("input[name='age_at_death']").val()) || 0;
+        var mos = parseInt($("input[name='age_one_month']").val()) || 0;
+        var dys = parseInt($("input[name='age_one_day']").val()) || 0;
+        
+        var infantFields = ['mother_age', 'delivery_method', 'pregnancy_length', 'birth_type', 'multi_birth_was', 'main_disease', 'other_disease', 'main_maternal_disease', 'other_maternal_disease', 'other_relevant'];
+        var adultFields = ['immediate_cause', 'immediate_interval', 'antecedent_cause', 'antecedent_interval', 'underlying_cause', 'underlying_interval', 'other_condition_death'];
+
+        if (yrs > 0 || mos > 0 || dys > 7) {
+            infantFields.forEach(function(f) { $("input[name='" + f + "']").val('N/A').prop('readonly', true).css('background-color', '#e9ecef'); });
+            adultFields.forEach(function(f) { var el = $("input[name='" + f + "']"); if (el.prop('readonly')) { el.prop('readonly', false).css('background-color', '#fff'); if(el.val() === 'N/A') el.val(''); } });
+        } else {
+            infantFields.forEach(function(f) { var el = $("input[name='" + f + "']"); if (el.prop('readonly')) { el.prop('readonly', false).css('background-color', '#fff'); if(el.val() === 'N/A') el.val(''); } });
+            adultFields.forEach(function(f) { $("input[name='" + f + "']").val('N/A').prop('readonly', true).css('background-color', '#e9ecef'); });
+        }
+
+        var sex = $("select[name='sex']").val() || "";
+        var maternalCheckboxes = $("input[name='maternal_condition']");
+        if (sex.toUpperCase() === 'FEMALE' && yrs >= 15 && yrs <= 49) {
+            maternalCheckboxes.prop('disabled', false);
+            $("#none_choices").css('pointer-events', 'auto');
+            if ($("#none_choices").data('auto-checked')) { $("#none_choices").prop('checked', false); $("#none_choices").data('auto-checked', false); }
+        } else {
+            maternalCheckboxes.prop('disabled', true).prop('checked', false);
+            $("#none_choices").prop('disabled', false).prop('checked', true).css('pointer-events', 'none');
+            $("#none_choices").data('auto-checked', true);
+        }
+    }
+
+    // 3. Sync to Page 2 Affidavit
+    function syncToPage2() {
+        var fname = $("input[name='deceased_fname']").val() || "";
+        var mname = $("input[name='deceased_mname']").val() || "";
+        var lname = $("input[name='deceased_lname']").val() || "";
+        $("input[name='death_name']").val((fname + " " + mname + " " + lname).replace(/\s+/g, ' ').trim());
+        $("input[name='died_on']").val($("input[name='date_of_death']").val());
+        $("input[name='died_in']").val($("input[name='place_of_death']").val());
+        var informant = $("input[name='informant_name']").val() || "";
+        $("input[name='late_name'], input[name='affiant_name']").val(informant);
+        $("input[name='late_address']").val($("input[name='informant_address']").val() || "");
+    }
+
+    // 4. Autopsy Toggle
+    function toggleAutopsyFields() {
+        var autopsySelect = $("select[name='autopsy']").val() || "";
+        var autopsyFields = ['autopsy_txt1', 'autopsy_txt2', 'autopsy_name', 'autopsy_date', 'autopsy_title', 'autopsy_address'];
+        if (autopsySelect.toUpperCase() === 'NO') {
+            autopsyFields.forEach(function(f) { $("input[name='" + f + "']").val('N/A').prop('readonly', true).css('background-color', '#e9ecef'); });
+        } else {
+            autopsyFields.forEach(function(f) { var el = $("input[name='" + f + "']"); el.prop('readonly', false).css('background-color', '#fff'); if(el.val() === 'N/A') el.val(''); });
+        }
+    }
+
+    // Bind triggers to instantly fire when typing or clicking
+    $("select[name='sex']").on('change', runSmartLogic);
+    $("select[name='autopsy']").on('change', toggleAutopsyFields);
+    $("input[name='date_birth'], input[name='date_of_death']").on('change', function() { runSmartLogic(); syncToPage2(); });
+    $("input[name='age_at_death'], input[name='age_one_month'], input[name='age_one_day'], input[name='deceased_fname'], input[name='deceased_mname'], input[name='deceased_lname'], input[name='place_of_death'], input[name='informant_name'], input[name='informant_address']").on('keyup change', function() { runSmartLogic(); syncToPage2(); });
+
+    // Fire everything instantly on load so logic applies to the pulled data
+    runSmartLogic();
+    syncToPage2();
+    toggleAutopsyFields();
+
+    // =======================================================================
+    // UNIVERSAL KEYBOARD NAVIGATION
+    // =======================================================================
+
+    const sequences = [
+        ['person_fname', 'person_mname', 'person_lname'],
+        ['cemetery', 'municipalityCemetery', 'provinceCemetery']
+    ];
+
+    $('form').on('keydown', 'input, select, textarea', function(e) {
+        if (e.key === 'Enter' || e.keyCode === 13) {
+            const id = $(this).attr('id');
+            const name = $(this).attr('name');
+            
+            // Check for horizontal sequences first
+            for (const seq of sequences) {
+                const idx = seq.indexOf(id) !== -1 ? seq.indexOf(id) : seq.indexOf(name);
+                if (idx !== -1 && idx < seq.length - 1) {
+                    e.preventDefault();
+                    const nextField = seq[idx + 1];
+                    $(`[id="${nextField}"], [name="${nextField}"]`).first().focus();
+                    return;
+                }
+            }
+
+            // Otherwise, move to next focusable element
+            if (this.tagName === 'TEXTAREA' && !e.ctrlKey) return; 
+            e.preventDefault(); 
+            
+            var $focusable = $(this).closest('form').find('input, select, textarea').filter(':visible:not([readonly]):not([disabled])');
+            var currentIndex = $focusable.index(this);
+            var nextIndex = currentIndex + 1;
+
+            if (nextIndex < $focusable.length) {
+                $focusable.eq(nextIndex).focus();
+            }
+        }
+    });
+
+});
+
+function openLivePreview() {
+    var $p1 = $('#page1'), $p2 = $('#page2');
+    var $c1 = $p1.clone(), $c2 = $p2.clone();
+    $([$c1, $c2]).each(function() {
+        this.find('script').remove();
+        this.removeClass('tab-pane fade show active');
+        this.css({'display': 'block', 'visibility': 'visible', 'height': 'auto', 'margin-bottom': '30px'});
+        this.find('*').removeAttr('id');
+    });
+    syncValues($p1, $c1); syncValues($p2, $c2);
+    $([$c1, $c2]).each(function() {
+        this.find('input, textarea').prop('readonly', true).css({'background-color': 'transparent', 'border': 'none'});
+        this.find('select, input[type="checkbox"], input[type="radio"]').prop('disabled', true);
+    });
+    $('#livePreviewBody').empty().append($c1).append('<hr style="border: 2px dashed #000;">').append($c2);
+    $('#livePreviewModal').modal('show');
+}
+
+function syncValues($source, $target) {
+    $source.find('input, select, textarea').each(function(index) {
+        var $srcEl = $(this), $tgtEl = $target.find('input, select, textarea').eq(index);
+        if ($srcEl.is(':checkbox, :radio')) $tgtEl.prop('checked', $srcEl.prop('checked'));
+        else $tgtEl.val($srcEl.val());
+    });
+}
+</script>
 </body>
 </html>

@@ -2,7 +2,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-	<title>CRS-Birth Registration</title>
+	<title>CRS-Adopted Registration (Staff)</title>
 	<meta charset="utf-8">
   	<meta name="viewport" content="width=device-width, initial-scale=1">
   	<link rel="shortcut icon" type="image/x-icon" href="../../images/logo-3.png">
@@ -147,7 +147,7 @@
 		<br>
   		<div class="table-responsive">
   		<h5 style="text-transform:uppercase;" align="center">-- Adopted Records --</h5>
-		  	<table class="table table-hover table-sm">
+		  	<table class="table table-striped table-sm">
 			    <thead class="thead-dark">
 			      	<tr>
 				        <th>Time Created</th>
@@ -157,6 +157,7 @@
 				        <th>Birthdate</th>
 				        <th>Gender</th>
 				        <th>Edit</th>
+				        <th>Delete</th>
 			      	</tr>
 			    </thead>
 		    	<tbody id="myTable">
@@ -166,17 +167,17 @@
             $conn = new mysqli($hn, $un, $pw, $db);
             if ($conn->connect_error) die($conn->connect_error);
 
-				      $sql= "SELECT * FROM registration_tbl NATURAL JOIN child_tbl ORDER BY child_lname ASC";
+				      $sql= "SELECT registration_tbl.registry_no, registration_tbl.no, registration_tbl.reg_user, registration_tbl.reg_date, registration_tbl.reg_time, registration_tbl.update_user, registration_tbl.update_date, registration_tbl.update_time, child_tbl.* 
+                             FROM registration_tbl 
+                             LEFT JOIN child_tbl ON registration_tbl.no = child_tbl.no 
+                             ORDER BY child_lname ASC";
 				      $result = $conn->query($sql);  
 				      if (!$result) die ("Database access failed: " . $conn->error);
 
-				      $rows = $result->num_rows;
-
-				      for ($j = 0 ; $j < $rows ; ++$j)
+				      while($row = $result->fetch_assoc())
 				      {
-				      $result->data_seek($j);
-				      $row = $result->fetch_array(MYSQLI_ASSOC);
 				  	?>
+				  	<tr>
 	                  <td class="tduser" scope="rows"><?php echo $row['reg_user'].'<br>('.date_format(date_create($row['reg_date']),"m/d/Y").' '.date_format(date_create($row['reg_time']),'h:i A').')'; ?></td>
 	                  <td class="tduser"><?php echo $row['update_user'].'<br>('.date_format(date_create($row['update_date']),"m/d/Y").' '.date_format(date_create($row['update_time']),'h:i A').')'; ?></td>
 	                  <td class="tduser"><?php echo $row['registry_no']; ?></td>
@@ -186,6 +187,13 @@
 	                  <td>
 	                      <a href="legal_cerf_edit_staff.php?reg_no=<?php echo $row['no']; ?>" class='btn btn-light btn-sm'><strong>Edit</strong></a>
 	                  </td>
+                      <td>
+                        <a href="remove.php?reg_no=<?php echo $row['no']; ?>" 
+                           class="btn btn-danger btn-sm" 
+                           onclick="return confirm('WARNING: Are you sure you want to permanently delete this record?')">
+                            <strong>Delete</strong>
+                        </a>
+                      </td>
 	              	</tr>
 	              	<?php
 	                }
@@ -210,7 +218,7 @@ $(document).ready(function(){
 });
 </script>
 
-<?php include '../../report/report_modal1_staff.php'; ?>
+<?php include '../../report/report_modal_staff.php'; ?>
 
 
 <!--Javascript-->

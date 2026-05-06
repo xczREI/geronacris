@@ -2,7 +2,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-	<title>CRS-Setting</title>
+<title>GERONA CRIS-Setting</title>
 	<meta charset="utf-8">
   	<meta name="viewport" content="width=device-width, initial-scale=1">
   	<link rel="shortcut icon" type="image/x-icon" href="../images/logo-3.png">
@@ -14,7 +14,7 @@
     <link rel="stylesheet" href="../alertifyjs/css/themes/default.min.css"/>
     <link href="../css/style_css.css" rel="stylesheet" type="text/css">
 
-<style>
+  <style>
     #navbar{ display: none; }
     #pic{ width: 80%; }
     @media only screen and (max-width: 768px) {
@@ -120,10 +120,10 @@
 			<nav class="navbar">
 				<ul class="navbar-nav" style="padding-bottom:6em;">
 			  		<li class="nav-item"><a class="active nav-link" id="nav-link_active" href="../home_staff.php">&emsp;<i class="fa fa-clock-o fa-fw"></i>Dashboard</a></li>
-		            <li class="nav-item"><a class="nav-link" id="nav-link" href="../files/files_staff.php" >&emsp;<i class="fa fa-bookmark-o fa-fw"></i>Registration</a></li>
-		            <li class="nav-item"><a class="nav-link" data-toggle="modal" href="#myreport" id="nav-link">
-		              &emsp;<i class="fa fa-file-o fa-fw"></i>Report</a></li>
-		            <li class="nav-item"><a class="nav-link" id="nav-link" href="../php/logout.php">&emsp;<i class="fa fa-eject fa-fw"></i>Logout</a></li>
+			  		<li class="nav-item"><a class="nav-link" id="nav-link" href="../files/files_staff.php" >&emsp;<i class="fa fa-bookmark-o fa-fw"></i>Registration</a></li>
+			  		<li class="nav-item"><a class="nav-link" data-toggle="modal" href="#myreport" id="nav-link">
+			        &emsp;<i class="fa fa-file-o fa-fw"></i>Report</a></li>
+			  		<li class="nav-item"><a class="nav-link" id="nav-link" href="../php/logout.php">&emsp;<i class="fa fa-eject fa-fw"></i>Logout</a></li>
 				</ul>
 			</nav>
 		</div>
@@ -164,7 +164,7 @@
 		        <?php } ?>
 	  	   	</div>
 	  	   	
-	  	   	<div class="col-sm-7 pl-5">
+	  	   	<div class="col-sm-7 pl-5" id="info">
 	  	   		<h5 class="text-uppercase pb-3">Profile Info.</h5>
 		  	   	<form method="post" action="edit_staff_action.php">
 	          		<input class="form-control" name="id" type="hidden" value="<?php echo $row['emp_id']; ?>">

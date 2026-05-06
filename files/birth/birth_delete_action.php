@@ -18,8 +18,10 @@ if (isset($_GET['reg_no'])) {
         $conn->query($sql);
     }
 
-    // Redirect back to the previous page
-    header('Location: ' . $_SERVER['HTTP_REFERER']);
+    // Explicit role-based redirection
+    session_start();
+    $redirect = ($_SESSION['type'] == 'Admin') ? 'birth_records.php' : 'birth_records_staff.php';
+    header("Location: $redirect");
     exit();
 }
 ?>

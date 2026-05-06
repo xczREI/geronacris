@@ -13,6 +13,7 @@
         <div class="modal-body" align="center">
           <a href="../report/birth_reports_staff.php" class="btn btn-outline-info btn-block mb-1" style=";letter-spacing: 2px;">BIRTH REPORT</a>
           <a href="../report/death_reports_staff.php" class="btn btn-outline-secondary btn-block mb-1" style=";letter-spacing: 2px;">DEATH REPORT</a>
+          <a href="../report/marriage_reports_staff.php" class="btn btn-outline-success btn-block mb-1" style=";letter-spacing: 2px;">MARRIAGE REPORT</a>
           <a href="../report/other_reports_staff.php" class="btn btn-outline-danger btn-block mb-1" style=";letter-spacing: 2px;">OTHER REPORT</a>
         </div>
 

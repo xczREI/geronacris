@@ -280,7 +280,7 @@
                         <input type="hidden" class="form-control form-control-sm" name="page_no1" id="pageno1">
 
                             <?php date_default_timezone_set('Asia/Manila'); ?>
-                        <input type="hidden" name="time" id="hrs" value="<?php echo date('H:i:s'); ?>">
+                        <input type="hidden" name="time" id="time" value="<?php echo date('H:i:s'); ?>">
                         <input type="hidden" name="date" id="date" value="<?php echo date('Y-m-d'); ?>">
                         <input type="hidden" name="emp_name" id="emp_name" value="<?php echo $_SESSION['lastname'] ?? ''; ?>">
                     </div>

@@ -2,7 +2,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-<title>GERONA CRIS-Death Report</title>
+<title>GERONA CRIS-Marriage Report</title>
   <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="shortcut icon" type="image/x-icon" href="../images/logo-3.png">
@@ -99,7 +99,7 @@
     </div>
 
   <div class="col-sm-9" style="padding-top: 7%;" id="body">
-      <h5 align="center">= DEATH REGISTRATION =</h5>
+      <h5 align="center">= MARRIAGE REGISTRATION =</h5>
       <center>
       <h6 class="mt-3 text-uppercase"><span>Monthly/Yearly Records</span></h6>
       <div class="row mb-5 justify-content-center">
@@ -107,15 +107,15 @@
           <label class="small font-weight-bold text-success">YEAR</label>
           <select class="custom-select" id="byear" name="year" required>
           <?php 
-            require_once 'login_db_death.php';
+            require_once 'login_db_mrg.php';
             $conn = new mysqli($hn, $un, $pw, $db);
             
             if ($conn->connect_error) {
                 echo "<option value=''>Error</option>";
             } else {
-                $sql = "SELECT DISTINCT LEFT(date_death, 4) AS yr 
-                        FROM person_tbl 
-                        WHERE date_death IS NOT NULL AND date_death != ''
+                $sql = "SELECT DISTINCT LEFT(mrg_date, 4) AS yr 
+                        FROM marriage_tbl 
+                        WHERE mrg_date IS NOT NULL AND mrg_date != ''
                         ORDER BY yr DESC";
                 
                 $result = $conn->query($sql);  
@@ -164,7 +164,7 @@ $(document).ready(function(){
 
     if(year && year !== ''){
       $.ajax({
-        url: "death_charts.php",
+        url: "marriage_charts.php",
         data:{year:year, month:month},
         method: "POST",
         dataType: "json",
@@ -180,7 +180,7 @@ $(document).ready(function(){
 
           var chart = new CanvasJS.Chart("chartContainer", {
             theme: "light", exportEnabled: true, animationEnabled: true,
-            title:{ text: "Death Statistics", horizontalAlign: "center", fontSize: 25 },
+            title:{ text: "Marriage Statistics", horizontalAlign: "center", fontSize: 25 },
             subtitles: [{ text: "(" + mm + " " + year + " )", fontSize: 15 }],
             legend:{ cursor: "pointer", itemclick: function(e) {
                 e.dataSeries.dataPoints[e.dataPointIndex].exploded = !(e.dataSeries.dataPoints[e.dataPointIndex].exploded || false);
@@ -207,3 +207,4 @@ $(document).ready(function(){
 </script>
 </body>
 </html>
+

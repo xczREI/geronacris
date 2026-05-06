@@ -1,4 +1,7 @@
 <?php
+error_reporting(E_ALL & ~E_DEPRECATED & ~E_NOTICE);
+ini_set('display_errors', 0);
+
   use setasign\Fpdi\Fpdi;
   require_once('../../fpdf/fpdf.php');
   require_once('../../fpdi/src/autoload.php');
@@ -12,7 +15,16 @@
       $conn = new mysqli($hn, $un, $pw, $db);
       if ($conn->connect_error) die($conn->connect_error);
 
-      $sql = "SELECT * FROM registration_tbl NATURAL JOIN (husband_tbl NATURAL JOIN wife_tbl NATURAL JOIN marriage_tbl NATURAL JOIN receive_civil_tbl NATURAL JOIN remarks_tbl NATURAL JOIN witness_tbl NATURAL JOIN aff_solemn_tbl NATURAL JOIN late_reg_tbl) WHERE no = '".$_POST['reg_no']."'";
+      $sql = "SELECT *, registration_tbl.registry_no as registry_no FROM registration_tbl 
+              LEFT JOIN husband_tbl ON registration_tbl.no = husband_tbl.no 
+              LEFT JOIN wife_tbl ON registration_tbl.no = wife_tbl.no 
+              LEFT JOIN marriage_tbl ON registration_tbl.no = marriage_tbl.no 
+              LEFT JOIN receive_civil_tbl ON registration_tbl.no = receive_civil_tbl.no 
+              LEFT JOIN remarks_tbl ON registration_tbl.no = remarks_tbl.no 
+              LEFT JOIN witness_tbl ON registration_tbl.no = witness_tbl.no 
+              LEFT JOIN aff_solemn_tbl ON registration_tbl.no = aff_solemn_tbl.no 
+              LEFT JOIN late_reg_tbl ON registration_tbl.no = late_reg_tbl.no 
+              WHERE registration_tbl.no = '".$_POST['reg_no']."'";
       $result = $conn->query($sql);  
       if (!$result) die ("Database access failed: " . $conn->error);
 
@@ -661,6 +673,7 @@ fitTextInCell($pdf, 110, 317, 62, 4, $row['late_administer_position']);
 
 
 // Output the PDF
+if (ob_get_length()) ob_end_clean();
 $pdf->Output('marriage_'.$row['husband_lname'].'_'.$row['wife_lname'].'.pdf', 'I');
 
           }

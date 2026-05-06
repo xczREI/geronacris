@@ -42,7 +42,7 @@
 					<input type="text" class="pageNo form-control form-control-sm" name="page_no" id="pageno" value="<?php echo $row['page_no'] ?? ''; ?>">
 					<input type="hidden" class="form-control form-control-sm" name="page_no1" id="pageno1" value="<?php echo $row['page_no1'] ?? ''; ?>">
 
-					<input type="hidden" name="time" id="hrs" value="">
+					<input type="hidden" name="time" id="time" value="">
 					<input type="hidden" name="date" id="date" value="">
 					<input type="hidden" name="emp_name" id="emp_name" value="<?php echo $_SESSION['lastname'] ?? ''; ?>">
 				</div>

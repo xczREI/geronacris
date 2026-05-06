@@ -124,7 +124,7 @@ if (isset($_POST['add_birth']) || $_SERVER['REQUEST_METHOD'] == 'POST') {
 
         // Query 1: registration_tbl
         $sql1 = "INSERT INTO registration_tbl (no, registry_no, book_no, page_no, province, municipal, reg_date, reg_time, reg_user, update_date, update_time, update_user) 
-                 VALUES ($reg_no, '$registry_no', $book_no, $page_no, '$province', '$municipal', '$reg_date', '$reg_time', '$reg_user', '0000-00-00', '00:00:00', '')";
+                 VALUES ($reg_no, '$registry_no', $book_no, $page_no, '$province', '$municipal', '$reg_date', '$reg_time', '$reg_user', '1900-01-01', '00:00:00', '')";
         if (!$conn->query($sql1)) throw new Exception("Reg Table Error: " . $conn->error);
 
         // Query 2: child_tbl

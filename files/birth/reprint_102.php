@@ -1,4 +1,7 @@
 <?php
+error_reporting(E_ALL & ~E_DEPRECATED & ~E_NOTICE);
+ini_set('display_errors', 0);
+
 use setasign\Fpdi\Fpdi;
 require_once('../../fpdf/fpdf.php');
 require_once('../../fpdi/src/autoload.php');
@@ -11,7 +14,7 @@ $reg_no=$_POST['reg_no'];
 if (!empty($_GET['reg_no'])){ $reg_no = $_REQUEST['reg_no']; }
 
     // IMPROVED QUERY: Using LEFT JOIN to ensure the record loads even if optional tables are empty
-    $sql = "SELECT *, registration_tbl.no as no FROM registration_tbl 
+    $sql = "SELECT *, registration_tbl.registry_no as registry_no, registration_tbl.no as no FROM registration_tbl 
             LEFT JOIN child_tbl ON registration_tbl.no = child_tbl.no 
             LEFT JOIN mother_tbl ON registration_tbl.no = mother_tbl.no 
             LEFT JOIN father_tbl ON registration_tbl.no = father_tbl.no 
@@ -625,6 +628,7 @@ $pdf->SetXY(127, 317);
 fitTextInCellAddress($pdf, 127, 317, 76, 5, ($row['late_administer_position'] ?? ''));
 
 // Output the PDF
+if (ob_get_length()) ob_end_clean();
 $pdf->Output('birth_'.$row['child_fname'].'_'.$row['child_lname'].'.pdf', 'I');
 
 }

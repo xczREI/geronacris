@@ -141,20 +141,20 @@
 	  	<div class="row" style="padding-top: 7%;">
 	  	    <div class="col-sm-12">
 		  	  	<div class="row">
-		  	  		<div class="col-sm-4 mb-5" align="center"><button type="button" data-toggle="collapse" data-target="#demo1" id="btn1"><img src="../images/1.png" class="cerf_pic" id="cerf_pic"><br> <span class="cerf_txt">birth registration</span></button>
+		  	  		<div class="col-sm-4 mb-5" align="center"><button type="button" data-toggle="collapse" data-target="#demo1" id="btn1"><img src="../images/b.png" class="cerf_pic" id="cerf_pic"><br> <span class="cerf_txt">birth<br>registration</span></button>
 			  	  		<div id="demo1" class="collapse"><br>
 				        	<a class="dropdown-item" href="birth/birth_cerf.php">Data Entry</a>
 				        	<a class="dropdown-item" href="birth/birth_records.php"><!--Query-->Records</a>
 				        	<a class="dropdown-item" href="legal/birth_records.php"><!--Query-->Legal Adoption</a>
 				      	</div>
 			      	</div>
-		  	  		<div class="col-sm-4 mb-5" align="center"><button type="button" data-toggle="collapse" data-target="#demo2" id="btn2"><img src="../images/d.png" class="cerf_pic"><br> <span class="cerf_txt">death registration</span></button>
+		  	  		<div class="col-sm-4 mb-5" align="center"><button type="button" data-toggle="collapse" data-target="#demo2" id="btn2"><img src="../images/d.png" class="cerf_pic"><br> <span class="cerf_txt">death<br>registration</span></button>
 			  	  		<div id="demo2" class="collapse"><br>
 				        	<a class="dropdown-item" href="death/death_cerf.php">Data Entry</a>
 				        	<a class="dropdown-item" href="death/death_records.php"><!--Query-->Records</a>
 				        </div>
 				     </div>
-		  	  		<div class="col-sm-4 mb-5" align="center"><button type="button" data-toggle="collapse" data-target="#demo3" id="btn3"><img src="../images/m.png" class="cerf_pic1" width="200px" height="105px"><br> <span class="cerf_txt1">marriage registration</span></button>
+		  	  		<div class="col-sm-4 mb-5" align="center"><button type="button" data-toggle="collapse" data-target="#demo3" id="btn3"><img src="../images/m.png" class="cerf_pic"><br> <span class="cerf_txt">marriage<br>registration</span></button>
 			  	  		<div id="demo3" class="collapse"><br>
 				        	<a class="dropdown-item" href="marriage/marriage_cerf.php">Data Entry</a>
 				        	<a class="dropdown-item" href="marriage/marriage_records.php"><!--Query-->Records</a>

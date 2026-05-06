@@ -53,7 +53,7 @@
 							<input type="text" class="pageNo form-control form-control-sm" name="page_no" id="pageno" >
 							<input type="hidden" class="form-control form-control-sm" name="page_no1" id="pageno1">
 
-						<input type="hidden" name="time" id="hrs" value="">
+						<input type="hidden" name="time" id="time" value="">
 							<input type="hidden" name="date" id="date" value="">
 							<input type="hidden" name="emp_name" id="emp_name" value="<?php echo $_SESSION['lastname']; ?>">
 						</div>
@@ -1063,7 +1063,7 @@ document.addEventListener('keydown', function(e) {
 
       //hours
       var hrs = Math.floor((now % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-      document.getElementById("hrs").innerHTML = hrs;
+      document.getElementById("time").innerHTML = hrs;
 
       var hours = ["08","09","10","11","12","01","02","03","04","05","06","07","08","09","10","11","12","01","02","03","04","05","06","07"];
       var hrss = hours[hrs];
@@ -1078,7 +1078,7 @@ document.addEventListener('keydown', function(e) {
       var sec = Math.floor((now % (1000 * 60)) / 1000);
       if (sec < 10){ var secs = "0" + sec; } else if (sec > 9){ var secs = sec; }
 
-      $("#hrs").val(hrss +":"+ mins +":"+ secs +''+ txt);
+      $("#time").val(hrss +":"+ mins +":"+ secs +''+ txt);
     })
   });
 

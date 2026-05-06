@@ -41,7 +41,8 @@
       
       if (!$result) die ("Database access failed: " . $conn->error);
 
-      header('location: death_records.php');
+      $redirect = ($_SESSION['type'] == 'Admin') ? 'death_records.php' : 'death_records_staff.php';
+      header("Location: $redirect");
     }
    
 ?>

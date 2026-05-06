@@ -392,13 +392,13 @@ if (!empty($id)) {
                         </div>
                         
                         <div class="col-md-9 d-flex justify-content-between">
-                            <button type="submit" formaction="print_103.php" formtarget="_blank" class="btn btn-light border py-1" style="background: white; width: 23%;">Preview</button>
+                            <button type="button" class="btn btn-light border py-1 font-weight-bold" style="background: white; width: 23%;" onclick="openLivePreview()">Preview</button>
                             
-                            <a href="print_103.php?no=<?php echo $row['no'] ?? $id; ?>" target="_blank" class="btn btn-light border py-1" style="background: white; width: 24%; text-align: center; text-decoration: none; color: black;">Print Form No. 103</a>
+                            <a href="print_103.php?no=<?php echo $row['no'] ?? $id; ?>" target="_blank" class="btn btn-light border py-1" style="background: white; width: 24%; text-align: center; text-decoration: none; color: black; font-size: 13px;">Print Form No. 103</a>
                             
-                            <a href="print_2A.php?no=<?php echo $row['no'] ?? $id; ?>" target="_blank" class="btn btn-light border py-1" style="background: white; width: 24%; text-align: center; text-decoration: none; color: black;">Print Form No. 2A</a>
+                            <a href="print_2A.php?no=<?php echo $row['no'] ?? $id; ?>" target="_blank" class="btn btn-light border py-1" style="background: white; width: 24%; text-align: center; text-decoration: none; color: black; font-size: 13px;">Print Form No. 2A</a>
                             
-                            <button type="submit" name="update_death" class="btn btn-light border py-1" style="background: white; width: 23%;">Reprint</button>
+                            <button type="button" class="btn btn-light border py-1 font-weight-bold" style="background: white; width: 23%;" data-toggle="modal" data-target="#myreprint">Reprint</button>
                         </div>
                         
                     </div>
@@ -425,6 +425,24 @@ if (!empty($id)) {
 </div>
 
 <?php include '../../report/report_modal1.php'; ?>
+
+<!-- LIVE PREVIEW MODAL -->
+<div class="modal fade" id="livePreviewModal" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-xl" role="document">
+        <div class="modal-content">
+            <div class="modal-header bg-dark text-white">
+                <h5 class="modal-title">Live Preview (Data Entry Review)</h5>
+                <button type="button" class="close text-white" data-dismiss="modal">&times;</button>
+            </div>
+            <div class="modal-body" id="livePreviewBody" style="background-color: #f4f4f4;"></div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" onclick="window.print()"><i class="fa fa-print"></i> Print This Preview</button>
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
 <script src = "../../alertifyjs/alertify.min.js"></script>
 
 <script>
@@ -575,6 +593,32 @@ $(document).ready(function() {
     });
 
 });
+
+function openLivePreview() {
+    var $p1 = $('#page1'), $p2 = $('#page2');
+    var $c1 = $p1.clone(), $c2 = $p2.clone();
+    $([$c1, $c2]).each(function() {
+        $(this).find('script').remove();
+        $(this).removeClass('tab-pane fade show active');
+        $(this).css({'display': 'block', 'visibility': 'visible', 'height': 'auto', 'margin-bottom': '30px'});
+        $(this).find('*').removeAttr('id');
+    });
+    syncValues($p1, $c1); syncValues($p2, $c2);
+    $([$c1, $c2]).each(function() {
+        $(this).find('input, textarea').prop('readonly', true).css({'background-color': 'transparent', 'border': 'none'});
+        $(this).find('select, input[type="checkbox"], input[type="radio"]').prop('disabled', true);
+    });
+    $('#livePreviewBody').empty().append($c1).append('<hr style="border: 2px dashed #000;">').append($c2);
+    $('#livePreviewModal').modal('show');
+}
+
+function syncValues($source, $target) {
+    $source.find('input, select, textarea').each(function(index) {
+        var $srcEl = $(this), $tgtEl = $target.find('input, select, textarea').eq(index);
+        if ($srcEl.is(':checkbox, :radio')) $tgtEl.prop('checked', $srcEl.prop('checked'));
+        else $tgtEl.val($srcEl.val());
+    });
+}
 </script>
 </body>
 </html>

@@ -2,7 +2,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-	<title>CRS-Birth Report</title>
+<title>GERONA CRIS-Birth Report</title>
 	<meta charset="utf-8">
   	<meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="shortcut icon" type="image/x-icon" href="../images/logo-3.png">
@@ -49,10 +49,13 @@
 
     }
   </style>
+
 </head>
 <body>
 
+<!-- nav top -->
 <nav class="navbar navbar-expand-md bg-dark navbar-dark" id="navbar">
+  <!-- Brand -->
   <a class="navbar-brand" href="#">
     <div class="media pl-1 mb-3">
       <div class="media-body">
@@ -69,10 +72,12 @@
     </div>
   </a>
 
+  <!-- Toggler/collapsibe Button -->
   <button class="navbar-toggler mr-2" type="button" data-toggle="collapse" data-target="#collapsibleNavbar" style="float: right;">
     <span class="navbar-toggler-icon"></span>
   </button>
 
+  <!-- Navbar links -->
   <div class="collapse navbar-collapse bg-light" id="collapsibleNavbar">
     <ul class="navbar-nav bg-dark mx-auto h-100">
       <li class="nav-item"><a class="active nav-link" id="nav-link" href="../home_staff.php">&emsp;<i class="fa fa-clock-o fa-fw"></i>Dashboard</a></li>
@@ -101,14 +106,17 @@
   </div>
 </div>
 
+<!--navbar-->
 <div class="row" id="row">
-  <div class="col-sm-3 bg-dark" style="border-left: 15px solid;" id="sidebar">
+    <div class="col-sm-3 bg-dark" style="border-left: 15px solid;" id="sidebar">
       <div class="pic" style="margin-top: 2em;">
-        <center><img src="../images/logo-3.png" class="logo">
-            <h4 class="text-uppercase">Civil Registry Information<br><span class="lblspan">System</span></h4>
+        <center>
+          <img src="../images/logo-3.png" class="logo">
+          <h4 class="text-uppercase">Civil Registry Information<br><span class="lblspan">System</span></h4>
         </center>
       </div>
 
+    <!--nav-side-->
     <div class="aside" style="margin-top: 3em;">
       <nav class="navbar">
         <ul class="navbar-nav" style="padding-bottom:6em;">
@@ -121,7 +129,7 @@
       </nav>
     </div>
 
-  </div>
+    </div><!--end col-3-->
 
   <div class="col-sm-9" style="padding-top: 7%;" id="body">
   		<h5 align="center">= BIRTH REGISTRATION =</h5>
@@ -133,24 +141,26 @@
                 <?php 
                     require_once 'login_db_birth.php';
                     $conn = new mysqli($hn, $un, $pw, $db);
-                    if ($conn->connect_error) die($conn->connect_error);
+                    
+                    if ($conn->connect_error) {
+                        echo "<option value=''>Error</option>";
+                    } else {
+                        $sql = "SELECT DISTINCT LEFT(child_birth_date, 4) AS yr 
+                                FROM child_tbl 
+                                WHERE child_birth_date IS NOT NULL 
+                                ORDER BY yr DESC";
 
-                    $sql = "SELECT DISTINCT LEFT(child_birth_date, 4) AS yr 
-                            FROM child_tbl 
-                            WHERE child_birth_date IS NOT NULL 
-                            ORDER BY yr DESC";
-                    $result = $conn->query($sql);  
-                    echo "<option value='' style='display:none;'>-- Select Year --</option>";
-
-                    if ($result && $result->num_rows > 0) {
-                        while($row = $result->fetch_assoc()) { 
-                            $validYear = $row['yr'];
-                            if (is_numeric($validYear) && strlen($validYear) == 4) {
-                                echo "<option value='".$validYear."'>".$validYear."</option>";   
+                        $result = $conn->query($sql);
+                        echo "<option value='' selected>Select Year</option>";
+                        if ($result && $result->num_rows > 0) {
+                            while($row = $result->fetch_assoc()) { 
+                                $y = trim($row['yr']);
+                                if (is_numeric($y) && strlen($y) == 4) {
+                                    echo "<option value='$y'>$y</option>";   
+                                }
                             }
                         }
-                    } else {
-                        echo "<option value=''>No records found</option>";
+                        $conn->close();
                     }
                 ?>
               </select>
@@ -158,8 +168,7 @@
           <div class="col-6 col-md-3 mb-2">
               <label class="small font-weight-bold text-success">MONTH</label>
               <select class="custom-select" id="bmonth" name="month" required>
-                  <option value="" style="display: none;" selected>-- Select Month --</option>
-                  <option value="">All</option>
+                  <option value="" selected>All Months</option>
                   <option value="01">January</option>
                   <option value="02">February</option>
                   <option value="03">March</option>
@@ -180,62 +189,141 @@
   </div>
 </div>
 
+<!--modal-->
 <?php include 'report_modal3_staff.php'; ?>
 
+<!--Javascrpt theme-->
 <script src = "../alertifyjs/alertify.min.js"></script>
 
 <script>
-// (CHART LOGIC REMAINED THE SAME AS ADMIN)
 $(document).ready(function(){
-    function updateChart() {
-        var year = $("#byear").val();
-        var month = $("#bmonth").val();
-        var mm = '';
-        if(month != ''){
-            var d = new Date(year, month - 1);
-            var months = ["January","February","March","April","May","June","July","August","September","October","November","December"];
-            mm = months[d.getMonth()];
-        }
 
-        if(year == ''){
-            alertify.dialog('alert').set({transition:'zoom',message: 'Pls. select month and enter year'}).show(); 
-        } else {
-            $.ajax({
-                url: "birth_charts.php",
-                data:{year:year,month:month},
-                method: "POST",
-                success:function(data){
-                    var chart = new CanvasJS.Chart("chartContainer", {
-                        theme: "light",
-                        exportEnabled: true,
-                        animationEnabled: true,
-                        title:{ text: "Birth Statistics", horizontalAlign: "center", fontSize: 25 },
-                        subtitles: [{ text: "(" + mm + " " + year + " )", fontSize: 15 }],
-                        legend:{ cursor: "pointer", itemclick: explodePie },
-                        data: [{
-                            type: "pie",
-                            showInLegend: true,
-                            toolTipContent: "<b>{name}:</b> {y}",
-                            indexLabel: "{name}: {y}",
-                            dataPoints: data
-                        }]
-                    });
-                    chart.render();
-                    function explodePie (e) {
-                        if(typeof (e.dataSeries.dataPoints[e.dataPointIndex].exploded) === "undefined" || !e.dataSeries.dataPoints[e.dataPointIndex].exploded) {
-                            e.dataSeries.dataPoints[e.dataPointIndex].exploded = true;
-                        } else {
-                            e.dataSeries.dataPoints[e.dataPointIndex].exploded = false;
-                        }
-                        e.chart.render();
-                    }
-                }
-            });
-        }
+$("#byear").change(function(){
+    var year = $("#byear").val();
+    var month = $("#bmonth").val();
+    if(month == ''){ var mm = ''; } else {
+      var d = new Date(month);
+      var months = ["January","February","March","April","May","June","July","August","September","October","November","December"];
+      var mm =  months[d.getMonth()];
     }
 
-    $("#byear, #bmonth").change(updateChart);
+    if(year == ''){
+      alertify.dialog('alert').set({transition:'zoom',message: 'Pls. select month and enter year'}).show(); 
+    }else{
+      $.ajax({
+        url: "birth_charts.php",
+        data:{year:year,month:month},
+        method: "POST",
+        success:function(data){
+
+        var chart = new CanvasJS.Chart("chartContainer",
+        {
+          theme: "light",
+          exportEnabled: true,
+          animationEnabled: true,
+          title:{
+            text: "Birth Statistics",
+            horizontalAlign: "center",
+            fontSize: 25
+          },
+          subtitles: [{
+            text: "(" + mm + " " + year + " )",
+            fontSize: 15
+          }],
+          legend:{
+            cursor: "pointer",
+            itemclick: explodePie
+          },
+          data: [{
+            type: "pie",
+            showInLegend: true,
+            toolTipContent: "<b>{name}:</b> {y}",
+            indexLabel: "{name}: {y}",
+            dataPoints: data
+          }]
+        });
+        chart.render();
+        function explodePie (e) {
+          if(typeof (e.dataSeries.dataPoints[e.dataPointIndex].exploded) === "undefined" || !e.dataSeries.dataPoints[e.dataPointIndex].exploded) {
+            e.dataSeries.dataPoints[e.dataPointIndex].exploded = true;
+          } else {
+            e.dataSeries.dataPoints[e.dataPointIndex].exploded = false;
+          }
+          e.chart.render();
+
+        }
+
+        }
+      });
+
+    }
+  
+  });
+
+$("#bmonth").change(function(){
+    var year = $("#byear").val();
+    var month = $("#bmonth").val();
+    if(month == ''){ var mm = ''; } else {
+      var d = new Date(month);
+      var months = ["January","February","March","April","May","June","July","August","September","October","November","December"];
+      var mm =  months[d.getMonth()];
+    }
+
+    if(year == ''){
+      alertify.dialog('alert').set({transition:'zoom',message: 'Pls. select month and enter year'}).show(); 
+    }else{
+      $.ajax({
+        url: "birth_charts.php",
+        data:{year:year,month:month},
+        method: "POST",
+        success:function(data){
+
+        var chart = new CanvasJS.Chart("chartContainer",
+        {
+          theme: "light",
+          exportEnabled: true,
+          animationEnabled: true,
+          title:{
+            text: "Birth Statistics",
+            horizontalAlign: "center",
+            fontSize: 25
+          },
+          subtitles: [{
+            text: "( " + mm + " " + year + " )",
+            fontSize: 15
+          }],
+          legend:{
+            cursor: "pointer",
+            itemclick: explodePie
+          },
+          data: [{
+            type: "pie",
+            showInLegend: true,
+            toolTipContent: "<b>{name}:</b> {y}",
+            indexLabel: "{name}: {y}",
+            dataPoints: data
+          }]
+        });
+        chart.render();
+        function explodePie (e) {
+          if(typeof (e.dataSeries.dataPoints[e.dataPointIndex].exploded) === "undefined" || !e.dataSeries.dataPoints[e.dataPointIndex].exploded) {
+            e.dataSeries.dataPoints[e.dataPointIndex].exploded = true;
+          } else {
+            e.dataSeries.dataPoints[e.dataPointIndex].exploded = false;
+          }
+          e.chart.render();
+
+        }
+
+        }
+      });
+
+    }
+  
+  });
+
 });
+
 </script>
 
 </body>

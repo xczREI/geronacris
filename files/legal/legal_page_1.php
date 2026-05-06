@@ -1,7 +1,7 @@
 <script>
 	$(document).ready(function(){
 		var y = new Date();
-	    document.getElementById("times").value = y.toLocaleTimeString();
+	    document.getElementById("time").value = y.toLocaleTimeString();
 	});
 </script>
 <div class="ctf-birth pt-3" style="width:960px;margin: auto;">
@@ -23,7 +23,7 @@
 							<label id="ltxt">Page No.</label>
 							<input type="text" class="pageNo form-control form-control-sm" id="txt" name="page_no" value="<?php echo $row['page_no']; ?>" readonly>
 
-							<input type="hidden" name="time" id="hrs" value="">
+							<input type="hidden" name="time" id="time" value="">
 							<input type="hidden" name="date" id="date" value="">
 							<input type="hidden" name="emp_name" id="emp_name" value="<?php echo $_SESSION['lastname']; ?>">
 						</div>
@@ -757,13 +757,13 @@
       var now = new Date().getTime();
 
       //hours
-      var hrs = Math.floor((now % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-      document.getElementById("hrs").innerHTML = hrs;
+      var time = Math.floor((now % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+      document.getElementById("time").innerHTML = time;
 
       var hours = ["08","09","10","11","12","01","02","03","04","05","06","07","08","09","10","11","12","01","02","03","04","05","06","07"];
-      var hrss = hours[hrs];
+      var times = hours[time];
 
-      if (hrs <= '3' || hrs >= '16'){ var txt = 'am'; } else if (hrs >= '4' || hrs <= '15'){ var txt = 'pm'; }
+      if (time <= '3' || time >= '16'){ var txt = 'am'; } else if (time >= '4' || time <= '15'){ var txt = 'pm'; }
       
       //minutes
       var min = Math.floor((now % (1000 * 60 * 60)) / (1000 * 60));
@@ -773,7 +773,7 @@
       var sec = Math.floor((now % (1000 * 60)) / 1000);
       if (sec < 10){ var secs = "0" + sec; } else if (sec > 9){ var secs = sec; }
 
-      $("#hrs").val(hrss +":"+ mins +":"+ secs +''+ txt);
+      $("#time").val(times +":"+ mins +":"+ secs +''+ txt);
     })
   });
 

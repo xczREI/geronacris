@@ -2,11 +2,11 @@
 <!DOCTYPE html>
 <html>
 <head>
-	<title>CRS-Death Registration</title>
-	<meta charset="utf-8">
- 	<meta name="viewport" content="width=device-width, initial-scale=1">
- 	<link rel="shortcut icon" type="image/x-icon" href="../../images/logo-3.png">
-	<link rel="stylesheet" type="text/css" href="../../bootstrap4/css/bootstrap.min.css"/>
+<title>GERONA CRIS-DEATH RECORDS (STAFF)</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="shortcut icon" type="image/x-icon" href="../../images/logo-3.png">
+  <link rel="stylesheet" type="text/css" href="../../bootstrap4/css/bootstrap.min.css"/>
   <script src="../../bootstrap4/jquery/jquery-3.3.1.min.js" type="text/javascript"></script>
   <script src="../../bootstrap4/js/bootstrap.min.js"></script>
   <link href="../../bootstrap4/font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css">
@@ -15,19 +15,18 @@
   <link href="../../css/style_css.css" rel="stylesheet" type="text/css">
 
   <style>
-  	td,th{
-   		font-size: 13px;
-   		font-family: century gothic;
-   	}
-   	.tduser{
-   		text-transform: uppercase;
-   	}
-  </style>
- 
-  <style>
+    td,th{
+      font-size: 13px;
+      font-family: century gothic;
+    }
+    .tduser{
+      text-transform: uppercase;
+    }
+
     #navbar{ display: none; }
+
     @media only screen and (max-width: 768px) {
-                /* For mobile phones: */
+        /* For mobile phones: */
       [class*="col-"] {
         width: 100%;
       }
@@ -43,55 +42,45 @@
         right: 20px;
         z-index: 1000;
       }
-      .navbar-collapse #nav-link_active, #nav-link{ 
-        font-size:13px; 
-        font-family: century gothic;
+      .navbar-collapse #nav-link_active, #nav-link { 
+        font-size: 18px !important; 
+        font-family: 'Century Gothic', sans-serif;
         text-transform: uppercase;
-        color: white;
-        display:  block;
+        color: #ffffff !important; 
+        display: block;
         padding: 10px;
         transition: all 0.3s ease;
         letter-spacing: 1px;
       }
-
     }
   </style>
-
 </head>
 <body>
 
-<!-- nav top -->
 <nav class="navbar navbar-expand-md bg-dark navbar-dark" id="navbar">
-  <!-- Brand -->
   <a class="navbar-brand" href="#">
     <div class="media pl-1 mb-3">
       <div class="media-body">
         <h6 class="text-left mb-3 text-light">
           <?php $type = $_SESSION['type']; if ($type == 'Admin') { ?>
               <img src="../../images/img_avatar3.png" class="mr-3 mt-0 rounded-circle" style="width:40px;">
-          <?php } else if ($type == 'Staff') { ?>
+          <?php } else { ?>
               <img src="../../images/img_avatar2.png" class="mr-3 mt-0 rounded-circle" style="width:40px;">
           <?php } ?>
-
           <?php echo $_SESSION['firstname'].' '.$_SESSION['lastname']; ?>
         </h6>
       </div>
     </div>
   </a>
-
-  <!-- Toggler/collapsibe Button -->
   <button class="navbar-toggler mr-2" type="button" data-toggle="collapse" data-target="#collapsibleNavbar" style="float: right;">
     <span class="navbar-toggler-icon"></span>
   </button>
-
-  <!-- Navbar links -->
   <div class="collapse navbar-collapse bg-light" id="collapsibleNavbar">
     <ul class="navbar-nav bg-dark mx-auto h-100">
-      <li class="nav-item"><a class="active nav-link" id="nav-link" href="../../home_staff.php">&emsp;<i class="fa fa-clock-o fa-fw"></i>Dashboard</a></li>
-      <li class="nav-item"><a class="nav-link" id="nav-link_active" href="../files_staff.php" >&emsp;<i class="fa fa-bookmark-o fa-fw"></i>Registration</a></li>
-      <li class="nav-item"><a class="nav-link" data-toggle="modal" href="#myreport" id="nav-link">
-      &emsp;<i class="fa fa-file-o fa-fw"></i>Report</a></li>
-      <li class="nav-item"><a class="nav-link" id="nav-link" href="../../php/logout.php">&emsp;<i class="fa fa-eject fa-fw"></i>Logout</a></li>
+        <li class="nav-item"><a class="nav-link" href="../../home_staff.php">&emsp;<i class="fa fa-clock-o fa-fw"></i>Dashboard</a></li>
+        <li class="nav-item"><a class="nav-link active" id="nav-link_active" href="../files_staff.php" >&emsp;<i class="fa fa-bookmark-o fa-fw"></i>Registration</a></li>
+        <li class="nav-item"><a class="nav-link" data-toggle="modal" href="#myreport">&emsp;<i class="fa fa-file-o fa-fw"></i>Report</a></li>
+        <li class="nav-item"><a class="nav-link" href="../../php/logout.php">&emsp;<i class="fa fa-eject fa-fw"></i>Logout</a></li>
     </ul>
   </div>
 </nav>
@@ -101,137 +90,124 @@
     <h5 class="text-left pt-2 text-uppercase" style="font-family: century gothic;"><i class="fa fa-angle-right"></i> <?php echo $_SESSION['type']; ?> Account</h5>
     <div class="media-body">
       <h6 class="text-right mb-3">
-        <?php $type = $_SESSION['type']; if ($type == 'Admin') { ?>
-          <img src="../../images/img_avatar3.png" class="mr-3 mt-0 rounded-circle" style="width:40px;">
-        <?php } else if ($type == 'Staff') { ?>
-          <img src="../../images/img_avatar2.png" class="mr-3 mt-0 rounded-circle" style="width:40px;">
+        <?php if ($type == 'Admin') { ?>
+            <img src="../../images/img_avatar3.png" class="mr-3 mt-0 rounded-circle" style="width:40px;">
+        <?php } else { ?>
+            <img src="../../images/img_avatar2.png" class="mr-3 mt-0 rounded-circle" style="width:40px;">
         <?php } ?>
-
         <?php echo $_SESSION['firstname'].' '.$_SESSION['lastname']; ?>
       </h6>
     </div>
   </div>
 </div>
 
-<!--navbar-->
 <div class="row" id="row">
   <div class="col-sm-3 bg-dark" style="border-left: 15px solid; min-height: 100vh;" id="sidebar">
     <div class="pic" style="margin-top: 2em;">
-      <center><img src="../../images/logo.png" class="logo">
+     <center>
+        <img src="../../images/logo-3.png" class="logo">
         <h4 class="text-uppercase">Civil Registry Information<br><span class="lblspan">System</span></h4>
       </center>
     </div>
-
-  <!--nav-side-->
-    <div class="aside mb-5" style="margin-top: 3em;">
+    <div class="aside" style="margin-top: 3em;">
       <nav class="navbar">
         <ul class="navbar-nav" style="padding-bottom:6em;">
           <li class="nav-item"><a class="nav-link" id="nav-link" href="../../home_staff.php">&emsp;<i class="fa fa-clock-o fa-fw"></i>Dashboard</a></li>
           <li class="nav-item"><a class="nav-link active" id="nav-link_active" href="../files_staff.php" >&emsp;<i class="fa fa-bookmark-o fa-fw"></i>Registration</a></li>
-          <li class="nav-item"><a class="nav-link" data-toggle="modal" href="#myreport" id="nav-link">
-          &emsp;<i class="fa fa-file-o fa-fw"></i>Report</a></li>
+          <li class="nav-item"><a class="nav-link" data-toggle="modal" href="#myreport" id="nav-link">&emsp;<i class="fa fa-file-o fa-fw"></i>Report</a></li>
           <li class="nav-item"><a class="nav-link" id="nav-link" href="../../php/logout.php">&emsp;<i class="fa fa-eject fa-fw"></i>Logout</a></li>
         </ul>
       </nav>
     </div>
+  </div>
 
-  </div><!--end col-3-->
-
- 	<div class="col-sm-9" style="padding-top: 7%;" id="body">
+  <div class="col-sm-9" style="padding-top: 7%;" id="body">
     <div class="row">
       <div class="col-sm-7 mb-1">
         <input class="form-control" id="myInput" type="text" placeholder="Search..">
       </div>
       <div class="col-sm-3"></div>
       <div class="col-sm-2">
-        <a class="btn btn-outline-info btn-block" href="death_cerf_staff.php" style="overflow:auto;">Data Entry</a>
+        <a class="btn btn-outline-info btn-block" href="death_cerf_staff.php">Data Entry</a>
       </div>
     </div>
-		<br>
- 		<div class="table-responsive">
-	  	<table class="table table-hover table-sm">
-		    <thead class="thead-dark">
-	      	<tr>
-		      	<th>Time Created</th>
-		        <th>Time Updated</th>
-		        <th>Registry No</th>
-		        <th>Name</th>
-		        <th>Birthdate</th>
-		        <th>Deathdate</th>
-		        <th>Gender</th>
-		        <th>Edit</th>
-	      	</tr>
-		    </thead>
-	    	<tbody id="myTable">
-	      	<?php
-				    require_once 'login_db_death.php';
-				    $conn = new mysqli($hn, $un, $pw, $db);
-				    if ($conn->connect_error) die($conn->connect_error);
+    <br>
+    <div class="table-responsive">
+      <table class="table table-hover table-sm">
+        <thead class="thead-dark">
+          <tr>
+            <th>Time Created</th>
+            <th>Time Updated</th>
+            <th>Registry No</th>
+            <th>Name of Deceased</th>
+            <th>Birth Date</th>
+            <th>Death Date</th>
+            <th>Gender</th>
+            <th>Edit</th>
+            <th>Delete</th>
+          </tr>
+        </thead>
+      <tbody id="myTable">
+    <?php
+    require_once 'login_db_death.php';
+    $conn = new mysqli($hn, $un, $pw, $db);
+    if ($conn->connect_error) die($conn->connect_error);
 
-			      $sql= "SELECT * FROM registration_tbl NATURAL JOIN person_tbl  ORDER BY date_death DESC";
-			      $result = $conn->query($sql);  
-			      if (!$result) die ("Database access failed: " . $conn->error);
-
-			      $rows = $result->num_rows;
-			      for ($j = 0 ; $j < $rows ; ++$j)
-			      {
-				      $result->data_seek($j);
-				      $row = $result->fetch_array(MYSQLI_ASSOC);
-			  	?>
-            <tr>
-              <td class="tduser" scope="rows"><?php echo $row['reg_user'].'<br>('.date_format(date_create($row['reg_date']),"m/d/Y").' '.date_format(date_create($row['reg_time']),'h:i A').')'; ?></td>
-              <td class="tduser"><?php echo $row['update_user'].'<br>('.date_format(date_create($row['update_date']),"m/d/Y").' '.date_format(date_create($row['update_time']),'h:i A').')'; ?></td>
-              <td class="tduser"><?php echo $row['registry_no']; ?></td>
-              <td class="tduser"><?php echo $row['last_name']; echo', ';echo $row['first_name']; echo' '; echo $row['middle_name']; ?></td>
-              <td class="tduser"><?php echo $row['date_birth']; ?></td>
-              <td class="tduser"><?php echo $row['date_death']; ?></td>
-              <td class="tduser"><?php echo $row['sex']; ?></td>
-              <td>
-                <!-- <a href="death_cerf_edit_staff.php?reg_no=<?php echo $row['no']; ?>" class='btn btn-light btn-sm'><strong>Edit</strong></a> -->
-                <button type="button" class="btn btn-secondary" data-toggle="modal" data-target="#staticBackdrop<?php echo $row['no']; ?>">
-                  Edit
-                </button>
-
-                <!-- Modal -->
-                <div class="modal fade" id="staticBackdrop<?php echo $row['no']; ?>" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
-                  <div class="modal-dialog modal-dialog-centered">
-                    <div class="modal-content">
-                      <div class="modal-header">
-                        <h5 class="modal-title h2" id="staticBackdropLabel">Admin Authentication</h5>
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                          <span aria-hidden="true">&times;</span>
-                        </button>
-                      </div>
-                      <div class="modal-body">
-                        <form action="death_admin_pass_check.php" method="post">
-                        <div class="form-group">
-                          <label for="adminPassword" class="h3">Enter Admin Password</label>
-                          <input type="password" name="adminPassword" class="form-control" id="adminPassword">
-                        </div>
-                        <input type="hidden" name="edit_no" value="<?php echo  $row['no']; ?>">
-                      </div>
-                      <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                        <button type="submit" name="birth_auth_submit_btn" class="btn btn-primary">Submit</button>
-                        </form>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </td>
-           	</tr>
-         	<?php
+    $sql = "SELECT r.no as no, r.registry_no as registry_no, r.reg_date, r.reg_time, r.reg_user, 
+                   r.update_date, r.update_time, r.update_user,
+                   p.first_name, p.middle_name, p.last_name, p.date_birth, p.date_death, p.sex
+            FROM registration_tbl r 
+            LEFT JOIN person_tbl p ON r.no = p.no 
+            ORDER BY r.no DESC";
+    $main_records = $conn->query($sql);  
+    
+    if ($main_records) {
+        while ($row = $main_records->fetch_assoc()) {
+            if (!$row) continue;
+            
+            $reg_date_formatted = (!empty($row['reg_date'])) ? date_format(date_create($row['reg_date']), "m/d/Y") : '';
+            $reg_time_formatted = (!empty($row['reg_time'])) ? date_format(date_create($row['reg_time']), "h:i A") : '';
+            $upd_date_formatted = (!empty($row['update_date'])) ? date_format(date_create($row['update_date']), "m/d/Y") : '';
+            $upd_time_formatted = (!empty($row['update_time'])) ? date_format(date_create($row['update_time']), "h:i A") : '';
+            
+            $reg_display = $row['reg_user'] . '<br>(' . $reg_date_formatted . ' ' . $reg_time_formatted . ')';
+            $upd_display = $row['update_user'] . '<br>(' . $upd_date_formatted . ' ' . $upd_time_formatted . ')';
+    ?>
+        <tr>
+            <td class="tduser" scope="rows"><?php echo $reg_display; ?></td>
+            <td class="tduser"><?php echo $upd_display; ?></td>
+            <td class="tduser"><?php echo $row['registry_no']; ?></td>
+            <td class="tduser"><?php echo $row['last_name'] . ', ' . $row['first_name'] . ' ' . $row['middle_name']; ?></td>
+            <td class="tduser"><?php echo $row['date_birth']; ?></td>
+            <td class="tduser"><?php echo $row['date_death']; ?></td>
+            <td class="tduser"><?php echo $row['sex']; ?></td>
+            
+            <td>
+                <a href="death_cerf_edit_staff.php?no=<?php echo $row['no']; ?>" class="btn btn-light btn-sm font-weight-bold">Edit</a>
+            </td>
+            
+            <td>
+                <a href="remove.php?reg_no=<?php echo $row['no']; ?>" 
+                   class="btn btn-danger btn-sm font-weight-bold" 
+                   onclick="return confirm('WARNING: Are you sure you want to permanently delete this record?')">
+                    Delete
+                </a>
+            </td>
+            </tr>
+            <?php
             }
-         	?>
-	    	</tbody>
-	  	</table>
-		</div>
-	</div>	
+            } else {
+            echo "<tr><td colspan='8'>Error loading database records: " . $conn->error . "</td></tr>";
+            }
+            ?>
+</tbody>
+      </table>
+    </div>
+  </div>  
 </div>
 
-<!--javascript-->
-<script src = "js/btnfile.js"></script>
 <script>
+// search filter logic
 $(document).ready(function(){
   $("#myInput").on("keyup", function() {
     var value = $(this).val().toLowerCase();
@@ -243,29 +219,6 @@ $(document).ready(function(){
 </script>
 
 <?php include '../../report/report_modal1_staff.php'; ?>
-<!--Javascript-->
-
-<script>
-$(document).ready(function(){
-	var x = new Date();
-    document.getElementById("time").value = x.toLocaleTimeString();
-
-    $("#defaultCheck1lbl").click(function(){
-        $("#defaultCheck1lbl").css("text-decoration", "underline");
-        $("#defaultCheck2lbl").css("text-decoration", "none");
-        document.getElementById("defaultCheck1").checked = true;
-    	document.getElementById("defaultCheck2").checked = false;
-    });
-    $("#defaultCheck2lbl").click(function(){
-    	$("#defaultCheck1lbl").css("text-decoration", "none");
-        $("#defaultCheck2lbl").css("text-decoration", "underline");
-        document.getElementById("defaultCheck1").checked = false;
-    	document.getElementById("defaultCheck2").checked = true;
-    });
-});
-</script>
-
-<!--Javascrpt theme-->
 <script src = "../../alertifyjs/alertify.min.js"></script>
 
 </body>

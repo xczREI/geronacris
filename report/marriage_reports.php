@@ -2,7 +2,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-<title>GERONA CRIS-Death Report</title>
+<title>GERONA CRIS-Marriage Report</title>
   <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="shortcut icon" type="image/x-icon" href="../images/logo-3.png">
@@ -37,7 +37,7 @@
 </head>
 <body>
 
-<nav class="navbar navbar-expand-md bg-dark navbar-dark" id="navbar">
+<nav class="navbar navbar-expand-md bg-success navbar-dark" id="navbar">
   <a class="navbar-brand" href="#">
     <div class="media pl-1 mb-3">
       <div class="media-body">
@@ -57,9 +57,10 @@
   </button>
   <div class="collapse navbar-collapse bg-light" id="collapsibleNavbar">
     <ul class="navbar-nav bg-dark mx-auto h-100">
-      <li class="nav-item"><a class="active nav-link" id="nav-link" href="../home_staff.php">&emsp;<i class="fa fa-clock-o fa-fw"></i>Dashboard</a></li>
-      <li class="nav-item"><a class="nav-link" id="nav-link" href="../files/files_staff.php" >&emsp;<i class="fa fa-bookmark-o fa-fw"></i>Registration</a></li>
+      <li class="nav-item"><a class="active nav-link" id="nav-link" href="../home.php">&emsp;<i class="fa fa-clock-o fa-fw"></i>Dashboard</a></li>
+      <li class="nav-item"><a class="nav-link" id="nav-link" href="../files/files.php" >&emsp;<i class="fa fa-bookmark-o fa-fw"></i>Registration</a></li>
       <li class="nav-item"><a class="nav-link" data-toggle="modal" data-target="#myreport" href="javascript:void(0)" id="nav-link_active">&emsp;<i class="fa fa-file-o fa-fw"></i>Report</a></li>
+      <li class="nav-item"><a class="nav-link" id="nav-link" href="../employee/view_users.php">&emsp;<i class="fa fa-user-o fa-fw"></i>Account</a></li>
       <li class="nav-item"><a class="nav-link" id="nav-link" href="../php/logout.php">&emsp;<i class="fa fa-eject fa-fw"></i>Logout</a></li>
     </ul>
   </div>
@@ -82,16 +83,17 @@
 </div>
 
 <div class="row" id="row">
-    <div class="col-sm-3 bg-dark" style="border-left: 15px solid;" id="sidebar">
+    <div class="col-sm-3 bg-success" style="border-left: 15px solid;" id="sidebar">
       <div class="pic" style="margin-top: 2em;">
-        <center><img src="../images/logo-3.png" class="logo"><h4 class="text-uppercase">Civil Registry Information<br><span class="lblspan">System</span></h4></center>
+        <center><img src="../images/logo.png" class="logo"><h4 class="text-uppercase">Civil Registry Information<br><span class="lblspan">System</span></h4></center>
       </div>
       <div class="aside" style="margin-top: 3em;">
         <nav class="navbar">
           <ul class="navbar-nav" style="padding-bottom:6em;">
-              <li class="nav-item"><a class="active nav-link" id="nav-link" href="../home_staff.php">&emsp;<i class="fa fa-clock-o fa-fw"></i>Dashboard</a></li>
-              <li class="nav-item"><a class="nav-link" id="nav-link" href="../files/files_staff.php" >&emsp;<i class="fa fa-bookmark-o fa-fw"></i>Registration</a></li>
+              <li class="nav-item"><a class="active nav-link" id="nav-link" href="../home.php">&emsp;<i class="fa fa-clock-o fa-fw"></i>Dashboard</a></li>
+              <li class="nav-item"><a class="nav-link" id="nav-link" href="../files/files.php" >&emsp;<i class="fa fa-bookmark-o fa-fw"></i>Registration</a></li>
               <li class="nav-item"><a class="nav-link" data-toggle="modal" data-target="#myreport" href="javascript:void(0)" id="nav-link_active">&emsp;<i class="fa fa-file-o fa-fw"></i>Report</a></li>
+              <li class="nav-item"><a class="nav-link" id="nav-link" href="../employee/view_users.php">&emsp;<i class="fa fa-user-o fa-fw"></i>Account</a></li>
               <li class="nav-item"><a class="nav-link" id="nav-link" href="../php/logout.php">&emsp;<i class="fa fa-eject fa-fw"></i>Logout</a></li>
           </ul>
         </nav>
@@ -99,7 +101,7 @@
     </div>
 
   <div class="col-sm-9" style="padding-top: 7%;" id="body">
-      <h5 align="center">= DEATH REGISTRATION =</h5>
+      <h5 align="center">= MARRIAGE REGISTRATION =</h5>
       <center>
       <h6 class="mt-3 text-uppercase"><span>Monthly/Yearly Records</span></h6>
       <div class="row mb-5 justify-content-center">
@@ -107,15 +109,15 @@
           <label class="small font-weight-bold text-success">YEAR</label>
           <select class="custom-select" id="byear" name="year" required>
           <?php 
-            require_once 'login_db_death.php';
+            require_once 'login_db_mrg.php';
             $conn = new mysqli($hn, $un, $pw, $db);
             
             if ($conn->connect_error) {
                 echo "<option value=''>Error</option>";
             } else {
-                $sql = "SELECT DISTINCT LEFT(date_death, 4) AS yr 
-                        FROM person_tbl 
-                        WHERE date_death IS NOT NULL AND date_death != ''
+                $sql = "SELECT DISTINCT LEFT(mrg_date, 4) AS yr 
+                        FROM marriage_tbl 
+                        WHERE mrg_date IS NOT NULL AND mrg_date != ''
                         ORDER BY yr DESC";
                 
                 $result = $conn->query($sql);  
@@ -150,7 +152,7 @@
   </div>
 </div>
 
-<?php include '../report/report_modal1_staff.php'; ?>
+<?php include '../report/report_modal1.php'; ?>
 <script src = "../alertifyjs/alertify.min.js"></script>
 
 <script>
@@ -164,7 +166,7 @@ $(document).ready(function(){
 
     if(year && year !== ''){
       $.ajax({
-        url: "death_charts.php",
+        url: "marriage_charts.php",
         data:{year:year, month:month},
         method: "POST",
         dataType: "json",
@@ -180,7 +182,7 @@ $(document).ready(function(){
 
           var chart = new CanvasJS.Chart("chartContainer", {
             theme: "light", exportEnabled: true, animationEnabled: true,
-            title:{ text: "Death Statistics", horizontalAlign: "center", fontSize: 25 },
+            title:{ text: "Marriage Statistics", horizontalAlign: "center", fontSize: 25 },
             subtitles: [{ text: "(" + mm + " " + year + " )", fontSize: 15 }],
             legend:{ cursor: "pointer", itemclick: function(e) {
                 e.dataSeries.dataPoints[e.dataPointIndex].exploded = !(e.dataSeries.dataPoints[e.dataPointIndex].exploded || false);
@@ -207,3 +209,4 @@ $(document).ready(function(){
 </script>
 </body>
 </html>
+
