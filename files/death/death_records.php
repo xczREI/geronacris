@@ -163,7 +163,7 @@
     if ($conn->connect_error) die($conn->connect_error);
 
     // Using a unique variable name ($main_records) so the includes don't overwrite it
-    $sql = "SELECT * FROM registration_tbl NATURAL JOIN person_tbl ORDER BY update_date DESC, update_time DESC";
+    $sql = "SELECT * FROM registration_tbl NATURAL JOIN person_tbl ORDER BY date_death DESC";
     $main_records = $conn->query($sql);  
     
     if ($main_records) {

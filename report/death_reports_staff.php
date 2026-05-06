@@ -110,7 +110,7 @@
   <div class="col-sm-3 bg-dark" style="border-left: 15px solid;" id="sidebar">
       <div class="pic" style="margin-top: 2em;">
         <center><img src="../images/logo.png" class="logo">
-            <h4 class="text-uppercase">Civil Registry<br><span class="lblspan">System</span></h4>
+            <h4 class="text-uppercase">Civil Registry Information<br><span class="lblspan">System</span></h4>
         </center>
       </div>
 
@@ -143,7 +143,10 @@
                 $conn = new mysqli($hn, $un, $pw, $db);
                 if ($conn->connect_error) die($conn->connect_error);
 
-                $sql = "SELECT DATE_FORMAT(reg_date,'%Y') AS yr FROM registration_tbl GROUP BY yr ORDER BY yr";
+                $sql = "SELECT DISTINCT LEFT(date_death, 4) AS yr 
+                        FROM person_tbl 
+                        WHERE date_death IS NOT NULL AND date_death != ''
+                        ORDER BY yr DESC";
                 $result = $conn->query($sql);  
                 if (!$result) die ("Database access failed: " . $conn->error);
 

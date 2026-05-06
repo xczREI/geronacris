@@ -65,7 +65,7 @@
 <body>
 
 <!-- nav top -->
-<nav class="navbar navbar-expand-md bg-success navbar-dark" id="navbar">
+<nav class="navbar navbar-expand-md bg-dark navbar-dark" id="navbar">
   <!-- Brand -->
   <a class="navbar-brand" href="#">
     <div class="media pl-1 mb-3">
@@ -91,41 +91,40 @@
   <!-- Navbar links -->
   <div class="collapse navbar-collapse bg-light" id="collapsibleNavbar">
     <ul class="navbar-nav bg-dark mx-auto h-100">
-		<li class="nav-item"><a class="nav-link" id="nav-link" href="../../home_staff.php">&emsp;<i class="fa fa-clock-o fa-fw"></i>Dashboard</a></li>
-        <li class="nav-item"><a class="nav-link active" id="nav-link_active" href="../files_staff.php" >&emsp;<i class="fa fa-bookmark-o fa-fw"></i>Registration</a></li>
-        <li class="nav-item"><a class="nav-link" data-toggle="modal" href="#myreport" id="nav-link">
-        &emsp;<i class="fa fa-file-o fa-fw"></i>Report</a></li>
-        <li class="nav-item"><a class="nav-link" id="nav-link" href="../../php/logout.php">&emsp;<i class="fa fa-eject fa-fw"></i>Logout</a></li>
+      <li class="nav-item"><a class="nav-link" id="nav-link" href="../../home_staff.php">&emsp;<i class="fa fa-clock-o fa-fw"></i>Dashboard</a></li>
+      <li class="nav-item"><a class="nav-link active" id="nav-link_active" href="../files_staff.php" >&emsp;<i class="fa fa-bookmark-o fa-fw"></i>Registration</a></li>
+      <li class="nav-item"><a class="nav-link" data-toggle="modal" href="#myreport" id="nav-link">
+      &emsp;<i class="fa fa-file-o fa-fw"></i>Report</a></li>
+      <li class="nav-item"><a class="nav-link" id="nav-link" href="../../php/logout.php">&emsp;<i class="fa fa-eject fa-fw"></i>Logout</a></li>
     </ul>
   </div>
 </nav>
 
 <div class="nav-top" id="topbar">
-	<div class="media">
+  <div class="media">
   <h5 class="text-left pt-2 text-uppercase" style="font-family: century gothic;"><i class="fa fa-angle-right"></i> <?php echo $_SESSION['type']; ?> Account</h5>
     <div class="media-body">
       <h6 class="text-right mb-3">
-	      <?php $type = $_SESSION['type']; if ($type == 'Admin') { ?>
+        <?php $type = $_SESSION['type']; if ($type == 'Admin') { ?>
             <img src="../../images/img_avatar3.png" class="mr-3 mt-0 rounded-circle" style="width:40px;">
         <?php } else if ($type == 'Staff') { ?>
             <img src="../../images/img_avatar2.png" class="mr-3 mt-0 rounded-circle" style="width:40px;">
         <?php } ?>
 
-	      <?php echo $_SESSION['firstname'].' '.$_SESSION['lastname']; ?>
+        <?php echo $_SESSION['firstname'].' '.$_SESSION['lastname']; ?>
       </h6>
-	  </div>
-	</div>
+    </div>
+  </div>
 </div>
 
 <!--navbar-->
 <div class="row" id="row">
-  <div class="col-sm-3 bg-success" style="border-left: 15px solid; min-height: 100vh;" id="sidebar">
+  <div class="col-sm-3 bg-dark" style="border-left: 15px solid; min-height: 100vh;" id="sidebar">
       <div class="pic" style="margin-top: 2em;">
         <center><img src="../../images/logo.png" class="logo">
             <h4 class="text-uppercase">Civil Registry Information<br><span class="lblspan">System</span></h4>
         </center>
       </div>
-
   <!--nav-side-->
     <div class="aside" style="margin-top: 3em;">
       <nav class="navbar">
@@ -167,7 +166,11 @@
 			$reg_no=null;
 			if (!empty($_GET['reg_no'])){ $reg_no = $conn->real_escape_string($_REQUEST['reg_no']); }
 
-			$sql = "SELECT * FROM registration_tbl 
+			$sql = "SELECT registration_tbl.registry_no as registry_no, registration_tbl.no as no, 
+                    registration_tbl.book_no, registration_tbl.page_no, registration_tbl.province, registration_tbl.municipal,
+                    child_tbl.*, mother_tbl.*, father_tbl.*, att_inf_tbl.*, receive_civil_tbl.*, 
+                    remarks_tbl.*, admission_paternity_tbl.*, late_reg_tbl.*
+                    FROM registration_tbl 
                     LEFT JOIN child_tbl ON registration_tbl.no = child_tbl.no
                     LEFT JOIN mother_tbl ON registration_tbl.no = mother_tbl.no
                     LEFT JOIN father_tbl ON registration_tbl.no = father_tbl.no

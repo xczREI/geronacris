@@ -5,7 +5,7 @@
 	<title>CRS-Dashboard</title>
 	<meta charset="utf-8">
   	<meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="shortcut icon" type="image/x-icon" href="images/logo-3.png">
+    <link rel="shortcut icon" type="image/x-icon" href="images/logo.png">
 	  <link rel="stylesheet" type="text/css" href="bootstrap4/css/bootstrap.min.css"/>
     <script src="bootstrap4/jquery/jquery-3.3.1.min.js" type="text/javascript"></script>
     <script src="bootstrap4/js/bootstrap.min.js"></script>
@@ -200,8 +200,8 @@
 <div class="row" id="row">
   <div class="col-sm-3 bg-dark" style="border-left: 15px solid;" id="sidebar">
       <div class="pic" style="margin-top: 2em;">
-        <center><img src="images/logo-3.png" class="logo">
-            <h4 class="text-uppercase">Civil Registry<br><span class="lblspan">System</span></h4>
+        <center><img src="images/logo.png" class="logo">
+            <h4 class="text-uppercase">Civil Registry Information<br><span class="lblspan">System</span></h4>
         </center>
       </div>
 

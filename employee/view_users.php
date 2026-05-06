@@ -167,7 +167,7 @@
 				    $conn = new mysqli($hn, $un, $pw, $db);
 				    if ($conn->connect_error) die($conn->connect_error);
 
-				      $sql= "SELECT * FROM emp_info NATURAL JOIN (email NATURAL JOIN user_status) WHERE emp_id > '".$_SESSION['id']."' ORDER BY lastname ASC";
+				      $sql= "SELECT * FROM emp_info NATURAL JOIN email NATURAL JOIN user_status WHERE emp_id != '".$_SESSION['id']."' ORDER BY lastname ASC";
 				      $result = $conn->query($sql);  
 				      if (!$result) die ("Database access failed: " . $conn->error);
 

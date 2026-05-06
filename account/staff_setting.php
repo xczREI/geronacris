@@ -111,7 +111,7 @@
   		<div class="pic" style="margin-top: 2em;">
 	  		<center>
 	  			<img src="../images/logo-3.png" class="logo">
-	  			<h4 class="text-uppercase">Civil Registry<br><span class="lblspan">System</span></h4>
+	  			<h4 class="text-uppercase">Civil Registry Information<br><span class="lblspan">System</span></h4>
 	  		</center>
 	  	</div>
 

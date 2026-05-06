@@ -61,7 +61,7 @@
 <body>
 
 <!-- nav top -->
-<nav class="navbar navbar-expand-md bg-success navbar-dark" id="navbar">
+<nav class="navbar navbar-expand-md bg-dark navbar-dark" id="navbar">
   <!-- Brand -->
   <a class="navbar-brand" href="#">
     <div class="media pl-1 mb-3">
@@ -115,7 +115,7 @@
 
 <!--navbar-->
 <div class="row" id="row">
-  <div class="col-sm-3 bg-success" style="border-left: 15px solid; min-height: 100vh;" id="sidebar">
+  <div class="col-sm-3 bg-dark" style="border-left: 15px solid; min-height: 100vh;" id="sidebar">
       <div class="pic" style="margin-top: 2em;">
         <center><img src="../../images/logo.png" class="logo">
             <h4 class="text-uppercase">Civil Registry Information<br><span class="lblspan">System</span></h4>
@@ -168,7 +168,7 @@
     $conn = new mysqli($hn, $un, $pw, $db);
     if ($conn->connect_error) die($conn->connect_error);
 
-    $sql = "SELECT * FROM registration_tbl NATURAL JOIN husband_tbl NATURAL JOIN wife_tbl NATURAL JOIN marriage_tbl ORDER BY reg_date DESC, reg_time DESC";
+    $sql = "SELECT * FROM registration_tbl NATURAL JOIN husband_tbl NATURAL JOIN wife_tbl NATURAL JOIN marriage_tbl ORDER BY mrg_date DESC";
     $result = $conn->query($sql);  
     if (!$result) die ("Database access failed: " . $conn->error);
 

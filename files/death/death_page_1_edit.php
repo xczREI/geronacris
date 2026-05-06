@@ -711,6 +711,35 @@ $(document).ready(function() {
     });
 });
 </script>
+
+<script>
+// Enter to fetch Current Date (ONLY IF EMPTY)
+$(document).ready(function() {
+    const dateFields = [
+        '#attendant_date', '#reviewed_date', '#informant_date', '#prepared_date', '#received_date', '#civil_date',
+        '#burial_issued_date', '#transfer_issued_date'
+    ];
+
+    $(dateFields.join(', ')).on('keydown', function(e) {
+        if (e.key === "Enter") {
+            // Only auto-fill if the input is currently empty
+            if ($(this).val().trim() === "") {
+                const now = new Date();
+                const year = now.getFullYear();
+                const month = String(now.getMonth() + 1).padStart(2, '0');
+                const day = String(now.getDate()).padStart(2, '0');
+                
+                if ($(this).attr('type') === 'date') {
+                    $(this).val(`${year}-${month}-${day}`);
+                } else {
+                    const monthName = now.toLocaleString('default', { month: 'long' }).toUpperCase();
+                    $(this).val(`${monthName} ${day}, ${year}`);
+                }
+            }
+        }
+    });
+});
+</script>
 		  	</div>
 		</div>
  		<div class="row" style="border: 2px solid purple;border-top:none;">

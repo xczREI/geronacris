@@ -443,7 +443,7 @@
 						</div>
 						<div class="custom-control custom-checkbox custom-control-inline mt-1" style="padding: 0; width: 54%;margin-right: 0;">
 							<span class="input-group-text" style="padding:0;border:none; background-color:white; color:black;font-size:14px;">Date&nbsp;</span>
-							<input type="date" class="form-control form-control-sm" name="attendant_date" id="attendant_date" value="<?php echo date('Y-m-d'); ?>">
+							<input type="date" class="form-control form-control-sm" name="attendant_date" id="attendant_date" value="">
 						</div>
 	  				</div>
 			  		<div class="col-5" style="border: 1px solid purple;border-right:none;margin-bottom:2px;">
@@ -451,7 +451,7 @@
 			    		<input type="text" class="form-control form-control-sm"  name="reviewed_name" onkeypress="return isTextKey(event)">
 						<h6 style="font-size:14px;" align="center">(Signature Over Printed Name of Health Officer)</h6>
 						<div class="input-group" style="padding-top: 10px;">
-					    	<input type="date" class="form-control form-control-sm text-center" id="reviewed_date" name="reviewed_date" value="<?php echo date('Y-m-d'); ?>">
+					    	<input type="date" class="form-control form-control-sm text-center" id="reviewed_date" name="reviewed_date" value="">
 					  	</div>
 					    <h6 style="font-size:14px;" align="center">Date</h6>
 			  		</div>
@@ -540,7 +540,7 @@
 			  				<div class="input-group-prepend">
 			      				<span class="input-group-text" style="padding:0;border:none; background-color:white; color:black;font-size:14px;">Date&nbsp;</span>
 			  				</div>
-			    			<input type="date" class="form-control form-control-sm" name="informant_date" id="informant_date" value="<?php echo date('Y-m-d'); ?>">
+			    			<input type="date" class="form-control form-control-sm" name="informant_date" id="informant_date" value="">
 						</div>
 	  				</div>
 			  		<div class="col-6">
@@ -568,7 +568,7 @@
 			  				<div class="input-group-prepend">
 			      				<span class="input-group-text" style="padding:0;border:none; background-color:white; color:black;font-size:14px;">Date&nbsp;</span>
 			  				</div>
-			    			<input type="date" class="form-control form-control-sm" id="prepared_date" name="prepared_date" value="<?php echo date('Y-m-d'); ?>">
+			    			<input type="date" class="form-control form-control-sm" id="prepared_date" name="prepared_date" value="">
 						</div>
 			  		</div>
 	    		</div>
@@ -724,6 +724,35 @@ $(document).ready(function() {
             let index = $canfocus.index(this) + 1;
             if (index < $canfocus.length) {
                 $canfocus.eq(index).focus();
+            }
+        }
+    });
+});
+</script>
+
+<script>
+// Enter to fetch Current Date (ONLY IF EMPTY)
+$(document).ready(function() {
+    const dateFields = [
+        '#attendant_date', '#reviewed_date', '#informant_date', '#prepared_date', '#received_date', '#civil_date',
+        '#burial_issued_date', '#transfer_issued_date'
+    ];
+
+    $(dateFields.join(', ')).on('keydown', function(e) {
+        if (e.key === "Enter") {
+            // Only auto-fill if the input is currently empty
+            if ($(this).val().trim() === "") {
+                const now = new Date();
+                const year = now.getFullYear();
+                const month = String(now.getMonth() + 1).padStart(2, '0');
+                const day = String(now.getDate()).padStart(2, '0');
+                
+                if ($(this).attr('type') === 'date') {
+                    $(this).val(`${year}-${month}-${day}`);
+                } else {
+                    const monthName = now.toLocaleString('default', { month: 'long' }).toUpperCase();
+                    $(this).val(`${monthName} ${day}, ${year}`);
+                }
             }
         }
     });

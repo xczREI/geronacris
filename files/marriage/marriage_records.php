@@ -171,7 +171,7 @@
             if ($conn->connect_error) die($conn->connect_error);
 
             // Updated SQL to sort by newest first like birth_records
-            $sql = "SELECT * FROM registration_tbl NATURAL JOIN husband_tbl NATURAL JOIN wife_tbl NATURAL JOIN marriage_tbl ORDER BY reg_date DESC, reg_time DESC";
+            $sql = "SELECT * FROM registration_tbl NATURAL JOIN husband_tbl NATURAL JOIN wife_tbl NATURAL JOIN marriage_tbl ORDER BY mrg_date DESC";
             $result = $conn->query($sql);  
             if (!$result) die ("Database access failed: " . $conn->error);
 

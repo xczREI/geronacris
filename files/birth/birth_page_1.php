@@ -800,7 +800,7 @@
                                 <div class="input-group-prepend">
                                     <span class="input-group-text" style="padding:0;border:none; background-color:white; color:black;">Name in Print&nbsp;</span>
                                 </div>
-                                <input type="text" class="form-control form-control-sm" name="prepared_name" onkeypress="return isTextKey(event)" value="">
+                                <input type="text" class="form-control form-control-sm" id="prepared_name" name="prepared_name" onkeypress="return isTextKey(event)" value="">
                             </div>
                             <div class="input-group mt-1">
                                 <div class="input-group-prepend">

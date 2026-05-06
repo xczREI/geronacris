@@ -207,7 +207,11 @@
 			$reg_no=null;
 			if (!empty($_GET['reg_no'])){ $reg_no = $conn->real_escape_string($_REQUEST['reg_no']); }
 
-			$sql = "SELECT *, registration_tbl.no as no FROM registration_tbl 
+			$sql = "SELECT registration_tbl.registry_no as registry_no, registration_tbl.no as no, 
+                    registration_tbl.book_no, registration_tbl.page_no, registration_tbl.province, registration_tbl.municipal,
+                    husband_tbl.*, wife_tbl.*, marriage_tbl.*, receive_civil_tbl.*, 
+                    remarks_tbl.*, witness_tbl.*, aff_solemn_tbl.*, late_reg_tbl.*
+                    FROM registration_tbl 
                     LEFT JOIN husband_tbl ON registration_tbl.no = husband_tbl.no
                     LEFT JOIN wife_tbl ON registration_tbl.no = wife_tbl.no
                     LEFT JOIN marriage_tbl ON registration_tbl.no = marriage_tbl.no

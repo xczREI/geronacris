@@ -1,4 +1,41 @@
-<?php include ('logout_session.php'); ?>
+<?php 
+include ('logout_session.php'); 
+
+// 1. Gather all unique years from all 3 databases at the top
+$unique_years = array();
+
+// Helper function to safely fetch years from a specific DB, table, and column
+function getDistinctYears($hn, $un, $pw, $db_name, $table, $column) {
+    $years = array();
+    $conn = @new mysqli($hn, $un, $pw, $db_name);
+    if (!$conn->connect_error) {
+        // Safe query that extracts the first 4 characters for year
+        $sql = "SELECT DISTINCT LEFT($column, 4) AS yr 
+                FROM $table 
+                WHERE $column IS NOT NULL"; 
+        $res = $conn->query($sql);
+        if ($res) {
+            while ($r = $res->fetch_assoc()) {
+                $y = trim($r['yr']);
+                if (is_numeric($y) && strlen($y) == 4) {
+                    $years[] = $y;
+                }
+            }
+        }
+        $conn->close();
+    }
+    return $years;
+}
+
+// Fetch from all 3 databases using Event Dates
+$unique_years = array_merge($unique_years, getDistinctYears('localhost', 'root', '', 'geronacris', 'child_tbl', 'child_birth_date'));
+$unique_years = array_merge($unique_years, getDistinctYears('localhost', 'root', '', 'geronacrisdeath', 'person_tbl', 'date_death'));
+$unique_years = array_merge($unique_years, getDistinctYears('localhost', 'root', '', 'geronamarriage', 'marriage_tbl', 'mrg_date'));
+
+// Clean and sort the final list
+$final_years = array_unique($unique_years);
+rsort($final_years);
+?>
 <!DOCTYPE html>
 <html>
 <head>
@@ -110,7 +147,7 @@
   <div class="col-sm-3 bg-dark" style="border-left: 15px solid; height: 50em;" id="sidebar">
       <div class="pic" style="margin-top: 2em;">
         <center><img src="../images/logo-3.png" class="logo">
-            <h4 class="text-uppercase">Civil Registry<br><span class="lblspan">System</span></h4>
+            <h4 class="text-uppercase">Civil Registry Information<br><span class="lblspan">System</span></h4>
         </center>
       </div>
 
@@ -144,79 +181,6 @@
             </div>
             <div class="col-sm-2 mb-1">
             <label class="small font-weight-bold">MONTH</label>
-            <select class="custom-select" id="month" name="month">
-                <option value="" style="display: none;" selected>-- Select Month --</option>
-                <option value="All">All</option>
-                <option value="01">January</option>
-                <option value="02">February</option>
-                <option value="03">March</option>
-                <option value="04">April</option>
-                <option value="05">May</option>
-                <option value="06">June</option>
-                <option value="07">July</option>
-                <option value="08">August</option>
-                <option value="09">September</option>
-                <option value="10">October</option>
-                <option value="11">November</option>
-                <option value="12">December</option>
-            </select>
-
-            </div>
-            <div class="col-sm-1">
-              <label class="small font-weight-bold invisible">PRINT</label>
-              <button class="btn btn-outline-danger btn-block" type="submit" name="pdf"><i class="fa fa-print"></i></button>
-            </div>
-        </div>
-      </form>      </center>
-      <div class="row" id="myTable">
-
-      </div>
-     
-    </div>
-  </div>
-
-<!--modal-->
-<?php include 'report_modal3_staff.php'; ?>
-
-<!--Javascrpt theme-->
-<script src = "../alertifyjs/alertify.min.js"></script>
-
-<script>
-  $(document).ready(function(){
-    $("#month").change(function(){
-      var month = $("#month").val();
-      var year = $("#year").val();
-
-      $.ajax({
-        type:"POST",
-        url: "other-list.php",   
-        data:{year:year, month:month},
-        cache:false,
-        success:function(data) {
-          $("#myTable").html(data);
-        }
-      }); 
-    });
-    $("#year").change(function(){
-      var month = $("#month").val();
-      var year = $("#year").val();
-
-      $.ajax({
-        type:"POST",
-        url: "other-list.php",   
-        data:{year:year, month:month},
-        cache:false,
-        success:function(data) {
-          $("#myTable").html(data);
-        }
-      });            
-    });
-  });
-</script>
-
-</body>
-</html>
-old">MONTH</label>
             <select class="custom-select" id="month" name="month">
                 <option value="" style="display: none;" selected>-- Select Month --</option>
                 <option value="All">All</option>

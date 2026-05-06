@@ -12,8 +12,7 @@ function getDistinctYears($hn, $un, $pw, $db_name, $table, $column) {
         // Safe query that extracts the first 4 characters for year
         $sql = "SELECT DISTINCT LEFT($column, 4) AS yr 
                 FROM $table 
-                WHERE $column IS NOT NULL 
-                AND $column != ''"; 
+                WHERE $column IS NOT NULL"; 
         $res = $conn->query($sql);
         if ($res) {
             while ($r = $res->fetch_assoc()) {

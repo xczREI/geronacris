@@ -72,7 +72,24 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     $reg_no = isset($_REQUEST['no']) ? $_REQUEST['no'] : '';
 
-    $sql = "SELECT * FROM registration_tbl NATURAL JOIN (person_tbl NATURAL JOIN death_cause_eight_days NATURAL JOIN att_rev_tbl NATURAL JOIN corpse_disposal_tbl NATURAL JOIN inf_pre_tbl NATURAL JOIN receive_civil_tbl NATURAL JOIN remarks_tbl NATURAL JOIN death_cause_zero_seven NATURAL JOIN autopsy_tbl NATURAL JOIN embalmer_tbl NATURAL JOIN late_reg_tbl) WHERE no = '$reg_no'";
+    $sql = "SELECT registration_tbl.registry_no as registry_no, registration_tbl.no as no, 
+            registration_tbl.book_no, registration_tbl.page_no, registration_tbl.province, registration_tbl.municipal,
+            person_tbl.*, death_cause_eight_days.*, att_rev_tbl.*, corpse_disposal_tbl.*, 
+            inf_pre_tbl.*, receive_civil_tbl.*, remarks_tbl.*, death_cause_zero_seven.*, 
+            autopsy_tbl.*, embalmer_tbl.*, late_reg_tbl.*
+            FROM registration_tbl 
+            LEFT JOIN person_tbl ON registration_tbl.no = person_tbl.no 
+            LEFT JOIN death_cause_eight_days ON registration_tbl.no = death_cause_eight_days.no 
+            LEFT JOIN att_rev_tbl ON registration_tbl.no = att_rev_tbl.no 
+            LEFT JOIN corpse_disposal_tbl ON registration_tbl.no = corpse_disposal_tbl.no 
+            LEFT JOIN inf_pre_tbl ON registration_tbl.no = inf_pre_tbl.no 
+            LEFT JOIN receive_civil_tbl ON registration_tbl.no = receive_civil_tbl.no 
+            LEFT JOIN remarks_tbl ON registration_tbl.no = remarks_tbl.no 
+            LEFT JOIN death_cause_zero_seven ON registration_tbl.no = death_cause_zero_seven.no 
+            LEFT JOIN autopsy_tbl ON registration_tbl.no = autopsy_tbl.no 
+            LEFT JOIN embalmer_tbl ON registration_tbl.no = embalmer_tbl.no 
+            LEFT JOIN late_reg_tbl ON registration_tbl.no = late_reg_tbl.no 
+            WHERE registration_tbl.no = '$reg_no'";
     $result = $conn->query($sql);  
     if (!$result) die ("Database access failed: " . $conn->error);
 

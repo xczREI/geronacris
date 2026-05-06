@@ -800,7 +800,7 @@
                                 <div class="input-group-prepend">
                                     <span class="input-group-text" style="padding:0;border:none; background-color:white; color:black;">Name in Print&nbsp;</span>
                                 </div>
-                                <input type="text" class="form-control form-control-sm" name="prepared_name" onkeypress="return isTextKey(event)" value="<?php echo $row['prepared_name'] ?? ''; ?>">
+                                <input type="text" class="form-control form-control-sm" id="prepared_name" name="prepared_name" onkeypress="return isTextKey(event)" value="<?php echo $row['prepared_name'] ?? ''; ?>">
                             </div>
                             <div class="input-group mt-1">
                                 <div class="input-group-prepend">
@@ -834,7 +834,7 @@
                                 <div class="input-group-prepend">
                                     <span class="input-group-text" style="padding:0;border:none; background-color:white; color:black;">Name in Print&nbsp;</span>
                                 </div>
-                                <input type="text" class="form-control form-control-sm"  name="received_name" onkeypress="return isTextKey(event)" value="<?php echo $row['received_name'] ?? ''; ?>">
+                                <input type="text" class="form-control form-control-sm"  id="received_name" name="received_name" onkeypress="return isTextKey(event)" value="<?php echo $row['received_name'] ?? ''; ?>">
                             </div>
                             <div class="input-group mt-1">
                                 <div class="input-group-prepend">
@@ -1365,13 +1365,16 @@ $(document).ready(function() {
     $(dateFields.join(', ')).on('keydown', function(e) {
         if (e.key === "Enter") {
             e.preventDefault(); 
-            const now = new Date();
-            const day = now.getDate();
-            const year = now.getFullYear();
-            const monthName = now.toLocaleString('default', { month: 'long' }).toUpperCase();
-            const formattedDate = `${monthName} ${day}, ${year}`;
-
-            $(this).val(formattedDate);
+            
+            // Only auto-fill if the input is currently empty
+            if ($(this).val().trim() === "") {
+                const now = new Date();
+                const day = now.getDate();
+                const year = now.getFullYear();
+                const monthName = now.toLocaleString('default', { month: 'long' }).toUpperCase();
+                const formattedDate = `${monthName} ${day}, ${year}`;
+                $(this).val(formattedDate);
+            }
 
             const currentId = $(this).attr('id');
             if (currentId === 'attendant_date') $('#informant_name').focus();

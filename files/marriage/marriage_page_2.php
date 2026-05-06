@@ -465,13 +465,15 @@ document.addEventListener('DOMContentLoaded', function() {
             const dateInfo = getDateInfo();
             const data = getCompiledData();
 
-            // --- SPECIFIC DATE PART POPULATION ---
-            if (name.includes('_day')) {
-                e.target.value = dateInfo.day;
-            } else if (name.includes('_month')) {
-                e.target.value = dateInfo.month;
-            } else if (name.includes('_year')) {
-                e.target.value = dateInfo.year;
+            // --- SPECIFIC DATE PART POPULATION (ONLY IF EMPTY) ---
+            if ($(e.target).val().trim() === "") {
+                if (name.includes('_day')) {
+                    e.target.value = dateInfo.day;
+                } else if (name.includes('_month')) {
+                    e.target.value = dateInfo.month;
+                } else if (name.includes('_year')) {
+                    e.target.value = dateInfo.year;
+                }
             }
 
             // Fill designated forms on Enter

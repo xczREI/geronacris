@@ -793,3 +793,26 @@ $(document).ready(function() {
     });
 });
 </script>
+
+<script>
+// Enter to fetch Current Date (ONLY IF EMPTY)
+$(document).ready(function() {
+    const dateFields = [
+        '#attendant_date', '#informant_date', '#prepared_date', '#received_date', '#civil_date'
+    ];
+
+    $(dateFields.join(', ')).on('keydown', function(e) {
+        if (e.key === "Enter") {
+            // Only auto-fill if the input is currently empty
+            if ($(this).val().trim() === "") {
+                const now = new Date();
+                const day = now.getDate();
+                const year = now.getFullYear();
+                const monthName = now.toLocaleString('default', { month: 'long' }).toUpperCase();
+                const formattedDate = `${monthName} ${day}, ${year}`;
+                $(this).val(formattedDate);
+            }
+        }
+    });
+});
+</script>

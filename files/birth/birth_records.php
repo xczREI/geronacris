@@ -153,7 +153,7 @@
     $conn = new mysqli($hn, $un, $pw, $db);
     if ($conn->connect_error) die($conn->connect_error);
 
-    $sql = "SELECT * FROM registration_tbl NATURAL JOIN child_tbl ORDER BY reg_date DESC, reg_time DESC";
+    $sql = "SELECT * FROM registration_tbl NATURAL JOIN child_tbl ORDER BY child_birth_date DESC";
     $result = $conn->query($sql);  
     
     if ($result) {

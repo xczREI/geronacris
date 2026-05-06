@@ -36,7 +36,7 @@
 </head>
 <body>
 
-<nav class="navbar navbar-expand-md bg-success navbar-dark" id="navbar">
+<nav class="navbar navbar-expand-md bg-dark navbar-dark" id="navbar">
     <a class="navbar-brand" href="#">
         <div class="media pl-1">
             <?php $type = $_SESSION['type']; $avatar = ($type == 'Admin') ? 'img_avatar3.png' : 'img_avatar2.png'; ?>
@@ -59,44 +59,57 @@
     </div>
 </nav>
 
-<div class="nav-top p-2" id="topbar">
-    <div class="d-flex justify-content-between align-items-center">
-        <h5 class="text-uppercase mb-0" style="font-family: 'Century Gothic', sans-serif;">
-            <i class="fa fa-angle-right"></i> <?php echo $_SESSION['type']; ?> Account
-        </h5>
-        <h6>
-            <img src="../../images/<?php echo $avatar; ?>" class="mr-2 rounded-circle" style="width:35px;">
-            <?php echo $_SESSION['firstname'].' '.$_SESSION['lastname']; ?>
-        </h6>
+<div class="nav-top" id="topbar">
+  <div class="media">
+  <h5 class="text-left pt-2 text-uppercase" style="font-family: century gothic;"><i class="fa fa-angle-right"></i> <?php echo $_SESSION['type']; ?> Account</h5>
+    <div class="media-body">
+      <h6 class="text-right mb-3">
+        <?php $type = $_SESSION['type']; if ($type == 'Admin') { ?>
+            <img src="../../images/img_avatar3.png" class="mr-3 mt-0 rounded-circle" style="width:40px;">
+        <?php } else if ($type == 'Staff') { ?>
+            <img src="../../images/img_avatar2.png" class="mr-3 mt-0 rounded-circle" style="width:40px;">
+        <?php } ?>
+
+        <?php echo $_SESSION['firstname'].' '.$_SESSION['lastname']; ?>
+      </h6>
     </div>
+  </div>
 </div>
 
-<div class="container-fluid">
-    <div class="row">
-        <div class="col-md-3 bg-success text-white min-vh-100" id="sidebar" style="border-left: 15px solid;">
-            <div class="text-center mt-4">
-                <img src="../../images/logo.png" class="logo mb-2" style="width: 80px;">
-                <h4 class="text-uppercase">Civil Registry Information<br><span class="lblspan">System</span></h4>
-            </div>
-            <nav class="navbar mt-5">
-                <ul class="navbar-nav w-100" style="padding-bottom:6em;">
-                    <li class="nav-item"><a class="nav-link" id="nav-link" href="../../home_staff.php"><i class="fa fa-clock-o fa-fw"></i> Dashboard</a></li>
-                    <li class="nav-item"><a class="nav-link active" id="nav-link_active" href="../files_staff.php"><i class="fa fa-bookmark-o fa-fw"></i> Registration</a></li>
-                    <li class="nav-item"><a class="nav-link" data-toggle="modal" href="#myreport" id="nav-link"><i class="fa fa-file-o fa-fw"></i> Report</a></li>
-                    <li class="nav-item"><a class="nav-link" id="nav-link" href="../../php/logout.php"><i class="fa fa-eject fa-fw"></i> Logout</a></li>
-                </ul>
-            </nav>
-        </div>
+<!--navbar-->
+<div class="row" id="row">
+  <div class="col-sm-3 bg-dark" style="border-left: 15px solid; min-height: 100vh;" id="sidebar">
+      <div class="pic" style="margin-top: 2em;">
+        <center><img src="../../images/logo.png" class="logo">
+            <h4 class="text-uppercase">Civil Registry Information<br><span class="lblspan">System</span></h4>
+        </center>
+      </div>
 
-        <div class="col-md-9 pt-4" id="body">
-            <div class="row mb-3">
-                <div class="col-md-8">
-                    <input class="form-control" id="myInput" type="text" placeholder="Search records...">
-                </div>
-                <div class="col-md-4">
-                    <a class="btn btn-outline-success btn-block" href="birth_cerf_staff.php">Data Entry</a>
-                </div>
-            </div>
+  <!--nav-side-->
+    <div class="aside mb-5" style="margin-top: 3em;">
+      <nav class="navbar">
+        <ul class="navbar-nav" style="padding-bottom:6em;">
+            <li class="nav-item"><a class="nav-link" id="nav-link" href="../../home_staff.php">&emsp;<i class="fa fa-clock-o fa-fw"></i>Dashboard</a></li>
+            <li class="nav-item"><a class="nav-link active" id="nav-link_active" href="../files_staff.php" >&emsp;<i class="fa fa-bookmark-o fa-fw"></i>Registration</a></li>
+            <li class="nav-item"><a class="nav-link" data-toggle="modal" href="#myreport" id="nav-link">
+              &emsp;<i class="fa fa-file-o fa-fw"></i>Report</a></li>
+            <li class="nav-item"><a class="nav-link" id="nav-link" href="../../php/logout.php">&emsp;<i class="fa fa-eject fa-fw"></i>Logout</a></li>
+        </ul>
+      </nav>
+    </div>
+
+  </div><!--end col-3-->
+
+  	<div class="col-sm-9" style="padding-top: 7%;" id="body">
+	    <div class="row">
+	    	<div class="col-sm-7 mb-1">
+	    		<input class="form-control" id="myInput" type="text" placeholder="Search..">
+	    	</div>
+	    	<div class="col-sm-3"></div>
+	    	<div class="col-sm-2">
+	    		<a class="btn btn-outline-info btn-block" href="birth_cerf_staff.php" style="overflow:auto;">Data Entry</a>
+	    	</div>
+	    </div>
 
             <div class="table-responsive">
                 <table class="table table-hover table-sm">
@@ -118,7 +131,7 @@
                         $conn = new mysqli($hn, $un, $pw, $db);
                         if ($conn->connect_error) die("Connection Failed");
 
-                        $sql = "SELECT * FROM registration_tbl NATURAL JOIN child_tbl ORDER BY reg_date DESC, reg_time DESC";
+                        $sql = "SELECT * FROM registration_tbl NATURAL JOIN child_tbl ORDER BY child_birth_date DESC";
                         $result = $conn->query($sql);
                         
                         if (!$result) die ("Database access failed: " . $conn->error);
