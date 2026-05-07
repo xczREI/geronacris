@@ -317,101 +317,107 @@ try {
 
     // 1. Paternity Affidavit
     $patType = strtoupper($row['paternity_type'] ?? '');
-    if ($patType == 'I') { $pdf->SetXY(31.5, 31.5); $pdf->Cell(0, 10, 'X', 0, 1); }
-    else if ($patType == 'WE') { $pdf->SetXY(43.5, 31.5); $pdf->Cell(0, 10, 'X', 0, 1); }
-
-    fitTextInCell($pdf, 33, 31.5, 77, 5, $father_full_name);
-    if ($patType != 'I') fitTextInCell($pdf, 120, 31.5, 77, 5, $mother_full_name);
+    if (empty($patType) && !empty($row['father_name'])) {
+        $patType = (!empty($row['mother_name'])) ? 'WE' : 'I';
+    }
     
-    fitTextInCell($pdf, 65, 36.5, 100, 5, $child_full_name);
+    if ($patType == 'I') { $pdf->SetXY(31.5, 29.5); $pdf->Cell(0, 10, 'X', 0, 1); }
+    else if ($patType == 'WE') { $pdf->SetXY(43.5, 29.5); $pdf->Cell(0, 10, 'X', 0, 1); }
+
+    fitTextInCell($pdf, 33, 29.5, 77, 5, $father_full_name);
+    if ($patType != 'I') fitTextInCell($pdf, 120, 29.5, 77, 5, $mother_full_name);
+    
+    fitTextInCell($pdf, 65, 34.5, 100, 5, $child_full_name);
     $dateB = (!empty($row['child_birth_date']) && $row['child_birth_date'] != '0000-00-00') ? date('F j, Y', strtotime($row['child_birth_date'])) : ($row['birth_date'] ?? '');
-    fitTextInCell($pdf, 25, 41.5, 55, 5, $dateB);
-    fitTextInCellAddress($pdf, 93, 41.5, 100, 5, $birth_place_fallback);
+    fitTextInCell($pdf, 25, 39.5, 55, 5, $dateB);
+    fitTextInCellAddress($pdf, 93, 39.5, 100, 5, $birth_place_fallback);
     
     // Signatures
-    fitTextInCell($pdf, 15, 62, 64, 5, $father_full_name);
-    if ($patType != 'I') fitTextInCell($pdf, 132, 62, 64, 5, $mother_full_name);
+    fitTextInCell($pdf, 15, 60, 64, 5, $father_full_name);
+    if ($patType != 'I') fitTextInCell($pdf, 132, 60, 64, 5, $mother_full_name);
     
     // Subscribed and Sworn
     $sDay = addOrdinalSuffix((int)($row['sworn_day'] ?? 0));
-    $pdf->SetXY(96, 77.5); $pdf->Cell(0, 10, strtolower($sDay), 0, 1);
-    $pdf->SetXY(137, 77.5); $pdf->Cell(0, 10, strtoupper($row['sworn_month'] ?? ''), 0, 1);
-    $pdf->SetXY(175, 77.5); $pdf->Cell(0, 10, strtoupper($row['sworn_year'] ?? ''), 0, 1);
+    $pdf->SetXY(96, 75.5); $pdf->Cell(0, 10, strtolower($sDay), 0, 1);
+    $pdf->SetXY(137, 75.5); $pdf->Cell(0, 10, strtoupper($row['sworn_month'] ?? ''), 0, 1);
+    $pdf->SetXY(175, 75.5); $pdf->Cell(0, 10, strtoupper($row['sworn_year'] ?? ''), 0, 1);
     
-    fitTextInCell($pdf, 14, 83.4, 64, 5, $father_full_name);
-    if ($patType != 'I') fitTextInCell($pdf, 85, 83.4, 64, 5, $mother_full_name);
+    fitTextInCell($pdf, 14, 81.4, 64, 5, $father_full_name);
+    if ($patType != 'I') fitTextInCell($pdf, 85, 81.4, 64, 5, $mother_full_name);
     
     $genderP = strtolower(trim($row['child_gender'] ?? ''));
-    if ($genderP == 'his') { $pdf->SetXY(168.8, 82.5); $pdf->Cell(0, 10, 'X', 0, 1); }
-    else if ($genderP == 'her') { $pdf->SetXY(177.8, 82.5); $pdf->Cell(0, 10, 'X', 0, 1); }
+    if ($genderP == 'his') { $pdf->SetXY(168.8, 80.5); $pdf->Cell(0, 10, 'X', 0, 1); }
+    else if ($genderP == 'her') { $pdf->SetXY(177.8, 80.5); $pdf->Cell(0, 10, 'X', 0, 1); }
     
-    $pdf->SetXY(38, 87.5); $pdf->Cell(0, 10, strtoupper($row['ctc'] ?? ''), 0, 1);
-    $pdf->SetXY(138, 87.5); $pdf->Cell(0, 10, strtoupper($row['issued_on'] ?? ''), 0, 1);
-    fitTextInCell($pdf, 14, 94.5, 75, 5, $row['issued_at'] ?? '');
+    $pdf->SetXY(38, 85.5); $pdf->Cell(0, 10, strtoupper($row['ctc'] ?? ''), 0, 1);
+    $pdf->SetXY(138, 85.5); $pdf->Cell(0, 10, strtoupper($row['issued_on'] ?? ''), 0, 1);
+    fitTextInCell($pdf, 14, 92.5, 75, 5, $row['issued_at'] ?? '');
     
-    fitTextInCell($pdf, 15, 121.5, 64, 5, $row['administer_name'] ?? '');
-    fitTextInCell($pdf, 132, 112.5, 64, 5, $row['administer_position'] ?? '');
-    fitTextInCell($pdf, 132, 121.5, 64, 5, $row['administer_address'] ?? '');
+    fitTextInCell($pdf, 15, 119.5, 64, 5, $row['administer_name'] ?? '');
+    fitTextInCell($pdf, 132, 110.5, 64, 5, $row['administer_position'] ?? '');
+    fitTextInCell($pdf, 132, 119.5, 64, 5, $row['administer_address'] ?? '');
 
     // 2. Delayed Registration Affidavit
-    fitTextInCell($pdf, 26, 143, 77, 5, $row['late_name'] ?? '');
-    fitTextInCellAddress($pdf, 70, 149.5, 127, 5, $row['late_address'] ?? '');
+    fitTextInCell($pdf, 26, 141, 77, 5, $row['late_name'] ?? '');
+    fitTextInCellAddress($pdf, 70, 147.5, 127, 5, $row['late_address'] ?? '');
     
     $late_birth = strtolower(trim($row['late_birth_type'] ?? ''));
     if ($late_birth == 'my birth') {
-        $pdf->SetXY(29.8, 167.5); $pdf->Cell(0, 10, 'X', 0, 1);
-        fitTextInCell($pdf, 55, 168.5, 66, 5, $row['late_birth_in'] ?? '');
+        $pdf->SetXY(29.8, 165.5); $pdf->Cell(0, 10, 'X', 0, 1);
+        fitTextInCell($pdf, 55, 166.5, 66, 5, $row['late_birth_in'] ?? '');
         if (!empty($row['late_birth_on']) && $row['late_birth_on'] != '0000-00-00') {
             $lOn = (strtotime($row['late_birth_on'])) ? date('F j, Y', strtotime($row['late_birth_on'])) : $row['late_birth_on'];
-            fitTextInCell($pdf, 128, 168.5, 68, 5, strtoupper($lOn));
+            fitTextInCell($pdf, 128, 166.5, 68, 5, strtoupper($lOn));
         }
     } else if ($late_birth == 'the birth'){
-        $pdf->SetXY(29.8, 173.8); $pdf->Cell(0, 10, 'X', 0, 1);
-        fitTextInCell($pdf, 55, 177.5, 60, 5, $row['late_birth_of'] ?? '');
-        fitTextInCell($pdf, 147, 177.5, 50, 5, $row['late_birth_in'] ?? '');
+        $pdf->SetXY(29.8, 171.8); $pdf->Cell(0, 10, 'X', 0, 1);
+        fitTextInCell($pdf, 55, 175.5, 60, 5, $row['late_birth_of'] ?? '');
+        fitTextInCell($pdf, 147, 175.5, 50, 5, $row['late_birth_in'] ?? '');
         if (!empty($row['late_birth_on']) && $row['late_birth_on'] != '0000-00-00') {
             $lOn2 = (strtotime($row['late_birth_on'])) ? date('F j, Y', strtotime($row['late_birth_on'])) : $row['late_birth_on'];
-            $pdf->SetXY(104.3, 180.5); $pdf->Cell(0, 10, strtoupper($lOn2), 0, 1); 
+            $pdf->SetXY(104.3, 178.5); $pdf->Cell(0, 10, strtoupper($lOn2), 0, 1); 
         }
     }
     
-    fitTextInCell($pdf, 93, 189, 78, 5, $row['attend_birth_by'] ?? '');
-    fitTextInCell($pdf, 27, 193.5, 138, 5, $row['who_resides_at'] ?? '');
-    fitTextInCell($pdf, 82, 201.5, 88, 5, $row['late_citizen'] ?? '');
+    fitTextInCell($pdf, 93, 187, 78, 5, $row['attend_birth_by'] ?? '');
+    fitTextInCell($pdf, 27, 191.5, 138, 5, $row['who_resides_at'] ?? '');
+    fitTextInCell($pdf, 82, 199.5, 88, 5, $row['late_citizen'] ?? '');
     
     $mType1 = strtolower(trim($row['married_type'] ?? ''));
     if ($mType1 == 'married') {
-        $pdf->SetXY(77.1, 206.5); $pdf->Cell(0, 10, 'X', 0, 1);
+        $pdf->SetXY(77.1, 204.5); $pdf->Cell(0, 10, 'X', 0, 1);
         if (!empty($row['married_on']) && $row['married_on'] != '0000-00-00') { 
             $mD = (strtotime($row['married_on'])) ? date('F j, Y', strtotime($row['married_on'])) : $row['married_on'];
-            $pdf->SetXY(108.6, 206.5); $pdf->Cell(0, 10, strtoupper($mD), 0, 1); 
+            $pdf->SetXY(108.6, 204.5); $pdf->Cell(0, 10, strtoupper($mD), 0, 1); 
         }
-        fitTextInCell($pdf, 156, 209, 42, 5, $row['married_at'] ?? '');
+        fitTextInCell($pdf, 156, 204.5, 42, 5, $row['married_at'] ?? '');
     } else if ($mType1 == 'not married') {
-        $pdf->SetXY(74.1, 217.5); $pdf->Cell(0, 10, 'X', 0, 1);
-        fitTextInCell($pdf, 140, 226, 52, 5, $row['not_married_name'] ?? '');
+        $pdf->SetXY(74.1, 215.5); $pdf->Cell(0, 10, 'X', 0, 1);
+        fitTextInCell($pdf, 140, 224, 52, 5, $row['not_married_name'] ?? '');
     }
     
-    fitTextInCell($pdf, 133, 232.5, 65, 5, $row['late_reg_reason'] ?? '');
-    fitTextInCell($pdf, 105, 243.5, 73, 5, $row['applicant_only'] ?? '');
-    fitTextInCell($pdf, 138, 249.5, 29, 5, $row['applicant_than_owner'] ?? '');
+    fitTextInCell($pdf, 133, 230.5, 65, 5, $row['late_reg_reason'] ?? '');
+    fitTextInCell($pdf, 105, 241.5, 73, 5, $row['applicant_only'] ?? '');
+    fitTextInCell($pdf, 138, 247.5, 29, 5, $row['applicant_than_owner'] ?? '');
     
-    $pdf->SetXY(120, 270.5); $pdf->Cell(0, 10, addOrdinalSuffix((int)($row['sign_day'] ?? 0)), 0, 1);
-    $pdf->SetXY(151, 270.5); $pdf->Cell(0, 10, strtoupper(($row['sign_month'] ?? '') . ' ' . ($row['sign_year'] ?? '')), 0, 1);
-    fitTextInCellAddress($pdf, 82, 278.5, 67, 4, $row['sign_at'] ?? '');
-    fitTextInCell($pdf, 147, 281.5, 60, 4, $row['affiant_name'] ?? '');
+    $pdf->SetXY(120, 268.5); $pdf->Cell(0, 10, addOrdinalSuffix((int)($row['sign_day'] ?? 0)), 0, 1);
+    $pdf->SetXY(151, 268.5); $pdf->Cell(0, 10, strtoupper(($row['sign_month'] ?? '') . ' ' . ($row['sign_year'] ?? '')), 0, 1);
+    fitTextInCellAddress($pdf, 82, 276.5, 67, 4, $row['sign_at'] ?? '');
+    fitTextInCell($pdf, 147, 279.5, 60, 4, $row['affiant_name'] ?? '');
     
     $lsDay = addOrdinalSuffix((int)($row['late_sworn_day'] ?? 0));
-    $pdf->SetXY(102, 300.5); $pdf->Cell(0, 10, strtolower($lsDay), 0, 1);
-    $pdf->SetXY(132, 300.5); $pdf->Cell(0, 10, strtoupper($row['late_sworn_month'] ?? ''), 0, 1);
-    $pdf->SetXY(172, 300.5); $pdf->Cell(0, 10, strtoupper($row['late_sworn_year'] ?? ''), 0, 1);
+    $pdf->SetXY(102, 298.5); $pdf->Cell(0, 10, strtolower($lsDay), 0, 1);
+    $pdf->SetXY(132, 298.5); $pdf->Cell(0, 10, strtoupper($row['late_sworn_month'] ?? ''), 0, 1);
+    $pdf->SetXY(172, 298.5); $pdf->Cell(0, 10, strtoupper($row['late_sworn_year'] ?? ''), 0, 1);
+    fitTextInCellAddress($pdf, 15, 304.5, 73, 5, $row['late_sworn_at'] ?? ''); // Moved from 307.5 overlap
     
-    fitTextInCellAddress($pdf, 15, 309.5, 73, 5, $row['late_sworn_at'] ?? '');
-    $pdf->SetXY(17, 309.5); $pdf->Cell(0, 10, strtoupper($row['late_ctc'] ?? ''), 0, 1);
-    $pdf->SetXY(77, 313.5); $pdf->Cell(0, 10, strtoupper($row['late_issued_on'] ?? ''), 0, 1);
+    $pdf->SetXY(40, 311.5); $pdf->Cell(0, 10, strtoupper($row['late_ctc'] ?? ''), 0, 1);
+    $pdf->SetXY(85, 311.5); $pdf->Cell(0, 10, strtoupper($row['late_issued_on'] ?? ''), 0, 1);
+    $pdf->SetXY(145, 311.5); $pdf->Cell(0, 10, strtoupper($row['late_issued_at'] ?? ''), 0, 1);
     
-    fitTextInCell($pdf, 25, 322.5, 76, 5, ($row['late_administer_name'] ?? ''));
-    fitTextInCellAddress($pdf, 127, 322.5, 76, 5, ($row['late_administer_address'] ?? ''));
+    fitTextInCell($pdf, 25, 320.5, 76, 5, ($row['late_administer_name'] ?? ''));
+    fitTextInCell($pdf, 132, 314.5, 64, 5, $row['late_administer_position'] ?? ''); // Moved down from 311.5 to avoid overlap
+    fitTextInCellAddress($pdf, 127, 320.5, 76, 5, ($row['late_administer_address'] ?? ''));
 
     ob_end_clean();
     $pdf->Output('I', $filename);

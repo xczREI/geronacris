@@ -16,10 +16,8 @@
 
   <style>
     #navbar{ display: none; }
-    .cerf_pic{ width:30%; }
+    .cerf_pic{ width:120px; height: auto; }
     .cerf_txt{ font-size: 170%; }
-    .cerf_pic1{ width:35%; }
-    .cerf_txt1{ font-size: 155%; }
     @media only screen and (max-width: 768px) {
                 /* For mobile phones: */
       [class*="col-"] {
@@ -47,11 +45,8 @@
         transition: all 0.3s ease;
         letter-spacing: 1px;
       }
-      .cerf_pic{ width:25%; }
-      #cerf_pic{ width:30%; }
+      .cerf_pic{ width: 80px; }
       .cerf_txt{ font-size: 150%; }
-      .cerf_pic1{ width:30%; }
-      .cerf_txt1{ font-size: 135%; }
     }
   </style>
 </head>
@@ -138,10 +133,10 @@
   	</div><!--end col-3-->
 
   	<div class="col-sm-9" style="padding-top: 7%;" id="body">
-	  	<div class="row" style="padding-top: 7%;">
+	  	<div class="row">
 	  	    <div class="col-sm-12">
 		  	  	<div class="row">
-		  	  		<div class="col-sm-4 mb-5" align="center"><button type="button" data-toggle="collapse" data-target="#demo1" id="btn1"><img src="../images/b.png" class="cerf_pic" id="cerf_pic"><br> <span class="cerf_txt">birth<br>registration</span></button>
+		  	  		<div class="col-sm-4 mb-5" align="center"><button type="button" data-toggle="collapse" data-target="#demo1" id="btn1"><img src="../images/b.png" class="cerf_pic"><br> <span class="cerf_txt">birth<br>registration</span></button>
 			  	  		<div id="demo1" class="collapse"><br>
 				        	<a class="dropdown-item" href="birth/birth_cerf.php">Data Entry</a>
 				        	<a class="dropdown-item" href="birth/birth_records.php"><!--Query-->Records</a>

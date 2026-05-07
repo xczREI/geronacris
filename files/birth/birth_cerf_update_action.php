@@ -138,7 +138,7 @@
       $birth_place = $conn->real_escape_string($_POST['birth_place'] ?? '');
       
       $sworn_day = !empty($_POST['ack_sworn_day']) ? (int)$_POST['ack_sworn_day'] : 0;
-      $sworn_month = !empty($_POST['ack_sworn_month']) ? (int)$_POST['ack_sworn_month'] : 0;
+      $sworn_month = $conn->real_escape_string($_POST['ack_sworn_month'] ?? '');
       $sworn_year = !empty($_POST['ack_sworn_year']) ? (int)$_POST['ack_sworn_year'] : 0;
 
       $birth_gender = $_POST['birth_gender'] ?? '';
@@ -181,14 +181,14 @@
       $applicant_than_owner = $conn->real_escape_string($_POST['applicant_than_owner'] ?? '');
       
       $sign_day = !empty($_POST['sign_day']) ? (int)$_POST['sign_day'] : 0;
-      $sign_month = !empty($_POST['sign_month']) ? (int)$_POST['sign_month'] : 0;
+      $sign_month = $conn->real_escape_string($_POST['sign_month'] ?? '');
       $sign_year = !empty($_POST['sign_year']) ? (int)$_POST['sign_year'] : 0;
       
       $sign_at = $conn->real_escape_string($_POST['sign_at'] ?? '');
       $affiant_name = $conn->real_escape_string($_POST['affiant_name'] ?? '');
 
       $late_sworn_day = !empty($_POST['late_sworn_day']) ? (int)$_POST['late_sworn_day'] : 0;
-      $late_sworn_month = !empty($_POST['late_sworn_month']) ? (int)$_POST['late_sworn_month'] : 0;
+      $late_sworn_month = $conn->real_escape_string($_POST['late_sworn_month'] ?? '');
       $late_sworn_year = !empty($_POST['late_sworn_year']) ? (int)$_POST['late_sworn_year'] : 0;
       
       $late_sworn_at = $conn->real_escape_string($_POST['late_sworn_at'] ?? '');
