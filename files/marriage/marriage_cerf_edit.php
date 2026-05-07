@@ -126,8 +126,8 @@
                         </div>
                         <div class="col-md-9 d-flex justify-content-between">
                             <button type="button" class="btn btn-light border py-1 font-weight-bold" style="background: white; width: 23%;" onclick="openLivePreview()">Preview</button>
-                            <a href="print_3A.php?no=<?php echo $row['no']; ?>" target="_blank" class="btn btn-light border py-1" style="background: white; width: 24%; text-align: center; text-decoration: none; color: black; font-size: 13px;">Print Form 3A</a>
-                            <a href="print_97.php?no=<?php echo $row['no']; ?>" target="_blank" class="btn btn-light border py-1" style="background: white; width: 24%; text-align: center; text-decoration: none; color: black; font-size: 13px;">Print Form 97</a>
+                            <button type="button" class="btn btn-light border py-1" style="background: white; width: 24%; text-align: center; text-decoration: none; color: black; font-size: 13px;" data-toggle="modal" data-target="#my3A">Print Form 3A</button>
+                            <button type="button" class="btn btn-light border py-1" style="background: white; width: 24%; text-align: center; text-decoration: none; color: black; font-size: 13px;" data-toggle="modal" data-target="#my97">Print Form 97</button>
                             <button type="button" class="btn btn-light border py-1 font-weight-bold" style="background: white; width: 23%;" data-toggle="modal" data-target="#myreprint">Reprint</button>
                         </div>
                     </div>

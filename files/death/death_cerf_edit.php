@@ -394,9 +394,8 @@ if (!empty($id)) {
                         <div class="col-md-9 d-flex justify-content-between">
                             <button type="button" class="btn btn-light border py-1 font-weight-bold" style="background: white; width: 23%;" onclick="openLivePreview()">Preview</button>
                             
-                            <a href="print_103.php?no=<?php echo $row['no'] ?? $id; ?>" target="_blank" class="btn btn-light border py-1" style="background: white; width: 24%; text-align: center; text-decoration: none; color: black; font-size: 13px;">Print Form No. 103</a>
-                            
-                            <a href="print_2A.php?no=<?php echo $row['no'] ?? $id; ?>" target="_blank" class="btn btn-light border py-1" style="background: white; width: 24%; text-align: center; text-decoration: none; color: black; font-size: 13px;">Print Form No. 2A</a>
+                            <button type="button" class="btn btn-light border py-1" style="background: white; width: 24%; text-align: center; text-decoration: none; color: black; font-size: 13px;" data-toggle="modal" data-target="#my103">Print Form No. 103</button>
+                            <button type="button" class="btn btn-light border py-1" style="background: white; width: 24%; text-align: center; text-decoration: none; color: black; font-size: 13px;" data-toggle="modal" data-target="#my2A">Print Form No. 2A</button>
                             
                             <button type="button" class="btn btn-light border py-1 font-weight-bold" style="background: white; width: 23%;" data-toggle="modal" data-target="#myreprint">Reprint</button>
                         </div>

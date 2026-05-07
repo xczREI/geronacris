@@ -49,7 +49,7 @@
           </div>
           
           <div class="modal-footer">
-            <button type="submit" class="btn btn-outline-danger btn-block" name="print">
+            <button type="button" class="btn btn-outline-danger btn-block" name="print" onclick="submitToPrint('print_102.php', 'my102')">
                 <i class="fa fa-print"></i> PRINT
             </button>
           </div>

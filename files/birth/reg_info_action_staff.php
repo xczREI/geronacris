@@ -1,14 +1,3 @@
-Here is the corrected PHP code. 
-
-### What was fixed:
-1. **Missing `catch` block**: A `try` block must be paired with a `catch` block in PHP. I added the `catch (Exception $e)` block to properly handle the exception you throw when a duplicate registry number is found.
-2. **Missing `commit()` and `rollback()`**: You started a transaction (`$conn->begin_transaction()`) but never committed it. I added `$conn->commit()` at the end of the `try` block and `$conn->rollback()` inside the `catch` block to ensure data integrity.
-3. **Closing Brace for `if`**: The opening `if (isset($_POST['add_birth'])) {` was missing its final closing curly brace `}` at the bottom of the script.
-4. **Undefined variable fix**: Inside the `if (!$result)` check, I updated `$sql` (which was undefined) to `$sql9` to correctly output the failed query string.
-
-### Corrected Code:
-
-```php
 <?php
 // Enable error reporting to catch issues
 error_reporting(E_ALL);
@@ -25,7 +14,6 @@ if ($conn->connect_error) {
 }
 
 // 3. --- MAGIC LINE: Bypass Strict Mode ---
-// This prevents "Incorrect integer value" and "Incorrect date value" errors
 $conn->query("SET SESSION sql_mode = ''");
 
 // 4. Check if form was submitted
@@ -161,7 +149,6 @@ if (isset($_POST['add_birth']) || $_SERVER['REQUEST_METHOD'] == 'POST') {
     $lr2 = $_POST['late_reason_2'] ?? '';
     $l_reason = mysqli_real_escape_string($conn, $lr1.' '.$lr2);
 
-<<<<<<< HEAD
     $l_appo    = mysqli_real_escape_string($conn, $_POST['applicant_only'] ?? '');
     $l_appto   = mysqli_real_escape_string($conn, $_POST['applicant_than_owner'] ?? '');
     $l_sigday  = mysqli_real_escape_string($conn, $_POST['sign_day'] ?? '');
@@ -197,7 +184,7 @@ if (isset($_POST['add_birth']) || $_SERVER['REQUEST_METHOD'] == 'POST') {
         $row_max = $result_max->fetch_assoc();
         $reg_no = (int)($row_max['max_no'] ?? 0) + 1;
 
-        // --- Execute 9 Inserst ---
+        // 3. --- Execute 9 Inserts ---
 
         $conn->query("INSERT INTO registration_tbl (no, registry_no, book_no, page_no, province, municipal, reg_date, reg_time, reg_user, update_date, update_time, update_user) 
                       VALUES ($reg_no, '$registry_no', $book_no, $page_no, '$province', '$municipal', '$reg_date', '$reg_time', '$reg_user', '1900-01-01', '00:00:00', '')");
@@ -216,63 +203,10 @@ if (isset($_POST['add_birth']) || $_SERVER['REQUEST_METHOD'] == 'POST') {
 
         $conn->query("INSERT INTO receive_civil_tbl (no, registry_no, received_name, received_position, civil_name, civil_position, received_date, civil_date) 
                       VALUES ($reg_no, '$registry_no', '$rec_name', '$rec_pos', '$civil_name', '$civil_pos', '$rec_date', '$civil_date')");
-=======
-          // --- CRITICAL FIX: Explicitly name columns to match Admin version and ensure reliability ---
-          
-          $sql1 = "INSERT INTO registration_tbl (no, registry_no, book_no, page_no, province, municipal, reg_date, reg_time, reg_user, update_date, update_time, update_user) 
-                   VALUES ($no, '$registry_no', '$book_no', '$page_no', '$province', '$municipal', '$date', '$time', '$e_name', '0000-00-00', '00:00:00', '')";
-          $conn->query($sql1);
-
-          $sql2 = "INSERT INTO child_tbl (no, registry_no, child_lname, child_fname, child_mname, child_sex, child_birth_date, birth_brgy, birth_municipal, birth_province, birth_type, if_multi_birth_was, birth_order, birth_weight) 
-                   VALUES ($no, '$registry_no', '$child_lname', '$child_fname', '$child_mname', '$child_sex', '$child_birth_date', '$birth_brgy', '$birth_city', '$birth_province', '$birth_type', '$multi_birth_was', '$birth_order', '$birth_weight')";
-          $conn->query($sql2);
-
-          $sql3 = "INSERT INTO mother_tbl (no, registry_no, mother_lname, mother_fname, mother_mname, mother_citizen, mother_religion, mother_brgy, mother_municipal, mother_province, mother_country, mother_occupation, mother_age, ttl_no_child, no_child_dead, no_child_alive, marriage_date, marriage_place) 
-                   VALUES ($no, '$registry_no', '$mother_lname', '$mother_fname', '$mother_mname', '$mother_citizen', '$mother_sect', '$mother_brgy', '$mother_city', '$mother_province', '$mother_country', '$mother_occupation', '$mother_age', '$ttl_no_child', '$no_child_dead', '$no_child_alive', '$marriage_date', '$marriage_place')";
-          $conn->query($sql3);
-
-          $sql4 = "INSERT INTO father_tbl (no, registry_no, father_lname, father_fname, father_mname, father_age, father_religion, father_citizen, father_brgy, father_municipal, father_province, father_country, father_occupation, marriage_date, marriage_place) 
-                   VALUES ($no, '$registry_no', '$father_lname', '$father_fname', '$father_mname', '$father_age', '$father_sect', '$father_citizen', '$father_brgy', '$father_city', '$father_province', '$father_country', '$father_occupation', '$marriage_date', '$marriage_place')";
-          $conn->query($sql4);
-
-          $sql5 = "INSERT INTO att_inf_tbl (no, registry_no, attendant_type, birth_time, attendant_name, attendant_position, attendant_address, informant_name, rel_child, informant_address, prepared_name, prepared_position, attendant_date, informant_date, prepared_date) 
-                   VALUES ($no, '$registry_no', '$attendant_type', '$birth_time', '$attendant_name', '$attendant_position', '$attendant_address', '$informant_name', '$rel_child', '$informant_address', '$prepared_name', '$prepared_position', '$attendant_date', '$informant_date', '$prepared_date')";
-          $conn->query($sql5);
-
-          $sql6 = "INSERT INTO receive_civil_tbl (no, registry_no, received_name, received_position, civil_name, civil_position, received_date, civil_date) 
-                   VALUES ($no, '$registry_no', '$received_name', '$received_position', '$civil_name', '$civil_position', '$received_date', '$civil_date')";
-          $conn->query($sql6);
-
-          $sql7 = "INSERT INTO remarks_tbl (no, registry_no, remarks) 
-                   VALUES ($no, '$registry_no', '$remarks')";
-          $conn->query($sql7);
-
-          $sql8 = "INSERT INTO admission_paternity_tbl (no, registry_no, father_name, mother_name, child_name, birth_date, birth_place, sworn_day, sworn_month, sworn_year, child_gender, ctc, issued_on, issued_at, administer_name, administer_position, administer_address) 
-                   VALUES ($no, '$registry_no', '$father_name', '$mother_name', '$child_name', '$birth_date', '$birth_place', '$sworn_day', '$sworn_month', '$sworn_year', '$birth_gender', '$sworn_ctc', '$sworn_issuedon', '$sworn_issuedat', '$sworn_name', '$sworn_position', '$sworn_address')";
-          $conn->query($sql8);
-
-          $sql9 = "INSERT INTO late_reg_tbl (no, registry_no, late_name, late_address, late_birth_type, late_birth_of, late_birth_in, late_birth_on, attend_birth_by, who_resides_at, late_citizen, married_type, married_on, married_at, not_married_name, late_reg_reason, applicant_only, applicant_than_owner, sign_day, sign_month, sign_year, sign_at, affiant_name, late_sworn_day, late_sworn_month, late_sworn_year, late_sworn_at, late_ctc, late_issued_on, late_issued_at, late_administer_name, late_administer_position, late_administer_address) 
-                   VALUES ($no, '$registry_no', '$late_name', '$late_address', '$late_birth_type', '$late_birth_of', '$late_birth_in', '$late_birth_on', '$attend_birth_by', '$who_resides_at', '$late_citizen', '$married_type', '$married_on', '$married_at', '$not_married_name', '$late_reg_reason', '$applicant_only', '$applicant_than_owner', '$sign_day', '$sign_month', '$sign_year', '$sign_at', '$affiant_name', '$late_sworn_day', '$late_sworn_month', '$late_sworn_year', '$late_sworn_at', '$late_ctc', '$late_issued_on', '$late_issued_at', '$late_sworn_name', '$late_sworn_position', '$late_sworn_address')";
-          $result = $conn->query($sql9);
-
-          if (!$result) {
-              echo "INSERT failed: $sql9<br>" . $conn->error . "<br><br>";
-          }
-
-          // Commit the transaction since everything was successful
-          $conn->commit();
-
-      } catch (Exception $e) {
-          // Rollback all inserts if an exception is thrown
-          $conn->rollback();
-          echo "Error: " . $e->getMessage() . "<br><br>";
-      }
->>>>>>> 4857b88a4be86b8850fa34bb93fa56fe294fddb0
 
         $conn->query("INSERT INTO remarks_tbl (no, registry_no, remarks) 
                       VALUES ($reg_no, '$registry_no', '$remarks')");
 
-<<<<<<< HEAD
         $conn->query("INSERT INTO admission_paternity_tbl (no, registry_no, father_name, mother_name, child_name, birth_date, birth_place, sworn_day, sworn_month, sworn_year, child_gender, ctc, issued_on, issued_at, administer_name, administer_position, administer_address) 
                       VALUES ($reg_no, '$registry_no', '$p_fname', '$p_mname', '$p_cname', '$p_bdate', '$p_bplace', '$p_sday', '$p_smon', '$p_syer', '$p_gender', '$p_ctc', '$p_ison', '$p_isat', '$p_sname', '$p_spos', '$p_saddr')");
 
@@ -296,8 +230,3 @@ if (isset($_POST['add_birth']) || $_SERVER['REQUEST_METHOD'] == 'POST') {
     echo "<h2>No data received from form.</h2>";
 }
 ?>
-=======
-      mysqli_close($conn);
-    }
-?>
->>>>>>> 4857b88a4be86b8850fa34bb93fa56fe294fddb0

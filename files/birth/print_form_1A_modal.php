@@ -31,7 +31,11 @@
         $reg_no=null;
         if (!empty($_GET['reg_no'])){ $reg_no = $_REQUEST['reg_no']; }
 
-        $sql = "SELECT *, registration_tbl.no as no FROM registration_tbl 
+        $sql = "SELECT registration_tbl.registry_no AS reg_no_official, registration_tbl.reg_date AS date_registered, 
+                registration_tbl.book_no AS book_official, registration_tbl.page_no AS page_official,
+                child_tbl.*, mother_tbl.*, father_tbl.*, att_inf_tbl.*, receive_civil_tbl.*, 
+                remarks_tbl.*, admission_paternity_tbl.*, late_reg_tbl.* 
+                FROM registration_tbl 
                 LEFT JOIN child_tbl ON registration_tbl.no = child_tbl.no 
                 LEFT JOIN mother_tbl ON registration_tbl.no = mother_tbl.no 
                 LEFT JOIN father_tbl ON registration_tbl.no = father_tbl.no 
@@ -46,6 +50,13 @@
 
         if ($result->num_rows > 0) {
           while($row = $result->fetch_assoc()) { 
+            // Shared fallback logic for names in modal
+            $child_full_name  = !empty($row['child_name'])  ? $row['child_name']  : trim(($row['child_fname'] ?? '') . ' ' . ($row['child_mname'] ?? '') . ' ' . ($row['child_lname'] ?? ''));
+            $father_full_name = !empty($row['father_name']) ? $row['father_name'] : trim(($row['father_fname'] ?? '') . ' ' . ($row['father_mname'] ?? '') . ' ' . ($row['father_lname'] ?? ''));
+            $mother_full_name = !empty($row['mother_name']) ? $row['mother_name'] : trim(($row['mother_fname'] ?? '') . ' ' . ($row['mother_mname'] ?? '') . ' ' . ($row['mother_lname'] ?? ''));
+
+            $birth_place_full = !empty($row['birth_place']) ? $row['birth_place'] : trim(($row['birth_brgy'] ?? '') . ', ' . ($row['birth_municipal'] ?? '') . ', ' . ($row['birth_province'] ?? ''));
+            $birth_place_full = trim($birth_place_full, ', ');
         ?>
         <form method="post" action="print_1A.php" target="_blank">
           <!-- Modal body -->
@@ -60,7 +71,7 @@
               </div>
               <br><br>
               <h6>TO WHOM IT MAY CONCERN:</h6>
-              <h6 style="text-indent:8%;">We certify that, among others, the following facts of birth appear in<br>our Register of Birth on page <input type="text" name="birthpage" id="birthpage" style="outline: none; border: 0; width: 80px; text-align: center; border-bottom: 1px solid #ced4da;" maxlength="4" value="<?php echo $row['page_no']; ?>"> of book number <input type="text" name="birthbook" id="birthbook" style="outline: none; border: 0; width: 80px; text-align: center; border-bottom: 1px solid #ced4da;" maxlength="4" value="<?php echo $row['book_no']; ?>">:</h6><br>
+              <h6 style="text-indent:8%;">We certify that, among others, the following facts of birth appear in<br>our Register of Birth on page <input type="text" name="birthpage" id="birthpage" style="outline: none; border: 0; width: 80px; text-align: center; border-bottom: 1px solid #ced4da;" maxlength="4" value="<?php echo $row['page_official'] ?? $row['page_no']; ?>"> of book number <input type="text" name="birthbook" id="birthbook" style="outline: none; border: 0; width: 80px; text-align: center; border-bottom: 1px solid #ced4da;" maxlength="4" value="<?php echo $row['book_official'] ?? $row['book_no']; ?>">:</h6><br>
 
               <div class="row" style="padding-left:8%;">
               <!-- Hidden text -->
@@ -83,21 +94,27 @@
                 <div class="col-7">
                   <h6>
                   <input class="input" type="hidden" name="reg_no" value="<?php echo $row['no']; ?>">
-                  <input class="input sync-registry-no" type="text" name="registry_no_val" value="<?php echo $row['registry_no'] ?? ''; ?>" readonly>
+                  <input class="input sync-registry-no" type="text" name="registry_no_val" value="<?php echo $row['reg_no_official'] ?? $row['registry_no'] ?? ''; ?>" readonly>
                   <input class="input sync-reg-date" type="text" name="reg_date" value="<?php 
-                        $raw_reg = $row['reg_date'] ?? '';
+                        $raw_reg = $row['date_registered'] ?? $row['reg_date'] ?? '';
                         if (!empty($raw_reg) && $raw_reg != '0000-00-00') {
                             echo date('F d, Y', strtotime($raw_reg));
                         } else {
                             echo 'N/A';
                         } ?>" readonly>
-                  <input class="input sync-child-name" type="text" name="child_name" value="<?php echo ucwords(($row['child_fname'] ?? '').' '.($row['child_mname'] ?? '').' '.($row['child_lname'] ?? '')); ?>" readonly>
+                  <input class="input sync-child-name" type="text" name="child_name" value="<?php echo ucwords($child_full_name); ?>" readonly>
                   <input class="input sync-child-sex" type="text" name="child_sex" value="<?php echo ucwords($row['child_sex'] ?? ''); ?>" readonly>
-                  <input class="input sync-birth-date" type="text" name="birth_date" value="<?php echo ucwords($row['child_birth_date'] ?? ''); ?>" readonly><br> 
-                  <input class="input sync-birth-place" type="text" name="birth_place" value="<?php echo ucwords(($row['birth_brgy'] ?? '').', '.($row['birth_municipal'] ?? '').', '.($row['birth_province'] ?? '')); ?>" readonly>   
-                  <input class="input sync-mother-name" type="text" name="mother_name" value="<?php echo ucwords(($row['mother_fname'] ?? '').' '.($row['mother_mname'] ?? '').' '.($row['mother_lname'] ?? '')); ?>" readonly><br> 
+                  <input class="input sync-birth-date" type="text" name="birth_date" value="<?php 
+                        $raw_bd = $row['child_birth_date'] ?? '';
+                        if (!empty($raw_bd) && $raw_bd != '0000-00-00') {
+                            echo date('F d, Y', strtotime($raw_bd));
+                        } else {
+                            echo ucwords($row['birth_date'] ?? '');
+                        } ?>" readonly><br> 
+                  <input class="input sync-birth-place" type="text" name="birth_place" value="<?php echo ucwords($birth_place_full); ?>" readonly>   
+                  <input class="input sync-mother-name" type="text" name="mother_name" value="<?php echo ucwords($mother_full_name); ?>" readonly><br> 
                   <input class="input sync-mother-citizen" type="text" name="mother_citizen" value="<?php echo ucwords($row['mother_citizen'] ?? ''); ?>" readonly>
-                  <input class="input sync-father-name" type="text" name="father_name" value="<?php echo ucwords(($row['father_fname'] ?? '').' '.($row['father_mname'] ?? '').' '.($row['father_lname'] ?? '')); ?>" readonly><br>
+                  <input class="input sync-father-name" type="text" name="father_name" value="<?php echo ucwords($father_full_name); ?>" readonly><br>
                   <input class="input sync-father-citizen" type="text" name="father_citizen" value="<?php echo ucwords($row['father_citizen'] ?? ''); ?>" readonly>
                   <input class="input sync-mrg-date" type="text" name="mrg_date" value="<?php echo ucwords($row['marriage_date'] ?? ''); ?>" readonly>
                   <input class="input sync-mrg-place" type="text" name="mrg_place" value="<?php echo ucwords($row['marriage_place'] ?? ''); ?>" readonly>
@@ -152,7 +169,9 @@
 
         <!-- Modal footer -->
         <div class="modal-footer">
-          <button type="submit" class="btn btn-outline-danger btn-block" name="print"><i class="fa fa-print"></i> PRINT</button>
+          <button type="button" class="btn btn-outline-danger btn-block" name="print" onclick="submitToPrint('print_1A.php', 'my1A')">
+              <i class="fa fa-print"></i> PRINT
+          </button>
         </div>
       </form>
         <?php 
@@ -164,5 +183,5 @@
 </div>
 
 <!--Javascript-->
-<script src = "../../js/birth_name.js"></script>
-<script src = "../../js/birth_reg_date.js"></script>
+<script src = "../../js/birth_name.js?v=2"></script>
+<script src = "../../js/birth_reg_date.js?v=2"></script>

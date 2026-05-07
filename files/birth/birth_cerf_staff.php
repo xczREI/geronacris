@@ -134,7 +134,7 @@
  	<div class="col-sm-9" style="padding-top: 7%;" id="body">
  		<div id="accordion">
   		<button data-toggle="collapse" data-target="#birth_page_1" id="page1" class="btn btn-outline-info">Page 1</button>
-		  <button data-toggle="collapse" data-target="#birth_page_2" id="page2" class="btn btn-outline-info">Page 2</button>
+		  <button data-toggle="collapse" data-target="#birth_page_2" id="page2" class="btn btn-outline-info" onclick="if(typeof saveToMemory === 'function') saveToMemory()">Page 2</button>
 		  <a href="birth_records_staff.php" class="btn btn-outline-info">View Records</a>
 
   		<form method="post" action="reg_info_action_staff.php" id="addbirth_form" novalidate>
@@ -164,6 +164,14 @@
 $(document).ready(function(){
   var x = new Date();
 	document.getElementById("time").value = x.toLocaleTimeString();
+
+  // Manual Collapse Trigger Fix
+  $('#page1, #page2').on('click', function (e) {
+      e.preventDefault();
+      var target = $(this).attr('data-target');
+      $(target).collapse('show');
+      $(this).addClass('active').siblings().removeClass('active');
+  });
 });
 </script>
 

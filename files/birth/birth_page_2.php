@@ -395,11 +395,13 @@ $(document).ready(function() {
         return v;
     }
 
-  function syncCurrentField(focusedElement) {
+  function syncCurrentField(focusedElement, forceOverwrite = false) {
     const rawData = localStorage.getItem('birth_form_data');
     const data = rawData ? JSON.parse(rawData) : {};
     
     const elementId = $(focusedElement).attr('id');
+    if (!elementId) return;
+
     let valueToFill = "";
 
     const now = new Date();
@@ -448,6 +450,7 @@ $(document).ready(function() {
         case 'bday2':
         case 'bday1':
         case 'late_birth_on':
+        case 'late_birth_onx':
             let storedDate = data.birth_day || ""; 
             if (storedDate) {
                 valueToFill = formatDateFormal(storedDate);
@@ -501,14 +504,31 @@ $(document).ready(function() {
     }
 
     if (valueToFill) {
-        $(focusedElement).val(valueToFill.trim().toUpperCase());
+        let currentVal = $(focusedElement).val().trim();
+        // ONLY overwrite if it's currently empty, OR if forceOverwrite is true (like on Enter key)
+        if (currentVal === "" || forceOverwrite) {
+            $(focusedElement).val(valueToFill.trim().toUpperCase());
+        }
     }
   }
 
+    // 1. ON LOAD: Fill in any fields that are currently blank
+    $('input[type="text"]').each(function() {
+        syncCurrentField(this, false); 
+    });
+
+    // 2. ON ENTER: Force an overwrite of the current field
     $('input').on('keydown', function(e) {
         if (e.key === "Enter") {
-            syncCurrentField(this);
+            syncCurrentField(this, true);
         }
+    });
+
+    // 3. ON SHOW: Sync everything again when Page 2 is opened (via Bootstrap Collapse)
+    $('#birth_page_2').on('shown.bs.collapse', function () {
+        $('input[type="text"]').each(function() {
+            syncCurrentField(this, false);
+        });
     });
 });
 </script>

@@ -682,7 +682,7 @@
                                         <label class="custom-control-label" for="hilot">&nbsp;4 Hilot (Traditional Birth Attendant)</label>
                                     </div>
                                     <div class="custom-control custom-checkbox custom-control-inline">
-                                        <input type="checkbox" class="custom-control-input" id="others">
+                                        <input type="checkbox" class="custom-control-input" id="others" name="attendant_others">
                                         <label class="custom-control-label" for="others">&nbsp;5 Others (Specify)</label>
                                     </div>
                                     <div class="custom-control custom-checkbox custom-control-inline pl-0">
@@ -737,7 +737,7 @@
                                 <input type="text" class="form-control form-control-sm" id="attendant_address1" name="attendant_address1" value="<?php echo $row['attendant_address'] ?? ''; ?>">
                             </div>
                             <div class="input-group mt-1">
-                                <input type="text" class="form-control form-control-sm" id="attendant_address2" name="attendant_address2" style="background-color: white;border-top:none;border-left:none;border-right:none;border-color: green;border-radius: 0;" value="<?php echo htmlspecialchars($row['attendant_address2'] ?? ''); ?>">
+                                <input type="text" class="form-control form-control-sm" id="attendant_address2" name="attendant_address2" style="background-color: white;border-top:none;border-left:none;border-right:none;border-color: green;border-radius: 0;" value="<?php echo $row['attendant_address2'] ?? ''; ?>">
                             </div>
                             <div class="input-group mt-1">
                                 <div class="input-group-prepend">
@@ -1215,44 +1215,54 @@ $(document).ready(function() {
 <script>
 // 7. Save To Memory (Page 1 to Page 2 sync)
 function saveToMemory() {
-    let mDate = $('#marriage_date').val() ? $('#marriage_date').val().trim().toUpperCase() : "";
-    let mPlace = $('#marriage_place').val() ? $('#marriage_place').val().trim() : "";
+    try {
+        let mDate = $('#marriage_date').val() ? $('#marriage_date').val().trim().toUpperCase() : "";
+        let mPlace = $('#marriage_place').val() ? $('#marriage_place').val().trim() : "";
 
-    if (mDate === "NOT MARRIED" || mDate === "NOT APPLICABLE" || mDate === "N/A") {
-        mPlace = "NOT APPLICABLE";
-        $('#marriage_place').val(mPlace);
-    }
+        if (mDate === "NOT MARRIED" || mDate === "NOT APPLICABLE" || mDate === "N/A") {
+            mPlace = "NOT APPLICABLE";
+            $('#marriage_place').val(mPlace);
+        }
 
-    const newData = {
-        child_fname: $('#child_fname').val(),
-        child_mname: $('#child_mname').val(),
-        child_lname: $('#child_lname').val(),
-        child_sex: $('#child_sex').val(), 
-        father_fname: $('#father_fname').val(),
-        father_mname: $('#father_mname').val(),
-        father_lname: $('#father_lname').val(),
-        mother_fname: $('#mother_fname').val(),
-        mother_mname: $('#mother_mname').val(),
-        mother_lname: $('#mother_lname').val(),
-        birth_day: $('#child_birth_date').val(),
-        birth_place: ($('#birth_city').val() + " " + $('#birth_province').val()).trim(),
-        marriage_date: mDate,
-        marriage_place: mPlace,
-        civil_name: $('input[name="civil_name"]').val(),
-        civil_position: $('input[name="civil_position"]').val(),
-        informant_name: $('input[name="informant_name"]').val(),
-        informant_address: $('input[name="informant_address"]').val(),
-        rel_child: $('input[name="rel_child"]').val(),
-        attendant_name: $('input[name="attendant_name"]').val(),
-        attendant_position: $('input[name="attendant_position"]').val() ? $('input[name="attendant_position"]').val().toUpperCase() : "",
-        attendant_address: (($('input[name="attendant_address1"]').val() || "") + " " + ($('input[name="attendant_address2"]').val() || "")).trim().toUpperCase()
-    };
+        const newData = {
+            child_fname: $('#child_fname').val(),
+            child_mname: $('#child_mname').val(),
+            child_lname: $('#child_lname').val(),
+            child_sex: $('#child_sex').val(), 
+            father_fname: $('#father_fname').val(),
+            father_mname: $('#father_mname').val(),
+            father_lname: $('#father_lname').val(),
+            mother_fname: $('#mother_fname').val(),
+            mother_mname: $('#mother_mname').val(),
+            mother_lname: $('#mother_lname').val(),
+            birth_day: $('#child_birth_date').val(),
+            birth_place: ($('#birth_city').val() + " " + $('#birth_province').val()).trim(),
+            marriage_date: mDate,
+            marriage_place: mPlace,
+            civil_name: $('#civil_name').val() || $('input[name="civil_name"]').val(),
+            civil_position: $('#civil_position').val() || $('input[name="civil_position"]').val(),
+            informant_name: $('#informant_name').val() || $('input[name="informant_name"]').val(),
+            informant_address: $('#informant_address').val() || $('input[name="informant_address"]').val(),
+            rel_child: $('#rel_child').val() || $('input[name="rel_child"]').val(),
+            attendant_name: $('#attendant_name').val() || $('input[name="attendant_name"]').val(),
+            attendant_position: ($('#attendant_position').val() || $('input[name="attendant_position"]').val()) ? ($('#attendant_position').val() || $('input[name="attendant_position"]').val()).toUpperCase() : "",
+            attendant_address: (($('input[name="attendant_address1"]').val() || "") + " " + ($('input[name="attendant_address2"]').val() || "")).trim().toUpperCase()
+        };
 
-    const rawOldData = localStorage.getItem('birth_form_data');
-    const oldData = rawOldData ? JSON.parse(rawOldData) : {};
+        const rawOldData = localStorage.getItem('birth_form_data');
+        let oldData = {};
+        try {
+            oldData = rawOldData ? JSON.parse(rawOldData) : {};
+            if (!oldData) oldData = {};
+        } catch (e) {
+            oldData = {};
+        }
 
-    if (JSON.stringify(newData) !== JSON.stringify(oldData)) {
-        localStorage.setItem('birth_form_data', JSON.stringify(newData));
+        if (JSON.stringify(newData) !== JSON.stringify(oldData)) {
+            localStorage.setItem('birth_form_data', JSON.stringify(newData));
+        }
+    } catch (err) {
+        console.error("saveToMemory error:", err);
     }
 }
 $('input, select').on('blur change', saveToMemory);
@@ -1564,6 +1574,27 @@ $(document).ready(function() {
 
     $('#marriage_date').on('blur', function() {
         formatMarriageDate(this);
+    });
+});
+</script>
+
+<script>
+// Synchronization for Section 21a "Others" to 21b "Title or Position"
+$(document).ready(function() {
+    function syncOthersToPosition() {
+        if ($('#others').is(':checked')) {
+            $('#attendant_position').val($('#otherstxt').val());
+        }
+    }
+
+    // When typing in the "Others" text box
+    $('#otherstxt').on('input keyup change', function() {
+        syncOthersToPosition();
+    });
+
+    // When checking/unchecking the "Others" checkbox
+    $('#others').on('change', function() {
+        syncOthersToPosition();
     });
 });
 </script>

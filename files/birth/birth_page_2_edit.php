@@ -68,12 +68,20 @@
 						<span>(For births on or after 3 August 1988)</span>
 					</div>
 				</h6>
-				<h6 style="padding-top:10px;">&emsp;&emsp;&emsp;&emsp;I/We,
-				<div class="custom-control custom-checkbox custom-control-inline" style="padding:0; width:42%; margin-right:0;">
+				<h6 style="padding-top:10px;">&emsp;&emsp;&emsp;&emsp;
+				<div class="custom-control custom-checkbox custom-control-inline" style="margin-right: 0;">
+					<input type="checkbox" class="custom-control-input paternity-toggle" id="pat_i" name="paternity_type" value="I" <?php if(empty($row['mother_name'])) echo 'checked'; ?>>
+					<label class="custom-control-label" for="pat_i">I</label>
+				</div>/
+				<div class="custom-control custom-checkbox custom-control-inline" style="margin-right: 0;">
+					<input type="checkbox" class="custom-control-input paternity-toggle" id="pat_we" name="paternity_type" value="We" <?php if(!empty($row['mother_name'])) echo 'checked'; ?>>
+					<label class="custom-control-label" for="pat_we">We</label>
+				</div>,
+				<div class="custom-control custom-checkbox custom-control-inline" style="padding:0; width:42%; margin-right:0;" id="f_name_cont">
 					<input type="text" class="form-control form-control-sm text-center" id="father_name" name="father_name" value="<?php echo $row['father_name'] ?? ''; ?>" onkeypress="return isTextKey(event)">
 				</div>
-				and
-				<div class="custom-control custom-checkbox custom-control-inline" style="padding: 0; width: 42%;margin-right: 0;">
+				<span id="and_mother_txt">and</span>
+				<div class="custom-control custom-checkbox custom-control-inline" style="padding: 0; width: 42%;margin-right: 0;" id="m_name_cont">
 					<input type="text" class="form-control form-control-sm text-center" id="mother_name" name="mother_name" value="<?php echo $row['mother_name'] ?? ''; ?>" onkeypress="return isTextKey(event)">
 				</div>
 				,<br> of legal age, am/are the natural mother and/or father of
@@ -96,7 +104,7 @@
 						<input type="text" class="form-control form-control-sm text-center" style="background-color:white; border-top:none;border-left:none; border-right:none; border-color:green; border-radius:0;" id="father_sign" name="father_sign" value="<?php echo $row['father_name'] ?? ''; ?>" onkeypress="return isTextKey(event)">
 						<h6>(Signature Over Printed Name of Father)</h6>
 					</div>
-					<div class="col-6" align="center">
+					<div class="col-6" align="center" id="mother_sign_cont">
 						<input type="text" class="form-control form-control-sm text-center" style="background-color:white; border-top:none;border-left:none; border-right:none; border-color:green; border-radius:0;" id="mother_sign" name="mother_sign" value="<?php echo $row['mother_name'] ?? ''; ?>" onkeypress="return isTextKey(event)">
 						<h6>(Signature Over Printed Name of Mother)</h6>
 					</div>
@@ -117,8 +125,8 @@
 					<div class="custom-control custom-checkbox custom-control-inline mt-1" style="padding:0; width:30%; margin-right:0;">
 						<input type="text" class="form-control form-control-sm text-center" id="ack_father_sworn" name="ack_sworn_father" value="<?php echo $row['father_name'] ?? ''; ?>" onkeypress="return isTextKey(event)">
 					</div>
-					and
-					<div class="custom-control custom-checkbox custom-control-inline mt-1" style="padding:0; width:30%; margin-right:0;">
+					<span id="sworn_and_txt">and</span>
+					<div class="custom-control custom-checkbox custom-control-inline mt-1" style="padding:0; width:30%; margin-right:0;" id="ack_mother_sworn_cont">
 						<input type="text" class="form-control form-control-sm text-center" id="ack_mother_sworn" name="ack_sworn_mother" value="<?php echo $row['mother_name'] ?? ''; ?>" onkeypress="return isTextKey(event)">
 					</div>
 				, who exhibited to me 
@@ -197,31 +205,31 @@
 					<input type="checkbox" class="custom-control-input text-center" id="my_birth" name="late_birth_type" value="my birth" <?php if(($row['late_birth_type'] ?? '') == 'my birth') echo 'checked'; ?>>
 					<label class="custom-control-label" for="my_birth">&nbsp;my birth in</label>
 				</div>
-				<div class="custom-control custom-checkbox custom-control-inline mt-1" style="padding: 0;width: 38%;margin-right: 0;">
+				<div class="custom-control custom-checkbox custom-control-inline mt-1" style="padding: 0;width: 38%;margin-right: 0;" id="bplace1_cont">
 					<input type="text" class="form-control form-control-sm text-center" id="bplace1" name="late_birth_in" value="<?php echo $row['late_birth_in'] ?? ''; ?>" onkeypress="return isTextKey(event)">
 				</div>
-				on
-				<div class="custom-control custom-checkbox custom-control-inline mt-1" style="padding: 0;width: 38%;margin-right: 0;">
+				<span id="my_on_txt">on</span>
+				<div class="custom-control custom-checkbox custom-control-inline mt-1" style="padding: 0;width: 38%;margin-right: 0;" id="bday1_cont">
 					<input type="text" class="form-control form-control-sm text-center" id="bday1" name="late_birth_on" value="<?php echo $row['late_birth_on'] ?? ''; ?>">
 				</div>
-				&emsp;&emsp;&emsp;&emsp;&emsp;
+				<br>&emsp;&emsp;&emsp;&emsp;&emsp;
 				<div class="custom-control custom-checkbox custom-control-inline" style="margin-right: 0;">
 					<input type="checkbox" class="custom-control-input text-center" id="the_birth" name="late_birth_type2" value="the birth" <?php if(($row['late_birth_type'] ?? '') == 'the birth') echo 'checked'; ?>>
 					<label class="custom-control-label" for="the_birth">&nbsp;the birth of</label>
 				</div>
-				<div class="custom-control custom-checkbox custom-control-inline mt-1" style="padding: 0;width: 32%;margin-right: 0;">
+				<div class="custom-control custom-checkbox custom-control-inline mt-1" style="padding: 0;width: 32%;margin-right: 0;" id="childlate_cont">
 					<input type="text" class="form-control form-control-sm text-center" id="childlatename" name="late_birth_of" value="<?php echo $row['late_birth_of'] ?? ''; ?>" onkeypress="return isTextKey(event)">
 				</div>
-				who was born in
-				<div class="custom-control custom-checkbox custom-control-inline mt-1" style="padding: 0;width: 34%;margin-right: 0;">
+				<span id="the_who_txt">who was born in</span>
+				<div class="custom-control custom-checkbox custom-control-inline mt-1" style="padding: 0;width: 34%;margin-right: 0;" id="bplace2_cont">
 					<input type="text" class="form-control form-control-sm text-center" id="bplace2" name="late_birth_in2" value="<?php echo $row['late_birth_in'] ?? ''; ?>" onkeypress="return isTextKey(event)">
 				</div>
 				&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;
 				<div class="custom-control custom-checkbox custom-control-inline mt-1" style="padding: 0;width: 28%;margin-right: 0;">
 					<input type="text" class="form-control form-control-sm text-center" style="background-color: white;border-top:none;border-left:none;border-right:none;border-color: green;border-radius: 0;" disabled>
 				</div>
-				on
-				<div class="custom-control custom-checkbox custom-control-inline mt-1" style="padding: 0;width: 34%;margin-right: 0;">
+				<span id="the_on_txt">on</span>
+				<div class="custom-control custom-checkbox custom-control-inline mt-1" style="padding: 0;width: 34%;margin-right: 0;" id="bday2_cont">
 					<input type="text" class="form-control form-control-sm text-center" id="bday2" name="late_birth_on2" value="<?php echo $row['late_birth_on'] ?? ''; ?>">
 				</div>
 				.
@@ -374,6 +382,87 @@
 
 
 <script>
+// Logic for Section 1 (Paternity) and Section 4 Point 1 (Delayed Reg)
+$(document).ready(function() {
+    
+    // --- SECTION 1: Paternity Affidavit ---
+    function togglePaternityFields(isClick = false) {
+        const rawData = localStorage.getItem('birth_form_data');
+        const data = rawData ? JSON.parse(rawData) : {};
+        const fName = `${data.father_fname || ''} ${data.father_mname || ''} ${data.father_lname || ''}`.trim().toUpperCase();
+        const mName = `${data.mother_fname || ''} ${data.mother_mname || ''} ${data.mother_lname || ''}`.trim().toUpperCase();
+
+        if ($('#pat_i').is(':checked')) {
+            // Data Disappear (Clear values) but keep boxes visible
+            $('#mother_name, #mother_sign, #ack_mother_sworn').val('');
+            $('#and_mother_txt').css('opacity', '0.2');
+            $('#sworn_and_txt').css('opacity', '0.2');
+            
+            // Ensure Father name is shown
+            if ($('#father_name').val() === "") $('#father_name, #father_sign, #ack_father_sworn').val(fName);
+        } else if ($('#pat_we').is(':checked')) {
+            // Restore Mother Fields and labels
+            $('#and_mother_txt').css('opacity', '1');
+            $('#sworn_and_txt').css('opacity', '1');
+            if ($('#mother_name').val() === "" || isClick) {
+                $('#mother_name, #mother_sign, #ack_mother_sworn').val(mName);
+            }
+            if ($('#father_name').val() === "" || isClick) {
+                $('#father_name, #father_sign, #ack_father_sworn').val(fName);
+            }
+        }
+    }
+
+    $('.paternity-toggle').on('change', function() {
+        if ($(this).is(':checked')) {
+            $('.paternity-toggle').not(this).prop('checked', false);
+        }
+        togglePaternityFields(true);
+    });
+
+    // --- SECTION 4 POINT 1: Delayed Registration ---
+    function toggleLateBirthFields(isClick = false) {
+        const rawData = localStorage.getItem('birth_form_data');
+        const data = rawData ? JSON.parse(rawData) : {};
+        
+        if ($('#my_birth').is(':checked')) {
+            // Data Disappear (Clear "the birth of" fields)
+            $('#childlatename, #bplace2, #bday2').val('');
+            $('#the_who_txt, #the_on_txt').css('opacity', '0.2');
+            $('#my_on_txt').css('opacity', '1');
+
+            // Restore "my birth" fields
+            if ($('#bplace1').val() === "" || isClick) $('#bplace1').val(data.birth_place || "");
+            if ($('#bday1').val() === "" || isClick) $('#bday1').val((data.birth_day || "").toUpperCase()); 
+        } 
+        else if ($('#the_birth').is(':checked')) {
+            // Data Disappear (Clear "my birth" fields)
+            $('#bplace1, #bday1').val('');
+            $('#my_on_txt').css('opacity', '0.2');
+            $('#the_who_txt, #the_on_txt').css('opacity', '1');
+            
+            // Restore "the birth of" fields
+            if ($('#childlatename').val() === "" || isClick) $('#childlatename').val(`${data.child_fname || ''} ${data.child_mname || ''} ${data.child_lname || ''}`.trim().toUpperCase());
+            if ($('#bplace2').val() === "" || isClick) $('#bplace2').val(data.birth_place || "");
+            if ($('#bday2').val() === "" || isClick) $('#bday2').val((data.birth_day || "").toUpperCase());
+        }
+    }
+
+    $('#my_birth, #the_birth').on('change', function() {
+        if ($(this).is(':checked')) {
+            if ($(this).attr('id') === 'my_birth') $('#the_birth').prop('checked', false);
+            else $('#my_birth').prop('checked', false);
+        }
+        toggleLateBirthFields(true);
+    });
+
+    // Initialize on load
+    togglePaternityFields(false);
+    toggleLateBirthFields(false);
+});
+</script>
+
+<script>
 // Day validation for all day fields
 $(document).ready(function(){
 	$("#ack_sworn_day, #sign_day, #sworn_day").keyup(function(){
@@ -513,7 +602,7 @@ $(document).ready(function() {
             $('#not_married').prop('checked', true);
             $('#married').prop('checked', false);
             $('#hidden_married_type').val('not married');
-            $('#hidden_married_type2').val('not married');
+            $('#hidden_married_type2').val('');
             
             $('#married_txt1').val(''); 
             $('#married_txt2').val(''); 
@@ -598,7 +687,14 @@ $(document).ready(function() {
     // Notice the new "forceOverwrite" parameter
     function syncCurrentField(focusedElement, forceOverwrite = false) {
         const rawData = localStorage.getItem('birth_form_data');
-        const data = rawData ? JSON.parse(rawData) : {};
+        let data = {};
+        try {
+            data = rawData ? JSON.parse(rawData) : {};
+            if (!data) data = {};
+        } catch (e) {
+            console.warn("Error parsing birth_form_data:", e);
+            data = {};
+        }
         
         const elementId = $(focusedElement).attr('id');
         if (!elementId) return;
@@ -660,6 +756,16 @@ $(document).ready(function() {
     $('input').on('keydown', function(e) {
         if (e.key === "Enter") {
             syncCurrentField(this, true);
+        }
+    });
+
+    // 3. ON TAB SWITCH: Sync everything again when Page 2 is shown (for Tabs in Edit mode)
+    $('a[data-toggle="tab"], button[data-toggle="tab"]').on('shown.bs.tab', function (e) {
+        let targetId = $(e.target).attr('href') || $(e.target).attr('data-target');
+        if (targetId === '#page2') {
+            $('input[type="text"]').each(function() {
+                syncCurrentField(this, false);
+            });
         }
     });
 });

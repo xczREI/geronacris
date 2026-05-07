@@ -145,5 +145,5 @@
 </div>
 
 <!--Javascript-->
-<script src = "../../js/birth_name.js"></script>
-<script src = "../../js/birth_reg_date.js"></script>
+<script src = "../../js/birth_name.js?v=2"></script>
+<script src = "../../js/birth_reg_date.js?v=2"></script>

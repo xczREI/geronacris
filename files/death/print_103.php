@@ -29,8 +29,8 @@ try {
     $conn = new mysqli($hn, $un, $pw, $db);
     if ($conn->connect_error) showError("Database Error", "Connection failed: " . $conn->connect_error);
 
-    $reg_no = $_POST['reg_no'] ?? $_GET['reg_no'] ?? '';
-    if (empty($reg_no)) showError("Input Error", "No Registry Number provided.");
+    $reg_no = $_REQUEST['no'] ?? $_REQUEST['reg_no'] ?? '';
+    if (empty($reg_no)) showError("Input Error", "No record ID provided.");
 
     $sql = "SELECT registration_tbl.registry_no as registry_no, registration_tbl.no as no, 
             registration_tbl.book_no, registration_tbl.page_no, registration_tbl.province, registration_tbl.municipal,
